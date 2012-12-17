@@ -50,10 +50,10 @@ class tms_waybill_analysis(osv.osv):
         'partner_id'            : fields.many2one('res.partner', 'Customer', readonly=True),
         'travel_id'             : fields.many2one('tms.travel', 'Travel', readonly=True),
         'employee_id'           : fields.many2one('hr.employee', 'Driver', readonly=True),
-        'unit_id'               : fields.many2one('tms.unit', 'Unit', readonly=True),
-        'trailer1_id'           : fields.many2one('tms.unit', 'Trailer 1', readonly=True),
-        'dolly_id'              : fields.many2one('tms.unit', 'Dolly', readonly=True),
-        'trailer2_id'           : fields.many2one('tms.unit', 'Trailer 2', readonly=True),
+        'unit_id'               : fields.many2one('fleet.vehicle', 'Unit', readonly=True),
+        'trailer1_id'           : fields.many2one('fleet.vehicle', 'Trailer 1', readonly=True),
+        'dolly_id'              : fields.many2one('fleet.vehicle', 'Dolly', readonly=True),
+        'trailer2_id'           : fields.many2one('fleet.vehicle', 'Trailer 2', readonly=True),
         'route_id'              : fields.many2one('tms.route', 'Route', readonly=True),
         'departure_id'          : fields.many2one('tms.place', 'Departure', readonly=True),
         'arrival_id'            : fields.many2one('tms.place', 'Arrival', readonly=True),
@@ -105,13 +105,12 @@ qty,
 sum(b.price_subtotal) / (select count(id) from tms_waybill_shipped_product where waybill_id=a.id)::FLOAT
  amount
 
-from tms_waybill a, tms_waybill_line b, product_product c, tms_travel d, tms_route e, tms_waybill_shipped_product f
-where b.waybill_id = a.id
-and f.waybill_id = a.id
-and b.line_type = 'product'
-and a.travel_id = d.id
-and d.route_id = e.id
-and c.id = b.product_id
+from tms_waybill a
+	left join tms_waybill_line b on (b.waybill_id = a.id and b.line_type = 'product')
+	left join product_product c on (c.id = b.product_id)
+	left join tms_travel d on (a.travel_id = d.id)
+	left join tms_route e on (d.route_id = e.id)
+	left join tms_waybill_shipped_product f on (f.waybill_id = a.id)
 group by a.id, c.id, a.shop_id, a.sequence_id,
 a.state, a.name, a.date_order, 
 a.partner_id, a.travel_id, d.employee_id, d.unit_id, d.trailer1_id, d.dolly_id, d.trailer2_id,

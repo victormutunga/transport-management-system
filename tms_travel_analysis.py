@@ -49,10 +49,10 @@ class tms_travel_analysis(osv.osv):
         'employee_id'           : fields.many2one('hr.employee', 'Driver', readonly=True),
         'framework'             : fields.char('Framework', size=64, readonly=True),
         'unit_type_id'          : fields.many2one('tms.unit.category', 'Unit Type', readonly=True),
-        'unit_id'               : fields.many2one('tms.unit', 'Unit', readonly=True),
-        'trailer1_id'           : fields.many2one('tms.unit', 'Trailer 1', readonly=True),
-        'dolly_id'              : fields.many2one('tms.unit', 'Dolly', readonly=True),
-        'trailer2_id'           : fields.many2one('tms.unit', 'Trailer 2', readonly=True),
+        'unit_id'               : fields.many2one('fleet.vehicle', 'Unit', readonly=True),
+        'trailer1_id'           : fields.many2one('fleet.vehicle', 'Trailer 1', readonly=True),
+        'dolly_id'              : fields.many2one('fleet.vehicle', 'Dolly', readonly=True),
+        'trailer2_id'           : fields.many2one('fleet.vehicle', 'Trailer 2', readonly=True),
         'route_id'              : fields.many2one('tms.route', 'Route', readonly=True),
         'departure'             : fields.many2one('tms.place', 'Departure', readonly=True),
         'arrival'               : fields.many2one('tms.place', 'Arrival', readonly=True),
@@ -115,7 +115,7 @@ from tms_travel a
 	left join tms_waybill_line c on (c.waybill_id = b.id and c.line_type = 'product')
 	left join product_product d on (c.product_id = d.id)
 	left join tms_waybill_shipped_product e on (e.waybill_id = b.id)
-	left join tms_unit f on (a.unit_id = f.id)
+	left join fleet_vehicle f on (a.unit_id = f.id)
 order by a.shop_id, a.name, a.date
 ;
         """)
