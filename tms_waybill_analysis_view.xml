@@ -111,6 +111,6 @@
               parent="tms.menu_tms_reporting" 
               id="menu_tms_waybill_analysis"
               action="action_tms_waybill_analysis"
-			  sequence="10"/>
+			  sequence="30"/>
     </data>
 </openerp>
