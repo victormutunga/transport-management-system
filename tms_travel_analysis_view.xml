@@ -195,6 +195,13 @@
               <field name="date"/>
               <field name="partner_id"/>
               <group expand="0" string="Extended Filters...">
+                <filter string="My units" icon="terp-personnal" domain="[('supplier_unit','=',False)]" help="Vehicles of the company..."/>
+                <filter string="Supplier's Unit" icon="terp-personnal" domain="[('supplier_unit','=',True)]" help="Vehicles of the Suppliers..."/>
+                <filter string="Motorized Unit" icon="terp-personnal" domain="[('fleet_type','=','tractor')]" help="Motorized unit..."/>
+                <filter string="Trailer" icon="terp-personnal" domain="[('fleet_type','=','trailer')]" help="Trailer unit..."/>
+                <filter string="Dolly" icon="terp-personnal" domain="[('fleet_type','=','dolly')]" help="Dolly unit..."/>
+                <filter string="Other" icon="terp-personnal" domain="[('fleet_type','=','other')]" help="Other unit type..."/>
+
                 <filter string="Just Unit" icon="terp-personnal" domain="[('framework','=','unit')]" help="Just motorized unit"/>
                 <filter string="Single Trailer" icon="terp-personnal" domain="[('framework','=','single')]" help="Single Trailer"/>
                 <filter string="Double Trailer" icon="terp-personnal" domain="[('framework','=','full')]" help="Double Trailer"/>

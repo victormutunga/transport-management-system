@@ -130,6 +130,8 @@ class tms_travel_availability(osv.osv):
     _rec_name = 'name'
     _columns = {
         'name'                  : fields.many2one('fleet.vehicle', 'Unit', readonly=True),
+        'supplier_unit'         : fields.boolean('Supplier Unit', readonly=True),
+        'fleet_type'            : fields.selection([('tractor','Motorized Unit'), ('trailer','Trailer'), ('dolly','Dolly'), ('other','Other')], 'Unit Fleet Type', readonly=True),
         'shop_id'               : fields.many2one('sale.shop', 'Shop', readonly=True),
         'travel_id'             : fields.many2one('tms.travel', 'Travel', readonly=True),
         'trailer1_id'           : fields.many2one('fleet.vehicle', 'Trailer 1', readonly=True),
@@ -167,7 +169,7 @@ class tms_travel_availability(osv.osv):
         cr.execute ("""
 CREATE OR REPLACE VIEW tms_travel_availability as
 select row_number() over() as id,
-a.id as name,
+a.id as name, a.supplier_unit, a.fleet_type,
 b.shop_id, b.id travel_id, b.trailer1_id, b.dolly_id, b.trailer2_id, b.employee_id,
 case when b.date is null then current_date else b.date end date, b.date_start, b.date_end, 
 case  when b.state is null then 'free' else b.state end state,
