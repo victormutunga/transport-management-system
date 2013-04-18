@@ -9,6 +9,7 @@
             <field name="arch" type="xml">
                 <tree string="Waybill Analisis" create="false">
                     <field name="shop_id"       invisible="1"/>
+                    <field name="waybill_category" invisible="1"/>
                     <field name="sequence_id"   invisible="1"/>
                     <field name="framework"     invisible="1"/>
                     <field name="state"  />
@@ -77,6 +78,7 @@
 			           <filter string="Product"     icon="terp-accessories-archiver"    domain="[]" context="{'group_by':'product_id'}"/>
 			           <filter string="Shipped Product"     icon="terp-accessories-archiver"    domain="[]" context="{'group_by':'shipped_product_id'}"/>
 			           <filter string="Invoice"  icon="terp-personal"                domain="[]" context="{'group_by':'invoice_id'}"/>
+                       <filter string="Waybill Category"           icon="terp-purchase" domain="[]" context="{'group_by':'waybill_category'}"/>
 			    </group>
 			    <group expand="0" string="More Groups By...">
                     <filter string="State"          icon="terp-stock_symbol-selection"  domain="[]" context="{'group_by':'state'}"/>

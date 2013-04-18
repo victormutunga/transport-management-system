@@ -33,6 +33,7 @@ class tms_waybill_analysis(osv.osv):
     _rec_name = 'name'
     _columns = {
         'shop_id'               : fields.many2one('sale.shop', 'Shop', readonly=True),
+        'waybill_category'      : fields.many2one('tms.waybill.category', 'Waybill Categ', readonly=True),
         'sequence_id'           : fields.many2one('ir.sequence', 'Sequence', readonly=True),
         'state'                 : fields.selection([
                                     ('draft', 'Pending'),
@@ -89,7 +90,7 @@ class tms_waybill_analysis(osv.osv):
 
 create or replace view tms_waybill_analysis as
 select row_number() over() as id,
-a.shop_id, a.sequence_id,
+a.shop_id, a.waybill_category, a.sequence_id,
 a.state, a.name, a.date_order, 
 EXTRACT(YEAR FROM a.date_order)::INTEGER as year,
 EXTRACT(MONTH FROM a.date_order)::INTEGER as month,
