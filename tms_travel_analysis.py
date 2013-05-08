@@ -107,9 +107,18 @@ EXTRACT(WEEK FROM a.date)::INTEGER as week,
 a.state, a.employee_id, a.framework, f.unit_type_id, 
 a.unit_id, a.trailer1_id, a.dolly_id, a.trailer2_id, a.route_id, a.departure, a.arrival,
 b.id as waybill_id, b.date_order as waybill_date, b.partner_id, b.state as waybill_state, b.sequence_id as waybill_sequence, b.currency_id, b.waybill_type, b.invoice_id, b.invoice_name, b.user_id,
-c.product_id, c.price_subtotal / (select count(id) from tms_waybill_shipped_product where waybill_id=b.id)::FLOAT as amount,
+c.product_id, 
+c.price_subtotal / 
+(case (select count(id) from tms_waybill_shipped_product where waybill_id=b.id)::FLOAT
+when 0.0 then 1.0 
+else (select count(id) from tms_waybill_shipped_product where waybill_id=b.id)::FLOAT
+end) as amount,
 d.tms_category, e.product_id as shipped_product_id, 
-e.product_uom_qty / (select count(id) from tms_waybill_line where waybill_id=b.id)::FLOAT as qty
+e.product_uom_qty / 
+(case (select count(id) from tms_waybill_line where waybill_id=b.id)::FLOAT
+when 0.0 then 1
+else (select count(id) from tms_waybill_line where waybill_id=b.id)::FLOAT
+end) as qty
 from tms_travel a 
 	left join tms_waybill b on (a.id = b.travel_id and b.state in ('approved', 'confirmed'))	
 	left join tms_waybill_line c on (c.waybill_id = b.id and c.line_type = 'product')

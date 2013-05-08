@@ -101,9 +101,17 @@ d.route_id, e.departure_id, e.arrival_id,
 a.currency_id, a.waybill_type, a.invoice_id, a.invoice_name, a.user_id, c.tms_category, b.product_id, 
 d.framework, 
 f.product_id as shipped_product_id,
-sum(f.product_uom_qty) / (select count(id) from tms_waybill_line where waybill_id=a.id)::FLOAT
+sum(f.product_uom_qty) / 
+(case (select count(id) from tms_waybill_line where waybill_id=a.id)::FLOAT
+when 0.0 then 1
+else (select count(id) from tms_waybill_line where waybill_id=a.id)::FLOAT
+end)
 qty,
-sum(b.price_subtotal) / (select count(id) from tms_waybill_shipped_product where waybill_id=a.id)::FLOAT
+sum(b.price_subtotal) / 
+(case (select count(id) from tms_waybill_shipped_product where waybill_id=a.id)::FLOAT
+when 0.0 then 1
+else (select count(id) from tms_waybill_shipped_product where waybill_id=a.id)::FLOAT
+end)
  amount
 
 from tms_waybill a
