@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>	
+
+
+
+############################################################################################################################
+                            ### TREE ###
+    <record model="ir.ui.view" id="create_invoice_tree">
+            <field eval="1" name="priority"/>
+            <field name="name">create.invoice.tree</field>
+            <field name="model">create.invoice</field>
+            <field name="arch" type="xml">	
+
+                <tree string="TMS Create Invoice">
+
+			
+					
+			<field name="id" invisible="1" />
+			<field name="activity_name" />
+
+			<field name="order_id" invisible="1" />
+			<field name="order_name"  />
+
+
+			<field name="supplier_id"  />
+			
+			<field name="unit_id" />
+			<field name="driver_id" invisible="1" />
+
+			<field name="date_begin" />
+			<field name="date_end" />
+			<field name="hours" invisible="1" />
+
+			<field name="cost_manpower" />
+			<field name="cost_material" />
+			
+
+		</tree>
+	    </field>
+    </record>
+
+    <act_window name="Create Invoice by Supplier"		    
+	    res_model="create.invoice.now"
+	    src_model="create.invoice"
+	    view_mode="form"
+	    target="new"
+	    key2="client_action_multi"    
+	    id="action_view_create_invoice"/>
+
+    <record id="create_invoice_form" model="ir.ui.view">
+	<field name="name">Crear Facturas</field>
+	<field name="model">create.invoice.now</field>
+	<field name="type">form</field>
+	<field name="arch" type="xml">
+	<form string="Create Invoice">
+		<separator colspan="4" string="Create Invoice from selected Activities ?" />
+		<group col="2" colspan="4">
+			<button name="button_generate_invoices" string="Generate Invoices" colspan="1" type="object" icon="gtk-ok" />
+
+		</group>
+	</form>
+	</field>
+	</record>
+<!-- create.invoice -->
+<!-- tms.maintenance.order.activity -->
+
+
+############################################################################################################################
+                            ### SEARCH ###
+
+    <record id="view_create_invoice_search" model="ir.ui.view">
+        <field name="name">create.invoice.search</field>
+        <field name="model">create.invoice</field>
+        <field name="arch" type="xml">
+            <search string="Orders Analysis">
+
+                <group expand="1" string="Group By...">
+                    <!--<filter string="Order"     icon="terp-personal" context="{'group_by':'order_name'}"/>
+                    <filter string="Activity"  icon="terp-personal" context="{'group_by':'activity_name'}"/>
+                    <filter string="Unit"      icon="terp-personal" context="{'group_by':'unit_id'}"/>
+                    <filter string="Driver"    icon="terp-personal" context="{'group_by':'driver_id'}"/>
+
+		    
+                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id','set_visible':True}"/>
+                    <filter string="Reference Unit of Measure" icon="terp-mrp" context="{'group_by':'product_uom'}"/> -->
+                </group>
+
+            </search>
+        </field>
+    </record>
+############################################################################################################################
+                            ### ACTION ###
+
+    <record id="create_invoice_action" model="ir.actions.act_window">
+        <field name="name">Create Invoices External WorkShop</field>
+        <field name="res_model">create.invoice</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+        <field name="search_view_id" ref="view_create_invoice_search"/>
+        <field name="view_id"        ref="create_invoice_tree"/>
+    </record>
+############################################################################################################################
+                            ### MENUS ###
+
+	<menuitem id="menu_tms_invoice" name="Invoices" parent="menu_tms_maintenance_orders" />
+	<menuitem action="create_invoice_action" id="menu_create_invoice" parent="menu_tms_invoice" sequence="401"/>
+<!--
+	<menuitem id="menu_tms_invoice" name="Invoices" parent="menu_tms_maintenance" />
+	<menuitem action="create_invoice_action" id="menu_create_invoice" parent="menu_tms_invoice" sequence="401"/>
+-->
+############################################################################################################################
+    </data>
+</openerp>

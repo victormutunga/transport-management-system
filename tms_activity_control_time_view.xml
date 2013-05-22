@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>	
+
+############################################################################################################################
+                            ### FORM ###
+        <record model="ir.ui.view" id="tms_maintenance_kiosk_form">
+          <field name="name">tms.activity.control.time.form</field>
+          <field name="model">tms.activity.control.time</field>
+          <field name="type">form</field>
+          <field name="arch" type="xml">
+            <form string="State Activity" version="7.0">
+		      <header>
+                <button string="Start"    name="action_start"   states="draft"   icon="gtk-go-forward"  type="object" />
+                <button string="Pause"    name="action_pause"   states="process" icon="gtk-media-pause" type="object" /> 
+                <button string="Continue" name="action_process" states="pause"   icon="gtk-redo"        type="object" /> 
+                <button string="End"      name="action_end"     states="process" icon="gtk-quit"        type="object" />
+                <field name="state" widget="statusbar" statusbar_visible="process,pause,end"/> 
+              </header>
+		      <sheet>
+			    <group col="4">
+                  <field name="name_order" />
+                  <field name="name_activity" />
+                  <field name="hr_employee_id" />
+                  <field name="hours_mechanic" widget="float_time "/>
+                  <field name="hr_employee_user_id" />
+		        </group>
+			    <group col="4">
+                  <field name="tms_time_ids" nolabel="1" />
+		        </group>
+		      </sheet>
+		    </form><!--### Fin Etiqueta Form ###-->
+	      </field>
+        </record>
+        
+############################################################################################################################
+                            ### TREE ###
+        <record model="ir.ui.view" id="tms_maintenance_kiosk_tree">
+          <field name="name">tms.activity.control.time.tree</field>
+          <field name="model">tms.activity.control.time</field>
+          <field name="type">tree</field>
+          <field name="arch" type="xml">
+            <tree string="State Activity">
+		      <field name="hr_employee_id" />
+              <field name="name_order" />
+              <field name="name_activity" />
+              <field name="state" />
+              <field name="date_begin" />
+              <field name="date_end" />
+              <field name="hours_mechanic" widget="float_time"/>
+              <field name="hr_employee_user_id" invisible="1" />
+		      
+              <button string="Start"    name="action_start"   states="draft"   icon="gtk-go-forward"  type="object" />
+              <button string="Pause"    name="action_pause"   states="process" icon="gtk-media-pause" type="object" /> 
+              <button string="Continue" name="action_process" states="pause"   icon="gtk-redo"        type="object" /> 
+              <button string="End"      name="action_end"     states="process" icon="gtk-quit"        type="object" />
+              
+		    </tree>
+	      </field>
+        </record>
+
+############################################################################################################################
+                            ### Calendar View ###
+        <record id="view_tms_kiosk_calendar" model="ir.ui.view">
+            <field name="name">tms.activity.control.time.calendar</field>
+            <field name="model">tms.activity.control.time</field>
+            <field name="arch" type="xml">
+                <calendar string="Order Calendar" color="state" date_start="date_begin">
+                    <field name="name_order"/>
+                    <field name="hr_employee_id"/>
+                    <field name="state"/>
+                </calendar>
+            </field>
+        </record>
+
+############################################################################################################################
+                            ### ACTION ###
+    <record model="ir.actions.act_window" id="tms_maintenance_kiosk_action">
+        <field name="name">Activities by Mechanics</field>
+        <field name="res_model">tms.activity.control.time</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>    
+############################################################################################################################
+                            ### MENUS ###
+
+	
+	<menuitem action="tms_maintenance_kiosk_action" id="menu_tms_kiosk_line" name="Activities by Mechanics" parent="menu_tms_kiosk" sequence="4" />
+############################################################################################################################
+    </data>
+</openerp>

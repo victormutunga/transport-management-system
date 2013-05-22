@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>	
+
+
+
+############################################################################################################################
+                            ### TREE ###
+    <record model="ir.ui.view" id="tms_analisys_03_tree">
+            <field eval="1" name="priority"/>
+            <field name="name">tms.analisys.03.tree</field>
+            <field name="model">tms.analisys.03</field>
+            <field name="arch" type="xml">
+                <tree string="TMS Analisys 03 orders">
+
+			<field name="id" invisible="1" />
+
+			<field name="order_id"/>
+
+			<field name="activity_id" invisible="1" />
+			<field name="activity_name"/>
+
+			<field name="product_id"  />
+
+			<field name="order_name" invisible="1" />
+			<field name="product_name"  invisible="1" />
+
+			<field name="price"/>
+			<field name="quantity"/>
+			<field name="total_price"/>
+
+
+			<field name="unit_id" />
+			<field name="driver_id" invisible="1"/>
+
+		</tree>
+	    </field>
+    </record>
+
+############################################################################################################################
+                            ### GRAPH ###
+<!--
+    <record id="view_order_product_graph" model="ir.ui.view">
+         <field name="name">sale.report.graph</field>
+         <field name="model">sale.report</field>
+         <field name="arch" type="xml">
+             <graph string="Sales Analysis" type="bar">
+                 <field name="product_id"/>
+                 <field name="price_total"/>
+                 <field name="state" group="True"/>
+             </graph>
+         </field>
+    </record>
+-->
+############################################################################################################################
+                            ### SEARCH ###
+
+    <record id="view_tms_analisys_03_search" model="ir.ui.view">
+        <field name="name">tms.analisys.03.search</field>
+        <field name="model">tms.analisys.03</field>
+        <field name="arch" type="xml">
+            <search string="Products Analysis">
+
+                <group expand="1" string="Group By...">
+                    <filter string="Order"     icon="terp-personal" context="{'group_by':'order_id'}"/>
+                    <filter string="Product"     icon="terp-personal" context="{'group_by':'product_id'}"/>
+
+                    <filter string="Activity"     icon="terp-personal" context="{'group_by':'activity_name'}"/>
+
+                    <filter string="Unit"     icon="terp-personal" context="{'group_by':'unit_id'}"/>
+                    <filter string="Driver"     icon="terp-personal" context="{'group_by':'driver_id'}"/>
+
+		    <!--
+                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id','set_visible':True}"/>
+                    <filter string="Reference Unit of Measure" icon="terp-mrp" context="{'group_by':'product_uom'}"/> -->
+                </group>
+
+            </search>
+        </field>
+    </record>
+############################################################################################################################
+                            ### ACTION ###
+
+    <record id="tms_analisys_03_action" model="ir.actions.act_window">
+        <field name="name">Analisys Products Material</field>
+        <field name="res_model">tms.analisys.03</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+        <field name="search_view_id" ref="view_tms_analisys_03_search"/>
+        <field name="view_id"        ref="tms_analisys_03_tree"/>
+    </record>
+############################################################################################################################
+                            ### MENUS ###
+        <!--<menuitem id="menu_tms_maintenance" name="Tms Maintenance" />
+	<menuitem id="menu_tms_analisys_1" name="Analisys" parent="menu_tms_maintenance" />
+	<menuitem action="tms_analisys_1_action" id="menu_tms_analisys_1_line" name="Analisys " parent="menu_tms_analisys_1" sequence="6" />
+
+        <menuitem id="base.next_id_64" name="Sales" parent="base.menu_reporting" sequence="1" groups="base.group_sale_manager"/>
+        <menuitem action="action_order_report_all" id="menu_report_product_all" parent="base.next_id_64" sequence="10"/>
+		-->
+	
+    	<!--<menuitem action="tms_analisys_03_action" id="menu_tms_analisys_03" parent="base.next_id_64" sequence="400"/>-->
+	<menuitem id="menu_tms_maintenance_Analisys" name="Tms Maintenance Analisys" parent="menu_tms_maintenance" />
+	<menuitem action="tms_analisys_03_action" id="menu_tms_analisys_03" parent="menu_tms_maintenance_Analisys" sequence="402"/>
+############################################################################################################################
+    </data>
+</openerp>

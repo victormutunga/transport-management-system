@@ -1,0 +1,17 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_tms_maintenance_order_manager,tms.maintenance.order,model_tms_maintenance_order,tms_group_order_Manager,1,1,1,1
+access_tms_maintenance_order_usuer,tms.maintenance.order,model_tms_maintenance_order,tms_group_order_User,1,1,0,0
+access_tms_maintenance_activity_manager,tms.maintenance.order.activity,model_tms_maintenance_order_activity,tms_group_activity_Manager,1,1,1,1
+access_tms_maintenance_activity_usuer,tms.maintenance.order.activity,model_tms_maintenance_order_activity,tms_group_activity_User,1,1,0,0
+access_tms_maintenance_product_line_manager,tms.product.line,model_tms_product_line,tms_group_product_line_Manager,1,1,1,1
+access_tms_maintenance_product_line_usuer,tms.product.line,model_tms_product_line,tms_group_product_line_User,1,1,0,0
+access_tms_maintenance_create_invoice_manager,create.invoice,model_create_invoice,tms_group_create_invoice_Manager,1,1,1,1
+access_tms_maintenance_create_invoice_usuer,create.invoice,model_create_invoice,tms_group_create_invoice_User,1,1,0,0
+access_analisis_01,tms.analisys.01,model_tms_analisys_01,tms_group_analisis_view,1,1,1,1
+access_analisis_02,tms.analisys.02,model_tms_analisys_02,tms_group_analisis_view,1,1,1,1
+access_analisis_03,tms.analisys.03,model_tms_analisys_03,tms_group_analisis_view,1,1,1,1
+access_analisis_04,tms.analisys.04,model_tms_analisys_04,tms_group_analisis_view,1,1,1,1
+access_tms_group_kct_Manager,tms.activity.control.time,model_tms_activity_control_time,tms_group_kct_Manager,1,1,1,1
+access_tms_group_kct_User,tms.activity.control.time,model_tms_activity_control_time,tms_group_kct_User,1,1,0,0
+access_tms_group_kc_Manager,tms.time,model_tms_time,tms_group_kc_Manager,1,1,1,1
+access_tms_group_kc_User,tms.time,model_tms_time,tms_group_kc_User,1,1,0,0

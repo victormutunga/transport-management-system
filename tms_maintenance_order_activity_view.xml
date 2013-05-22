@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>	
+
+############################################################################################################################
+                            ### FORM ###
+    <record model="ir.ui.view" id="tms_maintenance_order_activity_form">
+            <field name="name">tms.maintenance.order.activity.form</field>
+            <field name="model">tms.maintenance.order.activity</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Order of Maintenance Activity" version="7.0">
+		    <header>
+                        <button string="Process"  name="action_process"  states="pending" icon="gtk-go-forward" type="object" />  
+                        <button string="Done"     name="action_done"     states="process" icon="gtk-apply" type="object" /> 
+                        <button string="Cancel"   name="action_cancel"   states="pending" icon="gtk-cancel" type="object" />
+                        <field                    name="state" widget="statusbar" statusbar_visible="cancel,pending,process,done"/> 
+                    </header>
+		    <sheet>
+			<group col="4" attrs="{'readonly':[('state_order','in',('done','cancel'))]}" >
+                        	<field name="product_id" on_change="on_change_product_id(product_id)" attrs="{'readonly':[('state','in',('process','done','cancel'))]}" />
+				<!--<field name="product_id" attrs="{'readonly':[('state','in',('process','done','cancel'))]}" />
+                        	<field name="id" readonly="1"/>-->
+
+				<field name="external_workshop" on_change="on_change_external_workshop(external_workshop)" attrs="{'readonly':[('state','in',('process','done','cancel'))]}" />
+				<field name="invoice_id" attrs="{'invisible':[('external_workshop','in',False)]}" />
+				<field name="supplier_id" attrs="{'invisible':[('external_workshop','in',False)], 'readonly':[('state','in',('process','done','cancel'))], 'required':[('external_workshop','in',True)]}" />
+				<field name="breakdown" attrs="{'readonly':[('state','in',('process','done','cancel'))], 'invisible':[('external_workshop','in',False)]}" />
+
+				<newline/>
+				<field name="cost_service_external" attrs="{'readonly':[('state','in',('done','cancel'))], 'invisible':[('external_workshop','in',False)]}" />
+				<field name="parts_cost_external"   attrs="{'readonly':[('state','in',('done','cancel'))], 'invisible':[('breakdown','in',True)]}" />
+
+				<newline/>
+                        	<field name="hours_estimated"  widget="float_time"/>
+				<!-- attrs="{'readonly':[('state','in',('process','done','cancel'))]}" -->
+                        	<field name="hours_real"  widget="float_time" />
+				<!-- attrs="{'readonly':[('state','in',('done','cancel'))]}" -->
+
+				<field name="cost_service" />
+				<field name="parts_cost" />
+
+				<newline/>
+				<field name="date_start" attrs="{'readonly':[('state','in',('process','done','cancel'))]}" />
+				<field name="date_start_real" />
+				<field name="date_end" attrs="{'readonly':[('state','in',('process','done','cancel'))]}" />
+				<field name="date_end_real" />
+				
+
+				<newline/>
+                        	<field name="maintenance_order_id" invisible="True" />
+                        	<field name="shop_id" invisible="True" />
+		    	</group>
+			<group col="4">
+				<!--<button string="Calculate Cost Service"  name="calculate_cost_service"  states="draft,pending,process" icon="gtk-go-forward" type="object" /> 
+				<button string="Calculate Parts Cost"  name="calculate_parts_cost"  states="draft,pending,process" icon="gtk-go-forward" type="object" />  -->
+			</group>
+
+<!--                        ### FORM ###  ### PESTAÑAS PAGE ###     -->
+			<group >
+		        <notebook attrs="{'readonly':[('state_order','in',('done','cancel'))]}" >
+				<page string="Employee Mechanics" attrs="{'invisible':[('external_workshop','in',True)]}" >
+				
+				<field name="mechanic_ids" attrs="{'readonly':[('state','in',('done', 'process','cancel'))]}" nolabel="1">
+                            		<tree string="Mechanics">
+                                		<field name="name" />
+                                		<field name="job_id">
+							<tree string="Job">
+		                                		<field name="name" />
+                            				</tree> 
+						</field>
+
+                            		</tree> 
+				</field>
+
+				</page>
+			</notebook>
+			<notebook>
+				<page string="List of material to use for activity" attrs="{'invisible':[('breakdown','in',False)]}" >
+					<group col="2">
+						<field name="product_line_ids" attrs="{'readonly':[('state_order','in',('done','cancel'))]}" nolabel="1" />
+						<newline/>
+						<newline/>
+						<newline/>
+						<newline/>
+						<field name="state_order" invisible="1" />
+					</group>
+				</page>
+			</notebook>
+			<!--<notebook>
+				<page string="List of material to use for activity" attrs="{'invisible':[('breakdown','in',False)]}" >
+					<group col="2">
+						<field name="product_line_ids" attrs="{'readonly':[('state','in',('done','cancel'))]}" nolabel="1" />
+					</group>
+				</page>
+			</notebook>-->
+			</group>
+		    </sheet>
+<!--                        ### FORM ###  ### Intrachat ###     -->
+		    <div class="oe_chatter">
+                    	<field name="message_follower_ids" widget="mail_followers"/>
+                    	<field name="message_ids" widget="mail_thread"/> 
+                    </div>
+		</form>
+	    </field>
+    </record>
+
+############################################################################################################################
+                            ### TREE ###
+    <record model="ir.ui.view" id="tms_maintenance_order_activity_tree">
+            <field name="name">tms.maintenance.order.activity.tree</field>
+            <field name="model">tms.maintenance.order.activity</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Order of Maintenance Activity">
+                        	<field name="state" />
+                        	<field name="product_id" /><!-- Actividad -->
+
+                        	<field name="hours_estimated"  />
+                        	<field name="hours_real"  />
+
+				<field name="cost_service" />
+				<field name="parts_cost" />
+
+				<field name="external_workshop" />
+		</tree>
+	    </field>
+    </record>
+
+<!--
+############################################################################################################################
+                            ### ACTION ###
+    <record model="ir.actions.act_window" id="tms_maintenance_order_action">
+        <field name="name">Order Maintenace TMS</field>
+        <field name="res_model">tms.maintenance.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>    
+############################################################################################################################
+                            ### MENUS ###
+        <menuitem id="menu_tms_maintenance" name="Tms Maintenance" />
+	<menuitem id="menu_tms_maintenance_orders" name="Orders" parent="menu_tms_maintenance" />
+	
+	<menuitem action="tms_maintenance_order_action" id="menu_tms_maintenance_order_line" name="TMS Maintenance Order"
+ parent="menu_tms_maintenance_orders" sequence="1" />
+############################################################################################################################
+-->
+    </data>
+</openerp>

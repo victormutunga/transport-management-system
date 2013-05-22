@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>	
+
+
+
+############################################################################################################################
+                            ### TREE ###
+    <record model="ir.ui.view" id="tms_analisys_02_tree">
+            <field eval="1" name="priority"/>
+            <field name="name">tms.analisys.02.tree</field>
+            <field name="model">tms.analisys.02</field>
+            <field name="arch" type="xml">
+                <tree string="TMS Analisys 02 orders">
+
+			<field name="id" invisible="1" />
+			<field name="activity_name" />
+
+			<field name="order_id" invisible="1" />
+			<field name="order_name" invisible="0" />
+			
+			<field name="unit_id" />
+			<field name="driver_id" invisible="1" />
+
+			<field name="date_begin" />
+			<field name="date_end" />
+			<field name="hours" />
+
+			<field name="cost_manpower" />
+			<field name="cost_material" />         
+
+			<field name="external_workshop" />
+			<field name="invoice_name" invisible="1" />
+			<!--<field name="supplier_invoice_number" />-->
+			<field name="invoice_id" invisible="1" />
+
+			
+			<field name="partner_id" invisible="1" />			
+			<field name="partner_name" />
+
+		</tree>
+	    </field>
+    </record>
+
+############################################################################################################################
+                            ### GRAPH ###
+<!--
+    <record id="view_order_product_graph" model="ir.ui.view">
+         <field name="name">sale.report.graph</field>
+         <field name="model">sale.report</field>
+         <field name="arch" type="xml">
+             <graph string="Sales Analysis" type="bar">
+                 <field name="product_id"/>
+                 <field name="price_total"/>
+                 <field name="state" group="True"/>
+             </graph>
+         </field>
+    </record>
+-->
+############################################################################################################################
+                            ### SEARCH ###
+
+    <record id="view_tms_analisys_02_search" model="ir.ui.view">
+        <field name="name">tms.analisys.02.search</field>
+        <field name="model">tms.analisys.02</field>
+        <field name="arch" type="xml">
+            <search string="Orders Analysis">
+
+                <group expand="1" string="Group By...">
+                    <filter string="Order"     icon="terp-personal" context="{'group_by':'order_name'}"/>
+                    <filter string="Activity"  icon="terp-personal" context="{'group_by':'activity_name'}"/>
+                    <filter string="Unit"      icon="terp-personal" context="{'group_by':'unit_id'}"/>
+                    <filter string="Driver"    icon="terp-personal" context="{'group_by':'driver_id'}"/>
+
+                    <filter string="External workshop"    icon="terp-personal" context="{'group_by':'external_workshop'}"/>
+                    <!--<filter string="Invoice"              icon="terp-personal" context="{'group_by':'invoice_id'}"/>-->
+                    <filter string="Partner"              icon="terp-personal" context="{'group_by':'partner_id'}"/>
+                    <filter string="Supplier Invoice Number" icon="terp-personal" context="{'group_by':'supplier_invoice_number'}"/>
+
+		    <!--
+                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id','set_visible':True}"/>
+                    <filter string="Reference Unit of Measure" icon="terp-mrp" context="{'group_by':'product_uom'}"/> -->
+                </group>
+
+
+                <!--###################### Filtros ###############################################################-->
+                <filter string="External True" icon="terp-gtk-media-pause" domain="[('external_workshop','=','True')]"/>
+
+            </search>
+        </field>
+    </record>
+############################################################################################################################
+                            ### ACTION ###
+
+    <record id="tms_analisys_02_action" model="ir.actions.act_window">
+        <field name="name">Analisys Activity</field>
+        <field name="res_model">tms.analisys.02</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+        <field name="search_view_id" ref="view_tms_analisys_02_search"/>
+        <field name="view_id"        ref="tms_analisys_02_tree"/>
+    </record>
+############################################################################################################################
+                            ### MENUS ###
+        <!--<menuitem id="menu_tms_maintenance" name="Tms Maintenance" />
+	<menuitem id="menu_tms_analisys_1" name="Analisys" parent="menu_tms_maintenance" />
+	<menuitem action="tms_analisys_1_action" id="menu_tms_analisys_1_line" name="Analisys " parent="menu_tms_analisys_1" sequence="6" />
+
+        <menuitem id="base.next_id_64" name="Sales" parent="base.menu_reporting" sequence="1" groups="base.group_sale_manager"/>
+        <menuitem action="action_order_report_all" id="menu_report_product_all" parent="base.next_id_64" sequence="10"/>
+		-->
+	
+    	<!--<menuitem action="tms_analisys_02_action" id="menu_tms_analisys_02" parent="base.next_id_64" sequence="400"/>-->
+	<menuitem id="menu_tms_maintenance_Analisys" name="Tms Maintenance Analisys" parent="menu_tms_maintenance" />
+	<menuitem action="tms_analisys_02_action" id="menu_tms_analisys_02" parent="menu_tms_maintenance_Analisys" sequence="401"/>
+############################################################################################################################
+    </data>
+</openerp>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>	
+
+############################################################################################################################
+                            ### MENUS ###
+        <menuitem id="menu_tms_maintenance" name="Fleet Maintenance" />
+	    <menuitem id="menu_tms_maintenance_orders" name="Fleet Maintenance" parent="menu_tms_maintenance" />
+
+	    <menuitem action="fleet.fleet_vehicle_odometer_act" parent="menu_tms_maintenance_orders" id="tms_maintenance_fleet_vehicle_odometer_menu" groups="fleet.group_fleet_user" sequence="90"/>
+
+
+	    <menuitem id="menu_tms_kiosk" name="Tasks by Mechanics" parent="menu_tms_maintenance" />
+	    <menuitem id="menu_tms_maintenance_Analisys" name="Tms Maintenance Analisys" parent="menu_tms_maintenance" />
+	    <menuitem id="menu_tms_maintenance_config" name="Configuration" parent="menu_tms_maintenance" />
+
+        <menuitem id="menu_tms_maintenance_config_product" name="Products" parent="menu_tms_maintenance_config" sequence="2"/>
+        <menuitem name="Products by Category" id="menu_tms_maintenance_product_by_category_stock_form" action="product.product_category_action"
+            parent="menu_tms_maintenance_config_product" sequence="0"/>
+
+
+
+
+############################################################################################################################
+### Cambios en la vista de Product ###                                                                                                                                                                                                                                                                                                                                             
+
+
+        <record id="tms_maintenance_product_search_form_view" model="ir.ui.view">
+            <field name="name">tms_maintenance.product.search.form</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <search string="Product">
+                   <field name="name" string="Product" filter_domain="['|',('name','ilike',self),('default_code','ilike',self)]"/>
+                   <field name="categ_id" string="Category" />
+                   <filter string="Service Program" icon="terp-accessories-archiver" domain="[('tms_category','=','maint_service_program')]"/>
+                   <filter string="Service Type" icon="terp-accessories-archiver" domain="[('tms_category','=','maint_service_type')]"/>
+                   <filter string="Spare Parts" icon="terp-accessories-archiver" domain="[('tms_category','=','maint_part')]"/>
+                   <filter string="Tasks" icon="terp-accessories-archiver" domain="[('tms_category','=','maint_activity')]"/>
+                   <separator/>
+                   <field name="categ_id"/>
+                   <group  expand='0' string='Group by...'>
+                       <filter string='MRO Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'tms_category'}"/>
+                       <filter string='Category' icon="terp-mrp" domain="[]" context="{'group_by' : 'categ_id'}"/>
+                   </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="tms_maintenance_product_product_tree_view" model="ir.ui.view">
+            <field name="name">tms_maintenance.product.product.tree</field>
+            <field name="model">product.product</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <tree colors="red:virtual_available&lt;0;blue:virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete');black:virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')" string="Products">
+                    <field name="default_code"/>
+                    <field name="name"/>
+                    <field name="categ_id" invisible="1"/>
+                    <field name="tms_category" invisible="1"/>
+                    <field name="type" invisible="1"/>
+                    <field name="uom_id" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="qty_available"/>
+                    <field name="virtual_available"/>
+                    <field name="lst_price"/>
+                    <field name="price" invisible="not context.get('pricelist',False)"/>
+                    <field name="standard_price" invisible="1"/>
+                    <field name="state"/>
+                    <field name="company_id" groups="base.group_multi_company" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="tms_maintenance_product_normal_action" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_id" ref="tms_maintenance_product_product_tree_view"/>
+            <field name="search_view_id" ref="tms_maintenance_product_search_form_view"/>
+            <field name="domain">[('tms_category','in',('maint_service_program','maint_service_type','maint_part','maint_activity'))]</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new Maintenance product.
+              </p><p>
+                You must define a product for everything related to MRO.
+              </p>
+            </field>
+        </record>
+
+
+        <menuitem action="tms_maintenance_product_normal_action" id="menu_tms_maintenance_config_product_product" parent="menu_tms_maintenance_config_product" sequence="1"/>
+
+
+
+
+        <menuitem
+            action="product.product_category_action_form" id="menu_tms_maintenance_config_product_product_category"
+            parent="menu_tms_maintenance_config_product" sequence="0"/>
+
+        <menuitem id="menu_tms_maintenance_config_unit" name="Vehicles" parent="menu_tms_maintenance_config" sequence="3"/>
+
+
+
+<!-- Menu for tms.unit.category (Types, Brands, Models, Motor Type for Transportation Units) -->
+    <menuitem name="Vehicles Related Catalogs" 
+              parent="menu_tms_maintenance_config_unit" 
+              id="menu_tms_maintenance_config_unit_category_form" 
+              action="tms.open_view_tms_unit_category_form"
+	      sequence="20"/>
+
+<!-- Menu for fleet.vehicle (Transportation Units) -->
+    <menuitem name="Vehicles" 
+              parent="menu_tms_maintenance_config_unit" 
+              id="menu_tms_maintenance_config_unit_form" 
+              action="tms.open_view_tms_unit_form"
+	      sequence="21"/>
+
+
+
+
+<!-- Menu for tms.unit.active_history -->
+    <menuitem name="Activate/Inactivate Units" 
+              parent="menu_tms_maintenance_config_unit" 
+              id="menu_tms_maintenance_config_unit_active_history_form" 
+              action="tms.open_view_tms_unit_active_history_form"
+		sequence="23"/>
+
+<!-- Menu for tms.unit.red_tape -->
+    <menuitem name="Vehicle Red Tape" 
+              parent="menu_tms_maintenance_config_unit" 
+              id="menu_tms_maintenance_config_unit_red_tape_form" 
+              action="tms.open_view_tms_unit_red_tape_form"
+		sequence="24"/>
+
+<!-- Take some config menu from Fleet module -->
+        <menuitem action="fleet.fleet_vehicle_model_act" parent="menu_tms_maintenance_config_unit" id="tms_maintenance_fleet_vehicle_model_menu" sequence="10"/>
+        <menuitem action="fleet.fleet_vehicle_model_brand_act" parent="menu_tms_maintenance_config_unit" id="tms_maintenance_fleet_vehicle_model_brand_menu" sequence="11"/>
+        <menuitem action="fleet.fleet_vehicle_state_act" parent="menu_tms_maintenance_config_unit" id="tms_maintenance_fleet_vehicle_state_menu" groups="fleet.group_fleet_manager" sequence="12"/>
+
+<!-- Menu for fleet.vehicle.odometer.device -->
+    <menuitem name="Vehicle Odometer Device" 
+              parent="menu_tms_maintenance_config_unit" 
+              id="menu_tms_maintenance_config_fleet_vehicle_odometer_device_form" 
+              action="tms.open_view_fleet_vehicle_odometer_device_form"
+		sequence="24"/>
+
+
+
+
+    </data>
+</openerp>

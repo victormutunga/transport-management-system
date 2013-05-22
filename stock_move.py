@@ -1,0 +1,163 @@
+# -*- encoding: utf-8 -*-
+##############################################################################
+#    
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#
+##############################################################################
+
+
+from osv import osv, fields
+import netsvc
+import pooler
+from tools.translate import _
+import decimal_precision as dp
+from osv.orm import browse_record, browse_null
+import time
+from datetime import datetime, date
+
+# Agregamos manejar una secuencia por cada tienda para controlar viajes 
+class stock_move(osv.osv):
+    _name = "stock.move"
+    _inherit = "stock.move"
+    
+    _columns = {
+            'tms_product_line_id': fields.many2one('tms.product.line', 'Product Line', readonly=True),
+        }
+
+    def get_current_instance(self, cr, uid, id):
+        lines = self.browse(cr,uid,id)
+        obj = None
+        for i in lines:
+            obj = i
+        return obj  
+
+    ##########################################################################################
+    ##########################################################################################
+    ##########################################################################################
+    ##########################################################################################
+    ##########################################################################################
+
+    def action_confirm(self, cr, uid, ids, context=None):
+        print '==============================================  stock_move----action_confirm'
+        print '==============================================  stock_move----action_confirm'
+        print '==============================================  stock_move----action_confirm'
+        arreglo = super(stock_move, self).action_confirm(cr, uid, ids, context)
+        for move_line in self.browse(cr,uid,ids):
+            if move_line['tms_product_line_id']: 
+                if move_line.state in ('confirmed'): 
+                    move_line['tms_product_line_id'].change_state_to_pending(context)
+        return arreglo    
+
+    def cancel_assign(self, cr, uid, ids, context=None): ##creo que ya quedo
+        print '==============================================  stock_move----cancel_assign' 
+        print '==============================================  stock_move----cancel_assign' 
+        print '==============================================  stock_move----cancel_assign'  
+        arreglo = super(stock_move, self).cancel_assign(cr, uid, ids, context) 
+        for move_line in self.browse(cr,uid,ids):
+            if move_line['tms_product_line_id']:
+                if move_line.state in ('cancel'):   
+                    move_line['tms_product_line_id'].change_state_to_cancel(context)
+        return arreglo   
+
+    def action_cancel(self, cr, uid, ids, context=None):
+        print '==============================================  stock_move----action_cancel'
+        print '==============================================  stock_move----action_cancel'
+        print '==============================================  stock_move----action_cancel'
+        band = super(stock_move, self).action_cancel(cr, uid, ids, context)
+        for move_line in self.browse(cr, uid, ids, context=context):
+            #if move_line.state in ('confirmed', 'waiting', 'assigned', 'draft'):
+            if move_line.state in ('cancel'):
+                if move_line['tms_product_line_id']:
+                    move_line['tms_product_line_id'].change_state_to_cancel() 
+        return band
+
+    def force_assign(self, cr, uid, ids, context=None): ##creo que ya quedo    
+        print '==============================================  stock_move----force_assign'
+        print '==============================================  stock_move----force_assign'
+        print '==============================================  stock_move----force_assign'
+        arreglo = super(stock_move, self).force_assign(cr, uid, ids, context)
+        for move_line in self.browse(cr,uid,ids):
+            if move_line['tms_product_line_id']: 
+                    if move_line.state in ['assigned']: 
+                        move_line['tms_product_line_id'].change_state_to_pending(context)
+        return arreglo   
+
+    def action_done(self, cr, uid, ids, context=None): ##creo que ya quedo
+        print '==============================================  stock_move----action_done'
+        print '==============================================  stock_move----action_done'
+        print '==============================================  stock_move----action_done'
+        band = super(stock_move, self).action_done(cr, uid, ids, context)
+        for move_line in self.browse(cr,uid,ids):
+            if move_line['tms_product_line_id']:  
+                if move_line.state in ['done']:
+                    move_line['tms_product_line_id'].change_state_to_delivered(context)
+                    move_line['tms_product_line_id'].product_line_set_list_price()
+        return band
+
+    def action_assign(self, cr, uid, ids, *args):
+        print '==============================================  stock_move----action_assign'
+        print '==============================================  stock_move----action_assign'
+        print '==============================================  stock_move----action_assign'
+        check_assign = super(stock_move, self).action_assign(cr, uid, ids, *args)
+        return check_assign
+
+    ##########################################################################################
+    ##########################################################################################
+    ##########################################################################################
+    ##########################################################################################
+    ##########################################################################################
+
+    #def action_confirm(self, cr, uid, ids, context=None): ##creo que ya quedo
+    #    arreglo = super(stock_move, self).action_confirm(cr, uid, ids, context)
+    #    return arreglo    
+
+    #def cancel_assign(self, cr, uid, ids, context=None): ##creo que ya quedo
+    #    for move_line in self.browse(cr,uid,ids):
+    #        if move_line['tms_product_line_id']:
+    #            move_line['tms_product_line_id'].change_state_to_pending(context) 
+    #    arreglo = super(stock_move, self).cancel_assign(cr, uid, ids, context)   
+    #    return arreglo   
+
+    #def action_cancel(self, cr, uid, ids, context=None): ##Lo invoca stock_picking desde action_cancel(self, cr, uid, ids, context=None)
+    #    for move_line in self.browse(cr, uid, ids, context=context):
+    #        if move_line.state in ('confirmed', 'waiting', 'assigned', 'draft'):
+    #            if move_line['tms_product_line_id']:
+    #                move_line['tms_product_line_id'].change_state_to_cancel() 
+    #    band = super(stock_move, self).action_cancel(cr, uid, ids, context)
+    #    return band
+
+    #def force_assign(self, cr, uid, ids, context=None): ##creo que ya quedo
+    #    for move_line in self.browse(cr,uid,ids):
+    #        if move_line['tms_product_line_id']:  
+    #            move_line['tms_product_line_id'].change_state_to_pending(context)      
+    #    arreglo = super(stock_move, self).force_assign(cr, uid, ids, context)
+    #    return arreglo   
+
+    #def action_done(self, cr, uid, ids, context=None): ##creo que ya quedo
+    #    band = super(stock_move, self).action_done(cr, uid, ids, context)
+    #    for move_line in self.browse(cr,uid,ids):
+    #        if move_line['tms_product_line_id']:  
+    #            if move_line.state in ['done']:
+    #                move_line['tms_product_line_id'].change_state_to_delivered(context)
+    #    return band
+
+
+
+
+stock_move()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

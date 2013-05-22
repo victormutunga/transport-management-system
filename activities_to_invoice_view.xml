@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>	
+
+############################################################################################################################
+                            ### TREE ###
+    <record model="ir.ui.view" id="activities_to_invoice_tree">
+            <field name="name">tms.maintenance.order.activity.tree</field>
+            <field name="model">tms.maintenance.order.activity</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Invoice Activity">
+			
+		    
+                    <field name="state" />
+                    <field name="product_id" /><!-- Actividad -->
+
+                    <field name="hours_estimated"  />
+                    <field name="hours_real"  />
+
+	            <field name="cost_service" />
+		    <field name="parts_cost" />
+
+
+		    <field name="maintenance_order_id" />
+		    <field name="external_workshop" domain="[('external_workshop','=',True)]" />
+		    <field name="invoiced" />
+		    <field name="invoice_id" />
+                    
+		    
+                    <!--<button string="Invoce"    name="action_start"   icon="gtk-go-forward"  type="object" />-->
+                    
+		</tree>
+	    </field>
+    </record>
+############################################################################################################################
+                            ### ACTION ###
+    <record model="ir.actions.act_window" id="activities_to_invoice_action">
+        <field name="name">Activities to Invoices</field>
+        <field name="res_model">tms.maintenance.order.activity</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>    
+############################################################################################################################
+                            ### MENUS ###
+	<menuitem id="menu_activities_to_invoice" name="Invoice" parent="menu_tms_maintenance" />
+	
+	<menuitem action="activities_to_invoice_action" id="menu_activities_to_invoice_line" name="Activities to Invoice" parent="menu_activities_to_invoice" sequence="4" />
+############################################################################################################################
+    </data>
+</openerp>
