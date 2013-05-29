@@ -21,15 +21,9 @@
 
 import product
 
-#import tms_agreement
-#import tms
-#import tms_expense
-#import sale
-#import tms_waybill
-#import tms_factor
-
 import tms_maintenance_order
 import tms_maintenance_order_activity
+import tms_maintenance
 import tms_product_line
 import sale
 import stock_picking

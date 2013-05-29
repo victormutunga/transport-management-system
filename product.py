@@ -50,6 +50,7 @@ class product_product(osv.osv):
                                           ('maint_part','Spare Part (MRO Related)'),
                                           ('maint_activity','Task (MRO)'),
                                           ('maint_service_type','Work Order Types (MRO)'),
+                                          ('maint_service_cycle','Service Cycle (MRO)'),
                                           ('maint_service_program','Service Program (MRO)'),
                                           ], 'TMS Type', required=True,
                                           help="""Product Type for using with TMS Module
@@ -67,14 +68,15 @@ class product_product(osv.osv):
   - Spare Part (MRO): Parts used for maintenance services.
   - Task (MRO): Tasks related to maintenance services.
   - Work Order Types (MRO): Different types of maintenance services
+  - Service Cycles (MRO): Maintenance Cycles
   - Service Program (MRO): Different Service Programs
   All of these products (except for MRO Spare Part) MUST be used as a service because they will never interact with Inventory.
-"""),
+""", translate=True),
 
         'mro_activity_ids' : fields.many2many('product.product',  'tms_maintenance_program_activity_rel',  'product_id', 'activity_id',  'Tasks', domain=[('tms_category','=','maint_activity')]),
         'mro_frequency'    : fields.integer('Frequency'),
         'mro_preventive'   : fields.boolean('Preventive MRO'),
-        'mro_program_ids'  : fields.many2many('product.product',  'tms_maintenance_program_program_rel',  'program_id', 'program_child_id',  'Service Programs', domain=[('tms_category','=','maint_service_program')]),
+        'mro_cycle_ids'    : fields.many2many('product.product',  'tms_maintenance_cycle_program_rel',  'program_id', 'program_child_id',  'Service Programs', domain=[('tms_category','=','maint_service_cycle')]),
         }
 
 

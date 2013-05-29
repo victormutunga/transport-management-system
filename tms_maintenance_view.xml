@@ -20,54 +20,73 @@
 
 
 
+############################################################################################################################
+### Cambios en la vista del Vehiculo ###
+        <record id="fleet_vehicle_form_inherit_tms_maintenance" model="ir.ui.view">
+            <field name="name">fleet.vehicle.tms_maintenance.form</field>
+            <field name="model">fleet.vehicle</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="tms.fleet_vehicle_form_inherit_tms"/>
+            <field name="arch" type="xml">
+              <button name="return_action_to_open" position="after">
+                <button name="return_action_to_open_tms" type="object" context="{'xml_id':'open_view_tms_unit_red_tape_form'}" string="Red Tapes" help="Show Red Tapes (Gov Formalities) logs for this vehicle" />
+                <button name="return_action_to_open_tms" type="object" context="{'xml_id':'open_view_tms_unit_active_history_for'}" string="Active/Inactivate Units" help="Show Active/Inactivate logs for this vehicle" />
+              </button>
+
+
+              <notebook position="inside">
+                <page string="MRO">
+                  <group col="4" colspan="4">
+                    <separator string="Tires info" colspan="4" />
+                    <field name="tires_number" />
+                    <field name="tires_extra" />
+                    <separator string="Maintenance Program" colspan="4" />
+                    <field name="mro_program_id" colspan="4" />
+                    <group col="2" colspan="2">
+                      <field name="cycle_last_service" />
+                      <field name="date_last_service" />
+                      <field name="main_odometer_last_service" />
+                      <field name="odometer_last_service" />
+                      <field name="sequence_last_service" />
+                      <field name="last_preventive_service" />
+                    </group>
+                    <group col="2" colspan="2">
+                      <field name="cycle_next_service" />
+                      <field name="date_next_service" />
+                      <field name="main_odometer_next_service" />
+                      <field name="odometer_next_service" />
+                      <field name="sequence_next_service" />
+                    </group>
+                    <separator string="Cycle Sequence" colspan="2" />
+                    <button name="button_create_mro_program" type="object" string="MRO Program" confirm="Are you sure you want to create Program Sequence for this record? All previous records will be deleted !!!"/>
+                    <field name="mro_cycle_ids" colspan="4" nolabel="1">
+                      <tree>
+                        <field name="mro_cycle_id" />
+                        <field name="trigger" />
+                        <field name="sequence" />
+                        <field name="mro_service_order_id" />
+                        <field name="mro_service_order_date" />                        
+                      </tree>
+                      <form>
+                        <group col="4" colspan="4">
+                          <field name="mro_cycle_id" colspan="4"/>
+                          <field name="trigger" />
+                          <field name="sequence" />
+                          <field name="mro_service_order_id" />
+                          <field name="mro_service_order_date" />
+                        </group>
+                      </form>
+                    </field>
+                  </group>
+                </page>
+              </notebook>
+            </field>
+        </record>
+
+
 
 ############################################################################################################################
-### Cambios en la vista de Product ###                                                                                                                                                                                                                                                                                                                                             
-
-
-        <record id="tms_maintenance_product_search_form_view" model="ir.ui.view">
-            <field name="name">tms_maintenance.product.search.form</field>
-            <field name="model">product.product</field>
-            <field name="arch" type="xml">
-                <search string="Product">
-                   <field name="name" string="Product" filter_domain="['|',('name','ilike',self),('default_code','ilike',self)]"/>
-                   <field name="categ_id" string="Category" />
-                   <filter string="Service Program" icon="terp-accessories-archiver" domain="[('tms_category','=','maint_service_program')]"/>
-                   <filter string="Service Type" icon="terp-accessories-archiver" domain="[('tms_category','=','maint_service_type')]"/>
-                   <filter string="Spare Parts" icon="terp-accessories-archiver" domain="[('tms_category','=','maint_part')]"/>
-                   <filter string="Tasks" icon="terp-accessories-archiver" domain="[('tms_category','=','maint_activity')]"/>
-                   <separator/>
-                   <field name="categ_id"/>
-                   <group  expand='0' string='Group by...'>
-                       <filter string='MRO Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'tms_category'}"/>
-                       <filter string='Category' icon="terp-mrp" domain="[]" context="{'group_by' : 'categ_id'}"/>
-                   </group>
-                </search>
-            </field>
-        </record>
-
-        <record id="tms_maintenance_product_product_tree_view" model="ir.ui.view">
-            <field name="name">tms_maintenance.product.product.tree</field>
-            <field name="model">product.product</field>
-            <field eval="7" name="priority"/>
-            <field name="arch" type="xml">
-                <tree colors="red:virtual_available&lt;0;blue:virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete');black:virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')" string="Products">
-                    <field name="default_code"/>
-                    <field name="name"/>
-                    <field name="categ_id" invisible="1"/>
-                    <field name="tms_category" invisible="1"/>
-                    <field name="type" invisible="1"/>
-                    <field name="uom_id" string="Unit of Measure" groups="product.group_uom"/>
-                    <field name="qty_available"/>
-                    <field name="virtual_available"/>
-                    <field name="lst_price"/>
-                    <field name="price" invisible="not context.get('pricelist',False)"/>
-                    <field name="standard_price" invisible="1"/>
-                    <field name="state"/>
-                    <field name="company_id" groups="base.group_multi_company" invisible="1"/>
-                </tree>
-            </field>
-        </record>
+### Cambios en la vista de Product ###
 
         <record id="tms_maintenance_product_normal_action" model="ir.actions.act_window">
             <field name="name">Products</field>
@@ -75,9 +94,9 @@
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,kanban</field>
-            <field name="view_id" ref="tms_maintenance_product_product_tree_view"/>
+            <field name="view_id" ref="product.product_product_tree_view"/>
             <field name="search_view_id" ref="tms_maintenance_product_search_form_view"/>
-            <field name="domain">[('tms_category','in',('maint_service_program','maint_service_type','maint_part','maint_activity'))]</field>
+            <field name="domain">[('tms_category','in',('maint_service_program','maint_service_type','maint_service_cycle','maint_part','maint_activity'))]</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to define a new Maintenance product.

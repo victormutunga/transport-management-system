@@ -51,6 +51,7 @@ Takes from Freight Management Module:
     "data" : [
                     'security/tms_security.xml',
                     'security/ir.model.access.csv',
+                    'product_view.xml',
                     'tms_maintenance_view.xml',
                     'tms_maintenance_order_view.xml',
                     'tms_maintenance_order_activity_view.xml',
@@ -65,7 +66,6 @@ Takes from Freight Management Module:
                     #'tms_analisys_05_view.xml',  
                     #'activities_to_invoice_view.xml',    
                     'create_invoice_view.xml',
-                    'product_view.xml',
 
                    ], 
     "active": False,

@@ -47,36 +47,41 @@ class tms_maintenance_order(osv.Model):
 
 ########################### Columnas : Atributos #######################################################################
     _columns = {#maint_service_type
-        'name': fields.char('Order Number', readonly=True),
-        'state': openerp.osv.fields.selection([('cancel','Cancelled'), ('draft','Draft'), ('open','Open'), ('released','Released'), ('done','Done')],'State'),
-        'description': fields.char('Description'),
-        'notes': fields.text('Notes', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),
+        'name'                 : fields.char('Order Number', readonly=True),
+        'state'                : fields.selection([('cancel','Cancelled'), ('draft','Draft'), ('open','Open'), ('released','Released'), ('done','Done')],'State'),
+        'description'          : fields.char('Description'),
+        'notes'                : fields.text('Notes', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),
 
-        'partner_id':     fields.many2one('res.partner','Partner', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),
-        'internal_repair' : fields.boolean('Internal Repair', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),
-        'date_start': fields.datetime('Scheduled Date Start', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'date_end': fields.datetime('Scheduled Date End', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'date_start_real': fields.datetime('Scheduled Date Start Real', readonly=True),
-        'date_end_real': fields.datetime('Scheduled Date End Real', readonly=True),
-        'date': fields.datetime('Date', readonly=True, states={'draft':[('readonly',False)]}),
+        'partner_id'           : fields.many2one('res.partner','Partner', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),
+        'internal_repair'      : fields.boolean('Internal Repair', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),
+        'date_start'           : fields.datetime('Scheduled Date Start', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'date_end'             : fields.datetime('Scheduled Date End', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'date_start_real'      : fields.datetime('Scheduled Date Start Real', readonly=True),
+        'date_end_real'        : fields.datetime('Scheduled Date End Real', readonly=True),
+        'date'                 : fields.datetime('Date', readonly=True, states={'draft':[('readonly',False)]}),
 
-        'cost_service':    fields.float('Service Cost', readonly=True),
-        'parts_cost':      fields.float('Parts Cost', readonly=True),
+        'cost_service'         : fields.float('Service Cost', readonly=True),
+        'parts_cost'           : fields.float('Parts Cost', readonly=True),
 
         ########Many2One###########
-        'shop_id':       fields.many2one('sale.shop','Shop', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'unit_id':       fields.many2one('fleet.vehicle','Unit', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'product_id':    fields.many2one('product.product','Service', required=True, domain=[('tms_category','=','maint_service_type')], readonly=True, states={'draft':[('readonly',False)]}),
-        'driver_id':     fields.many2one('hr.employee','Driver',domain=[('tms_category', '=', 'driver')], required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'supervisor_id': fields.many2one('hr.employee','Supervisor',domain=[('tms_category', '=', 'driver')], required=True, readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),        
-        'user_id':       fields.many2one('res.users','User', readonly=True), 
+        'shop_id'              : fields.many2one('sale.shop','Shop', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'unit_id'              : fields.many2one('fleet.vehicle','Unit', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'product_id'           : fields.many2one('product.product','Service', required=True, domain=[('tms_category','=','maint_service_type')], readonly=True, states={'draft':[('readonly',False)]}),
+        'driver_id'            : fields.many2one('hr.employee','Driver',domain=[('tms_category', '=', 'driver')], required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'supervisor_id'        : fields.many2one('hr.employee','Supervisor',domain=[('tms_category', '=', 'mechanic')], required=True, readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),        
+        'user_id'              : fields.many2one('res.users','User', readonly=True), 
               
-        'stock_origin_id': fields.many2one('stock.location','Stock Origin', required=True, readonly=True, states={'draft':[('readonly',False)]}),  
-        'stock_dest_id':   fields.many2one('stock.location','Stock Dest'),
-        
+        'stock_origin_id'      : fields.many2one('stock.location','Stock Origin', required=True, readonly=True, states={'draft':[('readonly',False)]}),  
+        'stock_dest_id'        : fields.many2one('stock.location','Stock Dest'),
+
+
+        'accumulated_odometer' : fields.float('Accum. Odometer'),
+        'current_odometer'     : fields.float('Current Odometer'),
+        'program_sequence'     : fields.integer('Preventive Program Seq.'),
+        'maint_cycle_id'       : fields.many2one('product.product', 'Preventive Cycle', domain=[('tms_category', '=', 'maint_service_cycle')]),        
         
         ########One2Many###########
-        'activities_ids': fields.one2many('tms.maintenance.order.activity','maintenance_order_id','Tasks', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),
+        'activities_ids'       : fields.one2many('tms.maintenance.order.activity','maintenance_order_id','Tasks', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),
         #'stock_picking_ids': fields.one2many('stock.piking','tms_order_id','Stock_pickings'),
     }
 
@@ -84,7 +89,7 @@ class tms_maintenance_order(osv.Model):
    
 ###################################################################################################        
     ########## Metodo para revisar si el Tipo de Servicio es Preventivo y por tanto, revisar que secuencia del Programa Preventivo le toca a la unidad ##########
-    #def button_generate_invoices(self,cr,uid,ids,context=None):
+    #def check_program(self,cr,uid,ids,context=None):
 
 
 
@@ -255,9 +260,25 @@ class tms_maintenance_order(osv.Model):
             suma = suma + line['cost_service']
         self.set_cost_service(cr,uid,ids, suma)
 
+    def on_change_unit_id(self,cr,uid,ids, unit_id):
+        unit = self.pool.get('fleet.vehicle').browse(cr, uid, unit_id)[0]
+        return {'value':{ 'accumulated_odometer' : unit.odometer,
+                          'current_odometer' : unit.current_odometer_read,
+                          }
+                }
+
+
     def on_change_product_id(self,cr,uid,ids, product_id):
         producto = self.pool.get('product.product').browse(cr, uid, product_id)
         location_id = producto['property_stock_production']['id']
+        # Pendiente revisar si el Tipo de Servicio es PReventivo, para entonces determinar cuál Preventivo 
+        # le correspondería en base a lo que tenga registrado en la ficha de la unidad como "Siguiente Preventivo"
+
+
+        # Si fuera Preventivo, entonces tomar los valores de Programa de Servicio y la secuencia correspondiente
+        #'program_sequence'
+        #'maint_program_id'
+
         return {'value':{'stock_dest_id':location_id}}
 
     def set_stock_dest(self,cr,uid,ids, stock_dest_id):
