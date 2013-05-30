@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_tms_expense_analysis_tree" model="ir.ui.view">
+          <field name="name">tms.expense.analysis.tree</field>
+          <field name="model">tms.expense.analysis</field>
+          <field name="type">tree</field>
+          <field name="arch" type="xml">
+            <tree string="Travel Expense Analysis" create="false">
+              <field name="shop_id" invisible="1" />
+              <field name="name" />
+              <field name="date" />
+              <field name="year" invisible="1" />
+              <field name="month" invisible="1" />
+              <field name="day" invisible="1" />
+              <field name="week" invisible="1" />
+              <field name="state" />
+              <field name="employee_id" invisible="1"/>
+              <field name="unit_id" invisible="1"/>
+              <field name="currency_id" invisible="1" />
+              <field name="product_id" />
+              <field name="expense_line_description" />
+              <field name="travel_id" />
+              <field name="route_id" />
+              <field name="waybill_income" />
+
+              <field name="travels" invisible="1"/>
+              <field name="qty" sum="Qty"/>
+              <field name="price_unit" invisible="1"/>
+              <field name="subtotal" sum="SubTotal"/>
+            </tree>
+          </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_tms_expense_analysis_search">
+		  <field name="name">tms.expense.analysis.tree</field>
+		  <field name="model">tms.expense.analysis</field>
+		  <field name="type">search</field>
+		  <field name="priority" eval="5"/>
+		  <field name="arch" type="xml">
+    		<search string="Search Travel Expense Analysis">
+              <field name="shop_id" />
+              <field name="state"  />
+              <field name="name" />
+              <field name="date"/>
+              <field name="employee_id"/>
+              <field name="unit_id"/>
+              <field name="product_id"/>
+			  <group expand="1" string="Group By...">
+			    <filter string="Name"        icon="terp-partner"                 domain="[]" context="{'group_by':'name'}"/>
+			    <filter string="Unit"        icon="terp-stage"                   domain="[]" context="{'group_by':'unit_id'}"/>
+			    <filter string="Driver"      icon="terp-personal"                domain="[]" context="{'group_by':'employee_id'}"/>
+			    <filter string="Product"     icon="terp-accessories-archiver"    domain="[]" context="{'group_by':'product_id'}"/>
+                <filter string="Route"          icon="STOCK_OK" domain="[]" context="{'group_by':'route_id'}"/>
+			  </group>
+            </search>
+		  </field>
+	    </record>
+        
+
+        <record id="action_tms_expense_analysis" model="ir.actions.act_window">
+          <field name="name">tms.expense.analysis.action</field>
+          <field name="res_model">tms.expense.analysis</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree</field>
+          <field name="view_id" ref="view_tms_expense_analysis_tree"></field>
+          
+        </record>
+        
+        <!-- Menu for tms.expense.analysis -->
+        <menuitem name="Travel Expense Analysis" 
+                  parent="tms.menu_tms_reporting" 
+                  id="menu_tms_expense_analysis"
+                  action="action_tms_expense_analysis"
+			      sequence="50"/>
+        
+        
+
+    </data>
+</openerp>
