@@ -33,6 +33,7 @@
     'update_xml' : [
                 'tms_waybill_analysis_view.xml',
                 'tms_travel_analysis_view.xml',
+                'tms_expense_analysis_view.xml',
                 #'tms_report_fuel_voucher_view.xml',
                 #'tms_report_performance_unit_view.xml',
                 #'tms_report_performance_unit_fuel_route_view.xml',
