@@ -58,9 +58,27 @@ class fleet_vehicle(osv.osv):
         'odometer_next_service'      : fields.float('Active Odometer Next Serv.'),
         'date_next_service'          : fields.date('Date Next Serv.'),
         'sequence_next_service'      : fields.integer('Cycle Seq. Next Serv.'),
-        'cycle_next_service'         : fields.many2one('product.product', 'Next Maintenance Service', domain=[('tms_category','=','tms_maint_service')]),
+        'cycle_next_service'         : fields.many2one('product.product', 'Next Maintenance Service', domain=[('tms_category','=','maint_service_cycle')]),
 
         }
+
+
+    def _check_next_service(self, cr, uid, ids, context=None):
+        program_obj = self.pool.get('fleet.vehicle.mro_program')
+        for record in self.browse(cr, uid, ids, context=context):
+            print record.cycle_next_service.id
+            print record.sequence_next_service
+            print record.id
+            if record.cycle_next_service.id and record.sequence_next_service:
+                res = program_obj.search(cr, uid, [('vehicle_id', '=', record.id), ('mro_cycle_id', '=', record.cycle_next_service.id), ('sequence', '=', record.sequence_next_service)])
+                print res
+                return (len(res) > 0)
+        return True
+
+    _constraints = [
+        (_check_next_service, 'Error ! Next service Cycle and Sequence was not found in Vehicle''s Program...', ['cycle_next_service'])
+        ]
+
 
 
     def return_cycle_ids(self, cr, uid, ids, cycle_id, context=None):
@@ -86,30 +104,17 @@ class fleet_vehicle(osv.osv):
                 program_obj.create(cr, uid, {'vehicle_id': ids[0], 'mro_cycle_id' : cycle.id, 'trigger' : x,  'sequence': seq})
                 seq += 1
         
-        print "============================"
-        print "Eliminando los repetidos y que estan contenidos en el repetido..."
-        
+        seq = 1
         last_trigger = 0
         last_cycle_id = False
-        print "Antes de entrar al ciclo..."
         for cycle in vehicle.mro_cycle_ids:
-            print "============================"
-            print "En el ciclo ..."
-            print "last_cycle_id: ", last_cycle_id
-            print "cycle.mro_cycle_id.id: ", cycle.mro_cycle_id.id
-            print "last_trigger: ", last_trigger
-            print "cycle.name: ", cycle.mro_cycle_id.name
-            print "cycle.trigger: ", cycle.trigger
-            print "cycle.trigger == last_trigger: ", last_trigger == cycle.trigger
-
-            print "cycle.id: ", cycle.id
-            print "return_cycle_ids: ", self.return_cycle_ids(cr, uid, ids, [last_cycle_id])
-            print "cycle.id in : ", cycle.id in self.return_cycle_ids(cr, uid, ids, [last_cycle_id])
             if last_trigger == cycle.trigger and last_cycle_id and cycle.mro_cycle_id.id in self.return_cycle_ids(cr, uid, ids, [last_cycle_id]):
                     program_obj.unlink(cr, uid, cycle.id)
             else:
                 last_trigger = cycle.trigger
                 last_cycle_id = cycle.mro_cycle_id.id
+                program_obj.write(cr, uid, cycle.id, { 'sequence': seq })
+                seq += 1
 
         return True
 

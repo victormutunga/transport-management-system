@@ -18,48 +18,51 @@
                 <field  name="state" widget="statusbar" statusbar_visible="draft,open,released,done,cancel"/> 
               </header>
 		      <sheet>
-			    <group col="4">
-                  <field name="internal_repair" />
-                  <field name="partner_id" attrs="{'invisible':[('internal_repair','=',True)], 'required':[('internal_repair','=',False)]}" />/>
-                  <field name="name" />
-                  <field name="shop_id" />
-                  
-                  <field name="product_id" on_change="on_change_product_id(product_id)" />
-				  <field name="date" />
-				  
-				  <field name="unit_id" />
-				  <field name="driver_id" context="{'default_tms_category':'driver'}" domain="[('tms_category', '=', 'driver')]"/>
-				  <field name="supervisor_id"  context="{'default_tms_category':'mechanic'}" domain="[('tms_category', '=', 'mechanic')]"/>
-				  <field name="stock_origin_id" context="{'default_usage':'internal'}" domain="[('usage', '=', 'internal')]"/>
-				  
-				  <field name="cost_service" />
-				  <field name="parts_cost" /> 
-		    	</group>
-			    <newline />		    
+                <h1>
+                  <label string="Service Order"/>
+                  <field name="name" class="oe_inline" readonly="1"/>
+                </h1>
+                <notebook>
+                  <page string="Service Order Detail">
+			        <group col="4">
+                      <field name="shop_id" />
+				      <field name="date" />
+				      <field name="unit_id" on_change="on_change_unit_id(unit_id)"/>
+				      <field name="driver_id" context="{'default_tms_category':'driver'}" domain="[('tms_category', '=', 'driver')]"/>
+                      <field name="product_id" on_change="on_change_product_id(product_id, unit_id, date)" />
+                      <newline />
 
-			    <notebook>
-				  <page string="Tasks">                      
-					<group col="4">
-					  <field name="activities_ids" nolabel="1" />
-					</group>
-				  </page>
-                  
-				  <page string="Scheduled Date">                   
-					<group col="4">
+                      <field name="internal_repair" />
+                      <field name="partner_id" attrs="{'invisible':[('internal_repair','=',True)], 'required':[('internal_repair','=',False)]}" />/>
+				      
+				      <field name="supervisor_id"  context="{'default_tms_category':'mechanic'}" domain="[('tms_category', '=', 'mechanic')]"/>
+				      <field name="stock_origin_id" context="{'default_usage':'internal'}" domain="[('usage', '=', 'internal')]"/>
+				      
+				      <field name="cost_service" />
+				      <field name="parts_cost" /> 
 					  <field name="date_start" />
 					  <field name="date_start_real" />
 					  <field name="date_end" />
 					  <field name="date_end_real" />
-					  
-					</group>
-				  </page>
-				  <page string="Notes">                      
-					<group col="4">
-					  <field name="notes" />
-					</group>
-				  </page>
-			    </notebook> 
 
+		    	    </group>
+                  </page>
+                  <page string="MRO Program Details">
+                    <group col="4">
+                      <field name="accumulated_odometer" />
+                      <field name="current_odometer" />
+                      <field name="maint_program_id" />
+                      <newline />
+                      <field name="maint_cycle_id" />
+                      <newline />
+                      <field name="program_sequence" />
+                    </group>
+                  </page>
+                </notebook>
+                <separator string="Tasks" colspan="4"/>
+				<field name="activities_ids" nolabel="1" on_change="on_change_activities_ids(activities_ids)"/>
+                <separator string="Notes" colspan="4"/>
+				<field name="notes"  colspan="4" nolabel="1"/>
 		      </sheet>
 		      <div class="oe_chatter">
                 <field name="message_follower_ids" widget="mail_followers"/>

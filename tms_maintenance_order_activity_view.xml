@@ -113,16 +113,14 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Order of Maintenance Activity">
-                        	<field name="state" />
-                        	<field name="product_id" /><!-- Actividad -->
-
-                        	<field name="hours_estimated"  />
-                        	<field name="hours_real"  />
-
-				<field name="cost_service" />
-				<field name="parts_cost" />
-
-				<field name="external_workshop" />
+                  <field name="state" />
+                  <field name="product_id" /><!-- Actividad -->
+                  <field name="hours_estimated"  />
+                  <field name="hours_real"  />
+                  
+				  <field name="cost_service" sum="Spare Parts"/>
+				  <field name="parts_cost" sum="Work Hand"/>
+				  <field name="external_workshop" />
 		</tree>
 	    </field>
     </record>

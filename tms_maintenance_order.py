@@ -47,17 +47,17 @@ class tms_maintenance_order(osv.Model):
 
 ########################### Columnas : Atributos #######################################################################
     _columns = {#maint_service_type
-        'name'                 : fields.char('Order Number', readonly=True),
+        'name'                 : fields.char('Name', readonly=True),
         'state'                : fields.selection([('cancel','Cancelled'), ('draft','Draft'), ('open','Open'), ('released','Released'), ('done','Done')],'State'),
         'description'          : fields.char('Description'),
         'notes'                : fields.text('Notes', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),
 
         'partner_id'           : fields.many2one('res.partner','Partner', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),
         'internal_repair'      : fields.boolean('Internal Repair', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),
-        'date_start'           : fields.datetime('Scheduled Date Start', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'date_end'             : fields.datetime('Scheduled Date End', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'date_start_real'      : fields.datetime('Scheduled Date Start Real', readonly=True),
-        'date_end_real'        : fields.datetime('Scheduled Date End Real', readonly=True),
+        'date_start'           : fields.datetime('Date Start Sched', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'date_end'             : fields.datetime('Date End Sched', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'date_start_real'      : fields.datetime('Date Start Real', readonly=True),
+        'date_end_real'        : fields.datetime('Date End Real', readonly=True),
         'date'                 : fields.datetime('Date', readonly=True, states={'draft':[('readonly',False)]}),
 
         'cost_service'         : fields.float('Service Cost', readonly=True),
@@ -75,10 +75,12 @@ class tms_maintenance_order(osv.Model):
         'stock_dest_id'        : fields.many2one('stock.location','Stock Dest'),
 
 
-        'accumulated_odometer' : fields.float('Accum. Odometer'),
-        'current_odometer'     : fields.float('Current Odometer'),
-        'program_sequence'     : fields.integer('Preventive Program Seq.'),
-        'maint_cycle_id'       : fields.many2one('product.product', 'Preventive Cycle', domain=[('tms_category', '=', 'maint_service_cycle')]),        
+        'accumulated_odometer' : fields.float('Accum. Odometer', readonly=True, states={'draft':[('readonly',False)]}),
+        'current_odometer'     : fields.float('Current Odometer', readonly=True, states={'draft':[('readonly',False)]}),
+        'program_sequence'     : fields.integer('Preventive Program Seq.', readonly=True, states={'draft':[('readonly',False)]}),
+        'maint_program_id'     : fields.many2one('product.product', 'Preventive Program', domain=[('tms_category', '=', 'maint_service_program')], readonly=True, states={'draft':[('readonly',False)]}),        
+        'maint_cycle_id'       : fields.many2one('product.product', 'Preventive Cycle', domain=[('tms_category', '=', 'maint_service_cycle')], readonly=True, states={'draft':[('readonly',False)]}),
+
         
         ########One2Many###########
         'activities_ids'       : fields.one2many('tms.maintenance.order.activity','maintenance_order_id','Tasks', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),
@@ -261,25 +263,61 @@ class tms_maintenance_order(osv.Model):
         self.set_cost_service(cr,uid,ids, suma)
 
     def on_change_unit_id(self,cr,uid,ids, unit_id):
-        unit = self.pool.get('fleet.vehicle').browse(cr, uid, unit_id)[0]
+        unit = self.pool.get('fleet.vehicle').browse(cr, uid, unit_id)
         return {'value':{ 'accumulated_odometer' : unit.odometer,
-                          'current_odometer' : unit.current_odometer_read,
+                          'current_odometer'     : unit.current_odometer_read,
+                          'driver_id'        : unit.employee_id.id,
                           }
                 }
 
 
-    def on_change_product_id(self,cr,uid,ids, product_id):
-        producto = self.pool.get('product.product').browse(cr, uid, product_id)
-        location_id = producto['property_stock_production']['id']
-        # Pendiente revisar si el Tipo de Servicio es PReventivo, para entonces determinar cuál Preventivo 
-        # le correspondería en base a lo que tenga registrado en la ficha de la unidad como "Siguiente Preventivo"
+    def get_tasks_from_cycle(self, cr, uid, cycle_id, date):
+        print "cycle_id: ", cycle_id
+        for cycle in self.pool.get('product.product').browse(cr, uid, [cycle_id]):
+            print cycle.name
+            task_ids = []
+            for task in cycle.mro_activity_ids:
+                task_ids.append([0, False, {'breakdown': True, 
+                                             'message_follower_ids': False, 
+                                             'supplier_id': False, 
+                                             'product_id': task.id, 
+                                             'cost_service_external': 0, 
+                                             'date_start': date,
+                                             'state': 'pending', 
+                                             'mechanic_ids': [[6, False, []]], 
+                                             'product_line_ids': [], 
+                                             'external_workshop': False, 
+                                             'parts_cost_external': 0, 
+                                             'message_ids': False, 
+                                             'date_end': date}])
+            for sub_cycle in cycle.mro_cycle_ids:
+                task_ids = task_ids + self.get_tasks_from_cycle(cr, uid, sub_cycle.id, date)
+        return task_ids
 
 
-        # Si fuera Preventivo, entonces tomar los valores de Programa de Servicio y la secuencia correspondiente
-        #'program_sequence'
-        #'maint_program_id'
 
-        return {'value':{'stock_dest_id':location_id}}
+        
+
+    def on_change_product_id(self,cr,uid,ids, product_id, unit_id, date):
+        product = self.pool.get('product.product').browse(cr, uid, product_id)
+        location_id = product['property_stock_production']['id']        
+        vehicle = self.pool.get('fleet.vehicle').browse(cr, uid, unit_id)
+        if product.mro_preventive and vehicle.mro_program_id.id and vehicle.main_odometer_next_service \
+                and vehicle.odometer_next_service and vehicle.sequence_next_service and vehicle.cycle_next_service.id:            
+            task_ids = self.get_tasks_from_cycle(cr, uid, vehicle.cycle_next_service.id, date)
+                
+            return {'value':{ 'program_sequence' : vehicle.sequence_next_service,
+                              'maint_program_id' : vehicle.mro_program_id.id,
+                              'maint_cycle_id'   : vehicle.cycle_next_service.id,
+                              'activities_ids'   : task_ids,
+                              }
+                    }
+
+        return {}
+
+    def on_change_activities_ids(self,cr,uid,ids, activities_ids):
+        print activities_ids
+        return {}
 
     def set_stock_dest(self,cr,uid,ids, stock_dest_id):
         self.write(cr, uid, ids, {'stock_dest_id':stock_dest_id})
@@ -681,6 +719,7 @@ class tms_maintenance_order(osv.Model):
     _defaults = {
         'state'                 : lambda *a: 'draft',
         'date'                  : lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        'date_start'                  : lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
         'user_id'               : lambda obj, cr, uid, context: uid,
         'internal_repair'       : True,
     }
