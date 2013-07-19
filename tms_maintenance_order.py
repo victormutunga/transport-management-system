@@ -94,28 +94,19 @@ class tms_maintenance_order(osv.Model):
     #def check_program(self,cr,uid,ids,context=None):
 
 
-
-
-
     ########## Metodos para crear la factura ##########
     def button_generate_invoices(self,cr,uid,ids,context={}):
         this = self.get_current_instance(cr, uid, ids)
         #self.write(cr, uid, ids, {'state':'draft'})
 
         activities_external_done_not_invoice = self.get_activities_external_done_not_invoice(cr,uid,ids,context)
-
         activities = activities_external_done_not_invoice 
-
-        #band = False
-        
+        #band = False        
         #for line in activities:
         #    band = True
-
         #if not band:
         #    raise osv.except_osv(_('Warning!'),_('No Existen Actividades Externas en Esta Orden o Ya estan Facturadas')) 
-       
         #partner = activities[0]['supplier_id']
-
 
         self.create_invoices_from_activities_not_invoice_and_done(cr,uid,ids, activities)
         #self.create_invoice_based_by_activities(cr,uid,ids, partner, activities)
@@ -169,27 +160,15 @@ class tms_maintenance_order(osv.Model):
         print 'synchronize invoice_lines: '+str(invoice_lines)  
 
     def create_invoice_based_by_activities(self,cr,uid,ids, partner, activities):
-
-        ### Diccionarios de Invoice Lines
-        ### Diccionarios de Invoice Lines
-        ### Diccionarios de Invoice Lines
         invoice_lines = [] 
-
-        ##Se generan los Diccionarios de Inv_line vasados en la lista de actividades
-        ##Se generan los Diccionarios de Inv_line vasados en la lista de actividades
-        ##Se generan los Diccionarios de Inv_line vasados en la lista de actividades
-        for activity in activities: 
-            
+        for activity in activities:             
             a = activity['maintenance_order_id']['product_id']['property_stock_production']['valuation_in_account_id']['id']
-        
             if not a:
                 a = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category', context=context).id
-
             a = self.pool.get('account.fiscal.position').map_account(cr, uid, False, a)
             
             descripcion = str(activity['maintenance_order_id']['name']) +str(', ') +str(activity['product_id']['name_template'])
             inv_line = (0,0,{
-                        #'name': activity['product_id']['name_template'],
                         'name': descripcion, #Descripcion
                         'origin': activity['maintenance_order_id']['product_id']['name_template'],
                         'account_id': a,

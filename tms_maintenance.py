@@ -118,6 +118,8 @@ class fleet_vehicle(osv.osv):
 
         return True
 
+
+
 class fleet_vehicle_mro_program(osv.Model):
     _name = 'fleet.vehicle.mro_program'
     _description = 'Fleet Vehicle MRO Program'
@@ -129,9 +131,100 @@ class fleet_vehicle_mro_program(osv.Model):
         'sequence'       : fields.integer('Sequence', required=True),
         'mro_service_order_id'   : fields.many2one('tms.maintenance.order', 'MRO Service Order'),
         'mro_service_order_date' : fields.related('mro_service_order_id', 'date', type='datetime', string="Date", store=True, readonly=True),
+        'next_date'     : fields.date('Date Next Service'),
+        }
+
+    _defaults = {
+        'next_date'      : lambda *a: time.strftime(DEFAULT_SERVER_DATE_FORMAT),
         }
 
     _order = 'trigger, sequence'
 
+    def button_set_next_cycle_service(self, cr, uid, ids, context=None):
+        print "context: ", context
+        if not ids:
+            return False
+        print "ids: ", ids
+        for program_line in self.browse(cr, uid, ids):
+            print "program_line.mro_cycle_id: ", program_line.mro_cycle_id
+            print "program_line.sequence: ", program_line.sequence
+            print "program_line.vehicle_id.odometer: ", program_line.vehicle_id.odometer
+            print "program_line.vehicle_id.current_odometer_read: ", program_line.vehicle_id.current_odometer_read
+            vehicle_obj = self.pool.get('fleet.vehicle')
+            vehicle_obj.write(cr, uid, [program_line.vehicle_id.id], {'cycle_next_service' : program_line.mro_cycle_id.id, 
+                                                                      'date_next_service' : program_line.next_date or time.strftime('%Y-%m-%d'), 
+                                                                      'sequence_next_service' : program_line.sequence,
+                                                                      'main_odometer_next_service' : program_line.trigger,
+                                                                      'odometer_next_service' : program_line.trigger})
+            print "Despues del desmadre..."
+        
+        return False
 
+
+class fleet_vehicle_mro_program_reschedule(osv.osv_memory):
+    _name ='fleet.vehicle.mro_program.re_schedule'
+    _description = 'Fleet Vehicle MRO Program assignation'
+
+    _columns = {
+        'vehicle_id'     : fields.many2one('fleet.vehicle', 'Vehicle', required=True, readonly=True),
+        'odometer'       : fields.float('Odometer', readonly=True),
+        'mro_program_id' : fields.many2one('product.product', 'Maintenance Program', required=True, readonly=True),
+        'next_date'      : fields.date('Date Next Service'),
+        'mro_cycle_ids'  : fields.many2many('fleet.vehicle.mro_program', 'fleet_vehicle_mro_program_re_schedule_rel', 'vehicle_id', 'cycle_id', string='MRO Program', required=True),
+        }
+
+
+
+    def _get_vehicle_id(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        return context.get('active_ids', False) 
+
+    def _get_odometer(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        vehicle_obj = self.pool.get('fleet.vehicle')
+        vehicle_id = context.get('active_ids', [])
+        if len(vehicle_id):
+            for vehicle in vehicle_obj.browse(cr, uid, vehicle_id):
+                return vehicle.odometer or False
+        return False
+
+
+    def _get_mro_program_id(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        print context
+
+        vehicle_obj = self.pool.get('fleet.vehicle')
+        vehicle_id = context.get('active_ids', [])
+        if len(vehicle_id):
+            for vehicle in vehicle_obj.browse(cr, uid, vehicle_id):
+                return vehicle.mro_program_id.id or False
+        return False
+
+
+    def _get_mro_cycle_ids(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        print context
+
+        vehicle_obj = self.pool.get('fleet.vehicle')
+        vehicle_id = context.get('active_ids', [])
+        if len(vehicle_id):
+            return self.pool.get('fleet.vehicle.mro_program').search(cr, uid ,[('vehicle_id', '=', vehicle_id[0]), ('mro_service_order_id', '=', False)])
+        else:
+            return False
+
+
+    _defaults = {
+        'vehicle_id'     : _get_vehicle_id,
+        'odometer'       : _get_odometer,
+        'mro_program_id' : _get_mro_program_id,
+        'mro_cycle_ids'  : _get_mro_cycle_ids,
+        'next_date'      : lambda *a: time.strftime(DEFAULT_SERVER_DATE_FORMAT),
+        }
+
+
+            
 

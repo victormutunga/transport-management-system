@@ -77,6 +77,7 @@ class product_product(osv.osv):
         'mro_frequency'    : fields.integer('Frequency'),
         'mro_preventive'   : fields.boolean('Preventive MRO'),
         'mro_cycle_ids'    : fields.many2many('product.product',  'tms_maintenance_cycle_program_rel',  'program_id', 'program_child_id',  'Service Programs', domain=[('tms_category','=','maint_service_cycle')]),
+  
         }
 
 
