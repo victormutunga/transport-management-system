@@ -53,19 +53,19 @@ class tms_expense_analysis(osv.osv):
 
         'travel_id'             : fields.many2one('tms.travel', 'Travel', readonly=True),
         'route_id'              : fields.many2one('tms.route', 'Route', readonly=True),
-        'waybill_income'        : fields.float('Waybill Amount', digits=(18,6), readonly=True),        
+#        'waybill_income'        : fields.float('Waybill Amount', digits=(18,2), readonly=True),        
 
         'travels'               : fields.integer('Travels', readonly=True),        
-        'qty'                   : fields.float('Qty', digits=(18,6), readonly=True),        
-        'price_unit'            : fields.float('Price Unit', digits=(18,6), readonly=True),        
-        'subtotal'              : fields.float('SubTotal', digits=(18,6), readonly=True),        
+        'qty'                   : fields.float('Qty', digits=(18,2), readonly=True),        
+        'price_unit'            : fields.float('Price Unit', digits=(18,4), readonly=True),        
+        'subtotal'              : fields.float('SubTotal', digits=(18,2), readonly=True),        
 
     }
 
 #    _order = "shop_id, date_order, name"
 
     def init(self, cr):
-        tools.sql.drop_view_if_exists(cr, 'tms_travel_analysis')
+        tools.sql.drop_view_if_exists(cr, 'tms_expense_analysis')
         cr.execute ("""
 CREATE OR REPLACE VIEW tms_expense_analysis as
 select row_number() over() as id,
@@ -77,7 +77,7 @@ EXTRACT(WEEK FROM a.date)::INTEGER as week,
 a.state, a.employee_id, a.unit_id, a.currency_id, 
 b.product_id, b.name expense_line_description,
 c.id travel_id, c.route_id, 
-c.waybill_income/ (select count(id) from tms_expense_line x where x.expense_id = a.id) waybill_income,
+--c.waybill_income/ (select count(id) from tms_expense_line x where x.expense_id = a.id) waybill_income,
 (select count(name) from tms_travel where a.id=tms_travel.expense_id) travels,
 b.product_uom_qty / (select count(name) from tms_travel where a.id=tms_travel.expense_id) qty,
 b.price_unit / (select count(name) from tms_travel where a.id=tms_travel.expense_id) price_unit,

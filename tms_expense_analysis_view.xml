@@ -23,7 +23,7 @@
               <field name="expense_line_description" />
               <field name="travel_id" />
               <field name="route_id" />
-              <field name="waybill_income" />
+<!--              <field name="waybill_income" /> -->
 
               <field name="travels" invisible="1"/>
               <field name="qty" sum="Qty"/>
@@ -52,7 +52,11 @@
 			    <filter string="Unit"        icon="terp-stage"                   domain="[]" context="{'group_by':'unit_id'}"/>
 			    <filter string="Driver"      icon="terp-personal"                domain="[]" context="{'group_by':'employee_id'}"/>
 			    <filter string="Product"     icon="terp-accessories-archiver"    domain="[]" context="{'group_by':'product_id'}"/>
-                <filter string="Route"          icon="STOCK_OK" domain="[]" context="{'group_by':'route_id'}"/>
+                <filter string="Route"       icon="STOCK_OK" domain="[]" context="{'group_by':'route_id'}"/>
+                <filter string="Day"            icon="terp-go-today"    domain="[]" context="{'group_by':'day'}"     help="Ordered Day of the Waybill"/>
+                <filter string="Month"          icon="terp-go-month"    domain="[]" context="{'group_by':'month'}"   help="Ordered Month of the Waybill"/>
+                <filter string="Year"           icon="terp-go-year"     domain="[]" context="{'group_by':'year'}"    help="Ordered Year of the Waybill"/>
+                <filter string="Week"           icon="terp-go-week"     domain="[]" context="{'group_by':'week'}"    help="Ordered Week of Year of the Waybill"/>    
 			  </group>
             </search>
 		  </field>
@@ -60,7 +64,7 @@
         
 
         <record id="action_tms_expense_analysis" model="ir.actions.act_window">
-          <field name="name">tms.expense.analysis.action</field>
+          <field name="name">Travel Expense Analysis</field>
           <field name="res_model">tms.expense.analysis</field>
           <field name="view_type">form</field>
           <field name="view_mode">tree</field>
