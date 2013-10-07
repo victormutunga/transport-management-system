@@ -177,7 +177,7 @@ class create_invoice_now(osv.osv_memory):
             print 'Parner : '+str(partner)+str(', ........... '+str(activities_to_partner))
 
 
-    def create_invoice_based_by_activities(self,cr,uid,ids, partner, activities):
+    def create_invoice_based_by_activities(self,cr,uid,ids, partner, activities, context=None):
 
         ### Diccionarios de Invoice Lines
         ### Diccionarios de Invoice Lines
@@ -192,9 +192,10 @@ class create_invoice_now(osv.osv_memory):
         ##Se generan los Diccionarios de Inv_line vasados en la lista de actividades
         ##Se generan los Diccionarios de Inv_line vasados en la lista de actividades
         for activity in activities: 
-            
+            print "activity:\n- - - - - - - - - - - - - - - -\n", activity
+            if not activity.maintenance_order_id.product_id.property_stock_production.valuation_in_account_id.id:
+                raise osv.except_osv(_('Warning!'),_('You have not defined Stock Valuation Account (Incoming) in Virtual Location related to Service Order Product (field: Production Location).')) 
             a = activity['maintenance_order_id']['product_id']['property_stock_production']['valuation_in_account_id']['id']
-        
             if not a:
                 a = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category', context=context).id
 
@@ -220,8 +221,6 @@ class create_invoice_now(osv.osv_memory):
                 invoice_origin_description.append(activity['maintenance_order_id'])
                 invoice_origin_description_string = str(activity['maintenance_order_id']['name'])+str(', ')+str(invoice_origin_description_string) 
 
-        #################### Generar La Factura ################################
-        #################### Generar La Factura ################################
         #################### Generar La Factura ################################
 
         journal_id = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'purchase')], context=None)

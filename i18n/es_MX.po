@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-26 22:19+0000\n"
-"PO-Revision-Date: 2013-09-26 17:37-0600\n"
+"POT-Creation-Date: 2013-10-05 20:18+0000\n"
+"PO-Revision-Date: 2013-10-05 13:19-0700\n"
 "Last-Translator: Israel CA <israel.cruz@hesatecnica.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -54,7 +54,7 @@ msgstr "Programa de Mtto"
 #: field:fleet.vehicle.mro_program,vehicle_id:0
 #: field:fleet.vehicle.mro_program.re_schedule,vehicle_id:0
 msgid "Vehicle"
-msgstr "Vehicle"
+msgstr "Vehículo"
 
 #. module: tms_maintenance
 #: field:create.invoice,supplier_id:0
@@ -96,7 +96,7 @@ msgstr "Servicio"
 #. module: tms_maintenance
 #: view:tms.maintenance.order:0 selection:tms.maintenance.order,state:0
 msgid "Released"
-msgstr "Liberado"
+msgstr "Liberada"
 
 #. module: tms_maintenance
 #: field:tms.maintenance.order,date_end_real:0
@@ -116,7 +116,7 @@ msgstr ""
 #. module: tms_maintenance
 #: field:tms.maintenance.order,program_sequence:0
 msgid "Preventive Program Seq."
-msgstr "Preventive Program Seq."
+msgstr "Sec. Programa Preventivo"
 
 #. module: tms_maintenance
 #: field:tms.maintenance.order.activity,date_start:0
@@ -129,8 +129,8 @@ msgid ""
 "Are you sure you want to create Program Sequence for this record? All "
 "previous records will be deleted !!!"
 msgstr ""
-"Are you sure you want to create Program Sequence for this record? All "
-"previous records will be deleted !!!"
+"Está seguro que desea crear el Programa de Preventivos para este vehículo? "
+"Toso los registros previos se eliminarán !!!"
 
 #. module: tms_maintenance
 #: field:create.invoice,date_begin:0
@@ -153,12 +153,12 @@ msgstr "Externo"
 #. module: tms_maintenance
 #: field:tms.maintenance.order,date_start:0
 msgid "Date Start Sched"
-msgstr "Date Start Sched"
+msgstr "Fecha Inicio Prog."
 
 #. module: tms_maintenance
 #: field:fleet.vehicle.mro_program,mro_cycle_id:0
 msgid "MRO Cycle"
-msgstr "MRO Cycle"
+msgstr "MRO Ciclo"
 
 #. module: tms_maintenance
 #: view:tms.product.line:0
@@ -173,7 +173,7 @@ msgstr "Notas"
 #. module: tms_maintenance
 #: view:fleet.vehicle.mro_program.re_schedule:0
 msgid "Assign as Next MRO Service"
-msgstr "Assign as Next MRO Service"
+msgstr "Asignar como Próximo Servicio de Mtto"
 
 #. module: tms_maintenance
 #: field:tms.maintenance.order,message_ids:0
@@ -196,7 +196,7 @@ msgstr ""
 #: field:tms.analisys.01,date_end:0 field:tms.analisys.02,date_end:0
 #: field:tms.analisys.04,date_end:0
 msgid "Date End"
-msgstr "Fecha Fin"
+msgstr "Fecha Finalización"
 
 #. module: tms_maintenance
 #: model:ir.actions.act_window,name:tms_maintenance.tms_maintenance_product_normal_action
@@ -258,7 +258,7 @@ msgstr "Mensajes sin leer"
 #. module: tms_maintenance
 #: field:create.invoice,cost_manpower:0 field:tms.analisys.02,cost_manpower:0
 msgid "Cost Manpower"
-msgstr "Costo Mano Obra"
+msgstr "Cost Mano Obra"
 
 #. module: tms_maintenance
 #: field:product.product,mro_preventive:0
@@ -268,19 +268,19 @@ msgstr "MRO Preventivo"
 #. module: tms_maintenance
 #: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance_orders
 msgid "Repair Orders"
-msgstr "Ordenes de Reparación"
+msgstr "Ordenes de Mantenimiento"
 
 #. module: tms_maintenance
 #: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance
 msgid "Fleet Maintenance"
-msgstr "Mantenimiento de Flota"
+msgstr "Mantenimiento"
 
 #. module: tms_maintenance
 #: selection:tms.activity.control.time,state:0
 #: view:tms.maintenance.order.activity:0
 #: selection:tms.maintenance.order.activity,state:0 selection:tms.time,event:0
 msgid "Process"
-msgstr "Procesar"
+msgstr "En Proceso"
 
 #. module: tms_maintenance
 #: help:tms.maintenance.order,message_summary:0
@@ -289,8 +289,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
-"Contiene el resumen del Chatr (número de mensajes, ...). Este resumen está "
-"en formato html para que pueda ser insertado en las vistas kanban."
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
 
 #. module: tms_maintenance
 #: field:tms.maintenance.order.activity,invoice_id:0
@@ -315,7 +315,7 @@ msgstr "Evento"
 #. module: tms_maintenance
 #: view:tms.analisys.03:0
 msgid "TMS Analisys 03 orders"
-msgstr "Análisis de Ordenes de Servicio"
+msgstr "TMS Analisys 03 orders"
 
 #. module: tms_maintenance
 #: field:tms.analisys.01,driver_name:0
@@ -326,7 +326,7 @@ msgstr "Operador"
 #: code:addons/tms_maintenance/tms_maintenance_order_activity.py:313
 #, python-format
 msgid "All Mechanics Activities, should be in state End"
-msgstr "Todas las Tareas de la Orden deben estar finalizadas."
+msgstr "Todas las Tareas deben estar Finalizadas"
 
 #. module: tms_maintenance
 #: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance_config_unit_active_history_form
@@ -344,22 +344,21 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                De clic aquí para definir un nuevo Producto relacionado a "
-"Mantenimiento.\n"
+"                Click to define a new Maintenance product.\n"
 "              </p><p>\n"
-"                Debe definer productos para poser usar MRO.\n"
+"                You must define a product for everything related to MRO.\n"
 "              </p>\n"
 "            "
 
 #. module: tms_maintenance
 #: field:tms.maintenance.order.activity,date_most_recent_end_mechanic_activity:0
 msgid "Scheduled Most Recent Activity End of Mechanic"
-msgstr "Fin Programado de la Tarea asignada al Mecánico"
+msgstr "Fecha mas reciente del Fin de Tarea"
 
 #. module: tms_maintenance
 #: model:ir.model,name:tms_maintenance.model_tms_analisys_01
 msgid "Order Maintenace Analisys 1, Order"
-msgstr "Análisis de Ordenes de Mantenimiento"
+msgstr "Order Maintenace Analisys 1, Order"
 
 #. module: tms_maintenance
 #: field:fleet.vehicle.mro_program.re_schedule,odometer:0
@@ -369,7 +368,7 @@ msgstr "Odómetro"
 #. module: tms_maintenance
 #: help:tms.maintenance.order.activity,external_workshop:0
 msgid "Check if this task is going to be done bya an external supplier "
-msgstr "Active si esta Tarea es para un Taller Externo"
+msgstr "Active si esta Tarea será realizada en Taller Externo"
 
 #. module: tms_maintenance
 #: view:product.product:0
@@ -379,7 +378,7 @@ msgstr "Ciclo de Servicios Incluido"
 #. module: tms_maintenance
 #: field:sale.shop,tms_maintenance_seq:0
 msgid "Maintenance Order Sequence"
-msgstr "Secuencia de Ordenes de Mantenimiento"
+msgstr "Secuencia de Orden de Mantenimiento"
 
 #. module: tms_maintenance
 #: field:tms.maintenance.order,message_follower_ids:0
@@ -390,12 +389,12 @@ msgstr "Seguidores"
 #. module: tms_maintenance
 #: view:tms.time:0
 msgid "Activity Time Detail"
-msgstr "Detalle de Tiempo de Tarea"
+msgstr "Detalle de tiempos de Tarea"
 
 #. module: tms_maintenance
 #: model:ir.model,name:tms_maintenance.model_stock_picking
 msgid "Picking List"
-msgstr "Movimiento de Almacén"
+msgstr "Albarán"
 
 #. module: tms_maintenance
 #: view:tms.maintenance.order.activity:0
@@ -410,7 +409,7 @@ msgstr "Sec. Ciclo Prox. Serv."
 #. module: tms_maintenance
 #: field:tms.maintenance.order.activity,product_line_ids:0
 msgid "Material List"
-msgstr "Lista de Materiales"
+msgstr "Lista Refacciones"
 
 #. module: tms_maintenance
 #: field:tms.analisys.03,total_price:0
@@ -425,7 +424,7 @@ msgstr "Mostrar Trámites para este vehículo"
 #. module: tms_maintenance
 #: field:tms.maintenance.order.activity,breakdown:0
 msgid "Breakdown"
-msgstr "Desglose"
+msgstr "Breakdown"
 
 #. module: tms_maintenance
 #: field:fleet.vehicle,main_odometer_next_service:0
@@ -435,7 +434,7 @@ msgstr "Odómetro Prox. Servicio"
 #. module: tms_maintenance
 #: view:tms.activity.control.time:0 view:tms.maintenance.order:0
 msgid "Order Calendar"
-msgstr "Calendario Ordenes"
+msgstr "Calendario"
 
 #. module: tms_maintenance
 #: field:tms.analisys.01,material_cost:0
@@ -446,12 +445,12 @@ msgstr "Costo Refacciones"
 #: field:tms.analisys.01,unit_name:0 field:tms.analisys.02,unit_name:0
 #: field:tms.analisys.03,unit_name:0 field:tms.analisys.04,unit_name:0
 msgid "Unit Name"
-msgstr "Unidad"
+msgstr "Vehículo"
 
 #. module: tms_maintenance
 #: field:create.invoice,cost_material:0 field:tms.analisys.02,cost_material:0
 msgid "Cost Material"
-msgstr "Costo de Refacciones"
+msgstr "Costo Refacciones"
 
 #. module: tms_maintenance
 #: constraint:tms.maintenance.order.activity:0
@@ -470,7 +469,7 @@ msgstr "Análisis de Mantenimiento"
 #. module: tms_maintenance
 #: view:tms.maintenance.order.activity:0
 msgid "Job"
-msgstr "Trabajo"
+msgstr "Tarea"
 
 #. module: tms_maintenance
 #: view:tms.analisys.02:0
@@ -480,7 +479,7 @@ msgstr "Taller Externo"
 #. module: tms_maintenance
 #: field:tms.analisys.03,product_name:0
 msgid "Product Name"
-msgstr "Producto"
+msgstr "Refacción"
 
 #. module: tms_maintenance
 #: field:fleet.vehicle.mro_program,next_date:0
@@ -516,7 +515,7 @@ msgstr "ID Tarea"
 #. module: tms_maintenance
 #: model:res.groups,name:tms_maintenance.tms_maintenance_admin
 msgid "TMS Maintenance Manager"
-msgstr "MRO Supervisor de Mantenimiento"
+msgstr "TMS Supervisor de Mantenimiento"
 
 #. module: tms_maintenance
 #: view:tms.analisys.02:0
@@ -526,7 +525,7 @@ msgstr "Externo"
 #. module: tms_maintenance
 #: model:res.groups,name:tms_maintenance.tms_group_tms_activity_control_time
 msgid "User Mechanics TMS Maintenance"
-msgstr "Usuario Mecánico del MRO"
+msgstr "Usuario Mecánico del TMS Maintenance"
 
 #. module: tms_maintenance
 #: view:tms.maintenance.order:0
@@ -558,7 +557,7 @@ msgstr "Mecánico"
 #. module: tms_maintenance
 #: field:fleet.vehicle.mro_program,sequence:0
 msgid "Sequence"
-msgstr "Sequence"
+msgstr "Secuencia"
 
 #. module: tms_maintenance
 #: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance_Analisys
@@ -719,7 +718,7 @@ msgstr "Costo"
 #. module: tms_maintenance
 #: model:ir.model,name:tms_maintenance.model_fleet_vehicle_mro_program
 msgid "Fleet Vehicle MRO Program"
-msgstr "Fleet Vehicle MRO Program"
+msgstr "Programa de Mtto de Vehículos"
 
 #. module: tms_maintenance
 #: view:product.product:0
@@ -730,7 +729,7 @@ msgstr "Relacionado al MRO"
 #: view:fleet.vehicle.mro_program.re_schedule:0
 #: model:ir.actions.act_window,name:tms_maintenance.action_fleet_vehicle_mro_program_re_schedule
 msgid "MRO Program Re-scheduling"
-msgstr "MRO Program Re-scheduling"
+msgstr "Reprogramación de Programa de Mtto"
 
 #. module: tms_maintenance
 #: selection:tms.activity.control.time,state:0
@@ -746,23 +745,23 @@ msgstr "Date Event"
 #. module: tms_maintenance
 #: view:fleet.vehicle:0
 msgid "Show Active/Inactivate logs for this vehicle"
-msgstr "Show Active/Inactivate logs for this vehicle"
+msgstr "Mostrar Historial de Altas/Bajas para este vehículo."
 
 #. module: tms_maintenance
 #: view:tms.activity.control.time:0
 #: selection:tms.activity.control.time,state:0 selection:tms.time,event:0
 msgid "End"
-msgstr "Fin"
+msgstr "Finalizada"
 
 #. module: tms_maintenance
 #: view:create.invoice.now:0
 msgid "Create Invoice from selected Activities ?"
-msgstr "Crear Factura de las Tareas seleccionadas ?"
+msgstr "Crear Factura(s) de Proveedor de las Tareas Seleccionadas?"
 
 #. module: tms_maintenance
 #: field:tms.analisys.04,hr_employee_name:0
 msgid "Employee Name"
-msgstr "Nombre Empleado"
+msgstr "Mecánico"
 
 #. module: tms_maintenance
 #: selection:tms.maintenance.order.activity,state:0 view:tms.product.line:0
@@ -773,7 +772,7 @@ msgstr "Pendiente"
 #. module: tms_maintenance
 #: view:tms.maintenance.order.activity:0
 msgid "List of material to use for activity"
-msgstr "Lista de Refacciones para la Tarea"
+msgstr "Lista de Refacciones a usar en la Tarea"
 
 #. module: tms_maintenance
 #: field:tms.analisys.03,order_name:0 field:tms.analisys.04,order_name:0
@@ -789,7 +788,7 @@ msgstr "Tareas por Mecánico"
 #. module: tms_maintenance
 #: field:tms.analisys.04,activity_name:0
 msgid "Activity Name"
-msgstr "Nombre de Tarea"
+msgstr "Tarea"
 
 #. module: tms_maintenance
 #: field:tms.product.line,product_id:0
@@ -825,12 +824,12 @@ msgstr "Estado del vehículo"
 #: field:fleet.vehicle.mro_program.re_schedule,mro_cycle_ids:0
 #: model:ir.actions.act_window,name:tms_maintenance.open_view_tms_maintenance_mro_program_calendar
 msgid "MRO Program"
-msgstr "MRO Programa"
+msgstr "Programa Mtto Preventivos"
 
 #. module: tms_maintenance
 #: field:fleet.vehicle,tires_extra:0
 msgid "Number of Extra Tires"
-msgstr "No. Llantas Extras"
+msgstr "Num. Llantas Extras"
 
 #. module: tms_maintenance
 #: code:addons/tms_maintenance/tms_maintenance_order.py:395
@@ -839,13 +838,13 @@ msgstr "No. Llantas Extras"
 #: code:addons/tms_maintenance/tms_maintenance_program.py:364
 #, python-format
 msgid "Order Maintenance Sequence Error !"
-msgstr "Error en Secuencia de Orden de Mantenimiento !!!"
+msgstr "Error en Secuencia de Orden de Mantenimiento !"
 
 #. module: tms_maintenance
 #: field:tms.maintenance.order,message_is_follower:0
 #: field:tms.maintenance.order.activity,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Es un seguidir"
+msgstr "Es un Seguidor"
 
 #. module: tms_maintenance
 #: field:create.invoice,id:0 field:tms.activity.control.time,activity_id:0
@@ -857,40 +856,40 @@ msgstr "Activity ID"
 #. module: tms_maintenance
 #: field:tms.maintenance.order,maint_program_id:0
 msgid "Preventive Program"
-msgstr "Preventive Program"
+msgstr "Programa Preventivo"
 
 #. module: tms_maintenance
 #: field:fleet.vehicle.mro_program,mro_service_order_date:0
 #: field:tms.analisys.01,date:0 field:tms.maintenance.order,date:0
 msgid "Date"
-msgstr "Date"
+msgstr "Fecha"
 
 #. module: tms_maintenance
 #: field:tms.analisys.01,name:0
 msgid "Order Maintenance"
-msgstr "Order Maintenance"
+msgstr "Orden de Mantenimiento"
 
 #. module: tms_maintenance
 #: view:fleet.vehicle:0
 #: model:ir.actions.act_window,name:tms_maintenance.open_view_tms_maintenance_mro_program_tree
 msgid "Delayed MRO Program"
-msgstr "Delayed MRO Program"
+msgstr "Retraso Programa Mtto"
 
 #. module: tms_maintenance
 #: field:fleet.vehicle,date_next_service:0
 msgid "Date Next Serv."
-msgstr "Date Next Serv."
+msgstr "Fecha Próx. Servicio"
 
 #. module: tms_maintenance
 #: field:tms.activity.control.time,hr_employee_user_id:0
 #: field:tms.maintenance.order,user_id:0
 msgid "User"
-msgstr "User"
+msgstr "Usuario"
 
 #. module: tms_maintenance
 #: field:tms.maintenance.order.activity,state_order:0
 msgid "State Order"
-msgstr "State Order"
+msgstr "Estado"
 
 #. module: tms_maintenance
 #: model:ir.ui.menu,name:tms_maintenance.tms_maintenance_fleet_vehicle_model_menu
@@ -905,12 +904,12 @@ msgstr "Tienda ventas"
 #. module: tms_maintenance
 #: view:tms.maintenance.order:0
 msgid "Service Order Detail"
-msgstr "Service Order Detail"
+msgstr "Detalle Orden de Servicio"
 
 #. module: tms_maintenance
 #: field:tms.maintenance.order,date_end:0
 msgid "Date End Sched"
-msgstr "Date End Sched"
+msgstr "Fecha Fin Prog."
 
 #. module: tms_maintenance
 #: field:tms.maintenance.order,shop_id:0
@@ -922,7 +921,7 @@ msgstr "Taller"
 #. module: tms_maintenance
 #: field:stock.picking,tms_order_id:0
 msgid "Maintenance Order"
-msgstr "Maintenance Order"
+msgstr "Orden de Mantenimiento"
 
 #. module: tms_maintenance
 #: field:tms.maintenance.order,message_summary:0
@@ -943,7 +942,7 @@ msgstr "Mano de Obra"
 #. module: tms_maintenance
 #: field:tms.analisys.01,manpower_cost:0
 msgid "Manpower Cost"
-msgstr "Costo de Mano de Obra"
+msgstr "Costo Mano Obra"
 
 #. module: tms_maintenance
 #: field:tms.maintenance.order.activity,hours_estimated:0
@@ -987,12 +986,12 @@ msgstr "Orden"
 #. module: tms_maintenance
 #: model:ir.model,name:tms_maintenance.model_tms_analisys_04
 msgid "Order Maintenace Analisys 4"
-msgstr "Order Maintenace Analisys 4"
+msgstr "Orden de Mtto"
 
 #. module: tms_maintenance
 #: view:tms.maintenance.order.activity:0
 msgid "Employee Mechanics"
-msgstr "Mecánicos"
+msgstr "Mecánico"
 
 #. module: tms_maintenance
 #: model:ir.model,name:tms_maintenance.model_tms_analisys_02
@@ -1037,7 +1036,7 @@ msgstr "Realizado"
 #: model:ir.model,name:tms_maintenance.model_tms_activity_control_time
 #: model:ir.model,name:tms_maintenance.model_tms_time
 msgid "Activity Control Time"
-msgstr "Activity Control Time"
+msgstr "Control Tiempo en Tarea"
 
 #. module: tms_maintenance
 #: view:fleet.vehicle.mro_program.re_schedule:0
@@ -1059,7 +1058,7 @@ msgstr "Horas Reales Mano Obra"
 #: view:tms.analisys.03:0 view:tms.analisys.04:0
 #: field:tms.maintenance.order.activity,maintenance_order_id:0
 msgid "Order"
-msgstr "Order"
+msgstr "Orden"
 
 #. module: tms_maintenance
 #: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance_config_unit_category_form
@@ -1083,7 +1082,7 @@ msgstr "Vehículo"
 #. module: tms_maintenance
 #: model:res.groups,comment:tms_maintenance.tms_maintenance_admin
 msgid "The user is TMS Maintenance Manager."
-msgstr "El usuario es Administrador de MRO"
+msgstr "El usuario es Supervisor de Mtto"
 
 #. module: tms_maintenance
 #: selection:tms.product.line,state:0
@@ -1158,7 +1157,7 @@ msgstr "Producto"
 #. module: tms_maintenance
 #: field:tms.maintenance.order,description:0
 msgid "Description"
-msgstr "Description"
+msgstr "Descripción"
 
 #. module: tms_maintenance
 #: constraint:product.product:0
@@ -1176,7 +1175,7 @@ msgstr "Orden"
 #. module: tms_maintenance
 #: field:tms.analisys.03,price:0
 msgid "Price"
-msgstr "costo"
+msgstr "Costo"
 
 #. module: tms_maintenance
 #: view:fleet.vehicle.mro_program.re_schedule:0
@@ -1188,14 +1187,24 @@ msgstr ""
 "será eliminada !!!"
 
 #. module: tms_maintenance
+#: code:addons/tms_maintenance/create_invoice.py:197
+#, python-format
+msgid ""
+"You have not defined Stock Valuation Account (Incoming) in Virtual Location "
+"related to Service Order Product (field: Production Location)."
+msgstr ""
+"No ha definido la Cuenta en la ficha de la Ubicación de Producción ligada al "
+"Producto de tipo Servicio de Mtto."
+
+#. module: tms_maintenance
 #: field:fleet.vehicle,cycle_next_service:0
 msgid "Next Maintenance Service"
-msgstr "Next Maintenance Service"
+msgstr "Próx. Servicio de Mtto"
 
 #. module: tms_maintenance
 #: field:fleet.vehicle,odometer_next_service:0
 msgid "Active Odometer Next Serv."
-msgstr "Active Odometer Next Serv."
+msgstr "Odómetro Sig. Servicio"
 
 #. module: tms_maintenance
 #: field:tms.analisys.02,supplier_invoice_number:0
@@ -1215,13 +1224,13 @@ msgstr "Ubicación Origen"
 #. module: tms_maintenance
 #: field:fleet.vehicle.mro_program,trigger:0
 msgid "Triggered at"
-msgstr "Triggered at"
+msgstr "Disparado en"
 
 #. module: tms_maintenance
 #: code:addons/tms_maintenance/tms_maintenance_order_activity.py:287
 #, python-format
 msgid "For Process should be exist Mechanics Asigned"
-msgstr "For Process should be exist Mechanics Asigned"
+msgstr "Para cambiar a estado \"En Proceso\" debe asignar Mecánico a la Tarea"
 
 #. module: tms_maintenance
 #: view:fleet.vehicle:0
@@ -1241,7 +1250,7 @@ msgstr "Productos por categoría"
 #. module: tms_maintenance
 #: field:fleet.vehicle,sequence_last_service:0
 msgid "Program Seq. Last Serv."
-msgstr "Program Seq. Last Serv."
+msgstr "Sec. del Programa Ult. Serv."
 
 #. module: tms_maintenance
 #: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance_config_unit
@@ -1257,7 +1266,7 @@ msgstr "ID Kiosko"
 #. module: tms_maintenance
 #: field:tms.maintenance.order,name:0
 msgid "Name"
-msgstr "Name"
+msgstr "Nombre"
 
 #. module: tms_maintenance
 #: model:ir.module.category,name:tms_maintenance.tms_maintenance_order_category
@@ -1280,6 +1289,7 @@ msgid "Continue"
 msgstr "Continuar"
 
 #. module: tms_maintenance
+#: code:addons/tms_maintenance/create_invoice.py:197
 #: code:addons/tms_maintenance/tms_maintenance_order.py:324
 #: code:addons/tms_maintenance/tms_maintenance_order.py:363
 #: code:addons/tms_maintenance/tms_maintenance_order.py:383
@@ -1294,7 +1304,7 @@ msgstr "Continuar"
 #: code:addons/tms_maintenance/tms_product_line.py:74
 #, python-format
 msgid "Warning!"
-msgstr "Advertencia !"
+msgstr "Advertencia!"
 
 #. module: tms_maintenance
 #: view:fleet.vehicle:0
@@ -1367,7 +1377,7 @@ msgstr "Fecha Ult. Serv."
 #. module: tms_maintenance
 #: field:fleet.vehicle,tires_number:0
 msgid "Number of Tires"
-msgstr "Number of Tires"
+msgstr "Num. Llantas"
 
 #. module: tms_maintenance
 #: field:tms.analisys.01,unit_id:0
