@@ -87,7 +87,7 @@ class tms_travel_analysis(osv.osv):
 
         'shipped_product_id'    : fields.many2one('product.product', 'Shipped Product', readonly=True),
         'qty'                   : fields.float('Product Qty', digits=(18,6), readonly=True),
-
+        'operation_id'          : fields.many2one('tms.operation', 'Operation', readonly=True),
 
 
     }
@@ -118,7 +118,8 @@ e.product_uom_qty /
 (case (select count(id) from tms_waybill_line where waybill_id=b.id)::FLOAT
 when 0.0 then 1
 else (select count(id) from tms_waybill_line where waybill_id=b.id)::FLOAT
-end) as qty
+end) as qty,
+a.operation_id
 from tms_travel a 
 	left join tms_waybill b on (a.id = b.travel_id and b.state in ('approved', 'confirmed'))	
 	left join tms_waybill_line c on (c.waybill_id = b.id and c.line_type = 'product')

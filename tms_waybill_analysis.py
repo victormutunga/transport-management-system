@@ -79,6 +79,8 @@ class tms_waybill_analysis(osv.osv):
         'shipped_product_id'    : fields.many2one('product.product', 'Shipped Product', readonly=True),
         'qty'                   : fields.float('Product Qty', digits=(18,6), readonly=True),
         'amount'                : fields.float('Amount', digits=(18,6), readonly=True),
+        'operation_id'          : fields.many2one('tms.operation', 'Operation', readonly=True),
+        
 
     }
 
@@ -112,7 +114,8 @@ sum(b.price_subtotal) /
 when 0.0 then 1
 else (select count(id) from tms_waybill_shipped_product where waybill_id=a.id)::FLOAT
 end)
- amount
+ amount,
+ a.operation_id
 
 from tms_waybill a
 	left join tms_waybill_line b on (b.waybill_id = a.id and b.line_type = 'product')

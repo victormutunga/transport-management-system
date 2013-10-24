@@ -59,7 +59,7 @@ class tms_expense_analysis(osv.osv):
         'qty'                   : fields.float('Qty', digits=(18,2), readonly=True),        
         'price_unit'            : fields.float('Price Unit', digits=(18,4), readonly=True),        
         'subtotal'              : fields.float('SubTotal', digits=(18,2), readonly=True),        
-
+        'operation_id'          : fields.many2one('tms.operation', 'Operation', readonly=True),
     }
 
 #    _order = "shop_id, date_order, name"
@@ -81,7 +81,8 @@ c.id travel_id, c.route_id,
 (select count(name) from tms_travel where a.id=tms_travel.expense_id) travels,
 b.product_uom_qty / (select count(name) from tms_travel where a.id=tms_travel.expense_id) qty,
 b.price_unit / (select count(name) from tms_travel where a.id=tms_travel.expense_id) price_unit,
-b.price_subtotal / (select count(name) from tms_travel where a.id=tms_travel.expense_id) subtotal
+b.price_subtotal / (select count(name) from tms_travel where a.id=tms_travel.expense_id) subtotal,
+b.operation_id
 from tms_expense a
 	inner join tms_expense_line b on a.id = b.expense_id 
 	inner join tms_travel c on a.id = c.expense_id

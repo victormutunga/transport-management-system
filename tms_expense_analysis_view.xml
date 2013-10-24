@@ -15,20 +15,21 @@
               <field name="month" invisible="1" />
               <field name="day" invisible="1" />
               <field name="week" invisible="1" />
-              <field name="state" />
               <field name="employee_id" invisible="1"/>
               <field name="unit_id" invisible="1"/>
               <field name="currency_id" invisible="1" />
-              <field name="product_id" />
+              <field name="product_id"  invisible="1" />
               <field name="expense_line_description" />
-              <field name="travel_id" />
-              <field name="route_id" />
+              <field name="travel_id"  invisible="1"/>
+              <field name="route_id"  invisible="1"/>
+              <field name="operation_id"  invisible="1"/>
 <!--              <field name="waybill_income" /> -->
-
               <field name="travels" invisible="1"/>
               <field name="qty" sum="Qty"/>
               <field name="price_unit" invisible="1"/>
               <field name="subtotal" sum="SubTotal"/>
+              <field name="unit_id"  invisible="1"/>
+              <field name="state" />
             </tree>
           </field>
         </record>
@@ -40,6 +41,8 @@
 		  <field name="priority" eval="5"/>
 		  <field name="arch" type="xml">
     		<search string="Search Travel Expense Analysis">
+                <filter string="This month" icon="terp-check" domain="[('date','&gt;=', time.strftime('%%Y-%%m-01'))]" name="this_month" />
+                <filter string="Confirmed" icon="terp-check" domain="[('state','=', 'confirmed')] " name="confirmed" />
               <field name="shop_id" />
               <field name="state"  />
               <field name="name" />
@@ -48,15 +51,16 @@
               <field name="unit_id"/>
               <field name="product_id"/>
 			  <group expand="1" string="Group By...">
-			    <filter string="Name"        icon="terp-partner"                 domain="[]" context="{'group_by':'name'}"/>
+			    <filter string="Name"        icon="terp-partner"                 domain="[]" context="{'group_by':'name'}" name="groupby_name"/>
 			    <filter string="Unit"        icon="terp-stage"                   domain="[]" context="{'group_by':'unit_id'}"/>
-			    <filter string="Driver"      icon="terp-personal"                domain="[]" context="{'group_by':'employee_id'}"/>
-			    <filter string="Product"     icon="terp-accessories-archiver"    domain="[]" context="{'group_by':'product_id'}"/>
+			    <filter string="Driver"      icon="terp-personal"                domain="[]" context="{'group_by':'employee_id'}" name="groupby_driver"/>
+			    <filter string="Product"     icon="terp-accessories-archiver"    domain="[]" context="{'group_by':'product_id'}" name="groupby_product"/>
+                <filter string="State"       icon="terp-accessories-archiver"    domain="[]" context="{'group_by':'state'}" name="groupby_state"/>
                 <filter string="Route"       icon="STOCK_OK" domain="[]" context="{'group_by':'route_id'}"/>
-                <filter string="Day"            icon="terp-go-today"    domain="[]" context="{'group_by':'day'}"     help="Ordered Day of the Waybill"/>
-                <filter string="Month"          icon="terp-go-month"    domain="[]" context="{'group_by':'month'}"   help="Ordered Month of the Waybill"/>
-                <filter string="Year"           icon="terp-go-year"     domain="[]" context="{'group_by':'year'}"    help="Ordered Year of the Waybill"/>
-                <filter string="Week"           icon="terp-go-week"     domain="[]" context="{'group_by':'week'}"    help="Ordered Week of Year of the Waybill"/>    
+                <filter string="Day"         icon="terp-go-today"    domain="[]" context="{'group_by':'day'}"     help="Ordered Day of the Waybill" name="groupby_day"/>
+                <filter string="Month"       icon="terp-go-month"    domain="[]" context="{'group_by':'month'}"   help="Ordered Month of the Waybill" name="groupby_month"/>
+                <filter string="Year"        icon="terp-go-year"     domain="[]" context="{'group_by':'year'}"    help="Ordered Year of the Waybill" name="groupby_year"/>
+                <filter string="Week"        icon="terp-go-week"     domain="[]" context="{'group_by':'week'}"    help="Ordered Week of Year of the Waybill"/>    
 			  </group>
             </search>
 		  </field>
@@ -68,6 +72,7 @@
           <field name="res_model">tms.expense.analysis</field>
           <field name="view_type">form</field>
           <field name="view_mode">tree</field>
+          <field name="context">{"search_default_this_month":True,"search_default_groupby_driver":True,"search_default_groupby_product":True}</field>
           <field name="view_id" ref="view_tms_expense_analysis_tree"></field>
           
         </record>
