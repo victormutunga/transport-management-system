@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-24 22:46+0000\n"
-"PO-Revision-Date: 2013-10-24 17:47-0600\n"
+"POT-Creation-Date: 2013-10-25 23:55+0000\n"
+"PO-Revision-Date: 2013-10-25 18:56-0600\n"
 "Last-Translator: Israel CA <israel.cruz@hesatecnica.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -190,7 +190,7 @@ msgstr "Cliente"
 #: field:tms.travel.analysis,operation_id:0 view:tms.waybill.analysis:0
 #: field:tms.waybill.analysis,operation_id:0
 msgid "Operation"
-msgstr "Operation"
+msgstr "Operación"
 
 #. module: tms_analysis
 #: view:tms.travel.availability:0
@@ -256,7 +256,7 @@ msgstr "Cantidad"
 #. module: tms_analysis
 #: view:tms.waybill.analysis:0
 msgid "Confirmed State"
-msgstr "Confirmed State"
+msgstr "Confirmada"
 
 #. module: tms_analysis
 #: model:ir.ui.menu,name:tms_analysis.menu_tms_travel_analysis
@@ -293,7 +293,7 @@ msgstr "Más Agrupar por..."
 #: view:tms.expense.analysis:0 view:tms.travel.analysis:0
 #: view:tms.waybill.analysis:0
 msgid "This month"
-msgstr "This month"
+msgstr "Este mes"
 
 #. module: tms_analysis
 #: model:ir.actions.act_window,name:tms_analysis.action_tms_travel_availability
