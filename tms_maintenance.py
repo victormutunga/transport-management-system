@@ -47,8 +47,8 @@ class fleet_vehicle(osv.osv):
         'mro_cycle_ids'              : fields.one2many('fleet.vehicle.mro_program', 'vehicle_id', 'MRP Program'),
 
         'last_preventive_service'    : fields.many2one('tms.maintenance.order', 'Last Maintenance Service'),
-        'main_odometer_last_service' : fields.related('last_preventive_service', 'odometer', type='float', string="Last Serv. Odometer", store=True, readonly=True),
-        'odometer_last_service'      : fields.related('last_preventive_service', 'active_odometer', type='float', string="Last Serv. Active Odometer", store=True, readonly=True),
+        'main_odometer_last_service' : fields.related('last_preventive_service', 'accumulated_odometer', type='float', string="Last Serv. Odometer", store=True, readonly=True),
+        'odometer_last_service'      : fields.related('last_preventive_service', 'current_odometer', type='float', string="Last Serv. Active Odometer", store=True, readonly=True),
         'date_last_service'          : fields.related('last_preventive_service', 'date', type='datetime', string="Date Last Serv.", store=True, readonly=True),
         'sequence_last_service'      : fields.related('last_preventive_service', 'program_sequence', type='integer', string="Program Seq. Last Serv.", store=True, readonly=True),
         'cycle_last_service'         : fields.related('last_preventive_service', 'maint_cycle_id', type='many2one', relation='product.product', string='Cycle Last Serv.', store=True, readonly=True),
@@ -98,9 +98,12 @@ class fleet_vehicle(osv.osv):
         if len(prog_ids):
             program_obj.unlink(cr, uid, prog_ids)
         
+        if not vehicle.mro_program_id.id:
+            raise osv.except_osv(_('Warning!'),_('You have not define Preventive Program for this vehicle')) 
+            
         for cycle in vehicle.mro_program_id.mro_cycle_ids:
             seq = 1
-            for x in range(cycle.mro_frequency, 3000000,cycle.mro_frequency): 
+            for x in range(cycle.mro_frequency, 4000000,cycle.mro_frequency): 
                 program_obj.create(cr, uid, {'vehicle_id': ids[0], 'mro_cycle_id' : cycle.id, 'trigger' : x,  'sequence': seq})
                 seq += 1
         
@@ -127,10 +130,11 @@ class fleet_vehicle_mro_program(osv.Model):
     _columns = {
         'vehicle_id'     : fields.many2one('fleet.vehicle', 'Vehicle', required=True),
         'mro_cycle_id'   : fields.many2one('product.product', 'MRO Cycle', required=True),
-        'trigger'        : fields.integer('Triggered at', required=True),
+        'trigger'        : fields.integer('Scheduled at', required=True),
         'sequence'       : fields.integer('Sequence', required=True),
-        'mro_service_order_id'   : fields.many2one('tms.maintenance.order', 'MRO Service Order'),
-        'mro_service_order_date' : fields.related('mro_service_order_id', 'date', type='datetime', string="Date", store=True, readonly=True),
+        'mro_service_order_id'       : fields.many2one('tms.maintenance.order', 'MRO Service Order'),
+        'mro_service_order_date'     : fields.related('mro_service_order_id', 'date', type='datetime', string="Date", store=True, readonly=True),
+        'mro_service_order_distance' : fields.related('mro_service_order_id', 'accumulated_odometer', type='float', string="mi/km", store=True, readonly=True),
         'next_date'     : fields.date('Date Next Service'),
         }
 

@@ -332,9 +332,37 @@ class tms_maintenance_order(osv.Model):
     def action_done(self,cr,uid,ids,context={}): 
         self.calculate_parts_cost(cr,uid,ids)
         self.calculate_cost_service(cr,uid,ids)
+        
+        for service_order in self.browse(cr, uid, ids):
+            if service_order.maint_program_id.id:
+                vehicle_obj = self.pool.get('fleet.vehicle')
+                vehicle_obj.write(cr, uid, [service_order.unit_id.id], {'last_preventive_service': service_order.id})
+                program_obj = self.pool.get('fleet.vehicle.mro_program')
+                prog_id = program_obj.search(cr, uid, [('vehicle_id', '=', service_order.unit_id.id), ('sequence','=', service_order.program_sequence)])
+                if prog_id:
+                    program_obj.write(cr, uid, prog_id, {'mro_service_order_id'   : service_order.id})
+                    
+                    prog_ids = program_obj.search(cr, uid, [('vehicle_id', '=', service_order.unit_id.id), ('sequence','>', service_order.program_sequence)], order='sequence')
+                    service_trigger = service_order.accumulated_odometer
+                    prog_last = program_obj.read(cr, uid, prog_id, ['trigger'])[0]['trigger']
+                    x = 0                    
+                    for rec in program_obj.browse(cr, uid, prog_ids):
+                        prog_next_trigger = rec.trigger - prog_last + service_trigger
+                        program_obj.write(cr, uid, [rec.id], {'trigger' : prog_next_trigger})
+                        if not x:
+                            vehicle_obj.write(cr, uid, [service_order.unit_id.id], \
+                                              {'cycle_next_service'     : rec.mro_cycle_id.id, \
+                                               'date_next_service'      : service_order.date, \ # Falta calcular la fecha en base a los kms promedio definidos en la unidad
+                                               'main_odometer_next_service': prog_next_trigger, \
+                                               'odometer_next_service'  : service_order.current_odometer + (rec.trigger - prog_last), \
+                                               'sequence_next_service'  : rec.sequence,
+                                               })
+                        x += 1
+                        service_trigger = prog_next_trigger
+                        
+        
+        self.write(cr, uid, ids, {'state':'done', 'date_end_real':time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
-        self.write(cr, uid, ids, {'state':'done'})
-        self.write(cr, uid, ids, {'date_end_real':time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}) 
         return True 
 
     def action_released(self,cr,uid,ids,context={}): 

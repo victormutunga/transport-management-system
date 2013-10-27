@@ -128,7 +128,8 @@
                   <form version="7.0">
                     <group col="4">
                       <button name="button_set_next_cycle_service" type="object" 
-                              string="Assign as Next MRO Service" confirm="Are you sure you want to assign this Sequence? Previous info will be overwritten !!!" icon="gtk-go-forward"/>
+                              string="Assign as Next MRO Service" confirm="Are you sure you want to assign this Sequence? Previous info will be overwritten !!!" 
+                              icon="gtk-go-forward"/>
                       <field name="mro_cycle_id" readonly="1"/>
                       <field name="trigger" readonly="1"/>
                       <field name="sequence" readonly="1"/>
@@ -195,14 +196,17 @@
                       <field name="sequence_next_service" />
                     </group>
                     <separator string="Cycle Sequence" colspan="2" />
-                    <button name="button_create_mro_program" type="object" string="MRO Program" confirm="Are you sure you want to create Program Sequence for this record? All previous records will be deleted !!!"/>
+                    <button name="button_create_mro_program" type="object" string="MRO Program" 
+                            confirm="Are you sure you want to create Program Sequence for this record? All previous records will be deleted !!!"
+                            attrs="{'invisible':[('mro_program_id', '=', False)]}" />
                     <field name="mro_cycle_ids" colspan="4" nolabel="1">
                       <tree>
                         <field name="mro_cycle_id" />
                         <field name="trigger" />
                         <field name="sequence" />
                         <field name="mro_service_order_id" />
-                        <field name="mro_service_order_date" />                        
+                        <field name="mro_service_order_date" />
+                        <field name="mro_service_order_distance" />
                       </tree>
                       <form>
                         <group col="4" colspan="4">
@@ -211,6 +215,7 @@
                           <field name="sequence" />
                           <field name="mro_service_order_id" />
                           <field name="mro_service_order_date" />
+                          <field name="mro_service_order_distance" />
                         </group>
                       </form>
                     </field>
