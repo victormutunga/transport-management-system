@@ -83,12 +83,12 @@
                   <field name="name" />
                   <field name="date" />
                   <field name="unit_id" />
-                  <field name="internal_repair" />
-                  <field name="partner_id" />
                   <field name="product_id" />
-                  <field name="state" />
+                  <field name="partner_id" />
+                  <field name="internal_repair" />
                   <field name="date_start" />
                   <field name="date_end" />
+                  <field name="state" />
 		</tree>
 	    </field>
     </record>

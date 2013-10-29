@@ -21,7 +21,7 @@
 
 from osv import osv, fields
 import time
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from osv.orm import browse_record, browse_null
 from osv.orm import except_orm
 from tools.translate import _
@@ -122,7 +122,20 @@ class fleet_vehicle(osv.osv):
         return True
 
 
+    def get_next_service_date(self, cr, uid, ids, context=None):
+        for vehicle in self.browse(cr, uid, ids):
+            if not vehicle.date_last_service:
+                raise osv.except_osv(_('Warning!'),_('I can not calculate Next Preventive Service Date because this Vehicle (%s) has no record for Last Preventive Service') % (vehicle.name)) 
+            date_origin = datetime.strptime(vehicle.date_last_service, '%Y-%m-%d %H:%M:%S')
+            if not vehicle.avg_odometer_uom_per_day:
+                raise osv.except_osv(_('Warning!'),_('I can not calculate Next Preventive Service Date because you have not defined Average distance/time per day for vehicle: %s') % (vehicle.name)) 
+            delta = timedelta(days=int((vehicle.main_odometer_next_service - vehicle.main_odometer_last_service)/vehicle.avg_odometer_uom_per_day))
+            date_next_service = date_origin + delta
+            #print date_next_service
+            return date_next_service.date().isoformat()
 
+        
+    
 class fleet_vehicle_mro_program(osv.Model):
     _name = 'fleet.vehicle.mro_program'
     _description = 'Fleet Vehicle MRO Program'
@@ -142,7 +155,7 @@ class fleet_vehicle_mro_program(osv.Model):
         'next_date'      : lambda *a: time.strftime(DEFAULT_SERVER_DATE_FORMAT),
         }
 
-    _order = 'trigger, sequence'
+    _order = 'sequence'
 
     def button_set_next_cycle_service(self, cr, uid, ids, context=None):
         print "context: ", context
@@ -167,68 +180,62 @@ class fleet_vehicle_mro_program(osv.Model):
 
 class fleet_vehicle_mro_program_reschedule(osv.osv_memory):
     _name ='fleet.vehicle.mro_program.re_schedule'
-    _description = 'Fleet Vehicle MRO Program assignation'
+    _description = 'Fleet Vehicle MRO Program re-schedule based on average distance/time per day'
 
     _columns = {
-        'vehicle_id'     : fields.many2one('fleet.vehicle', 'Vehicle', required=True, readonly=True),
-        'odometer'       : fields.float('Odometer', readonly=True),
-        'mro_program_id' : fields.many2one('product.product', 'Maintenance Program', required=True, readonly=True),
-        'next_date'      : fields.date('Date Next Service'),
-        'mro_cycle_ids'  : fields.many2many('fleet.vehicle.mro_program', 'fleet_vehicle_mro_program_re_schedule_rel', 'vehicle_id', 'cycle_id', string='MRO Program', required=True),
+        'control'     : fields.boolean('Control'),
+        'vehicle_ids' : fields.one2many('fleet.vehicle.mro_program.re_schedule.line', 'wizard_id', 'Vehicles'),
         }
+    
+    def do_re_schedule(self, cr, uid, ids, context=None):
+        for rec in self.browse(cr, uid, ids):
+            vehicle_obj = self.pool.get('fleet.vehicle')
+            for vehicle in rec.vehicle_ids:
+                vehicle_obj.write(cr, uid, [vehicle.vehicle_id.id], {'date_next_service':vehicle.next_date})
+                
+        return {'type': 'ir.actions.act_window_close'}
+    
+    
+    def _get_vehicle_ids(self, cr, uid, context=None):
+        vehicle_ids = []
+        ids = context.get('active_ids', False)
+        if ids:
+            vehicle_obj = self.pool.get('fleet.vehicle')
+            for rec in vehicle_obj.browse(cr, uid, ids):
+                vehicle_ids.append({'vehicle_id'        : rec.id,
+                                    'mro_program_id'    : rec.mro_program_id.id,
+                                    'cycle_next_service': rec.cycle_next_service.id,
+                                    'sequence_next_service': rec.sequence_next_service,
+                                    'odometer'          : rec.odometer,
+                                    'current_odometer'  : rec.current_odometer_read,
+                                    'avg_odometer_uom_per_day'  : rec.avg_odometer_uom_per_day,
+                                    'date_next_service' : rec.date_next_service,
+                                    'next_date'         : vehicle_obj.get_next_service_date(cr, uid, [rec.id]), 
+                                    })
 
-
-
-    def _get_vehicle_id(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        return context.get('active_ids', False) 
-
-    def _get_odometer(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        vehicle_obj = self.pool.get('fleet.vehicle')
-        vehicle_id = context.get('active_ids', [])
-        if len(vehicle_id):
-            for vehicle in vehicle_obj.browse(cr, uid, vehicle_id):
-                return vehicle.odometer or False
-        return False
-
-
-    def _get_mro_program_id(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        print context
-
-        vehicle_obj = self.pool.get('fleet.vehicle')
-        vehicle_id = context.get('active_ids', [])
-        if len(vehicle_id):
-            for vehicle in vehicle_obj.browse(cr, uid, vehicle_id):
-                return vehicle.mro_program_id.id or False
-        return False
-
-
-    def _get_mro_cycle_ids(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        print context
-
-        vehicle_obj = self.pool.get('fleet.vehicle')
-        vehicle_id = context.get('active_ids', [])
-        if len(vehicle_id):
-            return self.pool.get('fleet.vehicle.mro_program').search(cr, uid ,[('vehicle_id', '=', vehicle_id[0]), ('mro_service_order_id', '=', False)])
-        else:
-            return False
-
-
+        return vehicle_ids
+    
     _defaults = {
-        'vehicle_id'     : _get_vehicle_id,
-        'odometer'       : _get_odometer,
-        'mro_program_id' : _get_mro_program_id,
-        'mro_cycle_ids'  : _get_mro_cycle_ids,
-        'next_date'      : lambda *a: time.strftime(DEFAULT_SERVER_DATE_FORMAT),
+            'vehicle_ids'   : _get_vehicle_ids,
+            'control'       : False,
+             }
+    
+class fleet_vehicle_mro_program_reschedule_line(osv.osv_memory):
+    _name ='fleet.vehicle.mro_program.re_schedule.line'
+    _description = 'Vehicles to re-schedule based on average distance/time per day'
+    _columns = {
+        'wizard_id'                 : fields.many2one('fleet.vehicle.mro_program.re_schedule', string="Wizard", ondelete='CASCADE'),
+        'vehicle_id'                : fields.many2one('fleet.vehicle', 'Vehicle', required=True, readonly=True),
+        'mro_program_id'            : fields.related('vehicle_id', 'mro_program_id', type='many2one', relation='product.product', string='Maintenance Program', readonly=True),
+        'cycle_next_service'        : fields.related('vehicle_id', 'cycle_next_service', type='many2one', relation='product.product', string='Next Maintenance Service', readonly=True),
+        'sequence_next_service'     : fields.related('vehicle_id', 'sequence_next_service', string='Cycle Seq. Next Serv.', readonly=True),
+        'odometer'                  : fields.related('vehicle_id', 'odometer', string='Accumulated Odometer', readonly=True),
+        'current_odometer'          : fields.related('vehicle_id', 'current_odometer_read', string='Current Odometer', readonly=True),
+        'avg_odometer_uom_per_day'  : fields.related('vehicle_id', 'avg_odometer_uom_per_day', string='Avg Distance/Time per day', readonly=True),
+        'date_next_service'         : fields.related('vehicle_id', 'date_next_service', type='date', string='Date Next Serv.', readonly=True),
+        'next_date'                 : fields.date('NEW Next Service', required=True),
+        
         }
-
 
             
 

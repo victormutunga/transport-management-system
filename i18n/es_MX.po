@@ -1,13 +1,13 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-# 	* tms_maintenance
+# 	* tms_analysis
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-05 20:18+0000\n"
-"PO-Revision-Date: 2013-10-05 13:19-0700\n"
+"POT-Creation-Date: 2013-10-29 00:21+0000\n"
+"PO-Revision-Date: 2013-10-28 18:21-0600\n"
 "Last-Translator: Israel CA <israel.cruz@hesatecnica.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,1415 +16,658 @@ msgstr ""
 "Plural-Forms: \n"
 "X-Generator: Poedit 1.5.7\n"
 
-#. module: tms_maintenance
-#: view:tms.product.line:0
-msgid "Tms Product Line"
-msgstr "MRO Línea de Refacción"
+#. module: tms_analysis
+#: view:tms.travel.analysis:0 view:tms.travel.availability:0
+msgid "Travels related to me"
+msgstr "Mis viajes"
 
-#. module: tms_maintenance
-#: model:ir.actions.act_window,name:tms_maintenance.action_view_create_invoice
-msgid "Create Invoice by Supplier"
-msgstr "Crear Factura de Proveedor"
+#. module: tms_analysis
+#: selection:tms.travel.analysis,waybill_type:0
+#: selection:tms.waybill.analysis,waybill_type:0
+msgid "Self"
+msgstr "Propios"
 
-#. module: tms_maintenance
-#: view:create.invoice:0 view:tms.analisys.01:0 view:tms.analisys.02:0
-#: view:tms.analisys.03:0 view:tms.analisys.04:0
+#. module: tms_analysis
+#: view:tms.expense.analysis:0 view:tms.travel.analysis:0
+#: view:tms.travel.availability:0 view:tms.waybill.analysis:0
 msgid "Group By..."
 msgstr "Agrupar por..."
 
-#. module: tms_maintenance
-#: view:tms.activity.control.time:0
-#: selection:tms.activity.control.time,state:0 selection:tms.time,event:0
-msgid "Pause"
-msgstr "Pausa"
+#. module: tms_analysis
+#: view:tms.waybill.analysis:0
+msgid "Not Invoiced"
+msgstr "No Facturado"
 
-#. module: tms_maintenance
-#: field:fleet.vehicle,last_preventive_service:0
-msgid "Last Maintenance Service"
-msgstr "Ultimo Mtto. Preventivo"
+#. module: tms_analysis
+#: selection:tms.travel.analysis,tms_category:0
+#: selection:tms.waybill.analysis,tms_category:0
+msgid "Highway Tolls"
+msgstr "Autopistas"
 
-#. module: tms_maintenance
-#: view:fleet.vehicle:0 field:fleet.vehicle,mro_program_id:0
-#: field:fleet.vehicle.mro_program.re_schedule,mro_program_id:0
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance_program
-msgid "Maintenance Program"
-msgstr "Programa de Mtto"
+#. module: tms_analysis
+#: selection:tms.travel.analysis,state:0
+#: selection:tms.travel.availability,state:0
+msgid "Progress"
+msgstr "En Proceso"
 
-#. module: tms_maintenance
-#: field:fleet.vehicle.mro_program,vehicle_id:0
-#: field:fleet.vehicle.mro_program.re_schedule,vehicle_id:0
-msgid "Vehicle"
-msgstr "Vehículo"
+#. module: tms_analysis
+#: view:tms.expense.analysis:0 field:tms.expense.analysis,subtotal:0
+msgid "SubTotal"
+msgstr "SubTotal"
 
-#. module: tms_maintenance
-#: field:create.invoice,supplier_id:0
-#: field:tms.maintenance.order.activity,supplier_id:0
-msgid "Supplier"
-msgstr "Proveedor"
+#. module: tms_analysis
+#: selection:tms.travel.analysis,waybill_type:0
+#: selection:tms.waybill.analysis,waybill_type:0
+msgid "Outsourced"
+msgstr "Tercerizado"
 
-#. module: tms_maintenance
-#: view:tms.activity.control.time:0 field:tms.activity.control.time,state:0
-msgid "State Activity"
-msgstr "Estado de Tarea"
+#. module: tms_analysis
+#: view:tms.travel.availability:0
+msgid "Single Trailer"
+msgstr "Sencillo"
 
-#. module: tms_maintenance
-#: model:ir.actions.act_window,name:tms_maintenance.tms_analisys_03_action
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_analisys_03
-msgid "Analisys Products Material"
-msgstr "Análisis de Refacciones Consumidas"
+#. module: tms_analysis
+#: selection:tms.travel.availability,state:0
+msgid "Free"
+msgstr "Disponible"
 
-#. module: tms_maintenance
-#: view:fleet.vehicle:0
-msgid "Cycle Sequence"
-msgstr "Secuencia del Ciclo"
+#. module: tms_analysis
+#: view:tms.travel.analysis:0 field:tms.travel.analysis,framework:0
+#: view:tms.travel.availability:0 field:tms.travel.availability,framework:0
+#: view:tms.waybill.analysis:0 field:tms.waybill.analysis,framework:0
+msgid "Framework"
+msgstr "Armado"
 
-#. module: tms_maintenance
-#: field:create.invoice,hours:0 field:tms.analisys.02,hours:0
-msgid "Hours"
-msgstr "Horas"
+#. module: tms_analysis
+#: model:ir.model,name:tms_analysis.model_tms_travel_analysis
+msgid "Travel Analisys"
+msgstr "Análisis de Viajes"
 
-#. module: tms_maintenance
-#: model:ir.model,name:tms_maintenance.model_tms_product_line
-msgid "Material Line"
-msgstr "Refacciones"
+#. module: tms_analysis
+#: field:tms.travel.analysis,trailer1_id:0
+#: field:tms.travel.availability,trailer1_id:0
+#: field:tms.waybill.analysis,trailer1_id:0
+msgid "Trailer 1"
+msgstr "Rem. 1"
 
-#. module: tms_maintenance
-#: field:tms.maintenance.order,product_id:0
-msgid "Service"
-msgstr "Servicio"
+#. module: tms_analysis
+#: field:tms.travel.analysis,trailer2_id:0
+#: field:tms.travel.availability,trailer2_id:0
+#: field:tms.waybill.analysis,trailer2_id:0
+msgid "Trailer 2"
+msgstr "Rem. 2"
 
-#. module: tms_maintenance
-#: view:tms.maintenance.order:0 selection:tms.maintenance.order,state:0
-msgid "Released"
-msgstr "Liberada"
+#. module: tms_analysis
+#: view:tms.travel.availability:0
+#: selection:tms.travel.availability,fleet_type:0
+msgid "Motorized Unit"
+msgstr "Unidad Motriz"
 
-#. module: tms_maintenance
-#: field:tms.maintenance.order,date_end_real:0
-#: field:tms.maintenance.order.activity,date_end_real:0
-msgid "Date End Real"
-msgstr "Fecha Fin Real"
+#. module: tms_analysis
+#: view:tms.expense.analysis:0 field:tms.expense.analysis,day:0
+#: view:tms.travel.analysis:0 field:tms.travel.analysis,day:0
+#: view:tms.waybill.analysis:0 field:tms.waybill.analysis,day:0
+msgid "Day"
+msgstr "Día"
 
-#. module: tms_maintenance
-#: constraint:tms.maintenance.order.activity:0
-msgid ""
-"Error ! You can not create Activities in released, please Errase manualy "
-"activity for save the Order"
-msgstr ""
-"Error ! No puede crear Tareas en una Orden de Servicio en estado Liberada. "
-"Elimine las tareas que intentó agregar..."
+#. module: tms_analysis
+#: view:tms.travel.availability:0
+msgid "Supplier's Unit"
+msgstr "Unidad de Perm."
 
-#. module: tms_maintenance
-#: field:tms.maintenance.order,program_sequence:0
-msgid "Preventive Program Seq."
-msgstr "Sec. Programa Preventivo"
+#. module: tms_analysis
+#: field:tms.expense.analysis,travels:0
+msgid "Travels"
+msgstr "Viajes"
 
-#. module: tms_maintenance
-#: field:tms.maintenance.order.activity,date_start:0
-msgid "Scheduled Date Start"
-msgstr "Fecha Inicio Prog."
+#. module: tms_analysis
+#: field:tms.travel.analysis,amount:0 view:tms.waybill.analysis:0
+#: field:tms.waybill.analysis,amount:0
+msgid "Amount"
+msgstr "Monto"
 
-#. module: tms_maintenance
-#: view:fleet.vehicle:0
-msgid ""
-"Are you sure you want to create Program Sequence for this record? All "
-"previous records will be deleted !!!"
-msgstr ""
-"Está seguro que desea crear el Programa de Preventivos para este vehículo? "
-"Toso los registros previos se eliminarán !!!"
-
-#. module: tms_maintenance
-#: field:create.invoice,date_begin:0
-#: field:tms.activity.control.time,date_begin:0
-#: field:tms.analisys.02,date_begin:0 field:tms.analisys.04,date_begin:0
-msgid "Date Begin"
-msgstr "Fecha Inicio"
-
-#. module: tms_maintenance
-#: field:tms.analisys.01,user_id:0
-msgid "User ID"
-msgstr "Usuario"
-
-#. module: tms_maintenance
-#: field:tms.analisys.02,external_workshop:0
-#: field:tms.maintenance.order.activity,external_workshop:0
-msgid "External"
-msgstr "Externo"
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order,date_start:0
-msgid "Date Start Sched"
-msgstr "Fecha Inicio Prog."
-
-#. module: tms_maintenance
-#: field:fleet.vehicle.mro_program,mro_cycle_id:0
-msgid "MRO Cycle"
-msgstr "MRO Ciclo"
-
-#. module: tms_maintenance
-#: view:tms.product.line:0
-msgid "Request Materials"
-msgstr "Requisición de Refacciones"
-
-#. module: tms_maintenance
-#: view:tms.maintenance.order:0 field:tms.maintenance.order,notes:0
-msgid "Notes"
-msgstr "Notas"
-
-#. module: tms_maintenance
-#: view:fleet.vehicle.mro_program.re_schedule:0
-msgid "Assign as Next MRO Service"
-msgstr "Asignar como Próximo Servicio de Mtto"
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order,message_ids:0
-#: field:tms.maintenance.order.activity,message_ids:0
-msgid "Messages"
-msgstr "Mensajes"
-
-#. module: tms_maintenance
-#: code:addons/tms_maintenance/tms_maintenance_order_activity.py:322
-#: code:addons/tms_maintenance/tms_maintenance_order_activity.py:334
-#, python-format
-msgid ""
-"All Product Lines should be not State Pending or Not Exist Product Lines"
-msgstr ""
-"Todas las líneas de Refacciones no deben estar Pendientes o bien, no debe "
-"haber ninguna línea de Refacciones..."
-
-#. module: tms_maintenance
-#: field:create.invoice,date_end:0 field:tms.activity.control.time,date_end:0
-#: field:tms.analisys.01,date_end:0 field:tms.analisys.02,date_end:0
-#: field:tms.analisys.04,date_end:0
+#. module: tms_analysis
+#: field:tms.travel.availability,date_end:0
 msgid "Date End"
 msgstr "Fecha Finalización"
 
-#. module: tms_maintenance
-#: model:ir.actions.act_window,name:tms_maintenance.tms_maintenance_product_normal_action
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance_config_product
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance_config_product_product
-msgid "Products"
-msgstr "Productos"
-
-#. module: tms_maintenance
-#: selection:tms.maintenance.order,state:0
-#: selection:tms.maintenance.order.activity,state:0
-#: selection:tms.product.line,state:0
+#. module: tms_analysis
+#: selection:tms.expense.analysis,state:0
+#: selection:tms.travel.analysis,state:0
+#: selection:tms.travel.analysis,waybill_state:0
+#: selection:tms.waybill.analysis,state:0
 msgid "Cancelled"
 msgstr "Cancelado"
 
-#. module: tms_maintenance
-#: field:tms.maintenance.order,maint_cycle_id:0
-msgid "Preventive Cycle"
-msgstr "Ciclo Preventivo"
-
-#. module: tms_maintenance
-#: help:tms.maintenance.order,message_unread:0
-#: help:tms.maintenance.order.activity,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Si está activo, entonces hay nuevos mensajes por revisar"
-
-#. module: tms_maintenance
-#: view:tms.maintenance.order.activity:0
-#: field:tms.maintenance.order.activity,mechanic_ids:0
-msgid "Mechanics"
-msgstr "Mecánicos"
-
-#. module: tms_maintenance
-#: view:tms.analisys.02:0
-msgid "Supplier Invoice Number"
-msgstr "Factura de Prov."
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order,stock_dest_id:0
-msgid "Stock Dest"
-msgstr "Ubicación Destino"
-
-#. module: tms_maintenance
-#: view:tms.activity.control.time:0
-msgid "Start"
-msgstr "Iniciar"
-
-#. module: tms_maintenance
-#: field:fleet.vehicle.mro_program,mro_service_order_id:0
-msgid "MRO Service Order"
-msgstr "Orden de Servicio"
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order,message_unread:0
-#: field:tms.maintenance.order.activity,message_unread:0
-msgid "Unread Messages"
-msgstr "Mensajes sin leer"
-
-#. module: tms_maintenance
-#: field:create.invoice,cost_manpower:0 field:tms.analisys.02,cost_manpower:0
-msgid "Cost Manpower"
-msgstr "Cost Mano Obra"
-
-#. module: tms_maintenance
-#: field:product.product,mro_preventive:0
-msgid "Preventive MRO"
-msgstr "MRO Preventivo"
-
-#. module: tms_maintenance
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance_orders
-msgid "Repair Orders"
-msgstr "Ordenes de Mantenimiento"
-
-#. module: tms_maintenance
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance
-msgid "Fleet Maintenance"
-msgstr "Mantenimiento"
-
-#. module: tms_maintenance
-#: selection:tms.activity.control.time,state:0
-#: view:tms.maintenance.order.activity:0
-#: selection:tms.maintenance.order.activity,state:0 selection:tms.time,event:0
-msgid "Process"
-msgstr "En Proceso"
-
-#. module: tms_maintenance
-#: help:tms.maintenance.order,message_summary:0
-#: help:tms.maintenance.order.activity,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order.activity,invoice_id:0
-msgid "Invoce"
-msgstr "Factura"
-
-#. module: tms_maintenance
-#: field:fleet.vehicle,mro_cycle_ids:0
-msgid "MRP Program"
-msgstr "Programa"
-
-#. module: tms_maintenance
-#: view:tms.analisys.02:0 field:tms.maintenance.order,partner_id:0
-msgid "Partner"
-msgstr "Empresa"
-
-#. module: tms_maintenance
-#: field:tms.time,event:0
-msgid "Event"
-msgstr "Evento"
-
-#. module: tms_maintenance
-#: view:tms.analisys.03:0
-msgid "TMS Analisys 03 orders"
-msgstr "TMS Analisys 03 orders"
-
-#. module: tms_maintenance
-#: field:tms.analisys.01,driver_name:0
-msgid "Driver Name"
-msgstr "Operador"
-
-#. module: tms_maintenance
-#: code:addons/tms_maintenance/tms_maintenance_order_activity.py:313
-#, python-format
-msgid "All Mechanics Activities, should be in state End"
-msgstr "Todas las Tareas deben estar Finalizadas"
-
-#. module: tms_maintenance
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance_config_unit_active_history_form
-msgid "Activate/Inactivate Units"
-msgstr "Alta/Baja de Unidades"
-
-#. module: tms_maintenance
-#: model:ir.actions.act_window,help:tms_maintenance.tms_maintenance_product_normal_action
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new Maintenance product.\n"
-"              </p><p>\n"
-"                You must define a product for everything related to MRO.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to define a new Maintenance product.\n"
-"              </p><p>\n"
-"                You must define a product for everything related to MRO.\n"
-"              </p>\n"
-"            "
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order.activity,date_most_recent_end_mechanic_activity:0
-msgid "Scheduled Most Recent Activity End of Mechanic"
-msgstr "Fecha mas reciente del Fin de Tarea"
-
-#. module: tms_maintenance
-#: model:ir.model,name:tms_maintenance.model_tms_analisys_01
-msgid "Order Maintenace Analisys 1, Order"
-msgstr "Order Maintenace Analisys 1, Order"
-
-#. module: tms_maintenance
-#: field:fleet.vehicle.mro_program.re_schedule,odometer:0
-msgid "Odometer"
-msgstr "Odómetro"
-
-#. module: tms_maintenance
-#: help:tms.maintenance.order.activity,external_workshop:0
-msgid "Check if this task is going to be done bya an external supplier "
-msgstr "Active si esta Tarea será realizada en Taller Externo"
-
-#. module: tms_maintenance
-#: view:product.product:0
-msgid "Cycle Services Included"
-msgstr "Ciclo de Servicios Incluido"
-
-#. module: tms_maintenance
-#: field:sale.shop,tms_maintenance_seq:0
-msgid "Maintenance Order Sequence"
-msgstr "Secuencia de Orden de Mantenimiento"
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order,message_follower_ids:0
-#: field:tms.maintenance.order.activity,message_follower_ids:0
-msgid "Followers"
-msgstr "Seguidores"
-
-#. module: tms_maintenance
-#: view:tms.time:0
-msgid "Activity Time Detail"
-msgstr "Detalle de tiempos de Tarea"
-
-#. module: tms_maintenance
-#: model:ir.model,name:tms_maintenance.model_stock_picking
-msgid "Picking List"
-msgstr "Albarán"
-
-#. module: tms_maintenance
-#: view:tms.maintenance.order.activity:0
-msgid "Spare Parts"
-msgstr "Refacciones"
-
-#. module: tms_maintenance
-#: field:fleet.vehicle,sequence_next_service:0
-msgid "Cycle Seq. Next Serv."
-msgstr "Sec. Ciclo Prox. Serv."
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order.activity,product_line_ids:0
-msgid "Material List"
-msgstr "Lista Refacciones"
-
-#. module: tms_maintenance
-#: field:tms.analisys.03,total_price:0
-msgid "Total Price"
-msgstr "Total"
-
-#. module: tms_maintenance
-#: view:fleet.vehicle:0
-msgid "Show Red Tapes (Gov Formalities) logs for this vehicle"
-msgstr "Mostrar Trámites para este vehículo"
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order.activity,breakdown:0
-msgid "Breakdown"
-msgstr "Breakdown"
-
-#. module: tms_maintenance
-#: field:fleet.vehicle,main_odometer_next_service:0
-msgid "Odometer Next Serv."
-msgstr "Odómetro Prox. Servicio"
-
-#. module: tms_maintenance
-#: view:tms.activity.control.time:0 view:tms.maintenance.order:0
-msgid "Order Calendar"
-msgstr "Calendario"
-
-#. module: tms_maintenance
-#: field:tms.analisys.01,material_cost:0
-msgid "Material Cost"
-msgstr "Costo Refacciones"
-
-#. module: tms_maintenance
-#: field:tms.analisys.01,unit_name:0 field:tms.analisys.02,unit_name:0
-#: field:tms.analisys.03,unit_name:0 field:tms.analisys.04,unit_name:0
-msgid "Unit Name"
-msgstr "Vehículo"
-
-#. module: tms_maintenance
-#: field:create.invoice,cost_material:0 field:tms.analisys.02,cost_material:0
-msgid "Cost Material"
-msgstr "Costo Refacciones"
-
-#. module: tms_maintenance
-#: constraint:tms.maintenance.order.activity:0
-msgid ""
-"Error ! You can not create Activities Duplicate, please Errase manualy "
-"activity for save the Order"
-msgstr ""
-"Error ! No puede crear Tareas duplicadas, elimine las tareas duplicadas para "
-"poder salvar la Orden de Servicio"
-
-#. module: tms_maintenance
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance_analisys
-msgid "Maintenance Analisys"
-msgstr "Análisis de Mantenimiento"
-
-#. module: tms_maintenance
-#: view:tms.maintenance.order.activity:0
-msgid "Job"
-msgstr "Tarea"
-
-#. module: tms_maintenance
-#: view:tms.analisys.02:0
-msgid "External workshop"
-msgstr "Taller Externo"
-
-#. module: tms_maintenance
-#: field:tms.analisys.03,product_name:0
-msgid "Product Name"
-msgstr "Refacción"
-
-#. module: tms_maintenance
-#: field:fleet.vehicle.mro_program,next_date:0
-#: field:fleet.vehicle.mro_program.re_schedule,next_date:0
-msgid "Date Next Service"
-msgstr "Fecha Prox. Servicio"
-
-#. module: tms_maintenance
-#: field:fleet.vehicle,cycle_last_service:0
-msgid "Cycle Last Serv."
-msgstr "Ciclo Ultimo Serv."
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order,current_odometer:0
-msgid "Current Odometer"
-msgstr "Odómetro actual"
-
-#. module: tms_maintenance
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance_config
-msgid "Configuration"
-msgstr "Configuración"
-
-#. module: tms_maintenance
-#: view:tms.analisys.02:0
-msgid "TMS Analisys 02 orders"
-msgstr "MRP Análisis Ordenes"
-
-#. module: tms_maintenance
-#: field:tms.product.line,activity_id:0
-msgid "Activity id"
-msgstr "ID Tarea"
-
-#. module: tms_maintenance
-#: model:res.groups,name:tms_maintenance.tms_maintenance_admin
-msgid "TMS Maintenance Manager"
-msgstr "TMS Supervisor de Mantenimiento"
-
-#. module: tms_maintenance
-#: view:tms.analisys.02:0
-msgid "External True"
-msgstr "Externo"
-
-#. module: tms_maintenance
-#: model:res.groups,name:tms_maintenance.tms_group_tms_activity_control_time
-msgid "User Mechanics TMS Maintenance"
-msgstr "Usuario Mecánico del TMS Maintenance"
-
-#. module: tms_maintenance
-#: view:tms.maintenance.order:0
-msgid "Order of Maintenance"
-msgstr "Orden de Mantenimiento"
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order,accumulated_odometer:0
-msgid "Accum. Odometer"
-msgstr "Odómetro Acumulado"
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order,cost_service:0
-#: field:tms.maintenance.order.activity,cost_service:0
-msgid "Service Cost"
-msgstr "Costo del Servicio"
-
-#. module: tms_maintenance
-#: view:product.product:0 view:tms.maintenance.order:0
-msgid "MRO Program Details"
-msgstr "MRO Detalle de Ciclos"
-
-#. module: tms_maintenance
-#: field:tms.activity.control.time,hr_employee_id:0 view:tms.analisys.04:0
-#: field:tms.analisys.04,hr_employee_id:0
-msgid "Mechanic"
-msgstr "Mecánico"
-
-#. module: tms_maintenance
-#: field:fleet.vehicle.mro_program,sequence:0
-msgid "Sequence"
-msgstr "Secuencia"
-
-#. module: tms_maintenance
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance_Analisys
-msgid "Tms Maintenance Analisys"
-msgstr "MRO Análisis"
-
-#. module: tms_maintenance
-#: code:addons/tms_maintenance/tms_maintenance_order_activity.py:277
-#, python-format
-msgid "For Process should be Order in state OPEN "
-msgstr "Para poder procesar debe estar en estado Abierto"
-
-#. module: tms_maintenance
-#: view:tms.analisys.03:0 view:tms.analisys.04:0
-msgid "Products Analysis"
-msgstr "Consumo de Refacciones"
-
-#. module: tms_maintenance
-#: code:addons/tms_maintenance/tms_maintenance_order.py:395
-#: code:addons/tms_maintenance/tms_maintenance_order.py:408
-#: code:addons/tms_maintenance/tms_maintenance_program.py:351
-#: code:addons/tms_maintenance/tms_maintenance_program.py:364
-#, python-format
-msgid "You have not defined Maintenance Sequence for shop "
-msgstr ""
-"No ha definido la secuencia para las Ordenes de Servicio para este taller"
-
-#. module: tms_maintenance
-#: field:fleet.vehicle,main_odometer_last_service:0
-msgid "Last Serv. Odometer"
-msgstr "Odómetro Ult. Serv."
-
-#. module: tms_maintenance
-#: view:product.product:0 field:product.product,mro_activity_ids:0
-#: view:tms.maintenance.order:0 field:tms.maintenance.order,activities_ids:0
-msgid "Tasks"
-msgstr "Tareas"
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order,supervisor_id:0
-msgid "Supervisor"
-msgstr "Supervisor"
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order,parts_cost:0
-#: field:tms.maintenance.order.activity,parts_cost:0
-msgid "Parts Cost"
-msgstr "Costo de Refacciones"
-
-#. module: tms_maintenance
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_invoice
-msgid "Invoices"
-msgstr "Facturas"
-
-#. module: tms_maintenance
-#: field:fleet.vehicle,odometer_last_service:0
-msgid "Last Serv. Active Odometer"
-msgstr "Ult. Serv. Odómetro Activo"
-
-#. module: tms_maintenance
-#: field:tms.analisys.02,invoice_name:0
-msgid "Invoice Name"
-msgstr "Factura"
-
-#. module: tms_maintenance
-#: view:fleet.vehicle.mro_program.re_schedule:0
-msgid "MRO Cycles"
-msgstr "MRO Ciclos"
-
-#. module: tms_maintenance
-#: constraint:fleet.vehicle:0
-msgid ""
-"Error ! Next service Cycle and Sequence was not found in Vehicles Program..."
-msgstr ""
-"Error ! El próximo Ciclo de Servicio y secuencia no fue encontrado en el "
-"Programa de Mantenimiento del Vehículo"
-
-#. module: tms_maintenance
-#: field:tms.analisys.01,driver_id:0
-msgid "Driver ID"
-msgstr "ID Operador"
-
-#. module: tms_maintenance
-#: model:ir.actions.act_window,name:tms_maintenance.tms_analisys_04_action
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_analisys_04
-msgid "Analisys Mechanics"
-msgstr "Uso de Mano de Obra"
-
-#. module: tms_maintenance
-#: field:tms.activity.control.time,tms_time_ids:0
-msgid "unknown"
-msgstr "desconocido"
-
-#. module: tms_maintenance
-#: field:stock.move,tms_product_line_id:0
-msgid "Product Line"
-msgstr "Línea de Refacción"
-
-#. module: tms_maintenance
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance_mro_program
-msgid "Calendar"
-msgstr "Calendar"
-
-#. module: tms_maintenance
-#: view:tms.analisys.04:0
-msgid "TMS Analisys 04 orders"
-msgstr "MRO Análisis de Ordenes de Servicio"
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order.activity,parts_cost_external:0
-msgid "Parts Cost External"
-msgstr "Costo Refacciones Externo"
-
-#. module: tms_maintenance
-#: code:addons/tms_maintenance/tms_product_line.py:74
-#, python-format
-msgid "You can not use Button Pending when Activity is in State Done"
-msgstr ""
-"No puede usar el botón Pendiente cuando la Tarea se encuentra en estado "
-"Realizado"
-
-#. module: tms_maintenance
-#: field:tms.analisys.02,partner_name:0
-msgid "Partner Name"
-msgstr "Empresa"
-
-#. module: tms_maintenance
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance_config_product_product_category
-msgid "Product Categories"
-msgstr "Categorías de producto"
-
-#. module: tms_maintenance
-#: field:tms.product.line,state_activity:0
-msgid "Activity State"
-msgstr "Estado de la Tarea"
-
-#. module: tms_maintenance
-#: model:ir.actions.act_window,name:tms_maintenance.tms_analisys_02_action
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_analisys_02
-msgid "Analisys Activity"
-msgstr "Análisis de Tareas"
-
-#. module: tms_maintenance
-#: field:tms.analisys.03,id:0
-msgid "Product Line ID"
-msgstr "ID de la Línea de Refacción"
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order.activity,date_end:0
-msgid "Scheduled Date End"
-msgstr "Fecha fin Prog."
-
-#. module: tms_maintenance
-#: field:tms.product.line,list_price:0
-msgid "List Price"
-msgstr "Costo"
-
-#. module: tms_maintenance
-#: model:ir.model,name:tms_maintenance.model_fleet_vehicle_mro_program
-msgid "Fleet Vehicle MRO Program"
-msgstr "Programa de Mtto de Vehículos"
-
-#. module: tms_maintenance
-#: view:product.product:0
-msgid "MRO Related"
-msgstr "Relacionado al MRO"
-
-#. module: tms_maintenance
-#: view:fleet.vehicle.mro_program.re_schedule:0
-#: model:ir.actions.act_window,name:tms_maintenance.action_fleet_vehicle_mro_program_re_schedule
-msgid "MRO Program Re-scheduling"
-msgstr "Reprogramación de Programa de Mtto"
-
-#. module: tms_maintenance
-#: selection:tms.activity.control.time,state:0
-#: selection:tms.maintenance.order,state:0 selection:tms.product.line,state:0
-msgid "Draft"
-msgstr "Borrador"
-
-#. module: tms_maintenance
-#: field:tms.time,date_event:0
-msgid "Date Event"
-msgstr "Date Event"
-
-#. module: tms_maintenance
-#: view:fleet.vehicle:0
-msgid "Show Active/Inactivate logs for this vehicle"
-msgstr "Mostrar Historial de Altas/Bajas para este vehículo."
-
-#. module: tms_maintenance
-#: view:tms.activity.control.time:0
-#: selection:tms.activity.control.time,state:0 selection:tms.time,event:0
-msgid "End"
-msgstr "Finalizada"
-
-#. module: tms_maintenance
-#: view:create.invoice.now:0
-msgid "Create Invoice from selected Activities ?"
-msgstr "Crear Factura(s) de Proveedor de las Tareas Seleccionadas?"
-
-#. module: tms_maintenance
-#: field:tms.analisys.04,hr_employee_name:0
-msgid "Employee Name"
-msgstr "Mecánico"
-
-#. module: tms_maintenance
-#: selection:tms.maintenance.order.activity,state:0 view:tms.product.line:0
-#: selection:tms.product.line,state:0
-msgid "Pending"
-msgstr "Pendiente"
-
-#. module: tms_maintenance
-#: view:tms.maintenance.order.activity:0
-msgid "List of material to use for activity"
-msgstr "Lista de Refacciones a usar en la Tarea"
-
-#. module: tms_maintenance
-#: field:tms.analisys.03,order_name:0 field:tms.analisys.04,order_name:0
-msgid "Order Name"
-msgstr "Orden"
-
-#. module: tms_maintenance
-#: model:ir.actions.act_window,name:tms_maintenance.tms_maintenance_kiosk_action
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_kiosk_line
-msgid "Activities by Mechanics"
-msgstr "Tareas por Mecánico"
-
-#. module: tms_maintenance
-#: field:tms.analisys.04,activity_name:0
-msgid "Activity Name"
-msgstr "Tarea"
-
-#. module: tms_maintenance
-#: field:tms.product.line,product_id:0
-msgid "Product Material"
-msgstr "Refacción"
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order,internal_repair:0
-msgid "Internal Repair"
-msgstr "Reparación Interna"
-
-#. module: tms_maintenance
-#: field:create.invoice,driver_id:0 view:tms.analisys.01:0
-#: view:tms.analisys.02:0 field:tms.analisys.02,driver_id:0
-#: view:tms.analisys.03:0 field:tms.analisys.03,driver_id:0
-#: view:tms.analisys.04:0 field:tms.analisys.04,driver_id:0
-#: field:tms.maintenance.order,driver_id:0
-msgid "Driver"
-msgstr "Operador"
-
-#. module: tms_maintenance
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance_mro_program_delayed
-msgid "Delayed"
-msgstr "Retrasada"
-
-#. module: tms_maintenance
-#: model:ir.ui.menu,name:tms_maintenance.tms_maintenance_fleet_vehicle_state_menu
-msgid "Vehicle Status"
-msgstr "Estado del vehículo"
-
-#. module: tms_maintenance
-#: view:fleet.vehicle:0
-#: field:fleet.vehicle.mro_program.re_schedule,mro_cycle_ids:0
-#: model:ir.actions.act_window,name:tms_maintenance.open_view_tms_maintenance_mro_program_calendar
-msgid "MRO Program"
-msgstr "Programa Mtto Preventivos"
-
-#. module: tms_maintenance
-#: field:fleet.vehicle,tires_extra:0
-msgid "Number of Extra Tires"
-msgstr "Num. Llantas Extras"
-
-#. module: tms_maintenance
-#: code:addons/tms_maintenance/tms_maintenance_order.py:395
-#: code:addons/tms_maintenance/tms_maintenance_order.py:408
-#: code:addons/tms_maintenance/tms_maintenance_program.py:351
-#: code:addons/tms_maintenance/tms_maintenance_program.py:364
-#, python-format
-msgid "Order Maintenance Sequence Error !"
-msgstr "Error en Secuencia de Orden de Mantenimiento !"
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order,message_is_follower:0
-#: field:tms.maintenance.order.activity,message_is_follower:0
-msgid "Is a Follower"
-msgstr "Es un Seguidor"
-
-#. module: tms_maintenance
-#: field:create.invoice,id:0 field:tms.activity.control.time,activity_id:0
-#: field:tms.analisys.02,id:0 field:tms.analisys.03,activity_id:0
-#: field:tms.analisys.04,activity_id:0
-msgid "Activity ID"
-msgstr "Activity ID"
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order,maint_program_id:0
-msgid "Preventive Program"
-msgstr "Programa Preventivo"
-
-#. module: tms_maintenance
-#: field:fleet.vehicle.mro_program,mro_service_order_date:0
-#: field:tms.analisys.01,date:0 field:tms.maintenance.order,date:0
-msgid "Date"
-msgstr "Fecha"
-
-#. module: tms_maintenance
-#: field:tms.analisys.01,name:0
-msgid "Order Maintenance"
-msgstr "Orden de Mantenimiento"
-
-#. module: tms_maintenance
-#: view:fleet.vehicle:0
-#: model:ir.actions.act_window,name:tms_maintenance.open_view_tms_maintenance_mro_program_tree
-msgid "Delayed MRO Program"
-msgstr "Retraso Programa Mtto"
-
-#. module: tms_maintenance
-#: field:fleet.vehicle,date_next_service:0
-msgid "Date Next Serv."
-msgstr "Fecha Próx. Servicio"
-
-#. module: tms_maintenance
-#: field:tms.activity.control.time,hr_employee_user_id:0
-#: field:tms.maintenance.order,user_id:0
-msgid "User"
-msgstr "Usuario"
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order.activity,state_order:0
-msgid "State Order"
-msgstr "Estado"
-
-#. module: tms_maintenance
-#: model:ir.ui.menu,name:tms_maintenance.tms_maintenance_fleet_vehicle_model_menu
-msgid "Vehicle Model"
-msgstr "Modelo del vehículo"
-
-#. module: tms_maintenance
-#: model:ir.model,name:tms_maintenance.model_sale_shop
-msgid "Sales Shop"
-msgstr "Tienda ventas"
-
-#. module: tms_maintenance
-#: view:tms.maintenance.order:0
-msgid "Service Order Detail"
-msgstr "Detalle Orden de Servicio"
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order,date_end:0
-msgid "Date End Sched"
-msgstr "Fecha Fin Prog."
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order,shop_id:0
-#: field:tms.maintenance.order.activity,shop_id:0
-#: field:tms.product.line,shop_id:0
+#. module: tms_analysis
+#: view:tms.waybill.analysis:0
+msgid "Search Waybill Analysis"
+msgstr "Búsqueda en Análisis de Cartas Porte"
+
+#. module: tms_analysis
+#: field:tms.expense.analysis,shop_id:0 view:tms.travel.analysis:0
+#: field:tms.travel.analysis,shop_id:0 view:tms.travel.availability:0
+#: field:tms.travel.availability,shop_id:0 view:tms.waybill.analysis:0
+#: field:tms.waybill.analysis,shop_id:0
 msgid "Shop"
-msgstr "Taller"
+msgstr "Base"
 
-#. module: tms_maintenance
-#: field:stock.picking,tms_order_id:0
-msgid "Maintenance Order"
-msgstr "Orden de Mantenimiento"
+#. module: tms_analysis
+#: view:tms.waybill.analysis:0
+msgid "Waybill Category"
+msgstr "Categoría de Carta Porte"
 
-#. module: tms_maintenance
-#: field:tms.maintenance.order,message_summary:0
-#: field:tms.maintenance.order.activity,message_summary:0
-msgid "Summary"
-msgstr "Resumen"
+#. module: tms_analysis
+#: view:tms.travel.analysis:0
+msgid "Search Travel Analysis"
+msgstr "Búsqueda en Análisis de Viajes"
 
-#. module: tms_maintenance
-#: view:tms.analisys.01:0
-msgid "TMS Analisys 01 orders"
-msgstr "TMS Analisys 01 orders"
+#. module: tms_analysis
+#: selection:tms.travel.analysis,tms_category:0
+#: selection:tms.waybill.analysis,tms_category:0
+msgid "Move"
+msgstr "Maniobra"
 
-#. module: tms_maintenance
-#: view:tms.maintenance.order.activity:0
-msgid "Work Hand"
-msgstr "Mano de Obra"
+#. module: tms_analysis
+#: view:tms.expense.analysis:0 view:tms.travel.analysis:0
+#: view:tms.waybill.analysis:0
+msgid "Ordered Day of the Waybill"
+msgstr "Día de Carta Porte"
 
-#. module: tms_maintenance
-#: field:tms.analisys.01,manpower_cost:0
-msgid "Manpower Cost"
-msgstr "Costo Mano Obra"
+#. module: tms_analysis
+#: model:ir.model,name:tms_analysis.model_tms_travel_availability
+msgid "Unit availability for Travel"
+msgstr "Unit availability for Travel"
 
-#. module: tms_maintenance
-#: field:tms.maintenance.order.activity,hours_estimated:0
-msgid "Hours Estimated"
-msgstr "Horas Estimadas"
+#. module: tms_analysis
+#: view:tms.travel.analysis:0 view:tms.travel.availability:0
+#: view:tms.waybill.analysis:0
+msgid "Partner"
+msgstr "Cliente"
 
-#. module: tms_maintenance
-#: field:tms.analisys.03,quantity:0 field:tms.product.line,quantity:0
-msgid "Quantity"
-msgstr "Cantidad"
+#. module: tms_analysis
+#: field:tms.expense.analysis,operation_id:0 view:tms.travel.analysis:0
+#: field:tms.travel.analysis,operation_id:0 view:tms.waybill.analysis:0
+#: field:tms.waybill.analysis,operation_id:0
+msgid "Operation"
+msgstr "Operación"
 
-#. module: tms_maintenance
-#: model:ir.model,name:tms_maintenance.model_fleet_vehicle_mro_program_re_schedule
-msgid "Fleet Vehicle MRO Program assignation"
-msgstr "Asignación de Programa MRO al Vehículo"
+#. module: tms_analysis
+#: view:tms.travel.availability:0
+msgid "Double Trailer"
+msgstr "Full"
 
-#. module: tms_maintenance
-#: model:ir.actions.act_window,name:tms_maintenance.tms_maintenance_order_action
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance_order_line
-#: view:tms.maintenance.order:0
-msgid "Service Order"
-msgstr "Orden de Servicio"
+#. module: tms_analysis
+#: view:tms.travel.availability:0
+msgid "Availability"
+msgstr "Disponibilidad"
 
-#. module: tms_maintenance
-#: field:tms.maintenance.order.activity,cost_service_external:0
-msgid "Service Cost External"
-msgstr "Costo Taller Externo"
+#. module: tms_analysis
+#: view:tms.expense.analysis:0 selection:tms.expense.analysis,state:0
+#: selection:tms.travel.analysis,waybill_state:0
+#: selection:tms.waybill.analysis,state:0
+msgid "Confirmed"
+msgstr "Confirmado"
 
-#. module: tms_maintenance
-#: model:ir.model,name:tms_maintenance.model_stock_move
-#: field:tms.product.line,stock_move_id:0
-msgid "Stock Move"
-msgstr "Moviemiento de stock"
+#. module: tms_analysis
+#: field:tms.travel.availability,supplier_unit:0
+msgid "Supplier Unit"
+msgstr "Unidad de Perm."
 
-#. module: tms_maintenance
-#: field:create.invoice,order_id:0 field:tms.analisys.02,order_id:0
-#: field:tms.analisys.03,order_id:0 field:tms.analisys.04,order_id:0
-msgid "Order ID"
-msgstr "Orden"
-
-#. module: tms_maintenance
-#: model:ir.model,name:tms_maintenance.model_tms_analisys_04
-msgid "Order Maintenace Analisys 4"
-msgstr "Orden de Mtto"
-
-#. module: tms_maintenance
-#: view:tms.maintenance.order.activity:0
-msgid "Employee Mechanics"
-msgstr "Mecánico"
-
-#. module: tms_maintenance
-#: model:ir.model,name:tms_maintenance.model_tms_analisys_02
-msgid "Order Maintenace Analisys 2"
-msgstr "Análisis de Orden de Servicio"
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order,state:0
-#: field:tms.maintenance.order.activity,state:0 field:tms.product.line,state:0
+#. module: tms_analysis
+#: view:tms.expense.analysis:0 field:tms.expense.analysis,state:0
+#: view:tms.travel.analysis:0 field:tms.travel.analysis,state:0
+#: view:tms.travel.availability:0 field:tms.travel.availability,state:0
+#: view:tms.waybill.analysis:0 field:tms.waybill.analysis,state:0
 msgid "State"
 msgstr "Estado"
 
-#. module: tms_maintenance
-#: model:ir.model,name:tms_maintenance.model_create_invoice
-#: model:ir.model,name:tms_maintenance.model_tms_analisys_03
-msgid "Order Maintenace Analisys 1"
-msgstr "Análisis de Orden de Servicio"
+#. module: tms_analysis
+#: view:tms.travel.availability:0
+msgid "Other unit type..."
+msgstr "Otro tipo de unidad"
 
-#. module: tms_maintenance
-#: view:create.invoice:0 view:tms.analisys.01:0 view:tms.analisys.02:0
-msgid "Orders Analysis"
-msgstr "Análisis Ordenes de Servicio"
+#. module: tms_analysis
+#: field:tms.travel.availability,waybill_date:0
+msgid "Waybill Date"
+msgstr "Fecha"
 
-#. module: tms_maintenance
-#: field:tms.maintenance.order.activity,invoiced:0
-msgid "Facturado"
-msgstr "Facturado"
+#. module: tms_analysis
+#: field:tms.travel.analysis,waybill_id:0
+#: field:tms.travel.availability,waybill_id:0
+msgid "Waybill"
+msgstr "Carta Porte"
 
-#. module: tms_maintenance
-#: field:product.product,mro_frequency:0
-msgid "Frequency"
-msgstr "Frecuencia"
+#. module: tms_analysis
+#: view:tms.travel.availability:0
+msgid "Vehicles of the Suppliers..."
+msgstr "Unidades de Permisionario"
 
-#. module: tms_maintenance
-#: view:tms.maintenance.order:0 selection:tms.maintenance.order,state:0
-#: view:tms.maintenance.order.activity:0
-#: selection:tms.maintenance.order.activity,state:0
+#. module: tms_analysis
+#: view:tms.travel.availability:0
+msgid "Just motorized unit"
+msgstr "Unidad Motriz"
+
+#. module: tms_analysis
+#: field:tms.travel.analysis,qty:0 field:tms.waybill.analysis,qty:0
+msgid "Product Qty"
+msgstr "Cantidad"
+
+#. module: tms_analysis
+#: view:tms.waybill.analysis:0
+msgid "Confirmed State"
+msgstr "Confirmada"
+
+#. module: tms_analysis
+#: model:ir.ui.menu,name:tms_analysis.menu_tms_travel_analysis
+#: view:tms.travel.analysis:0
+msgid "Travel Analysis"
+msgstr "Análisis de Viajes"
+
+#. module: tms_analysis
+#: field:tms.expense.analysis,product_id:0
+#: field:tms.travel.analysis,product_id:0
+#: field:tms.waybill.analysis,product_id:0
+msgid "Line"
+msgstr "Tipo Gasto"
+
+#. module: tms_analysis
+#: field:tms.travel.analysis,unit_type_id:0
+#: field:tms.travel.availability,unit_type_id:0
+msgid "Unit Type"
+msgstr "Tipo Unidad"
+
+#. module: tms_analysis
+#: view:tms.travel.analysis:0 field:tms.travel.analysis,departure:0
+#: view:tms.travel.availability:0 field:tms.travel.availability,departure:0
+#: view:tms.waybill.analysis:0 field:tms.waybill.analysis,departure_id:0
+msgid "Departure"
+msgstr "Origen"
+
+#. module: tms_analysis
+#: view:tms.travel.analysis:0 view:tms.waybill.analysis:0
+msgid "More Groups By..."
+msgstr "Más Agrupar por..."
+
+#. module: tms_analysis
+#: view:tms.expense.analysis:0 view:tms.travel.analysis:0
+#: view:tms.waybill.analysis:0
+msgid "This month"
+msgstr "Este mes"
+
+#. module: tms_analysis
+#: model:ir.actions.act_window,name:tms_analysis.action_tms_travel_availability
+#: model:ir.ui.menu,name:tms_analysis.menu_tms_travel_availability
+#: view:tms.travel.availability:0
+msgid "Unit Availability"
+msgstr "Disponibilidad de Unidades"
+
+#. module: tms_analysis
+#: view:tms.travel.analysis:0 field:tms.travel.analysis,waybill_sequence:0
+msgid "Waybill Sequence"
+msgstr "Serie Carta Porte"
+
+#. module: tms_analysis
+#: field:tms.travel.analysis,tms_category:0
+#: field:tms.waybill.analysis,tms_category:0
+msgid "Income Category"
+msgstr "Tipo Ingreso"
+
+#. module: tms_analysis
+#: field:tms.travel.analysis,waybill_state:0
+msgid "Waybill State"
+msgstr "Estado Carta Porte"
+
+#. module: tms_analysis
+#: field:tms.travel.analysis,invoice_name:0
+#: field:tms.waybill.analysis,invoice_name:0
+msgid "Invoice Name"
+msgstr "Num. Factura"
+
+#. module: tms_analysis
+#: view:tms.expense.analysis:0 field:tms.expense.analysis,month:0
+#: view:tms.travel.analysis:0 field:tms.travel.analysis,month:0
+#: view:tms.waybill.analysis:0 field:tms.waybill.analysis,month:0
+msgid "Month"
+msgstr "Mes"
+
+#. module: tms_analysis
+#: field:tms.expense.analysis,currency_id:0
+#: field:tms.travel.analysis,currency_id:0
+#: field:tms.waybill.analysis,currency_id:0
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: tms_analysis
+#: model:ir.actions.act_window,name:tms_analysis.action_tms_waybill_analysis
+msgid "tms.waybill.analysis.action"
+msgstr "Análisis de Cartas Porte"
+
+#. module: tms_analysis
+#: selection:tms.travel.analysis,tms_category:0
+#: selection:tms.waybill.analysis,tms_category:0
+msgid "Freight"
+msgstr "Flete"
+
+#. module: tms_analysis
+#: view:tms.travel.availability:0
+msgid "Dolly unit..."
+msgstr "Dolly"
+
+#. module: tms_analysis
+#: field:tms.travel.analysis,user_id:0 field:tms.travel.availability,user_id:0
+#: view:tms.waybill.analysis:0 field:tms.waybill.analysis,user_id:0
+msgid "Salesman"
+msgstr "Ejecutivo"
+
+#. module: tms_analysis
+#: view:tms.waybill.analysis:0
+msgid "My Waybills"
+msgstr "Mis Cartas Porte"
+
+#. module: tms_analysis
+#: field:tms.expense.analysis,travel_id:0
+#: field:tms.travel.availability,travel_id:0
+#: field:tms.waybill.analysis,travel_id:0
+msgid "Travel"
+msgstr "Viaje"
+
+#. module: tms_analysis
+#: view:tms.travel.analysis:0 field:tms.travel.analysis,shipped_product_id:0
+#: view:tms.waybill.analysis:0 field:tms.waybill.analysis,shipped_product_id:0
+msgid "Shipped Product"
+msgstr "Carga"
+
+#. module: tms_analysis
+#: selection:tms.expense.analysis,state:0
+msgid "Draft"
+msgstr "Borrador"
+
+#. module: tms_analysis
+#: field:tms.travel.analysis,dolly_id:0 view:tms.travel.availability:0
+#: field:tms.travel.availability,dolly_id:0
+#: selection:tms.travel.availability,fleet_type:0
+#: field:tms.waybill.analysis,dolly_id:0
+msgid "Dolly"
+msgstr "Dolly"
+
+#. module: tms_analysis
+#: selection:tms.travel.analysis,state:0
+msgid "Closed"
+msgstr "Cerrado"
+
+#. module: tms_analysis
+#: selection:tms.travel.analysis,state:0
+#: selection:tms.travel.analysis,waybill_state:0
+#: selection:tms.travel.availability,state:0
+#: selection:tms.waybill.analysis,state:0
+msgid "Pending"
+msgstr "Pendiente"
+
+#. module: tms_analysis
+#: view:tms.expense.analysis:0 view:tms.travel.analysis:0
+#: view:tms.waybill.analysis:0
+msgid "Week"
+msgstr "Semana"
+
+#. module: tms_analysis
+#: view:tms.travel.availability:0
+msgid "My units"
+msgstr "Mis unidades"
+
+#. module: tms_analysis
+#: view:tms.travel.availability:0
+msgid "Motorized unit..."
+msgstr "Unidad Motriz"
+
+#. module: tms_analysis
+#: view:tms.expense.analysis:0 field:tms.expense.analysis,employee_id:0
+#: view:tms.travel.analysis:0 field:tms.travel.analysis,employee_id:0
+#: view:tms.travel.availability:0 field:tms.travel.availability,employee_id:0
+#: view:tms.waybill.analysis:0 field:tms.waybill.analysis,employee_id:0
+msgid "Driver"
+msgstr "Operador"
+
+#. module: tms_analysis
+#: view:tms.travel.availability:0
+msgid "Trailer unit..."
+msgstr "Remolque"
+
+#. module: tms_analysis
+#: view:tms.travel.availability:0
+msgid "Search Unit Availability"
+msgstr "Búsqueda de Unidades Disponibles"
+
+#. module: tms_analysis
+#: view:tms.waybill.analysis:0
+msgid "Waybill Analisis"
+msgstr "Análisis de Cartas Porte"
+
+#. module: tms_analysis
+#: view:tms.expense.analysis:0 view:tms.travel.analysis:0
+#: view:tms.waybill.analysis:0
+msgid "Ordered Week of Year of the Waybill"
+msgstr "Semana del Año de Carta Porte"
+
+#. module: tms_analysis
+#: field:tms.expense.analysis,date:0 field:tms.travel.analysis,date:0
+#: field:tms.travel.analysis,waybill_date:0 view:tms.travel.availability:0
+#: field:tms.waybill.analysis,date_order:0
+msgid "Date"
+msgstr "Fecha"
+
+#. module: tms_analysis
+#: view:tms.travel.analysis:0 view:tms.travel.availability:0
+#: view:tms.waybill.analysis:0
+msgid "Extended Filters..."
+msgstr "Filtros Extendidos..."
+
+#. module: tms_analysis
+#: model:ir.model,name:tms_analysis.model_tms_waybill_analysis
+msgid "Waybill Analisys"
+msgstr "Análisis de Cartas Porte"
+
+#. module: tms_analysis
+#: model:ir.actions.act_window,name:tms_analysis.action_tms_expense_analysis
+#: model:ir.ui.menu,name:tms_analysis.menu_tms_expense_analysis
+#: view:tms.expense.analysis:0
+msgid "Travel Expense Analysis"
+msgstr "Análisis de Gastos de Viaje"
+
+#. module: tms_analysis
+#: view:tms.travel.availability:0
+#: selection:tms.travel.availability,fleet_type:0
+msgid "Trailer"
+msgstr "Remolque"
+
+#. module: tms_analysis
+#: view:tms.expense.analysis:0 view:tms.travel.analysis:0
+#: view:tms.waybill.analysis:0
+msgid "Ordered Month of the Waybill"
+msgstr "Mes en Carta Porte"
+
+#. module: tms_analysis
+#: view:tms.expense.analysis:0 field:tms.expense.analysis,qty:0
+#: view:tms.waybill.analysis:0
+msgid "Qty"
+msgstr "Cant"
+
+#. module: tms_analysis
+#: view:tms.travel.analysis:0
+msgid "Income Type"
+msgstr "Tipo Ingreso"
+
+#. module: tms_analysis
+#: model:ir.actions.act_window,name:tms_analysis.action_tms_travel_analysis
+msgid "tms.travel.analysis.action"
+msgstr "Análisis de Viajes"
+
+#. module: tms_analysis
+#: field:tms.expense.analysis,week:0 field:tms.travel.analysis,week:0
+#: field:tms.waybill.analysis,week:0
+msgid "Week of Year"
+msgstr "Semana"
+
+#. module: tms_analysis
+#: field:tms.travel.availability,date:0
+msgid "Travel Date"
+msgstr "Fecha Viaje"
+
+#. module: tms_analysis
+#: selection:tms.travel.analysis,state:0
 msgid "Done"
-msgstr "Realizado"
+msgstr "Terminado"
 
-#. module: tms_maintenance
-#: model:ir.model,name:tms_maintenance.model_tms_activity_control_time
-#: model:ir.model,name:tms_maintenance.model_tms_time
-msgid "Activity Control Time"
-msgstr "Control Tiempo en Tarea"
+#. module: tms_analysis
+#: view:tms.waybill.analysis:0
+msgid "Waybills related to me"
+msgstr "Mis Cartas Porte"
 
-#. module: tms_maintenance
-#: view:fleet.vehicle.mro_program.re_schedule:0
-#: selection:tms.activity.control.time,state:0 view:tms.maintenance.order:0
-#: view:tms.maintenance.order.activity:0 view:tms.product.line:0
-msgid "Cancel"
-msgstr "Cancelar"
+#. module: tms_analysis
+#: view:tms.travel.analysis:0 field:tms.travel.analysis,invoice_id:0
+#: view:tms.waybill.analysis:0 field:tms.waybill.analysis,invoice_id:0
+msgid "Invoice"
+msgstr "Factura"
 
-#. module: tms_maintenance
-#: field:tms.maintenance.order.activity,hours_real:0
-msgid "Hours Real Men"
-msgstr "Horas Reales Mano Obra"
+#. module: tms_analysis
+#: selection:tms.travel.analysis,tms_category:0
+#: selection:tms.waybill.analysis,tms_category:0
+msgid "Insurance"
+msgstr "Seguro"
 
-#. module: tms_maintenance
-#: field:create.invoice,order_name:0
-#: field:tms.activity.control.time,name_order:0
-#: field:tms.activity.control.time,order_id:0 view:tms.analisys.01:0
-#: view:tms.analisys.02:0 field:tms.analisys.02,order_name:0
-#: view:tms.analisys.03:0 view:tms.analisys.04:0
-#: field:tms.maintenance.order.activity,maintenance_order_id:0
-msgid "Order"
-msgstr "Orden"
-
-#. module: tms_maintenance
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance_config_unit_category_form
-msgid "Vehicles Related Catalogs"
-msgstr "Catálogos Relacionados a las Unidades"
-
-#. module: tms_maintenance
-#: view:tms.maintenance.order:0 selection:tms.maintenance.order,state:0
-msgid "Open"
-msgstr "Abrir"
-
-#. module: tms_maintenance
-#: field:create.invoice,unit_id:0 view:tms.analisys.01:0
-#: view:tms.analisys.02:0 field:tms.analisys.02,unit_id:0
-#: view:tms.analisys.03:0 field:tms.analisys.03,unit_id:0
-#: view:tms.analisys.04:0 field:tms.analisys.04,unit_id:0
-#: field:tms.maintenance.order,unit_id:0
+#. module: tms_analysis
+#: view:tms.expense.analysis:0 field:tms.expense.analysis,unit_id:0
+#: view:tms.travel.analysis:0 field:tms.travel.analysis,unit_id:0
+#: field:tms.travel.availability,name:0 view:tms.waybill.analysis:0
+#: field:tms.waybill.analysis,unit_id:0
 msgid "Unit"
 msgstr "Vehículo"
 
-#. module: tms_maintenance
-#: model:res.groups,comment:tms_maintenance.tms_maintenance_admin
-msgid "The user is TMS Maintenance Manager."
-msgstr "El usuario es Supervisor de Mtto"
+#. module: tms_analysis
+#: selection:tms.travel.analysis,tms_category:0 view:tms.travel.availability:0
+#: selection:tms.travel.availability,fleet_type:0
+#: selection:tms.waybill.analysis,tms_category:0
+msgid "Other"
+msgstr "Otros"
 
-#. module: tms_maintenance
-#: selection:tms.product.line,state:0
-msgid "Delivered"
-msgstr "Entregado"
+#. module: tms_analysis
+#: view:tms.travel.analysis:0 view:tms.travel.availability:0
+msgid "My Travels"
+msgstr "Mis Viajes"
 
-#. module: tms_maintenance
-#: model:ir.actions.act_window,name:tms_maintenance.tms_analisys_01_action
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_analisys_01
-msgid "Analisys Order"
-msgstr "Análisis de Orden de Servicio"
+#. module: tms_analysis
+#: selection:tms.expense.analysis,state:0
+#: selection:tms.travel.analysis,waybill_state:0
+#: selection:tms.waybill.analysis,state:0
+msgid "Approved"
+msgstr "Aprobada"
 
-#. module: tms_maintenance
-#: field:tms.activity.control.time,uid:0
-msgid "uid"
-msgstr "uid"
+#. module: tms_analysis
+#: view:tms.travel.analysis:0 field:tms.travel.analysis,arrival:0
+#: view:tms.travel.availability:0 field:tms.travel.availability,arrival:0
+#: view:tms.waybill.analysis:0 field:tms.waybill.analysis,arrival_id:0
+msgid "Arrival"
+msgstr "Destino"
 
-#. module: tms_maintenance
-#: view:tms.analisys.01:0 field:tms.analisys.01,user_name:0
-msgid "User Name"
-msgstr "Usuario"
-
-#. module: tms_maintenance
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance_config_unit_red_tape_form
-msgid "Vehicle Red Tape"
-msgstr "Trámite"
-
-#. module: tms_maintenance
-#: field:product.product,mro_cycle_ids:0
-msgid "Service Programs"
-msgstr "Programa de Servicio"
-
-#. module: tms_maintenance
-#: model:ir.ui.menu,name:tms_maintenance.tms_maintenance_fleet_vehicle_model_brand_menu
-msgid "Model brand of Vehicle"
-msgstr "Marca del vehículo"
-
-#. module: tms_maintenance
-#: view:create.invoice.now:0
-msgid "Create Invoice"
-msgstr "Crear Factura"
-
-#. module: tms_maintenance
-#: view:fleet.vehicle:0
-msgid "Active/Inactivate Units"
-msgstr "Alta/Baja de Unidades"
-
-#. module: tms_maintenance
-#: view:create.invoice:0
-msgid "TMS Create Invoice"
-msgstr "MRO Crear Factura"
-
-#. module: tms_maintenance
-#: view:create.invoice.now:0
-msgid "Generate Invoices"
-msgstr "Crear Facturas"
-
-#. module: tms_maintenance
-#: code:addons/tms_maintenance/tms_maintenance_order.py:324
-#: code:addons/tms_maintenance/tms_maintenance_program.py:280
-#, python-format
-msgid "For Open should be exist Activities Asigned"
-msgstr "Para abrir la Orden de Servicio deben existir Tareas asignadas"
-
-#. module: tms_maintenance
-#: model:ir.model,name:tms_maintenance.model_product_product
-#: view:product.product:0 view:tms.analisys.03:0
-#: field:tms.analisys.03,product_id:0
+#. module: tms_analysis
+#: view:tms.expense.analysis:0 view:tms.travel.analysis:0
+#: view:tms.waybill.analysis:0
 msgid "Product"
 msgstr "Producto"
 
-#. module: tms_maintenance
-#: field:tms.maintenance.order,description:0
+#. module: tms_analysis
+#: field:tms.expense.analysis,expense_line_description:0
 msgid "Description"
 msgstr "Descripción"
 
-#. module: tms_maintenance
-#: constraint:product.product:0
-msgid ""
-"Error ! Product is not defined correctly...Please see TMS Category tooltip..."
-msgstr ""
-"Error ! El producto no está definido correctamente, por favor revise los "
-"comentarios del campo..."
+#. module: tms_analysis
+#: view:tms.travel.availability:0
+msgid "Vehicles of the company..."
+msgstr "Vehículo de la empresa..."
 
-#. module: tms_maintenance
-#: model:ir.model,name:tms_maintenance.model_tms_maintenance_order
-msgid "Order Maintenace"
-msgstr "Orden"
+#. module: tms_analysis
+#: view:tms.expense.analysis:0 view:tms.travel.analysis:0
+#: view:tms.waybill.analysis:0
+msgid "Ordered Year of the Waybill"
+msgstr "Año de Carta Porte"
 
-#. module: tms_maintenance
-#: field:tms.analisys.03,price:0
-msgid "Price"
-msgstr "Costo"
+#. module: tms_analysis
+#: field:tms.travel.availability,fleet_type:0
+msgid "Unit Fleet Type"
+msgstr "Tipo de Vehículo"
 
-#. module: tms_maintenance
-#: view:fleet.vehicle.mro_program.re_schedule:0
-msgid ""
-"Are you sure you want to assign this Sequence? Previous info will be "
-"overwritten !!!"
-msgstr ""
-"Está seguro que desea asignar esta nueva Secuencia? La información previa "
-"será eliminada !!!"
+#. module: tms_analysis
+#: model:ir.model,name:tms_analysis.model_tms_expense_analysis
+msgid "Travel Expenses Analisys"
+msgstr "Análisis de Gastos de Viaje"
 
-#. module: tms_maintenance
-#: code:addons/tms_maintenance/create_invoice.py:197
-#, python-format
-msgid ""
-"You have not defined Stock Valuation Account (Incoming) in Virtual Location "
-"related to Service Order Product (field: Production Location)."
-msgstr ""
-"No ha definido la Cuenta en la ficha de la Ubicación de Producción ligada al "
-"Producto de tipo Servicio de Mtto."
+#. module: tms_analysis
+#: field:tms.travel.analysis,partner_id:0
+#: field:tms.travel.availability,partner_id:0
+#: field:tms.waybill.analysis,partner_id:0
+msgid "Customer"
+msgstr "Cliente"
 
-#. module: tms_maintenance
-#: field:fleet.vehicle,cycle_next_service:0
-msgid "Next Maintenance Service"
-msgstr "Próx. Servicio de Mtto"
+#. module: tms_analysis
+#: model:ir.ui.menu,name:tms_analysis.menu_tms_waybill_analysis
+msgid "Waybill Analysis"
+msgstr "Análisis de Cartas Porte"
 
-#. module: tms_maintenance
-#: field:fleet.vehicle,odometer_next_service:0
-msgid "Active Odometer Next Serv."
-msgstr "Odómetro Sig. Servicio"
-
-#. module: tms_maintenance
-#: field:tms.analisys.02,supplier_invoice_number:0
-msgid "Invoice Number"
-msgstr "Factura"
-
-#. module: tms_maintenance
-#: model:ir.ui.menu,name:tms_maintenance.tms_maintenance_fleet_vehicle_odometer_menu
-msgid "Vehicles Odometer"
-msgstr "Odómetro de los vehículos"
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order,stock_origin_id:0
-msgid "Stock Origin"
-msgstr "Ubicación Origen"
-
-#. module: tms_maintenance
-#: field:fleet.vehicle.mro_program,trigger:0
-msgid "Triggered at"
-msgstr "Disparado en"
-
-#. module: tms_maintenance
-#: code:addons/tms_maintenance/tms_maintenance_order_activity.py:287
-#, python-format
-msgid "For Process should be exist Mechanics Asigned"
-msgstr "Para cambiar a estado \"En Proceso\" debe asignar Mecánico a la Tarea"
-
-#. module: tms_maintenance
-#: view:fleet.vehicle:0
-msgid "Red Tapes"
-msgstr "Trámites"
-
-#. module: tms_maintenance
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_kiosk
-msgid "Tasks by Mechanics"
-msgstr "Tareas por Mecánico"
-
-#. module: tms_maintenance
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance_product_by_category_stock_form
-msgid "Products by Category"
-msgstr "Productos por categoría"
-
-#. module: tms_maintenance
-#: field:fleet.vehicle,sequence_last_service:0
-msgid "Program Seq. Last Serv."
-msgstr "Sec. del Programa Ult. Serv."
-
-#. module: tms_maintenance
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance_config_unit
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance_config_unit_form
-msgid "Vehicles"
-msgstr "Vehículos"
-
-#. module: tms_maintenance
-#: field:tms.analisys.04,id:0
-msgid "Kiosk ID"
-msgstr "ID Kiosko"
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order,name:0
+#. module: tms_analysis
+#: view:tms.expense.analysis:0 field:tms.expense.analysis,name:0
+#: view:tms.travel.analysis:0 field:tms.travel.analysis,name:0
+#: view:tms.travel.availability:0 view:tms.waybill.analysis:0
+#: field:tms.waybill.analysis,name:0
 msgid "Name"
 msgstr "Nombre"
 
-#. module: tms_maintenance
-#: model:ir.module.category,name:tms_maintenance.tms_maintenance_order_category
-msgid "TMS Maintenance Security"
-msgstr "Seguridad de MRO"
+#. module: tms_analysis
+#: view:tms.travel.analysis:0 field:tms.travel.analysis,waybill_type:0
+#: view:tms.waybill.analysis:0 field:tms.waybill.analysis,waybill_type:0
+msgid "Waybill Type"
+msgstr "Tipo de Carta Porte"
 
-#. module: tms_maintenance
-#: field:tms.analisys.01,id:0
-msgid "ID order"
-msgstr "ID orden"
+#. module: tms_analysis
+#: view:tms.expense.analysis:0 field:tms.expense.analysis,route_id:0
+#: view:tms.travel.analysis:0 field:tms.travel.analysis,route_id:0
+#: view:tms.travel.availability:0 field:tms.travel.availability,route_id:0
+#: view:tms.waybill.analysis:0 field:tms.waybill.analysis,route_id:0
+msgid "Route"
+msgstr "Ruta"
 
-#. module: tms_maintenance
-#: model:ir.module.category,description:tms_maintenance.tms_maintenance_order_category
-msgid "TMS Maintenance Security."
-msgstr "Seguridad MRO"
+#. module: tms_analysis
+#: view:tms.expense.analysis:0
+msgid "Search Travel Expense Analysis"
+msgstr "Búsqueda en Análisis de Gastos de Viaje"
 
-#. module: tms_maintenance
-#: view:tms.activity.control.time:0
-msgid "Continue"
-msgstr "Continuar"
+#. module: tms_analysis
+#: field:tms.expense.analysis,price_unit:0
+msgid "Price Unit"
+msgstr "Precio Unit."
 
-#. module: tms_maintenance
-#: code:addons/tms_maintenance/create_invoice.py:197
-#: code:addons/tms_maintenance/tms_maintenance_order.py:324
-#: code:addons/tms_maintenance/tms_maintenance_order.py:363
-#: code:addons/tms_maintenance/tms_maintenance_order.py:383
-#: code:addons/tms_maintenance/tms_maintenance_order_activity.py:277
-#: code:addons/tms_maintenance/tms_maintenance_order_activity.py:287
-#: code:addons/tms_maintenance/tms_maintenance_order_activity.py:313
-#: code:addons/tms_maintenance/tms_maintenance_order_activity.py:322
-#: code:addons/tms_maintenance/tms_maintenance_order_activity.py:334
-#: code:addons/tms_maintenance/tms_maintenance_program.py:280
-#: code:addons/tms_maintenance/tms_maintenance_program.py:319
-#: code:addons/tms_maintenance/tms_maintenance_program.py:339
-#: code:addons/tms_maintenance/tms_product_line.py:74
-#, python-format
-msgid "Warning!"
-msgstr "Advertencia!"
+#. module: tms_analysis
+#: field:tms.waybill.analysis,sequence_id:0
+msgid "Sequence"
+msgstr "Serie Carta Porte"
 
-#. module: tms_maintenance
-#: view:fleet.vehicle:0
-msgid "Tires info"
-msgstr "Info de Llantas"
+#. module: tms_analysis
+#: view:tms.travel.availability:0
+msgid "Just Unit"
+msgstr "Unidad Motriz"
 
-#. module: tms_maintenance
-#: field:tms.time,control_time_id:0
-msgid "Control Time"
-msgstr "Control de Tiempo"
+#. module: tms_analysis
+#: view:tms.expense.analysis:0 field:tms.expense.analysis,year:0
+#: view:tms.travel.analysis:0 field:tms.travel.analysis,year:0
+#: view:tms.waybill.analysis:0 field:tms.waybill.analysis,year:0
+msgid "Year"
+msgstr "Año"
 
-#. module: tms_maintenance
-#: field:create.invoice,activity_id:0 field:create.invoice,activity_name:0
-#: model:ir.model,name:tms_maintenance.model_tms_maintenance_order_activity
-#: field:tms.activity.control.time,name_activity:0 view:tms.analisys.02:0
-#: field:tms.analisys.02,activity_id:0 field:tms.analisys.02,activity_name:0
-#: view:tms.analisys.03:0 field:tms.analisys.03,activity_name:0
-#: view:tms.analisys.04:0 field:tms.maintenance.order.activity,product_id:0
-msgid "Activity"
-msgstr "Tarea"
-
-#. module: tms_maintenance
-#: model:ir.actions.act_window,name:tms_maintenance.create_invoice_action
-#: model:ir.ui.menu,name:tms_maintenance.menu_create_invoice
-msgid "Create Invoices External WorkShop"
-msgstr "Crear Factura de Taller Externo"
-
-#. module: tms_maintenance
-#: field:tms.analisys.02,partner_id:0
-msgid "Partner ID"
-msgstr "ID Empresa"
-
-#. module: tms_maintenance
-#: help:tms.maintenance.order,message_ids:0
-#: help:tms.maintenance.order.activity,message_ids:0
-msgid "Messages and communication history"
-msgstr "Historial de mensajes y comunicación"
-
-#. module: tms_maintenance
-#: model:ir.model,name:tms_maintenance.model_create_invoice_now
-msgid "Make Invoices from Fuel Vouchers"
-msgstr "Crear Factura de Vales de Combustible"
-
-#. module: tms_maintenance
-#: model:ir.model,name:tms_maintenance.model_fleet_vehicle
-msgid "Information on a vehicle"
-msgstr "Información en un vehículo"
-
-#. module: tms_maintenance
-#: field:tms.activity.control.time,hours_mechanic:0
-#: field:tms.analisys.04,hours_work:0
-msgid "Hours Work"
-msgstr "Trabajo en Horas"
-
-#. module: tms_maintenance
-#: view:fleet.vehicle.mro_program.re_schedule:0
-msgid "= = = = = = = = = = = = = = = = = = = = ="
-msgstr "= = = = = = = = = = = = = = = = = = = = ="
-
-#. module: tms_maintenance
-#: field:tms.maintenance.order.activity,control_time_ids:0
-msgid "Kiosk List"
-msgstr "Lista de Kiosko"
-
-#. module: tms_maintenance
-#: field:fleet.vehicle,date_last_service:0
-msgid "Date Last Serv."
-msgstr "Fecha Ult. Serv."
-
-#. module: tms_maintenance
-#: field:fleet.vehicle,tires_number:0
-msgid "Number of Tires"
-msgstr "Num. Llantas"
-
-#. module: tms_maintenance
-#: field:tms.analisys.01,unit_id:0
-msgid "Unit ID"
-msgstr "ID Vehículo"
-
-#. module: tms_maintenance
-#: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance_config_fleet_vehicle_odometer_device_form
-msgid "Vehicle Odometer Device"
-msgstr "Medidor de Unidad"
-
-#. module: tms_maintenance
-#: view:tms.maintenance.order:0
-msgid "/>"
-msgstr "/>"
-
-#. module: tms_maintenance
-#: view:tms.maintenance.order.activity:0
-msgid "Order of Maintenance Activity"
-msgstr "Orden de Tarea"
-
-#. module: tms_maintenance
-#: view:fleet.vehicle:0
-msgid "MRO"
-msgstr "MRO"
-
-#. module: tms_maintenance
-#: field:tms.analisys.01,date_start:0
+#. module: tms_analysis
+#: field:tms.travel.availability,date_start:0
 msgid "Date Start"
 msgstr "Fecha Inicio"
 
-#. module: tms_maintenance
-#: field:tms.maintenance.order,date_start_real:0
-#: field:tms.maintenance.order.activity,date_start_real:0
-msgid "Date Start Real"
-msgstr "Fecha Inicio Real"
-
-#. module: tms_maintenance
-#: code:addons/tms_maintenance/tms_maintenance_order.py:363
-#: code:addons/tms_maintenance/tms_maintenance_order.py:383
-#: code:addons/tms_maintenance/tms_maintenance_program.py:319
-#: code:addons/tms_maintenance/tms_maintenance_program.py:339
-#, python-format
-msgid "All Activity Lines should be not State Process"
-msgstr "Todas las Tareas deben estar en estado En Proceso"
-
-#. module: tms_maintenance
-#: field:tms.analisys.02,invoice_id:0
-msgid "Invoice ID"
-msgstr "ID Factura"
+#. module: tms_analysis
+#: field:tms.waybill.analysis,waybill_category:0
+msgid "Waybill Categ"
+msgstr "Categoría de Carta Porte"

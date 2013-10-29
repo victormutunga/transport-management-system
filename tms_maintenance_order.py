@@ -21,7 +21,7 @@
 
 from osv import osv, fields
 import time
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from osv.orm import browse_record, browse_null
 from osv.orm import except_orm
 from tools.translate import _
@@ -192,7 +192,7 @@ class tms_maintenance_order(osv.Model):
         
         vals = {
                     'name'              : 'Invoice TMS Maintenance',
-                    'origin'            : 'Maaaantenimiento',
+                    'origin'            : 'MRO',
                     'type'              : 'in_invoice',
                     'journal_id'        : journal_id,
                     'reference'         : 'Maintenance Invoice',
@@ -341,7 +341,6 @@ class tms_maintenance_order(osv.Model):
                 prog_id = program_obj.search(cr, uid, [('vehicle_id', '=', service_order.unit_id.id), ('sequence','=', service_order.program_sequence)])
                 if prog_id:
                     program_obj.write(cr, uid, prog_id, {'mro_service_order_id'   : service_order.id})
-                    
                     prog_ids = program_obj.search(cr, uid, [('vehicle_id', '=', service_order.unit_id.id), ('sequence','>', service_order.program_sequence)], order='sequence')
                     service_trigger = service_order.accumulated_odometer
                     prog_last = program_obj.read(cr, uid, prog_id, ['trigger'])[0]['trigger']
@@ -350,15 +349,23 @@ class tms_maintenance_order(osv.Model):
                         prog_next_trigger = rec.trigger - prog_last + service_trigger
                         program_obj.write(cr, uid, [rec.id], {'trigger' : prog_next_trigger})
                         if not x:
+                            #print "service_order.date_end: ", service_order.date_end
+                            #date_origin = datetime.strptime(service_order.date_end, '%Y-%m-%d %H:%M:%S')
+                            #if not service_order.unit_id.avg_odometer_uom_per_day:
+                            #    raise osv.except_osv(_('Warning!'),_('I can not calculate Next Preventive Service Date because you have not defined Average distance/time per day for this vehicle')) 
+                            #delta = timedelta(days=int((rec.trigger - prog_last)/service_order.unit_id.avg_odometer_uom_per_day))
+                            #date_next_service = date_origin + delta
+                            #print "date_next_service : ", date_next_service
                             vehicle_obj.write(cr, uid, [service_order.unit_id.id], \
-                                              {'cycle_next_service'     : rec.mro_cycle_id.id, \
-                                               'date_next_service'      : service_order.date, \ # Falta calcular la fecha en base a los kms promedio definidos en la unidad
-                                               'main_odometer_next_service': prog_next_trigger, \
-                                               'odometer_next_service'  : service_order.current_odometer + (rec.trigger - prog_last), \
+                                              {'cycle_next_service'     : rec.mro_cycle_id.id, 
+                                               #'date_next_service'      : date_next_service, 
+                                               'main_odometer_next_service': prog_next_trigger, 
+                                               'odometer_next_service'  : service_order.current_odometer + (rec.trigger - prog_last), 
                                                'sequence_next_service'  : rec.sequence,
                                                })
                         x += 1
                         service_trigger = prog_next_trigger
+                vehicle_obj.get_next_service_date(cr, uid, [service_order.unit_id.id])
                         
         
         self.write(cr, uid, ids, {'state':'done', 'date_end_real':time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
