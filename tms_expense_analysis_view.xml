@@ -29,6 +29,7 @@
               <field name="price_unit" invisible="1"/>
               <field name="subtotal" sum="SubTotal"/>
               <field name="unit_id"  invisible="1"/>
+              <field name="driver_helper"  invisible="1"/>
               <field name="state" />
             </tree>
           </field>
@@ -43,6 +44,7 @@
     		<search string="Search Travel Expense Analysis">
                 <filter string="This month" icon="terp-check" domain="[('date','&gt;=', time.strftime('%%Y-%%m-01'))]" name="this_month" />
                 <filter string="Confirmed" icon="terp-check" domain="[('state','=', 'confirmed')] " name="confirmed" />
+                <filter string="Driver Helper" icon="terp-check" domain="[('driver_helper','=', True)] " name="driver_helper" />
               <field name="shop_id" />
               <field name="state"  />
               <field name="name" />
@@ -60,7 +62,8 @@
                 <filter string="Day"         icon="terp-go-today"    domain="[]" context="{'group_by':'day'}"     help="Ordered Day of the Waybill" name="groupby_day"/>
                 <filter string="Month"       icon="terp-go-month"    domain="[]" context="{'group_by':'month'}"   help="Ordered Month of the Waybill" name="groupby_month"/>
                 <filter string="Year"        icon="terp-go-year"     domain="[]" context="{'group_by':'year'}"    help="Ordered Year of the Waybill" name="groupby_year"/>
-                <filter string="Week"        icon="terp-go-week"     domain="[]" context="{'group_by':'week'}"    help="Ordered Week of Year of the Waybill"/>    
+                <filter string="Week"        icon="terp-go-week"     domain="[]" context="{'group_by':'week'}"    help="Ordered Week of Year of the Waybill"/>
+                <filter string="Driver Helper"  icon="terp-personal" domain="[]" context="{'group_by':'driver_helper'}" name="groupby_driver_helper"/>
 			  </group>
             </search>
 		  </field>

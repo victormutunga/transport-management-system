@@ -32,6 +32,7 @@ class tms_expense_analysis(osv.osv):
     _auto = False
     _rec_name = 'name'
     _columns = {
+        'driver_helper'         : fields.boolean('Driver Helper'),
         'shop_id'               : fields.many2one('sale.shop', 'Shop', readonly=True),
         'name'                  : fields.char('Name', size=64, readonly=True),
         'date'                  : fields.date('Date', readonly=True),
@@ -67,8 +68,10 @@ class tms_expense_analysis(osv.osv):
     def init(self, cr):
         tools.sql.drop_view_if_exists(cr, 'tms_expense_analysis')
         cr.execute ("""
+
 CREATE OR REPLACE VIEW tms_expense_analysis as
-select row_number() over() as id,
+select b.id as id,
+a.driver_helper,
 a.shop_id, a.name, a.date, 
 EXTRACT(YEAR FROM a.date)::INTEGER as year,
 EXTRACT(MONTH FROM a.date)::INTEGER as month,
@@ -88,7 +91,30 @@ from tms_expense a
 	inner join tms_travel c on a.id = c.expense_id
 	where a.state <> 'cancel'
 
-order by a.shop_id, a.name, a.date
+union
+
+select b.id as id,
+a.driver_helper,
+a.shop_id, a.name, a.date, 
+EXTRACT(YEAR FROM a.date)::INTEGER as year,
+EXTRACT(MONTH FROM a.date)::INTEGER as month,
+EXTRACT(DAY FROM a.date)::INTEGER as day,
+EXTRACT(WEEK FROM a.date)::INTEGER as week,
+a.state, a.employee_id, a.unit_id, a.currency_id, 
+b.product_id, b.name expense_line_description,
+c.id travel_id, c.route_id, 
+--c.waybill_income/ (select count(id) from tms_expense_line x where x.expense_id = a.id) waybill_income,
+(select count(name) from tms_travel where a.id=tms_travel.expense2_id) travels,
+b.product_uom_qty / (select count(name) from tms_travel where a.id=tms_travel.expense2_id) qty,
+b.price_unit / (select count(name) from tms_travel where a.id=tms_travel.expense2_id) price_unit,
+b.price_subtotal / (select count(name) from tms_travel where a.id=tms_travel.expense2_id) subtotal,
+b.operation_id
+from tms_expense a
+	inner join tms_expense_line b on a.id = b.expense_id 
+	inner join tms_travel c on a.id = c.expense2_id
+	where a.state <> 'cancel'
+
+order by shop_id, name, date
 ;
         """)
 

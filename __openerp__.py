@@ -21,7 +21,7 @@
 
 
 {
-    'name'          : 'Hesatec - Freight Management - Analysis',
+    'name'          : 'Freight Management - Analysis',
     'version'       : '1.0',
     'category'      : 'Vertical',
     'complexity'    : "easy",
