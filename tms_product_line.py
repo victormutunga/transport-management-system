@@ -97,17 +97,24 @@ class tms_product_line(osv.Model):
         #### cancelar el stock move de albaran si es que se genero
         product_line = self.get_current_instance(cr, uid, ids)
         stock_move = product_line['stock_move_id']
+        print "stock_move: ", stock_move
         if stock_move:
+            #stock_move.unlink(context)
+            print "stock_move.state: ", stock_move.state
+            print "stock_move.product_id: ", stock_move.product_id.name
+            stock_move.action_cancel(context)
+            print "stock_move.state: ", stock_move.state
             stock_move.unlink(context)
+            #res = self.pool.get('stock.move').unlink(cr, uid, [stock_move.id] )
         #### cambiar el estado de product line a 'cancel'
         self.write(cr, uid, ids, {'state':'cancel'})
         return True
 
     def get_current_instance(self, cr, uid, id):
-        lines = self.browse(cr,uid,id)
         obj = None
-        for i in lines:
+        for i in self.browse(cr,uid,id):
             obj = i
+        print "obj: ", obj
         return obj
 
 ######################### Metodos Manipulacion de Stock_picking ########
@@ -205,7 +212,7 @@ class tms_product_line(osv.Model):
         return self.get_order_obj(cr,uid,id)['stock_dest_id']['id']
         #return 12       
 
-    def create_stock_move(self,cr,uid,id,      stock_picking, context=None):
+    def create_stock_move(self,cr,uid,id,stock_picking, context=None):
 
         product_line = self.get_current_instance(cr, uid, id)
         product_id = product_line['product_id']['id']
@@ -222,6 +229,9 @@ class tms_product_line(osv.Model):
                 ## One2Many Request, Many2One  de Stock_Move a Stock_Picking
                 'picking_id': ''+str( stock_picking['id'] ),
                 'tms_product_line_id':''+str( product_line['id'] ),
+                'maintenance_order_id': product_line['activity_id']['maintenance_order_id']['id'],
+                'activity_id'         : product_line['activity_id']['id'],
+
                 ##End Add
                } 
 

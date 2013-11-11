@@ -18,7 +18,7 @@
                     </header>
 		    <sheet>
 			<group col="4" attrs="{'readonly':[('state_order','in',('done','cancel'))]}" >
-                        	<field name="product_id" on_change="on_change_product_id(product_id)" attrs="{'readonly':[('state','in',('process','done','cancel'))]}" />
+                        	<field name="product_id" on_change="on_change_product_id(product_id, date_start)" attrs="{'readonly':[('state','in',('process','done','cancel'))]}" />
 				<!--<field name="product_id" attrs="{'readonly':[('state','in',('process','done','cancel'))]}" />
                         	<field name="id" readonly="1"/>-->
 
@@ -41,7 +41,8 @@
 				<field name="parts_cost" />
 
 				<newline/>
-				<field name="date_start" attrs="{'readonly':[('state','in',('process','done','cancel'))]}" />
+				<field name="date_start" attrs="{'readonly':[('state','in',('process','done','cancel'))]}" 
+                       on_change="on_change_date_start(hours_estimated, date_start)"/>
 				<field name="date_start_real" />
 				<field name="date_end" attrs="{'readonly':[('state','in',('process','done','cancel'))]}" />
 				<field name="date_end_real" />
@@ -51,52 +52,26 @@
                         	<field name="maintenance_order_id" invisible="True" />
                         	<field name="shop_id" invisible="True" />
 		    	</group>
-			<group col="4">
-				<!--<button string="Calculate Cost Service"  name="calculate_cost_service"  states="draft,pending,process" icon="gtk-go-forward" type="object" /> 
-				<button string="Calculate Parts Cost"  name="calculate_parts_cost"  states="draft,pending,process" icon="gtk-go-forward" type="object" />  -->
-			</group>
-
-<!--                        ### FORM ###  ### PESTAÑAS PAGE ###     -->
-			<group >
-		        <notebook attrs="{'readonly':[('state_order','in',('done','cancel'))]}" >
-				<page string="Employee Mechanics" attrs="{'invisible':[('external_workshop','in',True)]}" >
-				
-				<field name="mechanic_ids" attrs="{'readonly':[('state','in',('done', 'process','cancel'))]}" nolabel="1">
-                            		<tree string="Mechanics">
-                                		<field name="name" />
-                                		<field name="job_id">
-							<tree string="Job">
-		                                		<field name="name" />
-                            				</tree> 
+			<group col="4" colspan="4">
+				<separator string="Employee Mechanics" attrs="{'invisible':[('external_workshop','in',True)]}" colspan="4" />
+				<field name="mechanic_ids" attrs="{'readonly':[('state','in',('done', 'process','cancel'))]}" nolabel="1" colspan="4">
+                    <tree string="Mechanics">
+                        <field name="name" />
+                        <field name="job_id">
+                            <!--<tree string="Job">-->
+                                <field name="name" />
+                            <!--</tree> -->
 						</field>
-
-                            		</tree> 
+                    </tree> 
 				</field>
-
-				</page>
-			</notebook>
-			<notebook>
-				<page string="List of material to use for activity" attrs="{'invisible':[('breakdown','in',False)]}" >
-					<group col="2">
-						<field name="product_line_ids" attrs="{'readonly':[('state_order','in',('done','cancel'))]}" nolabel="1" />
-						<newline/>
-						<newline/>
-						<newline/>
-						<newline/>
-						<field name="state_order" invisible="1" />
-					</group>
-				</page>
-			</notebook>
-			<!--<notebook>
-				<page string="List of material to use for activity" attrs="{'invisible':[('breakdown','in',False)]}" >
-					<group col="2">
-						<field name="product_line_ids" attrs="{'readonly':[('state','in',('done','cancel'))]}" nolabel="1" />
-					</group>
-				</page>
-			</notebook>-->
-			</group>
+				<separator string="List of material to use for activity" attrs="{'invisible':[('breakdown','in',False)]}" colspan="4"/>	
+                <field name="product_line_ids" 
+                       attrs="{'readonly':[('state_order','in',('done','cancel'))], 'invisible':[('breakdown','in',False)]}" 
+                       nolabel="1" 
+                       domain="[('state', 'not in', ('cancel'))]"/>
+				<field name="state_order" invisible="1" />
+            </group>
 		    </sheet>
-<!--                        ### FORM ###  ### Intrachat ###     -->
 		    <div class="oe_chatter">
                     	<field name="message_follower_ids" widget="mail_followers"/>
                     	<field name="message_ids" widget="mail_thread"/> 

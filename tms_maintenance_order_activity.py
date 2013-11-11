@@ -21,7 +21,7 @@
 
 from osv import osv, fields
 import time
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from osv.orm import browse_record, browse_null
 from osv.orm import except_orm
 from tools.translate import _
@@ -29,12 +29,13 @@ from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, fl
 import decimal_precision as dp
 import netsvc
 import openerp
+import openerp
 
 class tms_maintenance_order_activity(osv.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _name = 'tms.maintenance.order.activity'
     _description = 'Activity'
-    _rec_name='product_id'
+    #_rec_name='product_id'
 
 ########################### Columnas : Atributos #######################################################################
     _columns = {
@@ -68,6 +69,7 @@ class tms_maintenance_order_activity(osv.Model):
 
         ######## Many2One ##########################
         'product_id': fields.many2one('product.product','Activity', domain=[('tms_category','=','maint_activity')] , required=True),
+        'name'      : fields.related('product_id', 'name', string="Name", type='char', readonly=True, store=True),
         ######## Many2One request One2Many ##########
         'maintenance_order_id': fields.many2one('tms.maintenance.order','Order', readonly=True),
         ######## Many2Many ##########################
@@ -536,11 +538,12 @@ class tms_maintenance_order_activity(osv.Model):
         id_order=(self.get_current_instance(cr, uid, id))['maintenance_order_id']['id']
         vals = {
                 'origin':':'+str(seq_order),
-                #'type':'internal',
-                'type':'out',
+                'type':'internal',
+                #'type':'out',
                 'state':'draft',
                 'move_type':'direct', # Delivery Method : partial=direct
-                'tms_order_id':''+str(id_order)
+                'tms_order_id':''+str(id_order),
+                'from_tms_order' : True,
                }    
         stock_id  = self.pool.get('stock.picking').create(cr, uid, vals, context)
         stock_obj = self.pool.get('stock.picking').browse(cr, uid, stock_id)
@@ -592,11 +595,21 @@ class tms_maintenance_order_activity(osv.Model):
 
 #################################################################################################
 
-    def on_change_product_id(self,cr,uid,ids, product_id):
+    def on_change_product_id(self,cr,uid,ids, product_id, date_start):
         producto = self.pool.get('product.product').browse(cr, uid, product_id)
         duration = producto['tms_activity_duration']
-        return {'value':{'hours_estimated':duration}}
+        delta = timedelta(hours=duration or 1)
+        origin = datetime.strptime(date_start, '%Y-%m-%d %H:%M:%S')
+        end_date = origin + delta
+        return {'value':{'hours_estimated':duration, 'date_end': end_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}}
 
+    def on_change_date_start(self,cr,uid,ids, hours_estimated, date_start):
+        delta = timedelta(hours=hours_estimated or 1)
+        origin = datetime.strptime(date_start, '%Y-%m-%d %H:%M:%S')
+        end_date = origin + delta
+        return {'value':{'date_end': end_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}}
+    
+    
     def on_change_external_workshop(self,cr,uid,ids, external_workshop):
         valores = {}
         if not external_workshop:
@@ -646,6 +659,8 @@ class tms_maintenance_order_activity(osv.Model):
     _defaults = {
         'state'                 : lambda *a: 'pending',
         'breakdown'             : lambda *a: True,
+        'date_start'            : lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        'date_end'              : lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
     }
 
 ########################### Criterio de ordenamiento ###################################################################

@@ -35,7 +35,9 @@ class stock_picking(osv.osv):
     _inherit = "stock.picking"
     
     _columns = {
-            'tms_order_id': fields.many2one('tms.maintenance.order', 'Maintenance Order', readonly=True),
+            'tms_order_id' : fields.many2one('tms.maintenance.order', 'Maintenance Order'),
+            'unit_id'      : fields.related('tms_order_id','unit_id',type='many2one',relation='fleet.vehicle',string='Vehicle',store=True,readonly=True),
+            'from_tms_order' : fields.boolean('From MRO Order'),
         }
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -93,10 +95,11 @@ class stock_picking(osv.osv):
         band = super(stock_picking, self).action_move(cr, uid, ids, context)
         return band  
 
-    #def :
-    #    print '==============================================  stock_picking----'
-    #    band = super(stock_picking, self).
-    #    return band
+    def on_change_tms_order(self, cr, uid, ids, tms_order_id, context=None):
+        return {'value': {'unit_id': self.pool.get('tms.maintenance.order').browse(cr, uid, [tms_order_id])[0].unit_id.id}}
+    
+    
+    
 stock_picking()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -35,7 +35,10 @@ class stock_move(osv.osv):
     _inherit = "stock.move"
     
     _columns = {
-            'tms_product_line_id': fields.many2one('tms.product.line', 'Product Line', readonly=True),
+            'tms_product_line_id' : fields.many2one('tms.product.line', 'Product Line', readonly=True),
+            'maintenance_order_id': fields.many2one('tms.maintenance.order','Order'),
+            'unit_id'             : fields.related('maintenance_order_id','unit_id',type='many2one',relation='fleet.vehicle',string='Vehicle',store=True,readonly=True),
+            'activity_id'         : fields.many2one('tms.maintenance.order.activity','Task'),            
         }
 
     def get_current_instance(self, cr, uid, id):
@@ -155,6 +158,47 @@ class stock_move(osv.osv):
     #                move_line['tms_product_line_id'].change_state_to_delivered(context)
     #    return band
 
+
+    def create(self, cr, uid, vals, context=None):
+        xvals = vals
+        if 'tms_product_line_id' not in vals and 'maintenance_order_id' in vals:            
+            order = self.pool.get('tms.maintenance.order').browse(cr, uid, [vals['maintenance_order_id']])[0]
+            xvals['location_id'] = order.stock_origin_id.id
+            xvals['location_dest_id'] = order.stock_dest_id.id            
+            res = super(stock_move, self).create(cr, uid, xvals, context=context)
+        
+            prod_line_obj = self.pool.get('tms.product.line')            
+            line = {
+                    'quantity'      : vals['product_qty'],
+                    'state'         : 'draft',
+                    'product_id'    : vals['product_id'],
+                    'activity_id'   : vals['activity_id'],
+                    'stock_move_id' : res,
+                    'state'         : 'pending',
+                    }
+            x = prod_line_obj.create(cr, uid, line)
+            
+            self.write(cr, uid, [res], {'tms_product_line_id': x})
+        elif 'tms_product_line_id' in vals and 'maintenance_order_id' in vals: # Check if it's returning products
+            res = super(stock_move, self).create(cr, uid, vals, context=context)
+            cr.execute("select tms_product_line_id from stock_move where tms_product_line_id = " + str(vals['tms_product_line_id']))
+            data_ids = cr.fetchall()            
+            if len(data_ids):
+                prod_line_obj = self.pool.get('tms.product.line')            
+                line = {
+                    'quantity'      : vals['product_qty'] * -1.0,
+                    'state'         : 'draft',
+                    'product_id'    : vals['product_id'],
+                    'activity_id'   : vals['activity_id'],
+                    'stock_move_id' : res,
+                    'state'         : 'pending',
+                    }
+                x = prod_line_obj.create(cr, uid, line)
+            
+                self.write(cr, uid, [res], {'tms_product_line_id': x})                
+        else:
+            res = super(stock_move, self).create(cr, uid, vals, context=context)
+        return res
 
 
 

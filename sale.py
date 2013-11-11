@@ -36,7 +36,6 @@ class sale_shop(osv.osv):
     
     _columns = {
             'tms_maintenance_seq': fields.many2one('ir.sequence', 'Maintenance Order Sequence'),
-            #'tms_activity_seq': fields.many2one('ir.sequence', 'Maintenance Activity Sequence'),
         }
 
 sale_shop()

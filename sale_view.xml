@@ -8,14 +8,12 @@
         <field name="model">sale.shop</field>
         <field name="type">form</field>
         <field name="priority">50</field>
-        <field name="inherit_id" ref="sale.view_shop_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//group[@name='shop']" position="inside" >
-		    <group cols="2">
+        <field name="inherit_id" ref="tms.tms_view_shop_form"/>
+        <field name="arch" type="xml">        
+		    <group name="tms" position="inside">
+                <separator string="MRO" colspan="4" />
                     <field name="tms_maintenance_seq"/>
-                    <!--<field name="tms_activity_seq"/>-->
-		    </group>
-            </xpath> 
+		    </group>            
         </field>
     </record>
 

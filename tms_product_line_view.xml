@@ -22,11 +22,12 @@
                     </header>
 		    <sheet>
 			<group col="2">
+                            <field name="activity_id" />
                         	<field name="product_id" attrs="{'readonly':[('state','in',('pending','delivered','cancel'))]}" />
                         	<field name="quantity"   attrs="{'readonly':[('state','in',('pending','delivered','cancel'))]}" />
                         	<field name="shop_id" invisible="1"/>
 				<!--Actividad a la que pertenece Product Line-->
-                        	<field name="activity_id" invisible="1" />
+                        	
                         	<field name="state_activity" invisible="1" />
                         	<field name="list_price" attrs="{'readonly':[('state','in',('delivered','cancel'))]}" />
 				

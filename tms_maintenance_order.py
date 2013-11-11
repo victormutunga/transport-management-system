@@ -52,13 +52,13 @@ class tms_maintenance_order(osv.Model):
         'description'          : fields.char('Description'),
         'notes'                : fields.text('Notes', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),
 
-        'partner_id'           : fields.many2one('res.partner','Partner', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),
+        'partner_id'           : fields.many2one('res.partner', 'Supplier', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),
         'internal_repair'      : fields.boolean('Internal Repair', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),
         'date_start'           : fields.datetime('Date Start Sched', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'date_end'             : fields.datetime('Date End Sched', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'date_start_real'      : fields.datetime('Date Start Real', readonly=True),
         'date_end_real'        : fields.datetime('Date End Real', readonly=True),
-        'date'                 : fields.datetime('Date', readonly=True, states={'draft':[('readonly',False)]}),
+        'date'                 : fields.datetime('Date', readonly=True, states={'draft':[('readonly',False)]}, required=True),
 
         'cost_service'         : fields.float('Service Cost', readonly=True),
         'parts_cost'           : fields.float('Parts Cost', readonly=True),
@@ -67,11 +67,11 @@ class tms_maintenance_order(osv.Model):
         'shop_id'              : fields.many2one('sale.shop','Shop', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'unit_id'              : fields.many2one('fleet.vehicle','Unit', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'product_id'           : fields.many2one('product.product','Service', required=True, domain=[('tms_category','=','maint_service_type')], readonly=True, states={'draft':[('readonly',False)]}),
-        'driver_id'            : fields.many2one('hr.employee','Driver',domain=[('tms_category', '=', 'driver')], required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'driver_id'            : fields.many2one('hr.employee','Driver',domain=[('tms_category', '=', 'driver'),('tms_supplier_driver', '=', False)], required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'supervisor_id'        : fields.many2one('hr.employee','Supervisor',domain=[('tms_category', '=', 'mechanic')], required=True, readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),        
         'user_id'              : fields.many2one('res.users','User', readonly=True), 
               
-        'stock_origin_id'      : fields.many2one('stock.location','Stock Origin', required=True, readonly=True, states={'draft':[('readonly',False)]}),  
+        'stock_origin_id'      : fields.many2one('stock.location','Stock Origin', required=True, readonly=True, states={'draft':[('readonly',False)]}, domain=[('usage', '=', 'internal'),('chained_location_type', '=', 'none')]),
         'stock_dest_id'        : fields.many2one('stock.location','Stock Dest'),
 
 
@@ -733,7 +733,8 @@ class tms_maintenance_order(osv.Model):
     _defaults = {
         'state'                 : lambda *a: 'draft',
         'date'                  : lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-        'date_start'                  : lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        'date_start'            : lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        'date_end'              : lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
         'user_id'               : lambda obj, cr, uid, context: uid,
         'internal_repair'       : True,
     }

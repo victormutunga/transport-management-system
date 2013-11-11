@@ -28,15 +28,19 @@
                       <field name="shop_id" />
 				      <field name="date" />
 				      <field name="unit_id" on_change="on_change_unit_id(unit_id)"/>
-				      <field name="driver_id" context="{'default_tms_category':'driver'}" domain="[('tms_category', '=', 'driver')]"/>
-                      <field name="product_id" on_change="on_change_product_id(product_id, unit_id, date)" />
+				      <field name="driver_id" context="{'default_tms_category':'driver'}" domain="[('tms_category', '=', 'driver'),('tms_supplier_driver', '=', 0)]"/>
+                      <field name="product_id" on_change="on_change_product_id(product_id, unit_id, date)"  
+                             domain="[('tms_category', '=', 'maint_service_type')]"
+                             context="{'default_tms_category':'maint_service_type', 'default_type':'service', 'default_sale_ok':0, 'default_purchase_ok':0}"/>
                       <newline />
 
                       <field name="internal_repair" />
-                      <field name="partner_id" attrs="{'invisible':[('internal_repair','=',True)], 'required':[('internal_repair','=',False)]}" />/>
+                      <field name="partner_id" attrs="{'invisible':[('internal_repair','=',True)], 'required':[('internal_repair','=',False)]}" 
+                             domain="[('is_company', '=', 1),('supplier','=',1)]"
+                             context="{'default_is_company':1, 'default_supplier':1, 'default_customer':0}"/>
 				      
 				      <field name="supervisor_id"  context="{'default_tms_category':'mechanic'}" domain="[('tms_category', '=', 'mechanic')]"/>
-				      <field name="stock_origin_id" context="{'default_usage':'internal'}" domain="[('usage', '=', 'internal')]"/>
+				      <field name="stock_origin_id" context="{'default_usage':'internal'}" domain="[('usage', '=', 'internal'),('chained_location_type', '=', 'none')]"/>
 				      
 				      <field name="cost_service" />
 				      <field name="parts_cost" /> 
