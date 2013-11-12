@@ -180,7 +180,7 @@ class fleet_vehicle_mro_program(osv.Model):
 
 class fleet_vehicle_mro_program_reschedule(osv.osv_memory):
     _name ='fleet.vehicle.mro_program.re_schedule'
-    _description = 'Fleet Vehicle MRO Program re-schedule based on average distance/time per day'
+    _description = 'Vehicle MRO Program re-schedule on avg distance/time per day'
 
     _columns = {
         'control'     : fields.boolean('Control'),
@@ -222,7 +222,7 @@ class fleet_vehicle_mro_program_reschedule(osv.osv_memory):
     
 class fleet_vehicle_mro_program_reschedule_line(osv.osv_memory):
     _name ='fleet.vehicle.mro_program.re_schedule.line'
-    _description = 'Vehicles to re-schedule based on average distance/time per day'
+    _description = 'Vehicle MRO Program re-schedule line'
     _columns = {
         'wizard_id'                 : fields.many2one('fleet.vehicle.mro_program.re_schedule', string="Wizard", ondelete='CASCADE'),
         'vehicle_id'                : fields.many2one('fleet.vehicle', 'Vehicle', required=True, readonly=True),
