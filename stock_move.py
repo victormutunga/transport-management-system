@@ -55,9 +55,9 @@ class stock_move(osv.osv):
     ##########################################################################################
 
     def action_confirm(self, cr, uid, ids, context=None):
-        print '==============================================  stock_move----action_confirm'
-        print '==============================================  stock_move----action_confirm'
-        print '==============================================  stock_move----action_confirm'
+        #print '==============================================  stock_move----action_confirm'
+        #print '==============================================  stock_move----action_confirm'
+        #print '==============================================  stock_move----action_confirm'
         arreglo = super(stock_move, self).action_confirm(cr, uid, ids, context)
         for move_line in self.browse(cr,uid,ids):
             if move_line['tms_product_line_id']: 
@@ -66,9 +66,9 @@ class stock_move(osv.osv):
         return arreglo    
 
     def cancel_assign(self, cr, uid, ids, context=None): ##creo que ya quedo
-        print '==============================================  stock_move----cancel_assign' 
-        print '==============================================  stock_move----cancel_assign' 
-        print '==============================================  stock_move----cancel_assign'  
+        #print '==============================================  stock_move----cancel_assign' 
+        #print '==============================================  stock_move----cancel_assign' 
+        #print '==============================================  stock_move----cancel_assign'  
         arreglo = super(stock_move, self).cancel_assign(cr, uid, ids, context) 
         for move_line in self.browse(cr,uid,ids):
             if move_line['tms_product_line_id']:
@@ -77,9 +77,9 @@ class stock_move(osv.osv):
         return arreglo   
 
     def action_cancel(self, cr, uid, ids, context=None):
-        print '==============================================  stock_move----action_cancel'
-        print '==============================================  stock_move----action_cancel'
-        print '==============================================  stock_move----action_cancel'
+        #print '==============================================  stock_move----action_cancel'
+        #print '==============================================  stock_move----action_cancel'
+        #print '==============================================  stock_move----action_cancel'
         band = super(stock_move, self).action_cancel(cr, uid, ids, context)
         for move_line in self.browse(cr, uid, ids, context=context):
             #if move_line.state in ('confirmed', 'waiting', 'assigned', 'draft'):
@@ -89,9 +89,9 @@ class stock_move(osv.osv):
         return band
 
     def force_assign(self, cr, uid, ids, context=None): ##creo que ya quedo    
-        print '==============================================  stock_move----force_assign'
-        print '==============================================  stock_move----force_assign'
-        print '==============================================  stock_move----force_assign'
+        #print '==============================================  stock_move----force_assign'
+        #print '==============================================  stock_move----force_assign'
+        #print '==============================================  stock_move----force_assign'
         arreglo = super(stock_move, self).force_assign(cr, uid, ids, context)
         for move_line in self.browse(cr,uid,ids):
             if move_line['tms_product_line_id']: 
@@ -100,11 +100,13 @@ class stock_move(osv.osv):
         return arreglo   
 
     def action_done(self, cr, uid, ids, context=None): ##creo que ya quedo
-        print '==============================================  stock_move----action_done'
-        print '==============================================  stock_move----action_done'
-        print '==============================================  stock_move----action_done'
+        #print '==============================================  stock_move----action_done'
+        #print '==============================================  stock_move----action_done'
+        #print '==============================================  stock_move----action_done'
         band = super(stock_move, self).action_done(cr, uid, ids, context)
         for move_line in self.browse(cr,uid,ids):
+            #print "move_line.tms_product_line_id ", move_line.tms_product_line_id.id
+            #print "move_line.state ", move_line.state
             if move_line['tms_product_line_id']:  
                 if move_line.state in ['done']:
                     move_line['tms_product_line_id'].change_state_to_delivered(context)
@@ -112,9 +114,9 @@ class stock_move(osv.osv):
         return band
 
     def action_assign(self, cr, uid, ids, *args):
-        print '==============================================  stock_move----action_assign'
-        print '==============================================  stock_move----action_assign'
-        print '==============================================  stock_move----action_assign'
+        #print '==============================================  stock_move----action_assign'
+        #print '==============================================  stock_move----action_assign'
+        #print '==============================================  stock_move----action_assign'
         check_assign = super(stock_move, self).action_assign(cr, uid, ids, *args)
         return check_assign
 
@@ -180,13 +182,18 @@ class stock_move(osv.osv):
             
             self.write(cr, uid, [res], {'tms_product_line_id': x})
         elif 'tms_product_line_id' in vals and 'maintenance_order_id' in vals: # Check if it's returning products
+            #print "vals: ", vals
+            sql = "select count(tms_product_line_id) from stock_move where tms_product_line_id = " + str(vals['tms_product_line_id'])
+            #print "sql: ", sql
+            cr.execute(sql)
+            data = filter(None, map(lambda x:x[0], cr.fetchall()))
+            #print "data: ", data
             res = super(stock_move, self).create(cr, uid, vals, context=context)
-            cr.execute("select tms_product_line_id from stock_move where tms_product_line_id = " + str(vals['tms_product_line_id']))
-            data_ids = cr.fetchall()            
-            if len(data_ids):
+            if len(data) and data[0]:
+                #print "Ya existe, es devolucion !!!"                
                 prod_line_obj = self.pool.get('tms.product.line')            
                 line = {
-                    'quantity'      : vals['product_qty'] * -1.0,
+                    'quantity'      : float(vals['product_qty']) * -1.0,
                     'state'         : 'draft',
                     'product_id'    : vals['product_id'],
                     'activity_id'   : vals['activity_id'],
@@ -195,7 +202,7 @@ class stock_move(osv.osv):
                     }
                 x = prod_line_obj.create(cr, uid, line)
             
-                self.write(cr, uid, [res], {'tms_product_line_id': x})                
+                self.write(cr, uid, [res], {'tms_product_line_id': x})
         else:
             res = super(stock_move, self).create(cr, uid, vals, context=context)
         return res

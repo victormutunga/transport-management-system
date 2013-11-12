@@ -92,6 +92,8 @@
                   <field name="internal_repair" />
                   <field name="date_start" />
                   <field name="date_end" />
+                  <field name="cost_service" sum="Workhand"/>
+                    <field name="parts_cost" sum="Spare Parts"/> 
                   <field name="state" />
 		</tree>
 	    </field>

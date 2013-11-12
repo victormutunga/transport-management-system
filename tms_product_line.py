@@ -38,17 +38,17 @@ class tms_product_line(osv.Model):
 
 ########################### Columnas : Atributos #######################################################################
     _columns = {
-        'quantity': fields.float('Quantity'),
+        'quantity'      : fields.float('Quantity'),
         'state_activity': fields.related('activity_id','state', type='char', string='Activity State', readonly=True),
-        'state': openerp.osv.fields.selection([('cancel','Cancelled'), ('draft','Draft'), ('pending','Pending'),('delivered','Delivered')],'State'),
-        'list_price':      fields.float('List Price'),
+        'state'         : fields.selection([('cancel','Cancelled'), ('draft','Draft'), ('pending','Pending'),('delivered','Delivered')],'State'),
+        'list_price'    : fields.float('List Price'),
         ######## Many2One ##########################
-        'product_id': fields.many2one('product.product','Product Material', domain=[('tms_category','=','maint_part')], required=True),
-        'stock_move_id': fields.many2one('stock.move','Stock Move', required=False),
+        'product_id'    : fields.many2one('product.product','Product Material', domain=[('tms_category','=','maint_part')], required=True),
+        'stock_move_id' : fields.many2one('stock.move','Stock Move', required=False),
         ######## Many2One request One2Many##########
-        'activity_id': fields.many2one('tms.maintenance.order.activity','Activity id', readonly=True),
+        'activity_id'   : fields.many2one('tms.maintenance.order.activity','Activity id', readonly=True),
         ######## Related ########
-        'shop_id': fields.related('activity_id','shop_id', type='char', string='Shop', readonly=True ,store=True),
+        'shop_id'       : fields.related('activity_id','shop_id', type='char', string='Shop', readonly=True ,store=True),
     }
     
 ########################### Metodos ####################################################################################
@@ -351,6 +351,6 @@ class tms_product_line(osv.Model):
         #'user_id'               : lambda obj, cr, uid, context: uid,
     }
 ########################### Criterio de ordenamiento ###################################################################
-    #_order = 'name'
+    _order = 'stock_move_id'
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
