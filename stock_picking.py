@@ -35,9 +35,10 @@ class stock_picking(osv.osv):
     _inherit = "stock.picking"
     
     _columns = {
-            'tms_order_id' : fields.many2one('tms.maintenance.order', 'Maintenance Order'),
-            'unit_id'      : fields.related('tms_order_id','unit_id',type='many2one',relation='fleet.vehicle',string='Vehicle',store=True,readonly=True),
+            'tms_order_id'   : fields.many2one('tms.maintenance.order', 'Maintenance Order'),
+            'unit_id'        : fields.related('tms_order_id','unit_id',type='many2one',relation='fleet.vehicle',string='Vehicle',store=True,readonly=True),
             'from_tms_order' : fields.boolean('From MRO Order'),
+            'mechanic_id'    : fields.many2one('hr.employee', 'Mechanic', readonly=False, domain=[('tms_category', '=', 'mechanic')]), 
         }
 
     def action_cancel(self, cr, uid, ids, context=None):

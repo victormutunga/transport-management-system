@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-11-12 19:28+0000\n"
-"PO-Revision-Date: 2013-11-12 16:48-0600\n"
+"PO-Revision-Date: 2013-11-12 16:59-0600\n"
 "Last-Translator: Israel CA <israel.cruz@hesatecnica.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -304,7 +304,7 @@ msgstr "Ordenes de Reparación"
 #. module: tms_maintenance
 #: model:ir.ui.menu,name:tms_maintenance.menu_tms_maintenance
 msgid "Fleet Maintenance"
-msgstr "Mantto Flota"
+msgstr "Mantenimiento"
 
 #. module: tms_maintenance
 #: selection:tms.activity.control.time,state:0

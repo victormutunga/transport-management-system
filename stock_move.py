@@ -163,7 +163,9 @@ class stock_move(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         xvals = vals
-        if 'tms_product_line_id' not in vals and 'maintenance_order_id' in vals:            
+        if 'tms_product_line_id' not in vals and 'maintenance_order_id' in vals and vals['maintenance_order_id']:
+            print "Entra al primer if..."
+            print "vals: ", vals
             order = self.pool.get('tms.maintenance.order').browse(cr, uid, [vals['maintenance_order_id']])[0]
             xvals['location_id'] = order.stock_origin_id.id
             xvals['location_dest_id'] = order.stock_dest_id.id            
@@ -182,7 +184,7 @@ class stock_move(osv.osv):
             
             self.write(cr, uid, [res], {'tms_product_line_id': x})
         elif 'tms_product_line_id' in vals and 'maintenance_order_id' in vals: # Check if it's returning products
-            #print "vals: ", vals
+            print "Entra al segundo if..."
             sql = "select count(tms_product_line_id) from stock_move where tms_product_line_id = " + str(vals['tms_product_line_id'])
             #print "sql: ", sql
             cr.execute(sql)
@@ -204,6 +206,7 @@ class stock_move(osv.osv):
             
                 self.write(cr, uid, [res], {'tms_product_line_id': x})
         else:
+            print "No entra a ningun IF..."
             res = super(stock_move, self).create(cr, uid, vals, context=context)
         return res
 

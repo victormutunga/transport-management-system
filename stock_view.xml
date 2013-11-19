@@ -14,6 +14,7 @@
                 <field name="name" position="after">
                     <field name="tms_order_id" />
                     <field name="unit_id" />
+                    <field name="mechanic_id" />
                     <filter icon="terp-dialog-close" name="mro" string="MRO Related" domain="[('maintenance_order_id','!=',False)]" help="Delivery orders already processed"/>
                 </field>
                 <filter string="Journal" position="after">
@@ -33,6 +34,7 @@
                 <field name="origin" position="after" >
                     <field name="tms_order_id" />
                     <field name="unit_id" />
+                    <field name="mechanic_id" />
               </field>
             </field>
         </record>
@@ -51,6 +53,7 @@
                            domain="[('state','not in',('cancel','draft','done'))]" 
                            attrs="{'readonly':[('from_tms_order','=',True)]}"/>                    
                     <field name="unit_id" attrs="{'invisible':[('tms_order_id','=',False)]}"/>
+                    <field name="mechanic_id" />
                 </field>
                 <field name="move_lines" position="replace">
                     <field name="move_lines" 
