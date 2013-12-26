@@ -198,7 +198,7 @@ class tms_maintenance_order_activity(osv.Model):
     def calculate_parts_cost(self,cr,uid,ids,context=None):
         suma = 0.0
         for line in self.get_products_lines_obj(cr, uid, ids):
-            suma = suma + (line['list_price'] * line['quantity'] )
+            suma = suma + (line['product_id']['standard_price'] * line['quantity'] )
         self.set_parts_cost(cr,uid,ids, suma)
         ### Si es Taller Externo la Actividad entonces eejecutara su propia sumatoria
         this = self.get_current_instance(cr, uid, ids)

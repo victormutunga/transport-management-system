@@ -49,16 +49,16 @@
 	    id="action_view_create_invoice"/>
 
     <record id="create_invoice_form" model="ir.ui.view">
-	<field name="name">Crear Facturas</field>
+	<field name="name">Crear Facturas de Taller Externo</field>
 	<field name="model">create.invoice.now</field>
 	<field name="type">form</field>
 	<field name="arch" type="xml">
-	<form string="Create Invoice">
+	<form string="Create Invoice" version="7.0">
 		<separator colspan="4" string="Create Invoice from selected Activities ?" />
-		<group col="2" colspan="4">
+		<footer>
 			<button name="button_generate_invoices" string="Generate Invoices" colspan="1" type="object" icon="gtk-ok" />
 
-		</group>
+		</footer>
 	</form>
 	</field>
 	</record>

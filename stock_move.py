@@ -183,7 +183,7 @@ class stock_move(osv.osv):
             x = prod_line_obj.create(cr, uid, line)
             
             self.write(cr, uid, [res], {'tms_product_line_id': x})
-        elif 'tms_product_line_id' in vals and 'maintenance_order_id' in vals: # Check if it's returning products
+        elif 'tms_product_line_id' in vals and vals['tms_product_line_id'] and 'maintenance_order_id' in vals: # Check if it's returning products
             print "Entra al segundo if..."
             sql = "select count(tms_product_line_id) from stock_move where tms_product_line_id = " + str(vals['tms_product_line_id'])
             #print "sql: ", sql
@@ -210,6 +210,23 @@ class stock_move(osv.osv):
             res = super(stock_move, self).create(cr, uid, vals, context=context)
         return res
 
+
+    def _create_account_move_line(self, cr, uid, move, src_account_id, dest_account_id, reference_amount, reference_currency_id, context=None):
+        #print "Si entra en _create_account_move_line"
+        res_prev = super(stock_move, self)._create_account_move_line(cr, uid, move, src_account_id, dest_account_id, reference_amount, reference_currency_id, context=None)
+        res = res_prev
+        if move.unit_id and move.unit_id.id:
+            res[0][2].update({'vehicle_id': move.unit_id.id})
+            res[1][2].update({'vehicle_id': move.unit_id.id})
+            if move.picking_id and move.picking_id.tms_order_id and move.picking_id.tms_order_id.driver_id and move.picking_id.tms_order_id.driver_id.id:
+                res[0][2].update({'employee_id' : move.picking_id.tms_order_id.driver_id.id})
+                res[1][2].update({'employee_id' : move.picking_id.tms_order_id.driver_id.id})
+                
+        if move.picking_id and move.picking_id.id and move.picking_id.on_consignment:
+            res[0][2].update({'debit' : 0.0,  'name' : res[0][2]['name'] + ' - Consigna'})
+            res[1][2].update({'credit' : 0.0, 'name' : res[1][2]['name'] + ' - Consigna'})
+        print "_create_account_move_line: ", res
+        return res
 
 
 stock_move()

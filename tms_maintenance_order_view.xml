@@ -34,7 +34,7 @@
                              context="{'default_tms_category':'maint_service_type', 'default_type':'service', 'default_sale_ok':0, 'default_purchase_ok':0}"/>
                       <newline />
 
-                      <field name="internal_repair" />
+                      <field name="internal_repair" invisible="1" />
                       <field name="partner_id" attrs="{'invisible':[('internal_repair','=',True)], 'required':[('internal_repair','=',False)]}" 
                              domain="[('is_company', '=', 1),('supplier','=',1)]"
                              context="{'default_is_company':1, 'default_supplier':1, 'default_customer':0}"/>
@@ -88,8 +88,8 @@
                   <field name="date" />
                   <field name="unit_id" />
                   <field name="product_id" />
-                  <field name="partner_id" />
-                  <field name="internal_repair" />
+                  <!--<field name="partner_id" />
+                  <field name="internal_repair" /> --> 
                   <field name="date_start" />
                   <field name="date_end" />
                   <field name="cost_service" sum="Workhand"/>

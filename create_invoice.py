@@ -128,7 +128,7 @@ import openerp
 class create_invoice_now(osv.osv_memory):
 
     _name = 'create.invoice.now'
-    _description = 'Make Invoices from Fuel Vouchers'
+    _description = 'Make Invoices from External Workshop Supplier'
 ###################################################################################################        
 
     ########## Metodos para crear la factura ##########
@@ -193,15 +193,19 @@ class create_invoice_now(osv.osv_memory):
         ##Se generan los Diccionarios de Inv_line vasados en la lista de actividades
         for activity in activities: 
             print "activity:\n- - - - - - - - - - - - - - - -\n", activity
-            if not activity.maintenance_order_id.product_id.property_stock_production.valuation_in_account_id.id:
-                raise osv.except_osv(_('Warning!'),_('You have not defined Stock Valuation Account (Incoming) in Virtual Location related to Service Order Product (field: Production Location).')) 
-            a = activity['maintenance_order_id']['product_id']['property_stock_production']['valuation_in_account_id']['id']
+            
+            a = activity.product_id.product_tmpl_id.property_account_expense.id
             if not a:
-                a = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category', context=context).id
+                a = activity.product_id.categ_id.property_account_expense_categ.id
+            if not a:
+                raise osv.except_osv(_('Error !'),
+                        _('There is no expense account defined ' \
+                          'for this product: "%s" (id:%d)') % \
+                                (activity.product_id.name, activity.product_id.id,))
 
             a = self.pool.get('account.fiscal.position').map_account(cr, uid, False, a)
             
-            descripcion = str(activity['maintenance_order_id']['name']) +str(', ') +str(activity['product_id']['name_template'])
+            descripcion = activity['maintenance_order_id']['name'] + ', ' + activity['product_id']['name_template']
             inv_line = (0,0,{
                         #'name': activity['product_id']['name_template'],
                         'name': descripcion, #Descripcion

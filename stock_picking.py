@@ -29,7 +29,26 @@ from osv.orm import browse_record, browse_null
 import time
 from datetime import datetime, date
 
-## Agregamos manejar una secuencia por cada tienda para controlar viajes 
+## Heredamos el objeto stock_picking_in
+class stock_picking_in(osv.osv):
+    _name = "stock.picking.in"
+    _inherit = "stock.picking.in"
+    _table = "stock_picking"
+    _columns = {
+            'on_consignment' : fields.boolean('Product on consignment', help="Check this if it is a Picking for Product on consignment"),
+        }
+
+## Heredamos el objeto stock_picking_out
+class stock_picking_out(osv.osv):
+    _name = "stock.picking.out"
+    _inherit = "stock.picking.out"
+    _table = "stock_picking"
+    _columns = {
+            'on_consignment' : fields.boolean('Product on consignment', help="Check this if it is a Picking for Product on consignment"),
+        }
+
+    
+## Heredamos el objeto stock_picking
 class stock_picking(osv.osv):
     _name = "stock.picking"
     _inherit = "stock.picking"
@@ -39,6 +58,7 @@ class stock_picking(osv.osv):
             'unit_id'        : fields.related('tms_order_id','unit_id',type='many2one',relation='fleet.vehicle',string='Vehicle',store=True,readonly=True),
             'from_tms_order' : fields.boolean('From MRO Order'),
             'mechanic_id'    : fields.many2one('hr.employee', 'Mechanic', readonly=False, domain=[('tms_category', '=', 'mechanic')]), 
+            'on_consignment' : fields.boolean('Product on consignment', help="Check this if it is a Picking for Product on consignment"),
         }
 
     def action_cancel(self, cr, uid, ids, context=None):
