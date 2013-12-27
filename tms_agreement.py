@@ -788,7 +788,7 @@ class tms_agreement(osv.Model):
 		if not prod_uom_id:
 			raise osv.except_osv(
                         _('Error !'),
-                        _('It was found measuring unit Unit Type !!!'))
+                        _('No se encontro Unidad de Medida Definida como (Unit, Unit(s), Unidad, Unidades) !!!'))
 		return prod_uom_id
 
 	########### FUNCION QUE CALCULA EN BASE A FACTORES
