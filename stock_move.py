@@ -222,10 +222,7 @@ class stock_move(osv.osv):
                 res[0][2].update({'employee_id' : move.picking_id.tms_order_id.driver_id.id})
                 res[1][2].update({'employee_id' : move.picking_id.tms_order_id.driver_id.id})
                 
-        if move.picking_id and move.picking_id.id and move.picking_id.on_consignment:
-            res[0][2].update({'debit' : 0.0,  'name' : res[0][2]['name'] + ' - Consigna'})
-            res[1][2].update({'credit' : 0.0, 'name' : res[1][2]['name'] + ' - Consigna'})
-        print "_create_account_move_line: ", res
+        #print "_create_account_move_line: ", res
         return res
 
 

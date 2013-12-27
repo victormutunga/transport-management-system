@@ -39,28 +39,6 @@
             </field>
         </record>
 
-        <record id="view_picking_in_form_tms_prod_on_consignment" model="ir.ui.view">
-            <field name="name">stock.picking.in.form.tms.consignment</field>
-            <field name="model">stock.picking.in</field>
-            <field name="inherit_id" ref="stock.view_picking_in_form"/>
-            <field name="arch" type="xml">
-                <field name="partner_id" position="after">
-                    <field name="on_consignment" />
-                </field>
-            </field>
-        </record>
-
-        <record id="view_picking_out_form_tms_prod_on_consignment" model="ir.ui.view">
-            <field name="name">stock.picking.out.form.tms.consignment</field>
-            <field name="model">stock.picking.out</field>
-            <field name="inherit_id" ref="stock.view_picking_out_form"/>
-            <field name="arch" type="xml">
-                <field name="partner_id" position="after">
-                    <field name="on_consignment" />
-                </field>
-            </field>
-        </record>
-
     
         <record model="ir.ui.view" id="tms_stock_view_picking_form_view">
             <field name="name">TMS stock.picking.form</field>
