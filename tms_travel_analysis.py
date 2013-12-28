@@ -30,7 +30,7 @@ class tms_travel_analysis(osv.osv):
     _name = "tms.travel.analysis"
     _description = "Travel Analisys"
     _auto = False
-    _rec_name = 'name'
+    #_rec_name = 'name'
     _columns = {
         'shop_id'               : fields.many2one('sale.shop', 'Shop', readonly=True),
         'name'                  : fields.char('Name', size=64, readonly=True),
@@ -106,7 +106,12 @@ EXTRACT(DAY FROM a.date)::INTEGER as day,
 EXTRACT(WEEK FROM a.date)::INTEGER as week,
 a.state, a.employee_id, a.framework, f.unit_type_id, 
 a.unit_id, a.trailer1_id, a.dolly_id, a.trailer2_id, a.route_id, a.departure, a.arrival,
-b.id as waybill_id, b.date_order as waybill_date, b.partner_id, b.state as waybill_state, b.sequence_id as waybill_sequence, b.currency_id, b.waybill_type, b.invoice_id, b.invoice_name, b.user_id,
+b.id as waybill_id, b.date_order as waybill_date, 
+case 
+when b.partner_id is null then 1
+else b.partner_id
+end partner_id, 
+b.state as waybill_state, b.sequence_id as waybill_sequence, b.currency_id, b.waybill_type, b.invoice_id, b.invoice_name, b.user_id,
 c.product_id, 
 c.price_subtotal / 
 (case (select count(id) from tms_waybill_shipped_product where waybill_id=b.id)::FLOAT
@@ -120,14 +125,13 @@ when 0.0 then 1
 else (select count(id) from tms_waybill_line where waybill_id=b.id)::FLOAT
 end) as qty,
 a.operation_id
-from tms_travel a 
+from tms_travel a
 	left join tms_waybill b on (a.id = b.travel_id and b.state in ('approved', 'confirmed'))	
 	left join tms_waybill_line c on (c.waybill_id = b.id and c.line_type = 'product')
 	left join product_product d on (c.product_id = d.id)
 	left join tms_waybill_shipped_product e on (e.waybill_id = b.id)
 	left join fleet_vehicle f on (a.unit_id = f.id)
-order by a.shop_id, a.name, a.date
-;
+order by a.shop_id, a.name, a.date;
         """)
 
 

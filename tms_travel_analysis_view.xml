@@ -55,7 +55,7 @@
     		<search string="Search Travel Analysis">
               <filter string="My Travels" icon="terp-personnal" domain="[('user_id','=',uid)]" help="Travels related to me" name="my_travels"/>
               <filter string="This month" icon="terp-check" domain="[('date','&gt;=', time.strftime('%%Y-%%m-01'))]" name="this_month" />
-              <field name="shop_id" />
+              <field name="unit_id"/>
               <field name="state"  />
               <field name="name" />
               <field name="date"/>
@@ -63,6 +63,7 @@
               <field name="product_id"/>
               <field name="shipped_product_id"/>
               <field name="waybill_sequence" />
+              <field name="shop_id" />
               <group expand="0" string="Extended Filters...">
                 <field name="employee_id"/>
                 <field name="unit_id"/>
@@ -74,8 +75,7 @@
                 <field name="waybill_type"/>
                 <field name="invoice_id"/> 
               </group>
-			  <group expand="1" string="Group By...">
-			    <filter string="Name"        icon="terp-partner"                 domain="[]" context="{'group_by':'name'}"/>
+			  <group expand="1" string="Group By...">			    
 			    <filter string="Partner"     icon="terp-partner"                 domain="[]" context="{'group_by':'partner_id'}"/>
 			    <filter string="Unit"        icon="terp-stage"                   domain="[]" context="{'group_by':'unit_id'}" name="groupby_unit_id"/>
 			    <filter string="Driver"      icon="terp-personal"                domain="[]" context="{'group_by':'employee_id'}"/>
@@ -92,9 +92,8 @@
                 <filter string="Route"          icon="STOCK_OK" domain="[]" context="{'group_by':'route_id'}"/>
                 <filter string="Departure"      icon="terp-gtk-go-back-rtl" domain="[]" context="{'group_by':'departure'}"/>
                 <filter string="Arrival"        icon="terp-gtk-jump-to-ltr" domain="[]" context="{'group_by':'arrival'}"/>
-                <filter string="Framework"      icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'partner_id'}"/>
+                <filter string="Framework"      icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'framework'}"/>
                 <filter string="Waybill Type"   icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'waybill_type'}"/>
-                <filter string="Driver"         icon="terp-personal"    domain="[]" context="{'group_by':'employee_id'}"/>
                 <filter string="Day"            icon="terp-go-today"    domain="[]" context="{'group_by':'day'}"     help="Ordered Day of the Waybill"/>
                 <filter string="Month"          icon="terp-go-month"    domain="[]" context="{'group_by':'month'}"   help="Ordered Month of the Waybill"/>
                 <filter string="Year"           icon="terp-go-year"     domain="[]" context="{'group_by':'year'}"    help="Ordered Year of the Waybill"/>
