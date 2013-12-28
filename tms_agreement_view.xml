@@ -77,6 +77,12 @@
                     <field name="name" />
                     <field name="image" />
                     <field name="partner_id" />
+
+                    <field name="partner_order_id"  />
+                    <field name="partner_invoice_id" />
+                    <field name="departure_address_id" />
+                    <field name="arrival_address_id" />
+
                     <field name="date" />
                     <field name="description" />
                     <field name="shop_id" />
@@ -100,11 +106,13 @@
                                         </a>
                                     </h4>
                                     <ul>
-                                    <li t-if="record.date.raw_value and record.date.raw_value">DateTime: <field name="date"/></li>
+                                    <li t-if="record.arrival_address_id.raw_value">D. Llegada: <field name="arrival_address_id"/></li>
+                                    <li t-if="record.partner_invoice_id.raw_value">Facturacion: <field name="partner_invoice_id"/></li>
                                     <li t-if="record.description.raw_value and record.description.raw_value" >Descripcion: <field name="description"/></li>
                                     <li t-if="record.shop_id.raw_value">Shop: <field name="shop_id"/></li>
                                     <li t-if="record.route_id.raw_value">Route: <field name="route_id"/></li>
                                     <!-- <li t-if="record.state.raw_value">Gain or Loss: $ <field name="amount_total"/></li> -->
+                                    <li t-if="record.date.raw_value and record.date.raw_value">Fecha: <field name="date"/></li>
                                     <li t-if="record.state.raw_value">State: <field name="state"/></li>
                                     <button string="Confirmed" name="action_confirmed" states="draft" icon="gtk-go-forward" type="object" class="oe_highlight"/>
                                     <button string="Cancelled" name="action_cancel" states="confirmed" icon="gtk-cancel" type="object" class="oe_highlight"/> 
@@ -171,14 +179,15 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="agreement" colors="gray:state=='draft';green:state=='confirmed';blue:state=='done';red:state=='cancel';">
-                <button string="Confirmed" type="object" name="action_confirmed" states="draft" icon="gtk-go-forward" class="oe_highlight" />
-                <button string="Cancelled" type="object" name="action_cancel" states="confirmed" icon="gtk-cancel" class="oe_highlight" /> 
-                <button string="Done" type="object"  name="action_done" states="confirmed" icon="gtk-apply" class="oe_highlight" /> 
-                <button string="Reset to Draft" type="object"  name="action_draft" states="cancel,done" icon="gtk-convert" class="oe_highlight" />
-                <button name="%(action_view_create_travel)d" states="confirmed, done" string="Documentacion" icon="gtk-execute"  type="action" class="oe_highlight"/> 
                     <field name="name"/>
                     <field name="version"/>
                     <field name="partner_id"/>
+
+                    <field name="partner_order_id"  />
+                    <field name="partner_invoice_id" />
+                    <field name="departure_address_id" />
+                    <field name="arrival_address_id" />
+
                     <field name="shop_id"/>
 
                     <field name="date_start"/>
@@ -194,6 +203,25 @@
                     <field name="unit_ids"/>
                     <field name="state"/> 
                     <field name="notes"/>
+
+                    <field name="company_id" invisible="1"/>
+                    <field name="date"  invisible="1"/>
+                    <field name="currency_id"  invisible="1"/>
+
+                    <field name="shop_id"  invisible="1"/>
+                    <field name="unit_ids"  invisible="1"/>
+                    <field name="units_a" invisible="1"/>
+                    <field name="upload_point" invisible="1"/> 
+                    <field name="download_point"  invisible="1"/>
+                    <field name="user_id"  invisible="1"/>
+                    <field name="quotation_id" invisible="1"/>
+                    <field name="waybill_ref_id" invisible="1"/>
+
+                    <button string="Confirmed" type="object" name="action_confirmed" states="draft" icon="gtk-go-forward" class="oe_highlight" />
+                    <button string="Cancelled" type="object" name="action_cancel" states="confirmed" icon="gtk-cancel" class="oe_highlight" /> 
+                    <button string="Done" type="object"  name="action_done" states="confirmed" icon="gtk-apply" class="oe_highlight" /> 
+                    <button string="Reset to Draft" type="object"  name="action_draft" states="cancel,done" icon="gtk-convert" class="oe_highlight" />
+                    <button name="%(action_view_create_travel)d" states="confirmed, done" string="Documentacion" icon="gtk-execute"  type="action" class="oe_highlight"/> 
 
 <!--                     <field name="expenses_amount" sum="Amount Expenses"/>
                     <field name="amount_untaxed" sum="Cost Total"/>
@@ -616,7 +644,22 @@
                         <filter domain="[('user_id','=',uid)]" help="My Agreements" icon="terp-personal"/>
                         </field>
 
+                        <field name="company_id" />
+                        <field name="date"  />
+                        <field name="currency_id"  />
 
+                        <field name="shop_id"  />
+                        <field name="unit_ids"  />
+                        <field name="units_a" />
+                        <field name="partner_order_id"  />
+                        <field name="partner_invoice_id" />
+                        <field name="departure_address_id" />
+                        <field name="arrival_address_id" />
+                        <field name="upload_point" /> 
+                        <field name="download_point"  />
+                        <field name="user_id"  />
+                        <field name="quotation_id" />
+                        <field name="waybill_ref_id" />
                         </group>
                             <newline/>
                             <group expand="0" string="Group By..." groups="base.groupagreement">
