@@ -36,6 +36,7 @@ import res_partner
 import tms_quotation
 import product
 # import crm
+import account_invoice
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
