@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Factura-2013-Final" language="groovy" pageWidth="612" pageHeight="792" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="2.420000000000037"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="244"/>
+	<property name="ireport.y" value="148"/>
 	<property name="OPENERP_RELATIONS" value="[&apos;invoice_line&apos;]"/>
 	<parameter name="SUBREPORT_DS" class="java.lang.Object"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String"/>
@@ -352,7 +352,7 @@
 			</staticText>
 			<image onErrorType="Blank">
 				<reportElement x="0" y="13" width="100" height="96"/>
-				<imageExpression class="java.lang.String"><![CDATA[JRImageRenderer.getInstance((byte []) $F{Logo-logo})]]></imageExpression>
+				<imageExpression class="java.lang.String"><![CDATA[$F{Logo-logo}]]></imageExpression>
 			</image>
 			<textField isStretchWithOverflow="true">
 				<reportElement x="111" y="13" width="256" height="20"/>
@@ -949,7 +949,7 @@
 		<band height="218" splitType="Stretch">
 			<image scaleImage="RealSize" onErrorType="Blank">
 				<reportElement stretchType="RelativeToTallestObject" x="1" y="1" width="128" height="106"/>
-				<imageExpression class="java.lang.String"><![CDATA[JRImageRenderer.getInstance((byte []) $F{CFD_I_CBB-cfdi_cbb})]]></imageExpression>
+				<imageExpression class="java.lang.String"><![CDATA[$F{CFD_I_CBB-cfdi_cbb}]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="421" y="65" width="75" height="10"/>
