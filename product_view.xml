@@ -13,7 +13,7 @@
                 <search string="Product">
                    <field name="categ_id" position="after">
                      <filter string="MRO Related" icon="terp-accessories-archiver" 
-                             domain="[('tms_category','in','in',('maint_service_program','maint_service_type','maint_service_cycle','maint_part','maint_activity'))]"/>
+                             domain="[('tms_category','in',('maint_service_program','maint_service_type','maint_service_cycle','maint_part','maint_activity'))]"/>
                    </field>
                 </search>
             </field>

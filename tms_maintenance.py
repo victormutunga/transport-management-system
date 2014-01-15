@@ -66,12 +66,12 @@ class fleet_vehicle(osv.osv):
     def _check_next_service(self, cr, uid, ids, context=None):
         program_obj = self.pool.get('fleet.vehicle.mro_program')
         for record in self.browse(cr, uid, ids, context=context):
-            print record.cycle_next_service.id
-            print record.sequence_next_service
-            print record.id
+            ##print record.cycle_next_service.id
+            ##print record.sequence_next_service
+            ##print record.id
             if record.cycle_next_service.id and record.sequence_next_service:
                 res = program_obj.search(cr, uid, [('vehicle_id', '=', record.id), ('mro_cycle_id', '=', record.cycle_next_service.id), ('sequence', '=', record.sequence_next_service)])
-                print res
+                ##print res
                 return (len(res) > 0)
         return True
 
@@ -82,7 +82,7 @@ class fleet_vehicle(osv.osv):
 
 
     def return_cycle_ids(self, cr, uid, ids, cycle_id, context=None):
-        print "cycle_id: ", cycle_id
+        ##print "cycle_id: ", cycle_id
         ids = [0]
         if len(cycle_id) and cycle_id[0]:
             for cycle in self.pool.get('product.product').browse(cr, uid, cycle_id)[0].mro_cycle_ids: 
@@ -131,7 +131,7 @@ class fleet_vehicle(osv.osv):
                 raise osv.except_osv(_('Warning!'),_('I can not calculate Next Preventive Service Date because you have not defined Average distance/time per day for vehicle: %s') % (vehicle.name)) 
             delta = timedelta(days=int((vehicle.main_odometer_next_service - vehicle.main_odometer_last_service)/vehicle.avg_odometer_uom_per_day))
             date_next_service = date_origin + delta
-            #print date_next_service
+            ##print date_next_service
             return date_next_service.date().isoformat()
 
         
@@ -155,25 +155,25 @@ class fleet_vehicle_mro_program(osv.Model):
         'next_date'      : lambda *a: time.strftime(DEFAULT_SERVER_DATE_FORMAT),
         }
 
-    _order = 'sequence'
+    _order = 'trigger,sequence'
 
     def button_set_next_cycle_service(self, cr, uid, ids, context=None):
-        print "context: ", context
+        #print "context: ", context
         if not ids:
             return False
-        print "ids: ", ids
+        ##print "ids: ", ids
         for program_line in self.browse(cr, uid, ids):
-            print "program_line.mro_cycle_id: ", program_line.mro_cycle_id
-            print "program_line.sequence: ", program_line.sequence
-            print "program_line.vehicle_id.odometer: ", program_line.vehicle_id.odometer
-            print "program_line.vehicle_id.current_odometer_read: ", program_line.vehicle_id.current_odometer_read
+            ##print "program_line.mro_cycle_id: ", program_line.mro_cycle_id
+            ##print "program_line.sequence: ", program_line.sequence
+            ##print "program_line.vehicle_id.odometer: ", program_line.vehicle_id.odometer
+            ##print "program_line.vehicle_id.current_odometer_read: ", program_line.vehicle_id.current_odometer_read
             vehicle_obj = self.pool.get('fleet.vehicle')
             vehicle_obj.write(cr, uid, [program_line.vehicle_id.id], {'cycle_next_service' : program_line.mro_cycle_id.id, 
                                                                       'date_next_service' : program_line.next_date or time.strftime('%Y-%m-%d'), 
                                                                       'sequence_next_service' : program_line.sequence,
                                                                       'main_odometer_next_service' : program_line.trigger,
                                                                       'odometer_next_service' : program_line.trigger})
-            print "Despues del desmadre..."
+            ##print "Despues del desmadre..."
         
         return False
 
