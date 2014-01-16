@@ -43,16 +43,16 @@ class stock_picking(osv.osv):
         }
 
     def action_cancel(self, cr, uid, ids, context=None):
-        print '==============================================  stock_picking----action_cancel'
-        print '==============================================  stock_picking----action_cancel'
-        print '==============================================  stock_picking----action_cancel'
+        #print '==============================================  stock_picking----action_cancel'
+        #print '==============================================  stock_picking----action_cancel'
+        #print '==============================================  stock_picking----action_cancel'
         band = super(stock_picking, self).action_cancel(cr, uid, ids, context)
         return band
 
     def action_confirm(self, cr, uid, ids, context=None):
-        print '==============================================  stock_picking----action_confirm'
-        print '==============================================  stock_picking----action_confirm'
-        print '==============================================  stock_picking----action_confirm'
+        #print '==============================================  stock_picking----action_confirm'
+        #print '==============================================  stock_picking----action_confirm'
+        #print '==============================================  stock_picking----action_confirm'
         band = super(stock_picking, self).action_confirm(cr, uid, ids, context)
         return band   
 
@@ -63,37 +63,37 @@ class stock_picking(osv.osv):
     #####################################
     
     def draft_force_assign(self, cr, uid, ids, *args):
-        print '==============================================  stock_picking----draft_force_assign'
-        print '==============================================  stock_picking----draft_force_assign'
-        print '==============================================  stock_picking----draft_force_assign'
+        #print '==============================================  stock_picking----draft_force_assign'
+        #print '==============================================  stock_picking----draft_force_assign'
+        #print '==============================================  stock_picking----draft_force_assign'
         band = super(stock_picking, self).draft_force_assign(cr, uid, ids, *args)
         return band    
 
     def draft_validate(self, cr, uid, ids, context=None):
-        print '==============================================  stock_picking----draft_validate'
-        print '==============================================  stock_picking----draft_validate'
-        print '==============================================  stock_picking----draft_validate'
+        #print '==============================================  stock_picking----draft_validate'
+        #print '==============================================  stock_picking----draft_validate'
+        #print '==============================================  stock_picking----draft_validate'
         band = super(stock_picking, self).draft_validate(cr, uid, ids, context)
         return band  
 
     def force_assign(self, cr, uid, ids, *args):
-        print '==============================================  stock_picking----force_assign'
-        print '==============================================  stock_picking----force_assign'
-        print '==============================================  stock_picking----force_assign'
+        #print '==============================================  stock_picking----force_assign'
+        #print '==============================================  stock_picking----force_assign'
+        #print '==============================================  stock_picking----force_assign'
         diccionario_action_process = super(stock_picking, self).force_assign(cr, uid, ids, *args)
         return diccionario_action_process  
 
     def action_process(self, cr, uid, ids, context=None):
-        print '==============================================  stock_picking----action_process'
-        print '==============================================  stock_picking----action_process'
-        print '==============================================  stock_picking----action_process'
+        #print '==============================================  stock_picking----action_process'
+        #print '==============================================  stock_picking----action_process'
+        #print '==============================================  stock_picking----action_process'
         diccionario = super(stock_picking, self).action_process(cr, uid, ids, context)
         return diccionario  
 
     def action_move(self, cr, uid, ids, context=None):
-        print '==============================================  stock_picking----action_move'
-        print '==============================================  stock_picking----action_move'
-        print '==============================================  stock_picking----action_move'
+        #print '==============================================  stock_picking----action_move'
+        #print '==============================================  stock_picking----action_move'
+        #print '==============================================  stock_picking----action_move'
         band = super(stock_picking, self).action_move(cr, uid, ids, context)
         return band  
 

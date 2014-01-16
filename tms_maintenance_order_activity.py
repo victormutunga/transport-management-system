@@ -113,7 +113,7 @@ class tms_maintenance_order_activity(osv.Model):
         this.synchronize_state_order()
         
         #if this['maintenance_order_id']['state'] in 'released':
-        #    print 'holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        #    #print 'holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         #    this.action_cancel()
         #    retorno = False
         #    this.unlink()
@@ -173,7 +173,7 @@ class tms_maintenance_order_activity(osv.Model):
         ### si existen, que todas esten finalizadas
         for mechanic_activity in this['control_time_ids']:
             if not mechanic_activity['state'] in ('end'):
-                print 'All Mechanics Activities, should be in state End'
+                #print 'All Mechanics Activities, should be in state End'
                 return False
         #######################################################################
         if not (self.is_exist_products_lines_pending(cr,uid,ids)):
@@ -183,7 +183,7 @@ class tms_maintenance_order_activity(osv.Model):
             self.write(cr, uid, ids, {'state':'done','date_end_real':this['date_most_recent_end_mechanic_activity']})
             return True
 
-        print 'All Product Lines should be not State Pending or Not Exist Product Lines' 
+        #print 'All Product Lines should be not State Pending or Not Exist Product Lines' 
         return False 
         
 
@@ -247,7 +247,7 @@ class tms_maintenance_order_activity(osv.Model):
         suma = 0.0
         this = self.get_current_instance(cr, uid, ids)
         for line in self.get_mechanics(cr,uid,ids):
-            print 'precio producto:  ' + str(line['id']['product_id']['list_price']) +str(', ID: ')+str(line['id'])
+            #print 'precio producto:  ' + str(line['id']['product_id']['list_price']) +str(', ID: ')+str(line['id'])
             cost_mechanic = line['id']['product_id']['list_price']
             suma = suma + cost_mechanic * this['hours_real']
         self.set_cost_service(cr,uid,ids, suma)
@@ -352,7 +352,7 @@ class tms_maintenance_order_activity(osv.Model):
         actividad = self.get_current_activity(cr,uid,id)
         product_lines = self.get_product_line_list_obj(actividad)
         if not product_lines:
-            print 'This activity not have product_lines .........' 
+            #print 'This activity not have product_lines .........' 
             return False
         
         if self.is_exist_products_lines_cancel(cr,uid,id):
@@ -368,7 +368,7 @@ class tms_maintenance_order_activity(osv.Model):
         actividad = self.get_current_activity(cr,uid,id)
         product_lines = self.get_product_line_list_obj(actividad)
         if not product_lines:
-            print 'This activity not have product_lines .........' 
+            #print 'This activity not have product_lines .........' 
             return False
         
         if self.is_exist_products_lines_draft(cr,uid,id):
@@ -384,7 +384,7 @@ class tms_maintenance_order_activity(osv.Model):
         actividad = self.get_current_activity(cr,uid,id)
         product_lines = self.get_product_line_list_obj(actividad)
         if not product_lines:
-            print 'This activity not have product_lines .........' 
+            #print 'This activity not have product_lines .........' 
             return False
         
         if self.is_exist_products_lines_draft(cr,uid,id):
@@ -400,7 +400,7 @@ class tms_maintenance_order_activity(osv.Model):
         actividad = self.get_current_activity(cr,uid,id)
         product_lines = self.get_product_line_list_obj(actividad)
         if not product_lines:
-            print 'This activity not have product_lines .........' 
+            #print 'This activity not have product_lines .........' 
             return False
         
         if self.is_exist_products_lines_draft(cr,uid,id):
@@ -418,7 +418,7 @@ class tms_maintenance_order_activity(osv.Model):
         actividad = self.get_current_activity(cr,uid,id)
         product_lines = self.get_product_line_list_obj(actividad)
         if not product_lines:
-            print 'This activity not have product_lines .........' 
+            #print 'This activity not have product_lines .........' 
             return False
         for line in product_lines:
             if self.is_draft_product_line(line):
@@ -430,7 +430,7 @@ class tms_maintenance_order_activity(osv.Model):
         actividad = self.get_current_activity(cr,uid,id)
         product_lines = self.get_product_line_list_obj(actividad)
         if not product_lines:
-            print 'This activity not have product_lines .........' 
+            #print 'This activity not have product_lines .........' 
             return False
         for line in product_lines:
             if self.is_cancel_product_line(line):
@@ -442,7 +442,7 @@ class tms_maintenance_order_activity(osv.Model):
         actividad = self.get_current_activity(cr,uid,id)
         product_lines = self.get_product_line_list_obj(actividad)
         if not product_lines:
-            print 'This activity not have product_lines .........' 
+            #print 'This activity not have product_lines .........' 
             return False
         for line in product_lines:
             if self.is_pending_product_line(line):
@@ -454,7 +454,7 @@ class tms_maintenance_order_activity(osv.Model):
         actividad = self.get_current_activity(cr,uid,id)
         product_lines = self.get_product_line_list_obj(actividad)
         if not product_lines:
-            print 'This activity not have product_lines .........' 
+            #print 'This activity not have product_lines .........' 
             return False
         for line in product_lines:
             if self.is_delivered_product_line(line):
@@ -482,7 +482,7 @@ class tms_maintenance_order_activity(osv.Model):
     def get_product_line_list_obj(self, activity_obj):
         product_lines = activity_obj['product_line_ids']  
         #if not product_lines:
-        #    print 'product line es None...................##########################################################'
+        #    #print 'product line es None...................##########################################################'
         return product_lines
 
     def get_products_lines_obj(self, cr, uid, ids):
@@ -494,7 +494,7 @@ class tms_maintenance_order_activity(osv.Model):
         activity_obj = self.get_current_activity(cr,uid,id)
         product_lines = activity_obj['product_line_ids']
         if not product_lines:
-            print 'product line Array es None...................##########################################################'
+            #print 'product line Array es None...................##########################################################'
             return False
         return True
 
@@ -626,34 +626,34 @@ class tms_maintenance_order_activity(osv.Model):
             line.change_state_to_delivered()
     
     def print_stock_picking(self,cr,uid,id, context=None):
-        print '-----------------------------------------------------------------------------------------------------------------------'
-        print '-----------------------------------------------------------------------------------------------------------------------'
+        #print '-----------------------------------------------------------------------------------------------------------------------'
+        #print '-----------------------------------------------------------------------------------------------------------------------'
         band = self.is_exist_stock_picking(cr,uid,id)
-        print 'Existen stock_picking relacionados a esta orden proveniente de esta actividad: '+ str(band)
-        print '-----------------------------------------------------------------------------------------------------------------------'
-        print '-----------------------------------------------------------------------------------------------------------------------'
+        #print 'Existen stock_picking relacionados a esta orden proveniente de esta actividad: '+ str(band)
+        #print '-----------------------------------------------------------------------------------------------------------------------'
+        #print '-----------------------------------------------------------------------------------------------------------------------'
         
         if band:
             for line in self.get_stock_picking_obj_list(cr,uid,id):
-                print 'id    stock:                 '+str(line['id'])  
-                print 'name  stock:                 '+str(line['name'])  
-                print 'state stock:                 '+str(line['state'])
-                print 'maintenance_order_id:        '+str(line['tms_order_id'])  
-                print 'maintenance_order_id[name]:  '+str(line['tms_order_id']['name'])  
-                print 'maintenance_order_id[state]: '+str(line['tms_order_id']['state'])  
-                print 'maintenance_order_id[id]:    '+str(line['tms_order_id']['id'])     
-                print '----------------------------------------------------------------------------------------------------------------' 
+                #print 'id    stock:                 '+str(line['id'])  
+                #print 'name  stock:                 '+str(line['name'])  
+                #print 'state stock:                 '+str(line['state'])
+                #print 'maintenance_order_id:        '+str(line['tms_order_id'])  
+                #print 'maintenance_order_id[name]:  '+str(line['tms_order_id']['name'])  
+                #print 'maintenance_order_id[state]: '+str(line['tms_order_id']['state'])  
+                #print 'maintenance_order_id[id]:    '+str(line['tms_order_id']['id'])     
+                #print '----------------------------------------------------------------------------------------------------------------' 
     def crear_stock_picking(self,cr,uid,id, context=None):
         stock_line = self.create_stock_picking(cr,uid,id,context)
         if stock_line:
-            print 'Stock_line Fue Creado Exitosamente----------------------------------------------------------------------------------'
-            print 'id    stock:                 '+str(stock_line['id'])  
-            print 'name  stock:                 '+str(stock_line['name'])  
-            print 'state stock:                 '+str(stock_line['state'])
-            print 'maintenance_order_id:        '+str(stock_line['tms_order_id'])  
-            print 'maintenance_order_id[name]:  '+str(stock_line['tms_order_id']['name']) 
-            print 'maintenance_order_id[state]: '+str(stock_line['tms_order_id']['state'])  
-            print 'maintenance_order_id[id]:    '+str(stock_line['tms_order_id']['id'])  
+            #print 'Stock_line Fue Creado Exitosamente----------------------------------------------------------------------------------'
+            #print 'id    stock:                 '+str(stock_line['id'])  
+            #print 'name  stock:                 '+str(stock_line['name'])  
+            #print 'state stock:                 '+str(stock_line['state'])
+            #print 'maintenance_order_id:        '+str(stock_line['tms_order_id'])  
+            #print 'maintenance_order_id[name]:  '+str(stock_line['tms_order_id']['name']) 
+            #print 'maintenance_order_id[state]: '+str(stock_line['tms_order_id']['state'])  
+            #print 'maintenance_order_id[id]:    '+str(stock_line['tms_order_id']['id'])  
         
 ########################### Valores por Defecto ########################################################################
     _defaults = {

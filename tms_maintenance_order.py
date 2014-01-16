@@ -121,7 +121,7 @@ class tms_maintenance_order(osv.Model):
         for activity in activities:
             if not activity['supplier_id'] in partners:
                 partners.append(activity['supplier_id'])
-        print '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ partner: '+str(partners)
+        #print '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ partner: '+str(partners)
 
         for partner in partners:
             activities_to_partner = []
@@ -130,7 +130,7 @@ class tms_maintenance_order(osv.Model):
                     activities_to_partner.append(activity)
             ###COnstruir las facturas basadas en este parner
             self.create_invoice_based_by_activities(cr,uid,ids, partner, activities_to_partner)
-            print 'Parner : '+str(partner)+str(', ........... '+str(activities_to_partner))
+            #print 'Parner : '+str(partner)+str(', ........... '+str(activities_to_partner))
 
     def create_invoice_lines_from_activity(self,cr,uid,ids, activity):
         return invoice_lines
@@ -156,8 +156,8 @@ class tms_maintenance_order(osv.Model):
     def synchronize_invoice_one_to_many(self,cr,uid,ids, factura, invoice_lines):
         this = self.get_current_instance(cr, uid, ids)
         
-        print 'synchronize Factura: '+str(factura)
-        print 'synchronize invoice_lines: '+str(invoice_lines)  
+        #print 'synchronize Factura: '+str(factura)
+        #print 'synchronize invoice_lines: '+str(invoice_lines)  
 
     def create_invoice_based_by_activities(self,cr,uid,ids, partner, activities):
         invoice_lines = [] 
@@ -251,9 +251,9 @@ class tms_maintenance_order(osv.Model):
 
 
     def get_tasks_from_cycle(self, cr, uid, cycle_id, date):
-        print "cycle_id: ", cycle_id
+        #print "cycle_id: ", cycle_id
         for cycle in self.pool.get('product.product').browse(cr, uid, [cycle_id]):
-            print cycle.name
+            #print cycle.name
             task_ids = []
             for task in cycle.mro_activity_ids:
                 task_ids.append([0, False, {'breakdown': True, 
@@ -295,7 +295,7 @@ class tms_maintenance_order(osv.Model):
         return {}
 
     def on_change_activities_ids(self,cr,uid,ids, activities_ids):
-        print activities_ids
+        #print activities_ids
         return {}
 
     def set_stock_dest(self,cr,uid,ids, stock_dest_id):
@@ -472,7 +472,7 @@ class tms_maintenance_order(osv.Model):
         order_obj = self.get_current_instance(cr,uid,id)
         activity_lines = self.get_activity_lines_obj(cr, uid, id)
         if not activity_lines:
-            print 'Activity line Array es None...................##########################################################'
+            #print 'Activity line Array es None...................##########################################################'
             return False
         return True   
 
@@ -512,7 +512,7 @@ class tms_maintenance_order(osv.Model):
         order = self.get_current_instance(cr, uid, id)
         activities = self.get_activity_lines(cr,uid,id)
         if not activities:
-            print 'This order not have activity_lines .........' 
+            #print 'This order not have activity_lines .........' 
             return False
         for activity_line in activities:
             if self.is_cancel_activity_line(activity_line):
@@ -525,7 +525,7 @@ class tms_maintenance_order(osv.Model):
         order = self.get_current_instance(cr, uid, id)
         activities = self.get_activity_lines(cr,uid,id)
         if not activities:
-            print 'This order not have activity_lines .........' 
+            #print 'This order not have activity_lines .........' 
             return False
         for activity_line in activities:
             if self.is_pending_activity_line(activity_line):
@@ -538,7 +538,7 @@ class tms_maintenance_order(osv.Model):
         order = self.get_current_instance(cr, uid, id)
         activities = self.get_activity_lines(cr,uid,id)
         if not activities:
-            print 'This order not have activity_lines .........' 
+            #print 'This order not have activity_lines .........' 
             return False
         for activity_line in activities:
             if self.is_process_activity_line(activity_line):
@@ -551,7 +551,7 @@ class tms_maintenance_order(osv.Model):
         order = self.get_current_instance(cr, uid, id)
         activities = self.get_activity_lines(cr,uid,id)
         if not activities:
-            print 'This order not have activity_lines .........' 
+            #print 'This order not have activity_lines .........' 
             return False
         for activity_line in activities:
             if self.is_done_activity_line(activity_line):
@@ -567,7 +567,7 @@ class tms_maintenance_order(osv.Model):
         order = self.get_current_instance(cr, uid, id)
         activities = self.get_activity_lines(cr,uid,id)
         if not activities:
-            print 'This order not have activity_lines .........' 
+            #print 'This order not have activity_lines .........' 
             return False
 
         if self.is_exist_activities_pending(cr, uid, id):
@@ -584,7 +584,7 @@ class tms_maintenance_order(osv.Model):
         order = self.get_current_instance(cr, uid, id)
         activities = self.get_activity_lines(cr,uid,id)
         if not activities:
-            print 'This order not have activity_lines .........' 
+            #print 'This order not have activity_lines .........' 
             return False
         
         if self.is_exist_activities_cancel(cr, uid, id):
@@ -601,7 +601,7 @@ class tms_maintenance_order(osv.Model):
         order = self.get_current_instance(cr, uid, id)
         activities = self.get_activity_lines(cr,uid,id)
         if not activities:
-            print 'This order not have activity_lines .........' 
+            #print 'This order not have activity_lines .........' 
             return False
         
         if self.is_exist_activities_cancel(cr, uid, id):
@@ -618,7 +618,7 @@ class tms_maintenance_order(osv.Model):
         order = self.get_current_instance(cr, uid, id)
         activities = self.get_activity_lines(cr,uid,id)
         if not activities:
-            print 'This order not have activity_lines .........' 
+            #print 'This order not have activity_lines .........' 
             return False
         
         if self.is_exist_activities_cancel(cr, uid, id):
@@ -700,34 +700,34 @@ class tms_maintenance_order(osv.Model):
 #####################################  Metodos de prueba Impresion  ####################################################
 ########################################################################################################################
     def print_stock_picking(self,cr,uid,id, context=None):
-        print '-----------------------------------------------------------------------------------------------------------------------'
-        print '-----------------------------------------------------------------------------------------------------------------------'
+        #print '-----------------------------------------------------------------------------------------------------------------------'
+        #print '-----------------------------------------------------------------------------------------------------------------------'
         band = self.is_exist_stock_picking(cr,uid,id)
-        print 'Existen stock_picking relacionados a esta ORDEN: '+ str(band)
-        print '-----------------------------------------------------------------------------------------------------------------------'
-        print '-----------------------------------------------------------------------------------------------------------------------'
+        #print 'Existen stock_picking relacionados a esta ORDEN: '+ str(band)
+        #print '-----------------------------------------------------------------------------------------------------------------------'
+        #print '-----------------------------------------------------------------------------------------------------------------------'
         
         if band:
             for line in self.get_stock_picking_obj_list(cr,uid,id):
-                print 'id    stock:                 '+str(line['id'])  
-                print 'name  stock:                 '+str(line['name'])  
-                print 'state stock:                 '+str(line['state'])  
-                print 'maintenance_order_id:        '+str(line['tms_order_id'])  
-                print 'maintenance_order_id[name]:  '+str(line['tms_order_id']['name'])  
-                print 'maintenance_order_id[state]: '+str(line['tms_order_id']['state'])  
-                print 'maintenance_order_id[id]:    '+str(line['tms_order_id']['id'])     
-                print '----------------------------------------------------------------------------------------------------------------' 
+                #print 'id    stock:                 '+str(line['id'])  
+                #print 'name  stock:                 '+str(line['name'])  
+                #print 'state stock:                 '+str(line['state'])  
+                #print 'maintenance_order_id:        '+str(line['tms_order_id'])  
+                #print 'maintenance_order_id[name]:  '+str(line['tms_order_id']['name'])  
+                #print 'maintenance_order_id[state]: '+str(line['tms_order_id']['state'])  
+                #print 'maintenance_order_id[id]:    '+str(line['tms_order_id']['id'])     
+                #print '----------------------------------------------------------------------------------------------------------------' 
     def crear_stock_picking(self,cr,uid,id, context=None):
         stock_line = self.create_stock_picking(cr,uid,id,context)
         if stock_line:
-            print 'Stock_line Fue Creado Exitosamente----------------------------------------------------------------------------------'
-            print 'id    stock:                 '+str(stock_line['id'])  
-            print 'name  stock:                 '+str(stock_line['name'])  
-            print 'state stock:                 '+str(stock_line['state'])
-            print 'maintenance_order_id:        '+str(stock_line['tms_order_id'])  
-            print 'maintenance_order_id[name]:  '+str(stock_line['tms_order_id']['name']) 
-            print 'maintenance_order_id[state]: '+str(stock_line['tms_order_id']['state'])  
-            print 'maintenance_order_id[id]:    '+str(stock_line['tms_order_id']['id'])  
+            #print 'Stock_line Fue Creado Exitosamente----------------------------------------------------------------------------------'
+            #print 'id    stock:                 '+str(stock_line['id'])  
+            #print 'name  stock:                 '+str(stock_line['name'])  
+            #print 'state stock:                 '+str(stock_line['state'])
+            #print 'maintenance_order_id:        '+str(stock_line['tms_order_id'])  
+            #print 'maintenance_order_id[name]:  '+str(stock_line['tms_order_id']['name']) 
+            #print 'maintenance_order_id[state]: '+str(stock_line['tms_order_id']['state'])  
+            #print 'maintenance_order_id[id]:    '+str(stock_line['tms_order_id']['id'])  
         
 ########################### Valores por Defecto ########################################################################
     _defaults = {

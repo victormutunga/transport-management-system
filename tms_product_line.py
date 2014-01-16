@@ -97,13 +97,13 @@ class tms_product_line(osv.Model):
         #### cancelar el stock move de albaran si es que se genero
         product_line = self.get_current_instance(cr, uid, ids)
         stock_move = product_line['stock_move_id']
-        print "stock_move: ", stock_move
+        #print "stock_move: ", stock_move
         if stock_move:
             #stock_move.unlink(context)
-            print "stock_move.state: ", stock_move.state
-            print "stock_move.product_id: ", stock_move.product_id.name
+            #print "stock_move.state: ", stock_move.state
+            #print "stock_move.product_id: ", stock_move.product_id.name
             stock_move.action_cancel(context)
-            print "stock_move.state: ", stock_move.state
+            #print "stock_move.state: ", stock_move.state
             stock_move.unlink(context)
             #res = self.pool.get('stock.move').unlink(cr, uid, [stock_move.id] )
         #### cambiar el estado de product line a 'cancel'
@@ -114,7 +114,7 @@ class tms_product_line(osv.Model):
         obj = None
         for i in self.browse(cr,uid,id):
             obj = i
-        print "obj: ", obj
+        #print "obj: ", obj
         return obj
 
 ######################### Metodos Manipulacion de Stock_picking ########
@@ -197,15 +197,15 @@ class tms_product_line(osv.Model):
     def get_location_dest_id(self,cr,uid,ids):
         this = self.get_current_instance(cr, uid, ids)
         order = this.get_order_obj()
-        print '???????????????????????????????????????????????????????????? order_obj : '+str(order)
+        #print '???????????????????????????????????????????????????????????? order_obj : '+str(order)
         product_id = order['product_id']['id']
-        print '??????????????????????????????????????????????????????????? product_id : '+str(product_id)
+        #print '??????????????????????????????????????????????????????????? product_id : '+str(product_id)
 
         location_id =  order['product_id']['property_stock_production']['id']
         order.set_stock_dest(location_id)
 
-        print '????????????????????????????????????????????????????? location_id      : '+str(location_id)
-        print '????????????????????????????????????????????????????? order_stock_dest : '+str(order['stock_dest_id'])
+        #print '????????????????????????????????????????????????????? location_id      : '+str(location_id)
+        #print '????????????????????????????????????????????????????? order_stock_dest : '+str(order['stock_dest_id'])
         return location_id #order['stock_dest_id']['id'] 
 
     def get_location_dest_id2(self,cr,uid,id):
@@ -235,7 +235,7 @@ class tms_product_line(osv.Model):
                 ##End Add
                } 
 
-        print 'Impresion Pruebaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        #print 'Impresion Pruebaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         stock_id  = self.pool.get('stock.move').create(cr, uid, vals, context)
         stock_obj = self.pool.get('stock.move').browse(cr, uid, stock_id)
         ##Add
@@ -290,11 +290,11 @@ class tms_product_line(osv.Model):
     def metodo_cambiar_estados_print(self,cr,uid,id, context=None):
         this = self.get_current_instance(cr, uid, id)
         self.change_state_to_pending(cr, uid, id, None)
-        print '--------------------------------------------------------'
-        print '--------------------------------------------------------'
-        print 'this[state]= '+str( this['state'] )
-        print '--------------------------------------------------------'
-        print '--------------------------------------------------------'
+        #print '--------------------------------------------------------'
+        #print '--------------------------------------------------------'
+        #print 'this[state]= '+str( this['state'] )
+        #print '--------------------------------------------------------'
+        #print '--------------------------------------------------------'
         
     
     def print_stock_picking(self,cr,uid,id, context=None): 
@@ -319,28 +319,28 @@ class tms_product_line(osv.Model):
         
 
 
-        print '--------------------------------------------------------------------------------------'
-        print '----------------tms_product_line_id =  :'+ str( self.get_current_instance(cr, uid, id)['id'] ) + '--------------------'
-        print '----------------tms_product_line[stock_move_id] =  :'+ str( self.get_current_instance(cr, uid, id)['stock_move_id'] ) + '--------------------'
-        print '---------------------------------------------------------------------' 
-        print '--------------------------------------------------------------------------------------'
-        print '----------------------------------Stock Picking----------------------------------------------------'
-        print 'Se Creo el stock_pickin[id]                 = '+str( stock_picking ['id'] )
-        print 'Se Creo el stock_pickin[name]               = '+str( stock_picking ['name'] )
-        print 'Se Creo el stock_pickin[move_lines]         = '+str( stock_picking ['move_lines'] )
-        print 'Se Creo el stock_pickin[tms_order_id]       = '+str( stock_picking ['tms_order_id'] )
-        print 'Se Creo el stock_pickin[tms_order_id][name] = '+str( stock_picking ['tms_order_id']['name'] )
+        #print '--------------------------------------------------------------------------------------'
+        #print '----------------tms_product_line_id =  :'+ str( self.get_current_instance(cr, uid, id)['id'] ) + '--------------------'
+        #print '----------------tms_product_line[stock_move_id] =  :'+ str( self.get_current_instance(cr, uid, id)['stock_move_id'] ) + '--------------------'
+        #print '---------------------------------------------------------------------' 
+        #print '--------------------------------------------------------------------------------------'
+        #print '----------------------------------Stock Picking----------------------------------------------------'
+        #print 'Se Creo el stock_pickin[id]                 = '+str( stock_picking ['id'] )
+        #print 'Se Creo el stock_pickin[name]               = '+str( stock_picking ['name'] )
+        #print 'Se Creo el stock_pickin[move_lines]         = '+str( stock_picking ['move_lines'] )
+        #print 'Se Creo el stock_pickin[tms_order_id]       = '+str( stock_picking ['tms_order_id'] )
+        #print 'Se Creo el stock_pickin[tms_order_id][name] = '+str( stock_picking ['tms_order_id']['name'] )
 
-        print '----------------------------------Stock Move----------------------------------------------------'
-        print 'Se Creo el stock_Move[id]                       = '+str( stock_move['id'] )
-        print 'Se Creo el stock_Move[name]                     = '+str( stock_move['name'] )
-        print 'Se Creo el stock_Move[product_id]               = '+str( stock_move['product_id'] )
-        print 'Se Creo el stock_Move[product_qty]              = '+str( stock_move['product_qty'] )
-        print 'Se Creo el stock_Move[picking_id]               = '+str( stock_move['picking_id'] )
-        print 'Se Creo el stock_Move[location_id][name]        = '+str( stock_move['location_id']['name'] )
-        print 'Se Creo el stock_Move[location_dest_id][name]   = '+str( stock_move['location_dest_id']['name'] )
-        print 'Se Creo el stock_Move[product_uom]              = '+str( stock_move['product_uom'] )
-        print 'Se Creo el stock_Move[tms_product_line_id]      = '+str( stock_move['tms_product_line_id'] )
+        #print '----------------------------------Stock Move----------------------------------------------------'
+        #print 'Se Creo el stock_Move[id]                       = '+str( stock_move['id'] )
+        #print 'Se Creo el stock_Move[name]                     = '+str( stock_move['name'] )
+        #print 'Se Creo el stock_Move[product_id]               = '+str( stock_move['product_id'] )
+        #print 'Se Creo el stock_Move[product_qty]              = '+str( stock_move['product_qty'] )
+        #print 'Se Creo el stock_Move[picking_id]               = '+str( stock_move['picking_id'] )
+        #print 'Se Creo el stock_Move[location_id][name]        = '+str( stock_move['location_id']['name'] )
+        #print 'Se Creo el stock_Move[location_dest_id][name]   = '+str( stock_move['location_dest_id']['name'] )
+        #print 'Se Creo el stock_Move[product_uom]              = '+str( stock_move['product_uom'] )
+        #print 'Se Creo el stock_Move[tms_product_line_id]      = '+str( stock_move['tms_product_line_id'] )
 
 
         

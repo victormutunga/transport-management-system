@@ -140,19 +140,19 @@ class create_invoice_now(osv.osv_memory):
         #activities = activities_external_done_not_invoice 
         
         record_ids =  context.get('active_ids',[])
-        print 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-        print 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-        print 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-        print 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee: '+str(record_ids)
+        ##print 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+        #print 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+        #print 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+        #print 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee: '+str(record_ids)
 
         actividades = []
         for line in self.pool.get('create.invoice').browse(cr,uid,record_ids):
             actividades.append(line['activity_id'])
 
-        print 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-        print 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-        print 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-        print 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee: '+str(actividades)
+        #print 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+        #print 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+        #print 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+        #print 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee: '+str(actividades)
         
 
         self.create_invoices_from_activities_not_invoice_and_done(cr,uid,ids, actividades)
@@ -164,7 +164,7 @@ class create_invoice_now(osv.osv_memory):
         for activity in activities:
             if not activity['supplier_id'] in partners:
                 partners.append(activity['supplier_id'])
-        print '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ partner: '+str(partners)
+        #print '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ partner: '+str(partners)
 
         for partner in partners:
             activities_to_partner = []
@@ -174,7 +174,7 @@ class create_invoice_now(osv.osv_memory):
             ###Construir las facturas basadas en este parner
             invoice_obj = self.create_invoice_based_by_activities(cr,uid,ids, partner, activities_to_partner)            
             ################################################################################
-            print 'Parner : '+str(partner)+str(', ........... '+str(activities_to_partner))
+            #print 'Parner : '+str(partner)+str(', ........... '+str(activities_to_partner))
 
 
     def create_invoice_based_by_activities(self,cr,uid,ids, partner, activities, context=None):
@@ -192,7 +192,7 @@ class create_invoice_now(osv.osv_memory):
         ##Se generan los Diccionarios de Inv_line vasados en la lista de actividades
         ##Se generan los Diccionarios de Inv_line vasados en la lista de actividades
         for activity in activities: 
-            print "activity:\n- - - - - - - - - - - - - - - -\n", activity
+            #print "activity:\n- - - - - - - - - - - - - - - -\n", activity
             
             a = activity.product_id.product_tmpl_id.property_account_expense.id
             if not a:
