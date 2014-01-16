@@ -707,8 +707,8 @@ class tms_maintenance_order(osv.Model):
         #print '-----------------------------------------------------------------------------------------------------------------------'
         #print '-----------------------------------------------------------------------------------------------------------------------'
         
-        if band:
-            for line in self.get_stock_picking_obj_list(cr,uid,id):
+        #if band:
+        #    for line in self.get_stock_picking_obj_list(cr,uid,id):
                 #print 'id    stock:                 '+str(line['id'])  
                 #print 'name  stock:                 '+str(line['name'])  
                 #print 'state stock:                 '+str(line['state'])  
@@ -719,7 +719,7 @@ class tms_maintenance_order(osv.Model):
                 #print '----------------------------------------------------------------------------------------------------------------' 
     def crear_stock_picking(self,cr,uid,id, context=None):
         stock_line = self.create_stock_picking(cr,uid,id,context)
-        if stock_line:
+        #if stock_line:
             #print 'Stock_line Fue Creado Exitosamente----------------------------------------------------------------------------------'
             #print 'id    stock:                 '+str(stock_line['id'])  
             #print 'name  stock:                 '+str(stock_line['name'])  
