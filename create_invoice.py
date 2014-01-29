@@ -193,15 +193,16 @@ class create_invoice_now(osv.osv_memory):
         ##Se generan los Diccionarios de Inv_line vasados en la lista de actividades
         for activity in activities: 
             #print "activity:\n- - - - - - - - - - - - - - - -\n", activity
-            
-            a = activity.product_id.product_tmpl_id.property_account_expense.id
-            if not a:
-                a = activity.product_id.categ_id.property_account_expense_categ.id
+        
+            #a = activity.product_id.product_tmpl_id.property_account_expense.id
+            a = activity.maintenance_order_id.product_id.property_stock_production.valuation_out_account_id.id
+            #if not a:
+            #    a = activity.product_id.categ_id.property_account_expense_categ.id
             if not a:
                 raise osv.except_osv(_('Error !'),
                         _('There is no expense account defined ' \
-                          'for this product: "%s" (id:%d)') % \
-                                (activity.product_id.name, activity.product_id.id,))
+                          'for production location of product: "%s" (id:%d)') % \
+                                (activity.maintenance_order_id.product_id.name, activity.maintenance_order_id.product_id.id,))
 
             a = self.pool.get('account.fiscal.position').map_account(cr, uid, False, a)
             
@@ -209,13 +210,13 @@ class create_invoice_now(osv.osv_memory):
             inv_line = (0,0,{
                         #'name': activity['product_id']['name_template'],
                         'name': descripcion, #Descripcion
-                        'origin': activity['maintenance_order_id']['product_id']['name_template'],
+                        'origin': activity.maintenance_order_id.product_id.name_template,
                         'account_id': a,
                         'price_unit': activity['cost_service']+activity['parts_cost'],
                         'quantity': 1,
-                        'uos_id': activity['product_id'].uos_id.id,
+                        'uos_id': activity.maintenance_order_id.product_id.uos_id.id,
                         'product_id': activity['product_id']['id'],
-                        'invoice_line_tax_id': [(6, 0, [x.id for x in activity['product_id'].supplier_taxes_id])],
+                        'invoice_line_tax_id': [(6, 0, [x.id for x in activity.maintenance_order_id.product_id.supplier_taxes_id])],
                         'note': 'Notasss',
                         'account_analytic_id': False,
                        })
