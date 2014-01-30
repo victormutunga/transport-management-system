@@ -164,11 +164,10 @@ class stock_move(osv.osv):
     def create(self, cr, uid, vals, context=None):
         xvals = vals
         if 'tms_product_line_id' not in vals and 'maintenance_order_id' in vals and vals['maintenance_order_id']:
-            #print "Entra al primer if..."
-            #print "vals: ", vals
             order = self.pool.get('tms.maintenance.order').browse(cr, uid, [vals['maintenance_order_id']])[0]
+            
             xvals['location_id'] = order.stock_origin_id.id
-            xvals['location_dest_id'] = order.stock_dest_id.id            
+            xvals['location_dest_id'] = order.product_id.property_stock_production.id            
             res = super(stock_move, self).create(cr, uid, xvals, context=context)
         
             prod_line_obj = self.pool.get('tms.product.line')            
@@ -184,15 +183,11 @@ class stock_move(osv.osv):
             
             self.write(cr, uid, [res], {'tms_product_line_id': x})
         elif 'tms_product_line_id' in vals and vals['tms_product_line_id'] and 'maintenance_order_id' in vals: # Check if it's returning products
-            #print "Entra al segundo if..."
             sql = "select count(tms_product_line_id) from stock_move where tms_product_line_id = " + str(vals['tms_product_line_id'])
-            #print "sql: ", sql
             cr.execute(sql)
             data = filter(None, map(lambda x:x[0], cr.fetchall()))
-            #print "data: ", data
             res = super(stock_move, self).create(cr, uid, vals, context=context)
             if len(data) and data[0]:
-                #print "Ya existe, es devolucion !!!"                
                 prod_line_obj = self.pool.get('tms.product.line')            
                 line = {
                     'quantity'      : float(vals['product_qty']) * -1.0,
@@ -206,7 +201,6 @@ class stock_move(osv.osv):
             
                 self.write(cr, uid, [res], {'tms_product_line_id': x})
         else:
-            #print "No entra a ningun IF..."
             res = super(stock_move, self).create(cr, uid, vals, context=context)
         return res
 
