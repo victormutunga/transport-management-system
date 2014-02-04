@@ -40,6 +40,7 @@ class product_product(osv.osv):
         'operating_fixed_cost': fields.boolean('Operating Fixed Cost'),
         'administrative_expense': fields.boolean('Administrative Expense'),
         'tms_category_default': fields.boolean('Default', help="Activar Esta casilla para poder Utilizar este producto en Cotizaciones y Acuerdos"),
+        'move_ag': fields.boolean('Maiobras', help="Activar Esta casilla para poder Utilizar este producto en Cotizaciones y Acuerdos como Maniobras"),
 #         'tms_category':fields.selection([
 #                                           ('no_tms_product','No TMS Product'), 
 #                                           ('transportable','Transportable'), 
@@ -107,6 +108,11 @@ class product_product(osv.osv):
             if record.tms_category in ('move','highway_tolls', 'insurance', 'fuel'):
                 if record.tms_category_default == True:
                     product_id = prod_obj.search(cr, uid, [('tms_category','=',record.tms_category),('tms_category_default','=',True),('id','!=',ids[0])])
+                    if product_id:
+                        return False
+            if record.tms_category == 'real_expense':
+                if record.move_ag:
+                    product_id = prod_obj.search(cr, uid, [('tms_category','=',record.tms_category),('move_ag','=',True),('id','!=',ids[0])])
                     if product_id:
                         return False
         return True

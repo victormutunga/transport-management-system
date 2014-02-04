@@ -1941,13 +1941,13 @@ class tms_quotation_agreement_wizard(osv.osv_memory):
 							expenses_list.append(xline_expense)
 
 					if quotation.move_travel_days > 0.0:
-						product_income_id = product_obj.search(cr, uid, [('tms_category', '=', 'move'),('active','=', 1),('tms_category_default','=',1)], limit=1)
+						product_income_id = product_obj.search(cr, uid, [('tms_category', '=', 'real_expense'),('active','=', 1),('move_ag','=',1)], limit=1)
 						product_browse = product_obj.browse(cr, uid, product_income_id, context)
 						fpos = quotation.partner_id.property_account_position.id or False
 						if not product_income_id:
 							raise osv.except_osv(
                                 _('Error al Crear el Acuerdo !'),
-                                _('No se tiene un producto configurado de tipo Move o Maniobra por Defecto'))
+                                _('No se tiene un producto configurado de Tipo Gasto y el Check de Maniobra Activado'))
 						else:
 							sq += 1
 							xline_expense = (0,0,{
