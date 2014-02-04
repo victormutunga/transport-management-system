@@ -208,12 +208,7 @@
                     <field name="date"  invisible="1"/>
                     <field name="currency_id"  invisible="1"/>
 
-                    <field name="shop_id"  invisible="1"/>
-                    <field name="unit_ids"  invisible="1"/>
                     <field name="units_a" invisible="1"/>
-                    <field name="upload_point" invisible="1"/> 
-                    <field name="download_point"  invisible="1"/>
-                    <field name="user_id"  invisible="1"/>
                     <field name="quotation_id" invisible="1"/>
                     <field name="waybill_ref_id" invisible="1"/>
 
