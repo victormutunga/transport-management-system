@@ -21,6 +21,10 @@
 			<field name="manpower_cost" />
 			<field name="material_cost" />
 			<field name="date" />
+            <field name="year" invisible="1" />
+            <field name="month" invisible="1" />
+            <field name="day" invisible="1" />
+
 			<field name="date_start" />
 			<field name="date_end" />
 		</tree>

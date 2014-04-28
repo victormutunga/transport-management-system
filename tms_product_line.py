@@ -43,10 +43,10 @@ class tms_product_line(osv.Model):
         'state'         : fields.selection([('cancel','Cancelled'), ('draft','Draft'), ('pending','Pending'),('delivered','Delivered')],'State'),
         'list_price'    : fields.float('List Price'),
         ######## Many2One ##########################
-        'product_id'    : fields.many2one('product.product','Product Material', domain=[('tms_category','=','maint_part')], required=True),
-        'stock_move_id' : fields.many2one('stock.move','Stock Move', required=False),
+        'product_id'    : fields.many2one('product.product','Product Material', domain=[('tms_category','=','maint_part')], required=True, ondelete='restrict'),
+        'stock_move_id' : fields.many2one('stock.move','Stock Move', required=False, ondelete='restrict'),
         ######## Many2One request One2Many##########
-        'activity_id'   : fields.many2one('tms.maintenance.order.activity','Activity id', readonly=True),
+        'activity_id'   : fields.many2one('tms.maintenance.order.activity','Activity id', readonly=True, ondelete='restrict'),
         ######## Related ########
         'shop_id'       : fields.related('activity_id','shop_id', type='char', string='Shop', readonly=True ,store=True),
     }

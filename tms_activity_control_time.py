@@ -51,10 +51,10 @@ class tms_activity_control_time(osv.Model):
         'date_end': fields.datetime('Date End', readonly="True"),
 
         ######## Many2One ###########
-        'order_id': fields.many2one('tms.maintenance.order','Order', readonly="True"),
-        'activity_id': fields.many2one('tms.maintenance.order.activity','Activity ID', readonly="True"),
-        'hr_employee_id': fields.many2one('hr.employee','Mechanic', readonly="True"),
-        'hr_employee_user_id': fields.many2one('res.users','User',readonly="True"),
+#        'order_id': fields.many2one('tms.maintenance.order','Order', readonly="True"),
+        'activity_id': fields.many2one('tms.maintenance.order.activity','Activity ID', readonly="True", ondelete='restrict'),
+        'hr_employee_id': fields.many2one('hr.employee','Mechanic', readonly="True", ondelete='restrict'),
+        'hr_employee_user_id': fields.many2one('res.users','User',readonly="True", ondelete='restrict'),
         
         ## Float
         'hours_mechanic':      fields.float('Hours Work', readonly="True"),
@@ -62,59 +62,44 @@ class tms_activity_control_time(osv.Model):
         ######## Related ###########
         'name_order': fields.related('activity_id','maintenance_order_id', 'name', type='char', string='Order', readonly=True, store=True),
         'name_activity': fields.related('activity_id','product_id', 'name_template', type='char', string='Activity', readonly=True, store=True),
+        'order_id'       : fields.related('activity_id', 'maintenance_order_id', type='many2one', relation='tms.maintenance.order', string='MRO Order', store=True, readonly=True),
+        'date'          : fields.related('order_id','date', type='date', string='Date', readonly=True, store=True),
+        'shop_id'       : fields.related('order_id', 'shop_id', type='many2one', relation='sale.shop', string='Shop', store=True, readonly=True),
+        'unit_id'       : fields.related('order_id', 'unit_id', type='many2one', relation='fleet.vehicle', string='Vehicle', store=True, readonly=True),                
+
     }
     
 ########################### Metodos ####################################################################################
 
-    def get_current_instance(self, cr, uid, ids):
-        lines = self.browse(cr,uid,ids)
-        obj = None
-        for i in lines:
-            obj = i
-        return obj
 
-    def get_time_lines(self,cr,uid,ids):
-        this = self.get_current_instance(cr, uid, ids)       
-        return this['tms_time_ids']
-
-    def calculate_diference_time(self, cr, uid, ids, date_begin, date_end):
-        this = self.get_current_instance(cr, uid, ids)
+    def calculate_diference_time(self, date_begin, date_end):
         duration = datetime.strptime(date_end, '%Y-%m-%d %H:%M:%S') - datetime.strptime(date_begin, '%Y-%m-%d %H:%M:%S')
         x1 = (duration.seconds / 3600.0) + (duration.days / 24 ) 
         return x1
 
     def calculate_time_activity(self, cr, uid, ids):
         sum_time = 0.0
-        
-        temp_begin = -1
-
-        for time in self.get_time_lines(cr,uid,ids):
-
-            if time['event'] in 'process':
-                temp_begin = time['date_event']
-
-            if time['event'] in ('pause','end'):
-                sum_time = sum_time + self.calculate_diference_time(cr, uid, ids, temp_begin, time['date_event'])
-
+        #temp_begin = False
+        for time in self.browse(cr,uid,ids)[0].tms_time_ids:
+            if time.event in 'process':
+                temp_begin = time.date_event
+            elif time.event in ('pause','end'):
+                sum_time += self.calculate_diference_time(temp_begin, time.date_event)
+        print "sum_time: ", sum_time
         return sum_time
 
-    def create_time_rec(self,cr,uid,ids, date_event, event):
-        
-        this = self.get_current_instance(cr, uid, ids)
-
+    def create_time_rec(self,cr,uid,ids, date_event, event):        
+        this = self.browse(cr, uid, ids)[0]
         vals_time = {
                 ## One2Many Request, Many2One  de tms_time a tms_activity_control_time
-                'control_time_id': ''+str( this['id'] ),
-                'event':''+str(event),
-                'date_event':date_event,
-               } 
-
+                'control_time_id'   : ids[0],
+                'event'             : event,
+                'date_event'        : date_event,
+               }
         time_id  = self.pool.get('tms.time').create(cr, uid, vals_time, None)
-        time_obj = self.pool.get('tms.time').browse(cr, uid, time_id)
 
-        ## One2Many a tms_time
-        this['tms_time_ids'].append(str(time_obj['id']))
-        return time_obj
+        this.tms_time_ids.append(str(time_id))
+        return
 
     ########## Metodos para el 'state' ##########
 
@@ -122,9 +107,9 @@ class tms_activity_control_time(osv.Model):
         date_start = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         self.write(cr, uid, ids, {'date_begin':date_start})
         ## Fijar Suma Fecha Inicio Actividad en (order.activity) campo (date_start_real) 
-        this = self.get_current_instance(cr, uid, ids)
-        if this['activity_id']:
-            this['activity_id'].write({'date_start_real':date_start})
+        this = self.browse(cr, uid, ids)[0]
+        if this.activity_id:
+            this.activity_id.write({'date_start_real':date_start})
  
         return self.action_process(cr, uid, ids, context)
 
@@ -140,25 +125,24 @@ class tms_activity_control_time(osv.Model):
 
     def action_end(self,cr,uid,ids,context=None): 
         date_end = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-
-        self.write(cr, uid, ids, {'state':'end'})
-        self.write(cr, uid, ids, {'date_end':date_end}) 
+        self.write(cr, uid, ids, {'state':'end','date_end':date_end})
         self.create_time_rec(cr,uid,ids, date_end, 'end')
 
         ## Fijar Suma Tiempos             en (order.activity) campo (hours_real)
         ## Fijar Suma Fecha Fin Actividad en (order.activity) campo (date_end_real) 
-        this = self.get_current_instance(cr, uid, ids)
-        if this['activity_id']:
+        this = self.browse(cr, uid, ids)[0]
+        if this.activity_id:
             time_total_mechanic = self.calculate_time_activity(cr, uid, ids)
-            this.write( {'hours_mechanic':time_total_mechanic})
+            #this.activity_id.write({'hours_mechanic':time_total_mechanic})
+            this.write({'hours_mechanic':time_total_mechanic})
 
-            acumulate_of_activity = time_total_mechanic + this['activity_id']['hours_real']
-            this['activity_id'].write( {'hours_real':acumulate_of_activity, 
+            acumulate_of_activity = time_total_mechanic + this.activity_id.hours_real
+            this.activity_id.write( {'hours_real':acumulate_of_activity, 
                                         'date_end_real':date_end,
                                         'date_most_recent_end_mechanic_activity':date_end})
-            this['activity_id']['maintenance_order_id'].calculate_cost_service()
+            this.activity_id.maintenance_order_id.calculate_cost_service()
         ##### Cerrar La Actividad Padre si es Posible   
-        this['activity_id'].done_close_activity_if_is_posible()
+        this.activity_id.done_close_activity_if_is_posible()
         #####    
         return True 
 

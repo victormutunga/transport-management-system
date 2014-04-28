@@ -36,6 +36,7 @@ class sale_shop(osv.osv):
     
     _columns = {
             'tms_maintenance_seq': fields.many2one('ir.sequence', 'Maintenance Order Sequence'),
+            'tms_maintenance_order_driver_report_seq': fields.many2one('ir.sequence', 'Driver Report of Failure Sequence'),
         }
 
 sale_shop()

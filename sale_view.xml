@@ -13,6 +13,7 @@
 		    <group name="tms" position="inside">
                 <separator string="MRO" colspan="4" />
                     <field name="tms_maintenance_seq"/>
+                    <field name="tms_maintenance_order_driver_report_seq" />
 		    </group>            
         </field>
     </record>

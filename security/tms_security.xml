@@ -47,6 +47,25 @@
 	  <field eval="[(4, ref('tms_group_tms_activity_control_time'))]" name="groups_id"/>
     </record>
 
+    
+    
+<!-- TMS.MAINTENANCE.DIVER_REPORT -->
+    <record id="tms_maintenance.group_report_confirm" model="res.groups">
+        <field name="name">Can Confirm Driver Report of Vehicle Failure</field>
+        <field name="category_id" ref="tms_maintenance_order_category"/>
+        <field name="comment">The user will be able to Confirm Driver Report of Vehicle Failure.</field>
+    </record>
+    <record id="tms_maintenance.group_report_cancel" model="res.groups">
+        <field name="name">Can Cancel Driver Report of Vehicle Failures</field>
+        <field name="category_id" ref="tms_maintenance_order_category"/>
+        <field name="comment">The user will be able to Cancel Driver Report of Vehicle Failure.</field>
+    </record>
+    <record id="tms_maintenance.group_report_setdraft" model="res.groups">
+        <field name="name">Can Set to Draft Driver Report of Vehicle Failure</field>
+        <field name="category_id" ref="tms_maintenance_order_category"/>
+        <field name="comment">The user will be able to Set to Draft Driver Report of Vehicle Failure.</field>
+    </record>
+    
 
 
 </data>

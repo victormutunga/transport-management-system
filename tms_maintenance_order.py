@@ -44,6 +44,91 @@ class tms_maintenance_order(osv.Model):
             'name': self.pool.get('ir.sequence').get(cr, uid, 'tms.maintenance.order'),
         })
         return super(tms_maintenance_order, self).copy(cr, uid, id, default, context=context)
+    
+#    def _get_all(self, cr, uid, ids, field_name, args, context=None):
+#        res = {}
+#        for record in self.browse(cr, uid, ids, context=context):
+#            invoiced = (record.invoice_id.id)
+#            paid = (record.invoice_id.state == 'paid') if record.invoice_id.id else False
+#            res[record.id] =  { 'invoiced': invoiced,
+#                                'invoice_paid': paid,
+#                                'invoice_name': record.invoice_id.reference
+#                                }
+#        return res
+
+#    def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
+#        #print "_amount_all"x
+#        res = {}
+#        for record in self.browse(cr, uid, ids, context=context):
+#            res[record.id] = {
+#                'service_cost': 0.0,
+#                'spare_parts_cost': 0.0,
+#                'service_cost_external': 0.0,
+#                'spare_parts_cost_external': 0.0,
+#            }            
+#            x_service = x_spare_parts = y_service = y_spare_parts = 0.0
+            
+#            ***
+#            def calculate_parts_cost(self,cr,uid,ids,context=None):
+#        suma = 0.0
+#        for line in self.get_activity_lines(cr,uid,ids):
+#            line.calculate_parts_cost()
+#            suma = suma + line['parts_cost']
+#        self.set_parts_cost(cr,uid,ids, suma)
+
+#    def calculate_cost_service(self,cr,uid,ids,context=None):
+#        suma = 0.0
+#        this = self.get_current_instance(cr, uid, ids)
+#        for line in self.get_activity_lines(cr,uid,ids):
+#            line.calculate_cost_service()
+#            suma = suma + line['cost_service']
+#        self.set_cost_service(cr,uid,ids, suma)
+#            ***
+            
+            ###Falta obtener la formula para obtener el Costo del Servicio
+#            for line in record.activities_ids:
+#                for time_line in line.control_time_ids:
+#                    cost_mechanic = times.['hr_employee_id']['product_id']['list_price']
+#            suma = suma + cost_mechanic * line['hours_mechanic']
+#                    x_service += 
+#                x
+#                    x_freight += line.price_subtotal if line.product_id.tms_category == 'freight' else 0.0
+#                    x_move += line.price_subtotal if line.product_id.tms_category == 'move' else 0.0
+#                    x_highway += line.price_subtotal if line.product_id.tms_category == 'highway_tolls' else 0.0
+#                    x_insurance += line.price_subtotal if line.product_id.tms_category == 'insurance' else 0.0
+#                    x_other += line.price_subtotal if line.product_id.tms_category == 'other' else 0.0
+#                    x_subtotal += line.price_subtotal
+#                    x_tax += line.tax_amount
+#                    x_total += line.price_total
+        
+#            res[record.id] = {
+#                'service_cost': 0.0,
+#                'spare_parts_cost': 0.0,
+#                'service_cost_external': 0.0,
+#                'spare_parts_cost_external': 0.0,
+#            }
+            
+                        
+#        return res
+
+    
+    def _get_duration(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for record in self.browse(cr, uid, ids, context=context):
+            res[record.id] = {
+                'duration': 0.0,
+                'duration_real': 0.0,
+            }
+            if record.date_end and record.date_start:
+                dur1 = datetime.strptime(record.date_end, '%Y-%m-%d %H:%M:%S') - datetime.strptime(record.date_start, '%Y-%m-%d %H:%M:%S')
+                x1 = ((dur1.days * 24.0*60.0*60.0) + dur1.seconds) / 3600.0 if dur1 else 0.0
+                res[record.id]['duration'] = x1    
+            if record.date_end_real and record.date_start_real:
+                dur2 = datetime.strptime(record.date_end_real, '%Y-%m-%d %H:%M:%S') - datetime.strptime(record.date_start_real, '%Y-%m-%d %H:%M:%S')
+                x2 = ((dur2.days * 24.0*60.0*60.0) + dur2.seconds) / 3600.0 if dur2 else 0.0
+                res[record.id]['duration_real'] = x2
+        return res
+
 
 ########################### Columnas : Atributos #######################################################################
     _columns = {#maint_service_type
@@ -52,34 +137,55 @@ class tms_maintenance_order(osv.Model):
         'description'          : fields.char('Description'),
         'notes'                : fields.text('Notes', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),
 
-        'partner_id'           : fields.many2one('res.partner', 'Supplier', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),
+        'partner_id'           : fields.many2one('res.partner', 'Supplier', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}, ondelete='restrict'),
         'internal_repair'      : fields.boolean('Internal Repair', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),
         'date_start'           : fields.datetime('Date Start Sched', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'date_end'             : fields.datetime('Date End Sched', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'date_start_real'      : fields.datetime('Date Start Real', readonly=True),
         'date_end_real'        : fields.datetime('Date End Real', readonly=True),
         'date'                 : fields.datetime('Date', readonly=True, states={'draft':[('readonly',False)]}, required=True),
+        'duration'             : fields.function(_get_duration, string='Scheduled Duration', method=True, type='float', digits=(18,6), multi=True,
+                                                 store = {'tms.maintenance.order': (lambda self, cr, uid, ids, c={}: ids, ['date_start','date_end','date_start_real','date_end_real'], 10)}, help="Scheduled duration in hours"),
+        'duration_real'        : fields.function(_get_duration, string='Duration Real', method=True, type='float', digits=(18,6), multi=True,
+                                                 store = {'tms.maintenance.order': (lambda self, cr, uid, ids, c={}: ids, ['date_start','date_end','date_start_real','date_end_real'], 10)}, help="Real duration in hours"),
 
         'cost_service'         : fields.float('Service Cost', readonly=True),
         'parts_cost'           : fields.float('Parts Cost', readonly=True),
 
+#        'service_cost'         : fields.function(_get_costs, method=True, digits_compute= dp.get_precision('Sale Price'), 
+#                                                 string='Service Cost', type='float', multi=True,
+#                                                 store = {'tms.maintenance.order': (lambda self, cr, uid, ids, c={}: ids, None, 10)}),
+                                 #fields.float('Service Cost', readonly=True),
+#        'spare_parts_cost'     : fields.function(_get_costs, method=True, digits_compute= dp.get_precision('Sale Price'), 
+#                                                 string='Spare Parts Cost', type='float', multi=True,
+#                                                 store = {'tms.maintenance.order': (lambda self, cr, uid, ids, c={}: ids, None, 10)}),
+                                 #fields.float('Spare Parts Cost', readonly=True),
+#        'service_cost_external': fields.function(_get_costs, method=True, digits_compute= dp.get_precision('Sale Price'), 
+#                                                 string='External Service Cost', type='float', multi=True,
+#                                                 store = {'tms.maintenance.order': (lambda self, cr, uid, ids, c={}: ids, None, 10)}),
+                                 #fields.float('Service Cost External', readonly=True),
+#        'spare_parts_cost_external' : fields.function(_get_costs, method=True, digits_compute= dp.get_precision('Sale Price'), 
+#                                                 string='External Spare Parts Cost', type='float', multi=True,
+#                                                 store = {'tms.maintenance.order': (lambda self, cr, uid, ids, c={}: ids, None, 10)}),
+                                 #fields.float('Parts Cost External', readonly=True),
+
         ########Many2One###########
-        'shop_id'              : fields.many2one('sale.shop','Shop', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'unit_id'              : fields.many2one('fleet.vehicle','Unit', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'product_id'           : fields.many2one('product.product','Service', required=True, domain=[('tms_category','=','maint_service_type')], readonly=True, states={'draft':[('readonly',False)]}),
-        'driver_id'            : fields.many2one('hr.employee','Driver',domain=[('tms_category', '=', 'driver'),('tms_supplier_driver', '=', False)], required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'supervisor_id'        : fields.many2one('hr.employee','Supervisor',domain=[('tms_category', '=', 'mechanic')], required=True, readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),        
-        'user_id'              : fields.many2one('res.users','User', readonly=True), 
+        'shop_id'              : fields.many2one('sale.shop','Shop', required=True, readonly=True, states={'draft':[('readonly',False)]}, ondelete='restrict'),
+        'unit_id'              : fields.many2one('fleet.vehicle','Unit', required=True, readonly=True, states={'draft':[('readonly',False)]}, ondelete='restrict'),
+        'product_id'           : fields.many2one('product.product','Service', required=True, domain=[('tms_category','=','maint_service_type')], readonly=True, states={'draft':[('readonly',False)]}, ondelete='restrict'),
+        'driver_id'            : fields.many2one('hr.employee','Driver',domain=[('tms_category', '=', 'driver'),('tms_supplier_driver', '=', False)], required=True, readonly=True, states={'draft':[('readonly',False)]}, ondelete='restrict'),
+        'supervisor_id'        : fields.many2one('hr.employee','Supervisor',domain=[('tms_category', '=', 'mechanic')], required=True, readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}, ondelete='restrict'),
+        'user_id'              : fields.many2one('res.users','User', readonly=True, ondelete='restrict'), 
               
-        'stock_origin_id'      : fields.many2one('stock.location','Stock Origin', required=True, readonly=True, states={'draft':[('readonly',False)]}, domain=[('usage', '=', 'internal'),('chained_location_type', '=', 'none')]),
-        'stock_dest_id'        : fields.many2one('stock.location','Stock Dest'),
+        'stock_origin_id'      : fields.many2one('stock.location','Stock Origin', required=True, readonly=True, states={'draft':[('readonly',False)]}, domain=[('usage', '=', 'internal'),('chained_location_type', '=', 'none')], ondelete='restrict'),
+        'stock_dest_id'        : fields.many2one('stock.location','Stock Dest', ondelete='restrict'),
 
 
         'accumulated_odometer' : fields.float('Accum. Odometer', readonly=True, states={'draft':[('readonly',False)]}),
         'current_odometer'     : fields.float('Current Odometer', readonly=True, states={'draft':[('readonly',False)]}),
         'program_sequence'     : fields.integer('Preventive Program Seq.', readonly=True, states={'draft':[('readonly',False)]}),
-        'maint_program_id'     : fields.many2one('product.product', 'Preventive Program', domain=[('tms_category', '=', 'maint_service_program')], readonly=True, states={'draft':[('readonly',False)]}),        
-        'maint_cycle_id'       : fields.many2one('product.product', 'Preventive Cycle', domain=[('tms_category', '=', 'maint_service_cycle')], readonly=True, states={'draft':[('readonly',False)]}),
+        'maint_program_id'     : fields.many2one('product.product', 'Preventive Program', domain=[('tms_category', '=', 'maint_service_program')], readonly=True, states={'draft':[('readonly',False)]}, ondelete='restrict'),
+        'maint_cycle_id'       : fields.many2one('product.product', 'Preventive Cycle', domain=[('tms_category', '=', 'maint_service_cycle')], readonly=True, states={'draft':[('readonly',False)]}, ondelete='restrict'),
 
         
         ########One2Many###########
@@ -632,8 +738,6 @@ class tms_maintenance_order(osv.Model):
     #End Def  
  
 ######################### Metodos Manipulacion de Stock_picking ########
-######################### Metodos Manipulacion de Stock_picking ########
-######################### Metodos Manipulacion de Stock_picking ########
 
     def create_stock_picking(self,cr,uid,id,context=None):
         seq_order=(self.get_current_instance(cr, uid, id))['name']
@@ -696,38 +800,12 @@ class tms_maintenance_order(osv.Model):
     def change_state_to_done(self, cr, uid, id, context=None):  
         self.set_state(cr, uid, id, 'done')
 
-########################################################################################################################
 #####################################  Metodos de prueba Impresion  ####################################################
-########################################################################################################################
     def print_stock_picking(self,cr,uid,id, context=None):
-        #print '-----------------------------------------------------------------------------------------------------------------------'
-        #print '-----------------------------------------------------------------------------------------------------------------------'
         band = self.is_exist_stock_picking(cr,uid,id)
-        #print 'Existen stock_picking relacionados a esta ORDEN: '+ str(band)
-        #print '-----------------------------------------------------------------------------------------------------------------------'
-        #print '-----------------------------------------------------------------------------------------------------------------------'
-        
-        #if band:
-        #    for line in self.get_stock_picking_obj_list(cr,uid,id):
-                #print 'id    stock:                 '+str(line['id'])  
-                #print 'name  stock:                 '+str(line['name'])  
-                #print 'state stock:                 '+str(line['state'])  
-                #print 'maintenance_order_id:        '+str(line['tms_order_id'])  
-                #print 'maintenance_order_id[name]:  '+str(line['tms_order_id']['name'])  
-                #print 'maintenance_order_id[state]: '+str(line['tms_order_id']['state'])  
-                #print 'maintenance_order_id[id]:    '+str(line['tms_order_id']['id'])     
-                #print '----------------------------------------------------------------------------------------------------------------' 
+
     def crear_stock_picking(self,cr,uid,id, context=None):
         stock_line = self.create_stock_picking(cr,uid,id,context)
-        #if stock_line:
-            #print 'Stock_line Fue Creado Exitosamente----------------------------------------------------------------------------------'
-            #print 'id    stock:                 '+str(stock_line['id'])  
-            #print 'name  stock:                 '+str(stock_line['name'])  
-            #print 'state stock:                 '+str(stock_line['state'])
-            #print 'maintenance_order_id:        '+str(stock_line['tms_order_id'])  
-            #print 'maintenance_order_id[name]:  '+str(stock_line['tms_order_id']['name']) 
-            #print 'maintenance_order_id[state]: '+str(stock_line['tms_order_id']['state'])  
-            #print 'maintenance_order_id[id]:    '+str(stock_line['tms_order_id']['id'])  
         
 ########################### Valores por Defecto ########################################################################
     _defaults = {
@@ -741,5 +819,25 @@ class tms_maintenance_order(osv.Model):
 
 ########################### Criterio de ordenamiento ###################################################################
     _order = 'date, name'
+
+    def _check_unique_draft_open_state_per_vehicle(self, cr, uid, ids, context=None):
+        for record in self.browse(cr, uid, ids, context=context):
+            res = self.search(cr, uid, [('unit_id','=',record.unit_id.id),('state','in',('draft','open')),('shop_id','=',record.shop_id.id)])
+            return not(res and res[0] and res[0] != record.id and record.state in ('draft','open'))
+        return True
+
+    def _check_unique_released_state_per_vehicle(self, cr, uid, ids, context=None):
+        for record in self.browse(cr, uid, ids, context=context):
+            res = self.search(cr, uid, [('unit_id','=',record.unit_id.id),('state','=','released'),('shop_id','=',record.shop_id.id)])
+            return not(res and res[0] and res[0] != record.id and record.state=='released')
+        return True
+
+    
+    _constraints = [
+        (_check_unique_draft_open_state_per_vehicle, 'Error ! You can''t have more than one Service Order in Draft / Open state for this Vehicle', ['state']),
+        (_check_unique_released_state_per_vehicle, 'Error ! You can''t have more than one Service Order in Released state for this Vehicle', ['date']),        
+        ]
+
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

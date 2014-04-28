@@ -141,11 +141,11 @@ class fleet_vehicle_mro_program(osv.Model):
     _description = 'Fleet Vehicle MRO Program'
 
     _columns = {
-        'vehicle_id'     : fields.many2one('fleet.vehicle', 'Vehicle', required=True),
-        'mro_cycle_id'   : fields.many2one('product.product', 'MRO Cycle', required=True),
+        'vehicle_id'     : fields.many2one('fleet.vehicle', 'Vehicle', required=True, ondelete='restrict'),
+        'mro_cycle_id'   : fields.many2one('product.product', 'MRO Cycle', required=True, ondelete='restrict'),
         'trigger'        : fields.integer('Scheduled at', required=True),
         'sequence'       : fields.integer('Sequence', required=True),
-        'mro_service_order_id'       : fields.many2one('tms.maintenance.order', 'MRO Service Order'),
+        'mro_service_order_id'       : fields.many2one('tms.maintenance.order', 'MRO Service Order', ondelete='restrict'),
         'mro_service_order_date'     : fields.related('mro_service_order_id', 'date', type='datetime', string="Date", store=True, readonly=True),
         'mro_service_order_distance' : fields.related('mro_service_order_id', 'accumulated_odometer', type='float', string="mi/km", store=True, readonly=True),
         'next_date'     : fields.date('Date Next Service'),

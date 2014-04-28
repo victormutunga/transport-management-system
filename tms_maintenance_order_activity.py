@@ -37,9 +37,20 @@ class tms_maintenance_order_activity(osv.Model):
     _description = 'Activity'
     #_rec_name='product_id'
 
+    def _supplier_invoiced(self, cr, uid, ids, field_name, args, context=None):
+        res = {}
+        for record in self.browse(cr, uid, ids, context=context):
+            invoiced = (record.invoice_id.id)
+            paid = (record.invoice_id.state == 'paid') if record.invoice_id.id else False
+            res[record.id] =  { 'supplier_invoiced': invoiced,
+                                'supplier_invoice_paid': paid,
+                                'supplier_invoice_name': record.invoice_id.supplier_invoice_number or record.invoice_id.reference
+                                }
+        return res
+
 ########################### Columnas : Atributos #######################################################################
     _columns = {
-        'state': openerp.osv.fields.selection([('cancel','Cancelled'), ('pending','Pending'), ('process','Process'),('done','Done')],'State'),
+        'state': fields.selection([('cancel','Cancelled'), ('pending','Pending'), ('process','Process'),('done','Done')],'State'),
 
         'state_order': fields.related('maintenance_order_id','state',  type='char', string='State Order', readonly=True),
 
@@ -59,27 +70,35 @@ class tms_maintenance_order_activity(osv.Model):
         
         'external_workshop':      fields.boolean('External', help="Check if this task is going to be done bya an external supplier "),
         'breakdown':              fields.boolean('Breakdown'),
+
+
+        'supplier_invoiced':  fields.function(_supplier_invoiced, method=True, string='Supplier Invoiced', type='boolean', multi='supplier_invoiced', store=True),
+        'supplier_invoice_paid':  fields.function(_supplier_invoiced, method=True, string='Supplier Invoice Paid', type='boolean', multi='invoiced', store=True),
+        'supplier_invoice_name':  fields.function(_supplier_invoiced, method=True, string='Supplier Invoice', type='char', size=64, multi='invoiced', store=True),
+
+
+
         'invoiced':               fields.boolean('Facturado'),
-        'invoice_id':             fields.many2one('account.invoice','Invoce', readonly=True),
-        'supplier_id':            fields.many2one('res.partner','Supplier'),
+        'invoice_id':             fields.many2one('account.invoice','Invoce', readonly=True, ondelete='restrict'),
+        'supplier_id':            fields.many2one('res.partner','Supplier', ondelete='restrict'),
 
         'cost_service_external':    fields.float('Service Cost External'),
         'parts_cost_external':      fields.float('Parts Cost External'),
         
 
         ######## Many2One ##########################
-        'product_id': fields.many2one('product.product','Activity', domain=[('tms_category','=','maint_activity')] , required=True),
+        'product_id': fields.many2one('product.product','Activity', domain=[('tms_category','=','maint_activity')] , required=True, ondelete='restrict'),
         'name'      : fields.related('product_id', 'name', string="Name", type='char', readonly=True, store=True),
         ######## Many2One request One2Many ##########
-        'maintenance_order_id': fields.many2one('tms.maintenance.order','Order', readonly=True),
+        'maintenance_order_id': fields.many2one('tms.maintenance.order','Service Order', readonly=True, ondelete='restrict'),
         ######## Many2Many ##########################
         'mechanic_ids': fields.many2many('hr.employee','tms_maintenance_order_activity_rel','activity_id','maintenance_id','Mechanics',domain=[('tms_category', '=', 'mechanic')]),
         ######## One2Many ###########################
         'product_line_ids': fields.one2many('tms.product.line','activity_id','Material List'),
         'control_time_ids': fields.one2many('tms.activity.control.time','activity_id','Kiosk List'),
         ########Related ###########
-        #'shop_id': fields.related('maintenance_order_id','shop_id', 'name', type='char', string='Shop', readonly=True),
-        'shop_id': fields.related('maintenance_order_id','shop_id', 'name', type='char', string='Shop', readonly=True, store=True),
+        'shop_id'       : fields.related('maintenance_order_id', 'shop_id', type='many2one', relation='sale.shop', string='Shop', store=True, readonly=True),
+        'unit_id'       : fields.related('maintenance_order_id', 'unit_id', type='many2one', relation='fleet.vehicle', string='Vehicle', store=True, readonly=True),                
     }
     
 ########################### Metodos ####################################################################################
@@ -99,8 +118,8 @@ class tms_maintenance_order_activity(osv.Model):
         return True
 
     _constraints = [
-        (_check_activity_save, 'Error ! You can not create Activities in released, please Errase manualy activity for save the Order', []),
-        (_check_activity_duplicate, 'Error ! You can not create Activities Duplicate, please Errase manualy activity for save the Order', [])
+        (_check_activity_save, 'Error ! You can not create Activities in released, please delete any activity recently added to be able to save the Order', []),
+        (_check_activity_duplicate, 'Error ! You can not create Duplicate Activities, please Errase manualy activity for save the Order', [])
     ]
 
     ########## Metodo Create ##########
@@ -209,8 +228,8 @@ class tms_maintenance_order_activity(osv.Model):
         suma = 0.0
         this = self.get_current_instance(cr, uid, ids)
         for line in this['control_time_ids']:
-            cost_mechanic = line['hr_employee_id']['product_id']['list_price']
-            suma = suma + cost_mechanic * line['hours_mechanic']
+            cost_mechanic = line['hr_employee_id']['product_id']['standard_price']
+            suma += (cost_mechanic * line['hours_mechanic'])
         self.set_cost_service(cr,uid,ids, suma)
         ### Si es Taller Externo la Actividad entonces eejecutara su propia sumatoria
         this = self.get_current_instance(cr, uid, ids)
@@ -226,7 +245,7 @@ class tms_maintenance_order_activity(osv.Model):
 
         if this['breakdown']:
             for line in this['product_line_ids']:
-                suma = suma + (line['list_price'] * line['quantity'])
+                suma += (line['list_price'] * line['quantity'])
             self.write(cr, uid, ids, {'parts_cost_external':suma})
         
         if not this['breakdown']:
@@ -665,5 +684,55 @@ class tms_maintenance_order_activity(osv.Model):
 
 ########################### Criterio de ordenamiento ###################################################################
     #_order = 'name'
+
+
+# Wizard que permite asignar Mecánicos a una o varias Tareas a la vez
+class tms_maintenance_order_activity_assign_manpower(osv.osv_memory):
+
+    """ To assign internal manpower to several Tasks"""
+
+    _name = 'tms.maintenance.order.activity.assing_manpower'
+    _description = 'Assign internal Manpower to several Tasks'
+
+    _columns = {
+            
+            'mechanic_ids': fields.many2many('hr.employee','tms_maintenance_order_assign_manpower_rel', 'activity_id','maintenance_id','Mechanics', 
+                                            domain=[('tms_category', '=', 'mechanic')], required=True),
+        }
+
+    def assign_manpower(self, cr, uid, ids, context=None):
+
+        """
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param context: A standard dictionary
+
+        """
+        task_obj = self.pool.get('tms.maintenance.order.activity')
+        task_ids =  context.get('active_ids',[])
+        task_ids = task_obj.search(cr, uid, [('id','in',tuple(task_ids),),('state','=', 'pending')])
+        if not task_ids:
+            raise osv.except_osv(
+                        _('Warning !'),
+                        _('Please select at least one Task in Pending state to assign manpower'))
+        rec = self.browse(cr,uid, ids)[0]
+ 
+        mechanic_ids = [x.id for x in rec.mechanic_ids]
+        if not mechanic_ids:
+            raise osv.except_osv(
+                            _('Warning !'),
+                            _('Please select at least one Mechanic or Technical Staff to assign manpower to selected Tasks'))
+
+        for record in task_obj.browse(cr, uid, task_ids):
+            mechanics = [x.id for x in record.mechanic_ids]
+            for mechanic_id in mechanic_ids:
+                if mechanic_id not in mechanics:
+                    mechanics.append(mechanic_id)
+            if mechanics != [x.id for x in record.mechanic_ids]:
+                task_obj.write(cr, uid, [record.id], {'mechanic_ids': [(6, 0, [x for x in mechanics])]})
+        return {'type': 'ir.actions.act_window_close'}
+
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -21,6 +21,7 @@
 
 from osv import osv, fields
 import tools
+from tools.translate import _
 
 class tms_analisys_01(osv.Model):
     _name = 'tms.analisys.01'
@@ -44,7 +45,13 @@ class tms_analisys_01(osv.Model):
         'material_cost':        fields.float('Material Cost'),
 
         ######## Date ###########
-        'date':       fields.datetime('Date'),
+        'date'                  : fields.date('Date', readonly=True),
+        'year'                  : fields.char('Year', size=4, readonly=True),
+        'day'                   : fields.char('Day', size=128, readonly=True),
+        'month'                 : fields.selection([('01',_('January')), ('02',_('February')), ('03',_('March')), ('04',_('April')),
+                                        ('05',_('May')), ('06',_('June')), ('07',_('July')), ('08',_('August')), ('09',_('September')),
+                                        ('10',_('October')), ('11',_('November')), ('12',_('December'))], 'Month',readonly=True),
+
         'date_start': fields.datetime('Date Start'),
         'date_end':   fields.datetime('Date End'),
 
@@ -61,7 +68,12 @@ class tms_analisys_01(osv.Model):
         cr.execute("""
             create or replace view tms_analisys_01 as (
 
-select id as id, name as name, date as date,
+select id as id, name as name, 
+        date,
+        to_char(date_trunc('day',date), 'YYYY') as year,
+        to_char(date_trunc('day',date), 'MM') as month,
+        to_char(date_trunc('day',date), 'YYYY-MM-DD') as day,
+
        user_id as user_id,     (select u.login         from res_users     as u where u.id=o.user_id)   as user_name,
        unit_id as unit_id,     (select u.name          from fleet_vehicle as u where u.id=o.unit_id)   as unit_name,
        driver_id as driver_id, (select e.name_related  from hr_employee   as e where e.id=o.driver_id) as driver_name,
