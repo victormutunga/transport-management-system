@@ -77,8 +77,11 @@
 				      <field name="supervisor_id"  context="{'default_tms_category':'mechanic'}" domain="[('tms_category', '=', 'mechanic')]"/>
 				      <field name="stock_origin_id" context="{'default_usage':'internal'}" domain="[('usage', '=', 'internal'),('chained_location_type', '=', 'none')]"/>
 				      
-				      <field name="cost_service" />
-				      <field name="parts_cost" /> 
+				      <field name="manpower" />
+				      <field name="spare_parts" /> 
+				      <field name="manpower_external" />
+				      <field name="spare_parts_external" /> 
+                        
 					  <field name="date_start" />
 					  <field name="date_start_real" />
 					  <field name="date_end" />
@@ -135,23 +138,26 @@
 ############################################################################################################################
                             ### TREE ###
     <record model="ir.ui.view" id="tms_maintenance_order_tree">
-            <field name="name">tms.maintenance.order.tree</field>
-            <field name="model">tms.maintenance.order</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Order of Maintenance">
-                  <field name="name" />
-                  <field name="date" />
-                  <field name="unit_id" />
-                  <field name="product_id" />
-                  <!--<field name="partner_id" />
-                  <field name="internal_repair" /> --> 
-                  <field name="date_start" />
-                  <field name="date_end" />
-                  <field name="cost_service" sum="Workhand"/>
-                    <field name="parts_cost" sum="Spare Parts"/> 
-                  <field name="state" />
-		</tree>
+        <field name="name">tms.maintenance.order.tree</field>
+        <field name="model">tms.maintenance.order</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Order of Maintenance">
+                <field name="name" />
+                <field name="date" />
+                <field name="unit_id" />
+                <field name="product_id" />
+                <!--<field name="partner_id" />
+                <field name="internal_repair" /> --> 
+                <field name="date_start" />
+                <field name="date_end" />
+                <field name="spare_parts" sum="Spare Parts"/> 
+                <field name="manpower" sum="Manpower"/>
+                <field name="spare_parts_external" sum="Spare Parts Ext."/> 
+                <field name="manpower_external" sum="Manpower Ext"/>
+
+                <field name="state" />
+            </tree>
 	    </field>
     </record>
 

@@ -65,27 +65,22 @@
         <field name="model">tms.analisys.02</field>
         <field name="arch" type="xml">
             <search string="Orders Analysis">
-
+                <field name="order_id"/>
+                <field name="activity_name"/>
+                <field name="unit_id"/>
+                <field name="driver_id"/>                
+                <filter string="This month" icon="terp-check" domain="[('date','&gt;=', time.strftime('%%Y-%%m-01'))]" name="this_month" />
+                <filter string="External True" icon="terp-gtk-media-pause" domain="[('external_workshop','=','True')]"/>                
                 <group expand="1" string="Group By...">
                     <filter string="Order"     icon="terp-personal" context="{'group_by':'order_name'}"/>
                     <filter string="Activity"  icon="terp-personal" context="{'group_by':'activity_name'}"/>
                     <filter string="Unit"      icon="terp-personal" context="{'group_by':'unit_id'}"/>
                     <filter string="Driver"    icon="terp-personal" context="{'group_by':'driver_id'}"/>
-
                     <filter string="External workshop"    icon="terp-personal" context="{'group_by':'external_workshop'}"/>
-                    <!--<filter string="Invoice"              icon="terp-personal" context="{'group_by':'invoice_id'}"/>-->
                     <filter string="Partner"              icon="terp-personal" context="{'group_by':'partner_id'}"/>
                     <filter string="Supplier Invoice Number" icon="terp-personal" context="{'group_by':'supplier_invoice_number'}"/>
-
-		    <!--
-                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id','set_visible':True}"/>
-                    <filter string="Reference Unit of Measure" icon="terp-mrp" context="{'group_by':'product_uom'}"/> -->
+                    <filter string="Period"     icon="terp-personal" context="{'group_by':'date'}"/>
                 </group>
-
-
-                <!--###################### Filtros ###############################################################-->
-                <filter string="External True" icon="terp-gtk-media-pause" domain="[('external_workshop','=','True')]"/>
-
             </search>
         </field>
     </record>
@@ -99,6 +94,7 @@
         <field name="view_mode">tree</field>
         <field name="search_view_id" ref="view_tms_analisys_02_search"/>
         <field name="view_id"        ref="tms_analisys_02_tree"/>
+        <field name="context">{'search_default_this_month': 1}</field>
     </record>
 ############################################################################################################################
                             ### MENUS ###

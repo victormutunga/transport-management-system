@@ -37,6 +37,7 @@ class stock_picking(osv.osv):
     
     _columns = {
             'tms_order_id'   : fields.many2one('tms.maintenance.order', 'Maintenance Order'),
+            'tms_order_state': fields.related('tms_order_id', 'state', type='char', store=True, readonly=True),
             'unit_id'        : fields.related('tms_order_id','unit_id',type='many2one',relation='fleet.vehicle',string='Vehicle',store=True,readonly=True),
             'from_tms_order' : fields.boolean('From MRO Order'),
             'mechanic_id'    : fields.many2one('hr.employee', 'Mechanic', readonly=False, domain=[('tms_category', '=', 'mechanic')]), 
@@ -98,7 +99,11 @@ class stock_picking(osv.osv):
         return band  
 
     def on_change_tms_order(self, cr, uid, ids, tms_order_id, context=None):
-        return {'value': {'unit_id': self.pool.get('tms.maintenance.order').browse(cr, uid, [tms_order_id])[0].unit_id.id}}
+        res = {}
+        if tms_order_id:
+            vals = self.pool.get('tms.maintenance.order').read(cr, uid, [tms_order_id],['unit_id','state'])
+            res = {'value': {'unit_id': vals[0]['unit_id'],'tms_order_state':vals[0]['state']}}
+        return res
     
     
     

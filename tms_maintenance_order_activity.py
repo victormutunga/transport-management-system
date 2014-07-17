@@ -105,9 +105,7 @@ class tms_maintenance_order_activity(osv.Model):
 
     def _check_activity_save(self, cr, uid, ids, context=None):
         this = self.get_current_instance(cr, uid, ids)
-        if this['maintenance_order_id']['state'] in 'released' and not this['state'] in ('done','cancel'):
-            return False
-        return True
+        return not(this['maintenance_order_id']['state'] in 'released' and not this['state'] in ('done','cancel'))
 
     def _check_activity_duplicate(self, cr, uid, ids, context=None):
         this = self.get_current_instance(cr, uid, ids)
@@ -118,8 +116,8 @@ class tms_maintenance_order_activity(osv.Model):
         return True
 
     _constraints = [
-        (_check_activity_save, 'Error ! You can not create Activities in released, please delete any activity recently added to be able to save the Order', []),
-        (_check_activity_duplicate, 'Error ! You can not create Duplicate Activities, please Errase manualy activity for save the Order', [])
+        (_check_activity_save, 'Error ! You can not create Tasks in when Maintenance Service Order is in Released State, please delete any Task recently added to be able to save changes', []),
+        (_check_activity_duplicate, 'Error ! You can not create Duplicate Tasks, please delete any Task recently added to be able to save changes', [])
     ]
 
     ########## Metodo Create ##########
@@ -139,7 +137,7 @@ class tms_maintenance_order_activity(osv.Model):
         
         #    raise osv.except_osv(_('Warning!'),_('Imposible Create Activity in State Released ')) 
 
-        #return retorno
+        return retorno
 
     def create_kiosk_register(self,cr,uid,ids, context=None):
         this = self.get_current_instance(cr, uid, ids)
@@ -228,7 +226,7 @@ class tms_maintenance_order_activity(osv.Model):
         suma = 0.0
         this = self.get_current_instance(cr, uid, ids)
         for line in this['control_time_ids']:
-            cost_mechanic = line['hr_employee_id']['product_id']['standard_price']
+            cost_mechanic = line.hr_employee_id.job_id.tms_global_salary
             suma += (cost_mechanic * line['hours_mechanic'])
         self.set_cost_service(cr,uid,ids, suma)
         ### Si es Taller Externo la Actividad entonces eejecutara su propia sumatoria
@@ -245,7 +243,7 @@ class tms_maintenance_order_activity(osv.Model):
 
         if this['breakdown']:
             for line in this['product_line_ids']:
-                suma += (line['list_price'] * line['quantity'])
+                suma += (line['standard_price'] * line['quantity'])
             self.write(cr, uid, ids, {'parts_cost_external':suma})
         
         if not this['breakdown']:
@@ -265,10 +263,9 @@ class tms_maintenance_order_activity(osv.Model):
     def calculate_cost_service_no_used(self,cr,uid,ids,context=None):
         suma = 0.0
         this = self.get_current_instance(cr, uid, ids)
-        for line in self.get_mechanics(cr,uid,ids):
-            #print 'precio producto:  ' + str(line['id']['product_id']['list_price']) +str(', ID: ')+str(line['id'])
-            cost_mechanic = line['id']['product_id']['list_price']
-            suma = suma + cost_mechanic * this['hours_real']
+        for mechanic in self.get_mechanics(cr,uid,ids):
+            cost_mechanic = mechanic.job_id.tms_global_salary
+            suma += cost_mechanic * this['hours_real']
         self.set_cost_service(cr,uid,ids, suma)
 
     def get_mechanics(self,cr,uid,ids):

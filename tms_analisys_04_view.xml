@@ -13,23 +13,23 @@
             <field name="arch" type="xml">
                 <tree string="TMS Analisys 04 orders">
 
-			<field name="id" invisible="1" />
+                    <field name="id" invisible="1" />
 
-			<field name="order_id"  />
-			<field name="activity_name"  />
+                    <field name="order_id"  />
+                    <field name="activity_name"  />
 
-			<field name="hr_employee_id"  />
-			<field name="hr_employee_name" invisible="1" />
+                    <field name="hr_employee_id"  />
+                    <field name="hr_employee_name" invisible="1" />
 
-			<field name="date_begin"  />
-			<field name="date_end"  />
-			<field name="hours_work"  />
+                    <field name="date_begin"  />
+                    <field name="date_end"  />
+                    <field name="hours_work"  />
 
-			<field name="unit_id" />
-			<field name="driver_id" invisible="1" />
-			
+                    <field name="unit_id" />
+                    <field name="driver_id" invisible="1" />
 
-		</tree>
+
+                </tree>
 	    </field>
     </record>
 
@@ -56,6 +56,10 @@
         <field name="model">tms.analisys.04</field>
         <field name="arch" type="xml">
             <search string="Products Analysis">
+                <field name="order_id" />
+                <field name="activity_id" />
+                <field name="unit_id" />
+                <field name="driver_id" />
 
                 <group expand="1" string="Group By...">
 

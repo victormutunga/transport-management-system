@@ -44,72 +44,33 @@ class tms_maintenance_order(osv.Model):
             'name': self.pool.get('ir.sequence').get(cr, uid, 'tms.maintenance.order'),
         })
         return super(tms_maintenance_order, self).copy(cr, uid, id, default, context=context)
-    
-#    def _get_all(self, cr, uid, ids, field_name, args, context=None):
-#        res = {}
-#        for record in self.browse(cr, uid, ids, context=context):
-#            invoiced = (record.invoice_id.id)
-#            paid = (record.invoice_id.state == 'paid') if record.invoice_id.id else False
-#            res[record.id] =  { 'invoiced': invoiced,
-#                                'invoice_paid': paid,
-#                                'invoice_name': record.invoice_id.reference
-#                                }
-#        return res
 
-#    def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
-#        #print "_amount_all"x
-#        res = {}
-#        for record in self.browse(cr, uid, ids, context=context):
-#            res[record.id] = {
-#                'service_cost': 0.0,
-#                'spare_parts_cost': 0.0,
-#                'service_cost_external': 0.0,
-#                'spare_parts_cost_external': 0.0,
-#            }            
-#            x_service = x_spare_parts = y_service = y_spare_parts = 0.0
+    def _get_costs(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for record in self.browse(cr, uid, ids, context=context):            
+            x_manpower = x_spare_parts = y_manpower = y_spare_parts = 0.0
             
-#            ***
-#            def calculate_parts_cost(self,cr,uid,ids,context=None):
-#        suma = 0.0
-#        for line in self.get_activity_lines(cr,uid,ids):
-#            line.calculate_parts_cost()
-#            suma = suma + line['parts_cost']
-#        self.set_parts_cost(cr,uid,ids, suma)
+            for line in record.activities_ids:
+                if line.state != 'cancel':
+                    x_spare_parts += line.parts_cost
+                    x_manpower += line.cost_service
+                    y_spare_parts += line.parts_cost_external
+                    y_manpower += line.cost_service_external
+            res[record.id] = {
+                'manpower'             : x_manpower,
+                'spare_parts'          : x_spare_parts,
+                'manpower_external'    : y_manpower,
+                'spare_parts_external' : y_spare_parts,
+            }
+        return res
 
-#    def calculate_cost_service(self,cr,uid,ids,context=None):
-#        suma = 0.0
-#        this = self.get_current_instance(cr, uid, ids)
-#        for line in self.get_activity_lines(cr,uid,ids):
-#            line.calculate_cost_service()
-#            suma = suma + line['cost_service']
-#        self.set_cost_service(cr,uid,ids, suma)
-#            ***
-            
-            ###Falta obtener la formula para obtener el Costo del Servicio
-#            for line in record.activities_ids:
-#                for time_line in line.control_time_ids:
-#                    cost_mechanic = times.['hr_employee_id']['product_id']['list_price']
-#            suma = suma + cost_mechanic * line['hours_mechanic']
-#                    x_service += 
-#                x
-#                    x_freight += line.price_subtotal if line.product_id.tms_category == 'freight' else 0.0
-#                    x_move += line.price_subtotal if line.product_id.tms_category == 'move' else 0.0
-#                    x_highway += line.price_subtotal if line.product_id.tms_category == 'highway_tolls' else 0.0
-#                    x_insurance += line.price_subtotal if line.product_id.tms_category == 'insurance' else 0.0
-#                    x_other += line.price_subtotal if line.product_id.tms_category == 'other' else 0.0
-#                    x_subtotal += line.price_subtotal
-#                    x_tax += line.tax_amount
-#                    x_total += line.price_total
-        
-#            res[record.id] = {
-#                'service_cost': 0.0,
-#                'spare_parts_cost': 0.0,
-#                'service_cost_external': 0.0,
-#                'spare_parts_cost_external': 0.0,
-#            }
-            
-                        
-#        return res
+
+    def _get_order(self, cr, uid, ids, context=None):
+        result = {}
+        for line in self.pool.get('tms.maintenance.order.activity').browse(cr, uid, ids, context=context):
+            result[line.maintenance_order_id.id] = True
+        return result.keys()
+
 
     
     def _get_duration(self, cr, uid, ids, field_name, arg, context=None):
@@ -152,22 +113,26 @@ class tms_maintenance_order(osv.Model):
         'cost_service'         : fields.float('Service Cost', readonly=True),
         'parts_cost'           : fields.float('Parts Cost', readonly=True),
 
-#        'service_cost'         : fields.function(_get_costs, method=True, digits_compute= dp.get_precision('Sale Price'), 
-#                                                 string='Service Cost', type='float', multi=True,
-#                                                 store = {'tms.maintenance.order': (lambda self, cr, uid, ids, c={}: ids, None, 10)}),
-                                 #fields.float('Service Cost', readonly=True),
-#        'spare_parts_cost'     : fields.function(_get_costs, method=True, digits_compute= dp.get_precision('Sale Price'), 
-#                                                 string='Spare Parts Cost', type='float', multi=True,
-#                                                 store = {'tms.maintenance.order': (lambda self, cr, uid, ids, c={}: ids, None, 10)}),
-                                 #fields.float('Spare Parts Cost', readonly=True),
-#        'service_cost_external': fields.function(_get_costs, method=True, digits_compute= dp.get_precision('Sale Price'), 
-#                                                 string='External Service Cost', type='float', multi=True,
-#                                                 store = {'tms.maintenance.order': (lambda self, cr, uid, ids, c={}: ids, None, 10)}),
-                                 #fields.float('Service Cost External', readonly=True),
-#        'spare_parts_cost_external' : fields.function(_get_costs, method=True, digits_compute= dp.get_precision('Sale Price'), 
-#                                                 string='External Spare Parts Cost', type='float', multi=True,
-#                                                 store = {'tms.maintenance.order': (lambda self, cr, uid, ids, c={}: ids, None, 10)}),
-                                 #fields.float('Parts Cost External', readonly=True),
+        'manpower'         : fields.function(_get_costs, method=True, digits_compute=dp.get_precision('Sale Price'), 
+                                                 string='Manpower Cost', type='float', multi=True,
+                                                 store = {'tms.maintenance.order': (lambda self, cr, uid, ids, c={}: ids, None, 10),
+                                                          'tms.maintenance.order.activity': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),}),
+
+        'spare_parts'     : fields.function(_get_costs, method=True, digits_compute= dp.get_precision('Sale Price'), 
+                                                 string='Spare Parts Cost', type='float', multi=True,
+                                                 store = {'tms.maintenance.order': (lambda self, cr, uid, ids, c={}: ids, None, 10),
+                                                          'tms.maintenance.order.activity': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),}),
+
+        'manpower_external': fields.function(_get_costs, method=True, digits_compute= dp.get_precision('Sale Price'), 
+                                                 string='External Manpower Cost', type='float', multi=True,
+                                                 store = {'tms.maintenance.order': (lambda self, cr, uid, ids, c={}: ids, None, 10),
+                                                          'tms.maintenance.order.activity': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),}),
+
+        'spare_parts_external' : fields.function(_get_costs, method=True, digits_compute= dp.get_precision('Sale Price'), 
+                                                 string='External Spare Parts Cost', type='float', multi=True,
+                                                 store = {'tms.maintenance.order': (lambda self, cr, uid, ids, c={}: ids, None, 10),
+                                                          'tms.maintenance.order.activity': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),}),
+
 
         ########Many2One###########
         'shop_id'              : fields.many2one('sale.shop','Shop', required=True, readonly=True, states={'draft':[('readonly',False)]}, ondelete='restrict'),
@@ -194,8 +159,6 @@ class tms_maintenance_order(osv.Model):
     }
 
 
-   
-###################################################################################################        
     ########## Metodo para revisar si el Tipo de Servicio es Preventivo y por tanto, revisar que secuencia del Programa Preventivo le toca a la unidad ##########
     #def check_program(self,cr,uid,ids,context=None):
 

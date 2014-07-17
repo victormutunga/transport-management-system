@@ -18,12 +18,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-
+import openerp
 from osv import osv, fields
 import tools
 from tools.translate import _
+import openerp.addons.decimal_precision as dp
 
-class tms_analisys_01(osv.Model):
+class tms_analisys_01(osv.osv):
     _name = 'tms.analisys.01'
     _description = "Order Analisys Tms"
     _auto = False
@@ -31,34 +32,30 @@ class tms_analisys_01(osv.Model):
 
 ########################### Columnas : Atributos #######################################################################
     _columns = {
-        ######## Integer ###########
-        'id':   fields.integer('ID order'),
-
-        ######## Char ###########
-        'name':        fields.char('Order Maintenance'),
-        'user_name':   fields.char('User Name'),
-        'unit_name':   fields.char('Unit Name'),
-        'driver_name': fields.char('Driver Name'),
-
-        ######## Float ###########
-        'manpower_cost':        fields.float('Manpower Cost'),
-        'material_cost':        fields.float('Material Cost'),
-
-        ######## Date ###########
-        'date'                  : fields.date('Date', readonly=True),
-        'year'                  : fields.char('Year', size=4, readonly=True),
-        'day'                   : fields.char('Day', size=128, readonly=True),
-        'month'                 : fields.selection([('01',_('January')), ('02',_('February')), ('03',_('March')), ('04',_('April')),
+        'name'           : fields.many2one('tms.maintenance.order','Service Order'),
+        'date'           : fields.date('Date', readonly=True),
+        'year'           : fields.char('Year', size=4, readonly=True),
+        'day'            : fields.char('Day', size=128, readonly=True),
+        'month'          : fields.selection([('01',_('January')), ('02',_('February')), ('03',_('March')), ('04',_('April')),
                                         ('05',_('May')), ('06',_('June')), ('07',_('July')), ('08',_('August')), ('09',_('September')),
                                         ('10',_('October')), ('11',_('November')), ('12',_('December'))], 'Month',readonly=True),
+        'date_start_real': fields.datetime('Date Start'),
+        'date_end_real'  : fields.datetime('Date End'),
+        'duration_real'  : fields.float('Duration', digits_compute=dp.get_precision('Account')),
+        'product_id'     : fields.many2one('product.product','Service'),
+        'supervisor_id'  : fields.many2one('hr.employee','Supervisor'),
+        'unit_id'        : fields.many2one('fleet.vehicle','Vehicle'),
+        'driver_id'      : fields.many2one('hr.employee','Driver'),
+        'maint_cycle_id' : fields.many2one('product.product','Maint. Cycle'),
+        'user_id'        : fields.many2one('res.users','User'),
+        'notes'          : fields.text('Notes'),
 
-        'date_start': fields.datetime('Date Start'),
-        'date_end':   fields.datetime('Date End'),
-
-        ######## Many2One ###########
-        'user_id':   fields.many2one('res.users','User ID'),
-        'unit_id':   fields.many2one('fleet.vehicle','Unit ID'),
-        'driver_id': fields.many2one('hr.employee','Driver ID'),
+        'parts_cost'     : fields.float('Spare Parts', digits_compute=dp.get_precision('Account')),
+        'cost_service'   : fields.float('Manpower Cost', digits_compute=dp.get_precision('Account')),
+        'parts_cost_external': fields.float('External Spare Parts', digits_compute=dp.get_precision('Account')),
+        'cost_service_external': fields.float('External Manpower Cost', digits_compute=dp.get_precision('Account')),
+        
+        
     }
     
 ########################### Metodos ####################################################################################
@@ -66,26 +63,30 @@ class tms_analisys_01(osv.Model):
     def init(self, cr):
         tools.drop_view_if_exists(cr,'tms_analisys_01')
         cr.execute("""
-            create or replace view tms_analisys_01 as (
 
-select id as id, name as name, 
-        date,
-        to_char(date_trunc('day',date), 'YYYY') as year,
-        to_char(date_trunc('day',date), 'MM') as month,
-        to_char(date_trunc('day',date), 'YYYY-MM-DD') as day,
+create or replace view tms_analisys_01 as (
 
-       user_id as user_id,     (select u.login         from res_users     as u where u.id=o.user_id)   as user_name,
-       unit_id as unit_id,     (select u.name          from fleet_vehicle as u where u.id=o.unit_id)   as unit_name,
-       driver_id as driver_id, (select e.name_related  from hr_employee   as e where e.id=o.driver_id) as driver_name,
-       date_start_real as date_start,
-       date_end_real   as date_end,
-       cost_service as manpower_cost,
-       parts_cost   as material_cost
+select 
+o.id, o.id as name, o.product_id, o.supervisor_id, o.maint_cycle_id, o.driver_id,
+o.user_id, o.unit_id, o.date,
+to_char(date_trunc('day',o.date), 'YYYY') as year,
+to_char(date_trunc('day',o.date), 'MM') as month,
+to_char(date_trunc('day',o.date), 'YYYY-MM-DD') as day,
+o.date_start_real, o.date_end_real,
+o.duration_real, o.notes,
+sum(a.parts_cost) as parts_cost,
+sum(a.cost_service) as cost_service,
+sum(a.parts_cost_external) as parts_cost_external,
+sum(a.cost_service_external) as cost_service_external
 from tms_maintenance_order as o
-where o.state like 'done'
-order by o.id           
-                
-            )
+left join tms_maintenance_order_activity a on o.id=a.maintenance_order_id and a.state='done'
+where o.state = 'done'
+group by o.id, o.product_id, o.supervisor_id, o.maint_cycle_id, o.driver_id,
+o.user_id, o.unit_id, o.name, o.date, o.date_start_real, o.date_end_real,
+o.duration_real, o.notes
+order by o.date
+);
+  
         """)
     
 tms_analisys_01()

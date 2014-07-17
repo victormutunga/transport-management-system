@@ -37,6 +37,7 @@ class stock_move(osv.osv):
     _columns = {
             'tms_product_line_id' : fields.many2one('tms.product.line', 'Product Line', readonly=True),
             'maintenance_order_id': fields.many2one('tms.maintenance.order','Order'),
+            'maintenance_order_state' : fields.related('maintenance_order_id','state',type='char',string='MRO Order State',store=True,readonly=True),
             'unit_id'             : fields.related('maintenance_order_id','unit_id',type='many2one',relation='fleet.vehicle',string='Vehicle',store=True,readonly=True),
             'activity_id'         : fields.many2one('tms.maintenance.order.activity','Task'),            
         }
