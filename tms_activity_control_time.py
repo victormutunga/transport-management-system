@@ -38,7 +38,7 @@ class tms_activity_control_time(osv.Model):
 
 ########################### Columnas : Atributos #######################################################################
     _columns = {
-        'state': openerp.osv.fields.selection([('draft','Draft'), ('process','Process'), ('pause','Pause'), ('end','End'), ('cancel','Cancel')],'State Activity'),
+        'state': openerp.osv.fields.selection([('draft','Draft'), ('process','Process'), ('pause','Pause'), ('end','End'), ('cancel','Cancel')],'State'),
         #eventossssss  ('process','Process'), ('pause','Pause'), ('end','End')
         ########One2Many###########
         'tms_time_ids': fields.one2many('tms.time','control_time_id', readonly="True"),

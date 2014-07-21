@@ -21,39 +21,41 @@
 
 from osv import osv, fields
 import tools
+from tools.translate import _
 
 class tms_analisys_03(osv.Model):
     _name = 'tms.analisys.03'
     _description = "Order Analisys Tms"
-    _rec_name='activity_name'
     _auto = False
-    _description = 'Order Maintenace Analisys 1'
+    _description = 'Order Maintenace Analisys 3'
 
 ########################### Columnas : Atributos #######################################################################
     _columns = {
-        ######## Integer ###########
-        'id':   fields.integer('Product Line ID'),
+        'name'          : fields.many2one('tms.product.line','Product', readonly=True),
+        'date'          : fields.datetime('Date', readonly=True),
+        'year'          : fields.char('Year', size=4, readonly=True),
+        'day'           : fields.char('Day', size=128, readonly=True),
+        'month'         : fields.selection([('01',_('January')), ('02',_('February')), ('03',_('March')), ('04',_('April')),
+                                        ('05',_('May')), ('06',_('June')), ('07',_('July')), ('08',_('August')), ('09',_('September')),
+                                        ('10',_('October')), ('11',_('November')), ('12',_('December'))], 'Month',readonly=True),        
 
-        ######## Char ###########
-        'product_name':       fields.char('Product Name'),
-        'activity_name':      fields.char('Activity'),
-        'order_name':         fields.char('Order Name'),
-        'unit_name':         fields.char('Unit Name'),
+        'date_order'    : fields.datetime('Date Order', readonly=True),
+        'order_id'      : fields.many2one('tms.maintenance.order','Order', readonly=True),
+        'task_id'       : fields.many2one('tms.maintenance.order.activity','Task', readonly=True),
+        'date_start'    : fields.datetime('Task Date Start', readonly=True),
+        'product_id'    : fields.many2one('product.product','Spare Part', readonly=True),
+        'product_category_id' : fields.many2one('product.category','Spare Part Category', readonly=True),
 
-        ######## Float ###########
-        'quantity':        fields.float('Quantity'),
-        'price':           fields.float('Price'),
-        'total_price':     fields.float('Total Price'),
-
-        ######## Date ###########
-        #'date_begin':       fields.datetime('Date Begin'),
-
-        ######## Many2One ###########
-        'product_id':        fields.many2one('product.product','Product'),
-        'activity_id':       fields.many2one('tms.maintenance.order.activity','Activity ID'),
-        'order_id':          fields.many2one('tms.maintenance.order','Order ID'),
-        'unit_id':     fields.many2one('fleet.vehicle','Unit'),
-        'driver_id':   fields.many2one('hr.employee','Driver'),
+        'external_workshop': fields.boolean('External', readonly=True),
+        
+        
+        'unit_id'       : fields.many2one('fleet.vehicle','Vehicle', readonly=True),
+        'driver_id'     : fields.many2one('hr.employee','Driver', readonly=True),
+        'supplier_id'   : fields.many2one('hr.employee','Supplier', readonly=True),
+        'qty'           : fields.float('Qty', readonly=True),
+        'product_uom'   : fields.many2one('product.uom','UoM', readonly=True),
+        'list_price'    : fields.float('Std Price', readonly=True),
+        'amount'        : fields.float('Amount', readonly=True),
     }
     
 ########################### Metodos ####################################################################################
@@ -63,34 +65,60 @@ class tms_analisys_03(osv.Model):
         cr.execute("""
             create or replace view tms_analisys_03 as (
 
-select 
-	pl.id                                                                       as id,
-	pl.id                                                                       as product_line_id, 
-	
-	(select p.name_template from product_product as p where p.id=pl.product_id) as product_name,
-	(select p.id from product_product as p where p.id=pl.product_id)            as product_id,
-	
-	pl.quantity                                                                 as quantity,
-	pl.list_price                                                               as price,
-	(pl.quantity*pl.list_price)                                                 as total_price,
+select sm.id, pl.id as name, sm.date, o.date as date_order, o.id as order_id, 
+task.id as task_id, task.date_start,
+sm.product_id, prod_tmpl.categ_id as product_category_id,
+to_char(date_trunc('day',sm.date), 'YYYY') as year,
+to_char(date_trunc('day',sm.date), 'MM') as month,
+to_char(date_trunc('day',sm.date), 'DD') as day,
+task.external_workshop, 
+sm.unit_id, o.driver_id, task.supplier_id,
+sm.product_qty qty,
+sm.product_uom,
+case when aml.debit > 0 then aml.debit / sm.product_qty else pl.list_price end as list_price,
+case when aml.debit > 0 then aml.debit else pl.quantity * pl.list_price end as amount
 
-    (select u.id            from fleet_vehicle as u where u.id=o.unit_id)                as unit_id,
-    (select u.name          from fleet_vehicle as u where u.id=o.unit_id)                as unit_name,
+from stock_move sm
+	left join tms_product_line pl on pl.stock_move_id=sm.id and pl.state = 'delivered'
+	left join account_move am on sm.am_id=am.id
+		left join account_move_line aml on am.id=aml.move_id and aml.state='valid' and aml.debit > 0
+	left join tms_maintenance_order_activity task on task.id=sm.activity_id --and task.state='done'
+	left join tms_maintenance_order as o on o.id=sm.maintenance_order_id --and o.state='done'
+	left join product_product prod on prod.id=sm.product_id
+	left join product_template prod_tmpl on prod_tmpl.id=prod.product_tmpl_id
 
-    (select e.id            from hr_employee   as e where e.id=o.driver_id)              as driver_id,
-    (select e.name_related  from hr_employee   as e where e.id=o.driver_id)              as driver_name,
+where sm.state='done' and sm.picking_id is not null
+and sm.unit_id is not null --and sm.driver_id is not null
+and (
+	sm.location_dest_id in (select id from stock_location where usage in ('production', 'inventory'))
+	or
+	sm.location_id in (select id from stock_location where usage in ('production', 'inventory'))
+	)
+order by sm.date
+)
+""")
+        
+        
+        """
+        
+        update tms_maintenance_order_activity a
+set state=(
+case when (select count(b.id) from tms_product_line b where a.id=b.activity_id and state='delivered') > 0 then 'done' else a.state end
+)
 
-	(select p.name_template  from product_product as p where p.id = activity.product_id) as activity_name,
-	(activity.id                                                                       ) as activity_id,
-	
-	o.name                                                                               as order_name,
-	o.id                                                                                 as order_id
-	
-from tms_product_line as pl, tms_maintenance_order_activity as activity, tms_maintenance_order as o
-where pl.state like 'delivered' and pl.activity_id = activity.id and o.id = activity.maintenance_order_id      
-                
-            )
-        """)
+
+update tms_maintenance_order_activity a
+set parts_cost=(
+select sum(case when aml.debit > 0 then aml.debit else pl.quantity * pl.list_price end)
+from tms_product_line pl 
+	left join stock_move sm on sm.id=pl.stock_move_id and sm.state='done'
+		left join account_move am on sm.am_id=am.id
+			left join account_move_line aml on am.id=aml.move_id and aml.state='valid' and aml.debit > 0
+where pl.activity_id=a.id)
+where external_workshop = False
+
+
+"""
     
 tms_analisys_03()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -23,7 +23,7 @@
 
                     <field name="date_begin"  />
                     <field name="date_end"  />
-                    <field name="hours_work"  />
+                    <field name="hours_work"  widget="float_time" sum="Duration"/>
 
                     <field name="unit_id" />
                     <field name="driver_id" invisible="1" />
