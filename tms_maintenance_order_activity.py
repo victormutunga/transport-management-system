@@ -29,7 +29,7 @@ from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, fl
 import decimal_precision as dp
 import netsvc
 import openerp
-import openerp
+import pytz
 
 class tms_maintenance_order_activity(osv.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -47,27 +47,57 @@ class tms_maintenance_order_activity(osv.Model):
                                 'supplier_invoice_name': record.invoice_id.supplier_invoice_number or record.invoice_id.reference
                                 }
         return res
+    
+    def _get_costs(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for rec in self.browse(cr, uid, ids, context=context):
+            spares = manpower = spares_ext = 0.00
+            for xline in rec.product_line_ids:
+                spares += xline.cost_amount if not rec.external_workshop else 0.0
+                spares_ext += xline.cost_amount if rec.external_workshop else 0.0
+            if not rec.external_workshop:
+                for line in rec.control_time_ids:
+                    cost_mechanic = line.hr_employee_id.job_id.tms_global_salary or 0.0
+                    manpower += (cost_mechanic * line.hours_mechanic)
+            res[rec.id] = {'parts_cost' : spares, 'cost_service': manpower, 'parts_cost_external': spares_ext}
+        return res    
+
+    def _get_activity1(self, cr, uid, ids, context=None):
+        result = {}
+        for line in self.pool.get('tms.product.line').browse(cr, uid, ids, context=context):
+            result[line.activity_id.id] = True
+        return result.keys()
+    
+    def _get_activity2(self, cr, uid, ids, context=None):
+        result = {}
+        for line in self.pool.get('tms.activity.control.time').browse(cr, uid, ids, context=context):
+            result[line.activity_id.id] = True
+        return result.keys()
 
 ########################### Columnas : Atributos #######################################################################
     _columns = {
-        'state': fields.selection([('cancel','Cancelled'), ('pending','Pending'), ('process','Process'),('done','Done')],'State'),
+        'state'           : fields.selection([('cancel','Cancelled'), ('pending','Pending'), ('process','Process'),('done','Done')],'State'),
 
-        'state_order': fields.related('maintenance_order_id','state',  type='char', string='State Order', readonly=True),
+        'state_order'     : fields.related('maintenance_order_id','state',  type='char', string='State Order', readonly=True),
 
-        'date_start':      fields.datetime('Scheduled Date Start', required=True),
-        'date_end':        fields.datetime('Scheduled Date End', required=True),
-        'date_start_real': fields.datetime('Date Start Real', readonly=True),
-        'date_end_real':   fields.datetime('Date End Real', readonly=True),
+        'date_start'      : fields.datetime('Scheduled Date Start', required=True),
+        'date_end'        : fields.datetime('Scheduled Date End', required=True),
+        'date_start_real' : fields.datetime('Date Start Real', readonly=True),
+        'date_end_real'   :   fields.datetime('Date End Real', readonly=True),
         'date_most_recent_end_mechanic_activity':   fields.datetime('Scheduled Most Recent Activity End of Mechanic'),
 
 
-        'hours_estimated': fields.float('Hours Estimated', readonly=True),
-        'hours_real':      fields.float('Hours Real Men', readonly=True),
+        'hours_estimated' : fields.float('Hours Estimated', readonly=True),
+        'hours_real'      : fields.float('Hours Real Men', readonly=True),
 
-        'cost_service':    fields.float('Service Cost', readonly=True),
-        'parts_cost':      fields.float('Parts Cost', readonly=True),
-
-        
+        #'cost_service'    : fields.float('Service Cost', readonly=True),
+        #'parts_cost'      : fields.float('Parts Cost', readonly=True),
+        'parts_cost'     : fields.function(_get_costs, method=True, string='Spare Parts', type='float', multi=True, digits_compute=dp.get_precision('Sale Price'), 
+                                            store = {'tms.maintenance.order.activity': (lambda self, cr, uid, ids, c={}: ids, None, 10),
+                                                     'tms.product.line': (_get_activity1, ['state', 'quantity', 'list_price'], 10),}),
+        'cost_service'     : fields.function(_get_costs, method=True, string='Manpower', type='float', multi=True, digits_compute=dp.get_precision('Sale Price'), 
+                                            store = {'tms.maintenance.order.activity': (lambda self, cr, uid, ids, c={}: ids, None, 10),
+                                                     'tms.activity.control.time': (_get_activity2, ['state','hours_mechanic'], 10),}),
         'external_workshop':      fields.boolean('External', help="Check if this task is going to be done bya an external supplier "),
         'breakdown':              fields.boolean('Breakdown'),
 
@@ -78,12 +108,15 @@ class tms_maintenance_order_activity(osv.Model):
 
 
 
-        'invoiced':               fields.boolean('Facturado'),
-        'invoice_id':             fields.many2one('account.invoice','Invoce', readonly=True, ondelete='restrict'),
+        'invoiced'          :               fields.boolean('Facturado'),
+        'invoice_id'        :             fields.many2one('account.invoice','Invoce', readonly=True, ondelete='restrict'),
         'supplier_id':            fields.many2one('res.partner','Supplier', ondelete='restrict'),
 
         'cost_service_external':    fields.float('Service Cost External'),
-        'parts_cost_external':      fields.float('Parts Cost External'),
+        'parts_cost_external'   : fields.function(_get_costs, method=True, string='Spare Parts External', type='float', multi=True, digits_compute=dp.get_precision('Sale Price'), 
+                                            store = {'tms.maintenance.order.activity': (lambda self, cr, uid, ids, c={}: ids, None, 10),
+                                                     'tms.product.line': (_get_activity1, ['state', 'quantity', 'list_price'], 10),}),
+
         
 
         ######## Many2One ##########################
@@ -99,6 +132,7 @@ class tms_maintenance_order_activity(osv.Model):
         ########Related ###########
         'shop_id'       : fields.related('maintenance_order_id', 'shop_id', type='many2one', relation='sale.shop', string='Shop', store=True, readonly=True),
         'unit_id'       : fields.related('maintenance_order_id', 'unit_id', type='many2one', relation='fleet.vehicle', string='Vehicle', store=True, readonly=True),                
+        'dummy_field'   : fields.boolean('Dummy'),
     }
     
 ########################### Metodos ####################################################################################
@@ -217,10 +251,10 @@ class tms_maintenance_order_activity(osv.Model):
         for line in self.get_products_lines_obj(cr, uid, ids):
             suma = suma + (line['product_id']['standard_price'] * line['quantity'] )
         self.set_parts_cost(cr,uid,ids, suma)
-        ### Si es Taller Externo la Actividad entonces eejecutara su propia sumatoria
+        ### Si es Taller Externo la Actividad entonces ejecutara su propia sumatoria
         this = self.get_current_instance(cr, uid, ids)
-        if this['external_workshop']:
-            self.calculate_parts_cost_external(cr,uid,ids)
+        #if this['external_workshop']:
+        #    self.calculate_parts_cost_external(cr,uid,ids)
 
     def calculate_cost_service(self,cr,uid,ids,context=None):
         suma = 0.0
@@ -588,6 +622,15 @@ class tms_maintenance_order_activity(osv.Model):
         return stocks_objs
 
 ################################# Metodos Para Escribir Genericos ################################
+    #def write(self, cr, uid, ids, vals, context=None):
+    #    res = super(tms_maintenance_order_activity, self).write(cr, uid, ids, vals, context)
+    #    order_ids = [x['maintenance_order_id'] for x in self.read(cr, uid, ids, ['maintenance_order_id'])]
+    #    print "order_ids: ", order_ids
+        #raise osv.except_osv('Pausa', 'Pausa')
+        
+    #    self.pool.get('tms.maintenance.order').write(cr, uid, order_ids, {'dummy_field' : True})
+    #s    return res
+        
     def write_custom(self, cr, uid, id, vals, context=None):
         self.write(cr,uid,id,vals,context)
 
@@ -675,8 +718,8 @@ class tms_maintenance_order_activity(osv.Model):
     _defaults = {
         'state'                 : lambda *a: 'pending',
         'breakdown'             : lambda *a: True,
-        'date_start'            : lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-        'date_end'              : lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        'date_start'            : lambda self, cr, uid, context: pytz.utc.localize(datetime.today()).astimezone(pytz.timezone(self.pool.get('res.users').browse(cr, uid, [uid])[0].tz) or pytz.utc).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        'date_end'              : lambda self, cr, uid, context: pytz.utc.localize(datetime.today()).astimezone(pytz.timezone(self.pool.get('res.users').browse(cr, uid, [uid])[0].tz) or pytz.utc).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
     }
 
 ########################### Criterio de ordenamiento ###################################################################

@@ -29,6 +29,7 @@ from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, fl
 import decimal_precision as dp
 import netsvc
 import openerp
+import pytz
 
 class tms_maintenance_order(osv.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -48,31 +49,48 @@ class tms_maintenance_order(osv.Model):
     def _get_costs(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):            
-            x_manpower = x_spare_parts = y_manpower = y_spare_parts = 0.0
-            
-            for line in record.activities_ids:
-                if line.state != 'cancel':
-                    x_spare_parts += line.parts_cost
-                    x_manpower += line.cost_service
-                    y_spare_parts += line.parts_cost_external
-                    y_manpower += line.cost_service_external
+            x_manpower = x_spare_parts = y_manpower = y_spare_parts = 0.0            
+            for task in record.activities_ids:
+                if task.state != 'cancel':
+                    for xline in task.product_line_ids:
+                        x_spare_parts += xline.cost_amount if not task.external_workshop else 0.0
+                        y_spare_parts += xline.cost_amount if task.external_workshop else 0.0
+                    if not task.external_workshop:
+                        for line in task.control_time_ids:
+                            cost_mechanic = line.hr_employee_id.job_id.tms_global_salary or 0.0
+                            x_manpower += (cost_mechanic * line.hours_mechanic)
+                    else:
+                        y_manpower += task.cost_service_external
             res[record.id] = {
                 'manpower'             : x_manpower,
                 'spare_parts'          : x_spare_parts,
                 'manpower_external'    : y_manpower,
                 'spare_parts_external' : y_spare_parts,
             }
-        return res
-
+        return res    
 
     def _get_order(self, cr, uid, ids, context=None):
+        #print "Si entra aqui... "
         result = {}
         for line in self.pool.get('tms.maintenance.order.activity').browse(cr, uid, ids, context=context):
             result[line.maintenance_order_id.id] = True
+        #print "result.keys(): ", result.keys()
         return result.keys()
 
-
+    def _get_activity1(self, cr, uid, ids, context=None):
+        result = {}
+        for line in self.pool.get('tms.product.line').browse(cr, uid, ids, context=context):
+            result[line.activity_id.maintenance_order_id.id] = True
+        print "result tms.product.line : ", result
+        return result.keys()
     
+    def _get_activity2(self, cr, uid, ids, context=None):
+        result = {}
+        for line in self.pool.get('tms.activity.control.time').browse(cr, uid, ids, context=context):
+            result[line.activity_id.maintenance_order_id.id] = True
+        print "result tms.activity.control.time : ", result
+        return result.keys()
+
     def _get_duration(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
@@ -110,28 +128,28 @@ class tms_maintenance_order(osv.Model):
         'duration_real'        : fields.function(_get_duration, string='Duration Real', method=True, type='float', digits=(18,6), multi=True,
                                                  store = {'tms.maintenance.order': (lambda self, cr, uid, ids, c={}: ids, ['date_start','date_end','date_start_real','date_end_real'], 10)}, help="Real duration in hours"),
 
-        'cost_service'         : fields.float('Service Cost', readonly=True),
-        'parts_cost'           : fields.float('Parts Cost', readonly=True),
+        #'cost_service'         : fields.float('Service Cost', readonly=True),
+        #'parts_cost'           : fields.float('Parts Cost', readonly=True),
 
-        'manpower'         : fields.function(_get_costs, method=True, digits_compute=dp.get_precision('Sale Price'), 
+        'manpower'              : fields.function(_get_costs, method=True, digits_compute=dp.get_precision('Sale Price'), 
                                                  string='Manpower Cost', type='float', multi=True,
                                                  store = {'tms.maintenance.order': (lambda self, cr, uid, ids, c={}: ids, None, 10),
-                                                          'tms.maintenance.order.activity': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),}),
+                                                          'tms.activity.control.time': (_get_activity2, ['state','hours_mechanic'], 10),}),
 
-        'spare_parts'     : fields.function(_get_costs, method=True, digits_compute= dp.get_precision('Sale Price'), 
+        'spare_parts'           : fields.function(_get_costs, method=True, digits_compute= dp.get_precision('Sale Price'), 
                                                  string='Spare Parts Cost', type='float', multi=True,
                                                  store = {'tms.maintenance.order': (lambda self, cr, uid, ids, c={}: ids, None, 10),
-                                                          'tms.maintenance.order.activity': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),}),
+                                                          'tms.product.line': (_get_activity1, ['quantity','list_price'], 10),}),
 
-        'manpower_external': fields.function(_get_costs, method=True, digits_compute= dp.get_precision('Sale Price'), 
+        'manpower_external'     : fields.function(_get_costs, method=True, digits_compute= dp.get_precision('Sale Price'), 
                                                  string='External Manpower Cost', type='float', multi=True,
                                                  store = {'tms.maintenance.order': (lambda self, cr, uid, ids, c={}: ids, None, 10),
-                                                          'tms.maintenance.order.activity': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),}),
+                                                          'tms.maintenance.order.activity': (_get_order, ['cost_service_external'], 10),}),
 
-        'spare_parts_external' : fields.function(_get_costs, method=True, digits_compute= dp.get_precision('Sale Price'), 
+        'spare_parts_external'  : fields.function(_get_costs, method=True, digits_compute= dp.get_precision('Sale Price'), 
                                                  string='External Spare Parts Cost', type='float', multi=True,
                                                  store = {'tms.maintenance.order': (lambda self, cr, uid, ids, c={}: ids, None, 10),
-                                                          'tms.maintenance.order.activity': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),}),
+                                                          'tms.maintenance.order.activity': (_get_order, ['parts_cost_external'], 10),}),
 
 
         ########Many2One###########
@@ -156,6 +174,7 @@ class tms_maintenance_order(osv.Model):
         ########One2Many###########
         'activities_ids'       : fields.one2many('tms.maintenance.order.activity','maintenance_order_id','Tasks', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),
         #'stock_picking_ids': fields.one2many('stock.piking','tms_order_id','Stock_pickings'),
+        'dummy_field'          : fields.boolean('Dummy'),
     }
 
 
@@ -773,9 +792,9 @@ class tms_maintenance_order(osv.Model):
 ########################### Valores por Defecto ########################################################################
     _defaults = {
         'state'                 : lambda *a: 'draft',
-        'date'                  : lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-        'date_start'            : lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-        'date_end'              : lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        'date'                  : lambda self, cr, uid, context: pytz.utc.localize(datetime.today()).astimezone(pytz.timezone(self.pool.get('res.users').browse(cr, uid, [uid])[0].tz) or pytz.utc).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        'date_start'            : lambda self, cr, uid, context: pytz.utc.localize(datetime.today()).astimezone(pytz.timezone(self.pool.get('res.users').browse(cr, uid, [uid])[0].tz) or pytz.utc).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        'date_end'              : lambda self, cr, uid, context: pytz.utc.localize(datetime.today()).astimezone(pytz.timezone(self.pool.get('res.users').browse(cr, uid, [uid])[0].tz) or pytz.utc).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
         'user_id'               : lambda obj, cr, uid, context: uid,
         'internal_repair'       : True,
     }

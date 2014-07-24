@@ -77,10 +77,10 @@
 				      <field name="supervisor_id"  context="{'default_tms_category':'mechanic'}" domain="[('tms_category', '=', 'mechanic')]"/>
 				      <field name="stock_origin_id" context="{'default_usage':'internal'}" domain="[('usage', '=', 'internal'),('chained_location_type', '=', 'none')]"/>
 				      
-				      <field name="manpower" />
-				      <field name="spare_parts" /> 
-				      <field name="manpower_external" />
-				      <field name="spare_parts_external" /> 
+                        <field name="spare_parts" /> 
+                        <field name="manpower" />
+                        <field name="spare_parts_external" /> 
+                        <field name="manpower_external" />
                         
 					  <field name="date_start" />
 					  <field name="date_start_real" />
@@ -88,22 +88,22 @@
 					  <field name="date_end_real" />
                         <separator string="Tasks" colspan="4"/>
                         <field name="activities_ids" nolabel="1" on_change="on_change_activities_ids(activities_ids)" colspan="4">
-			    <tree string="Order of Maintenance Activity">
-				  <field name="maintenance_order_id" invisible="1"/>
-				  <field name="product_id" /><!-- Actividad -->
-				  <field name="unit_id"  invisible="1"/>
-				  <field name="hours_estimated"  widget="float_time"/>
-				  <field name="hours_real" widget="float_time"/>
-				  <field name="cost_service" sum="Spare Parts"/>
-				  <field name="parts_cost" sum="Work Hand"/>
-				  <field name="cost_service_external" sum="Spare Parts External"/>
-				  <field name="parts_cost_external" sum="Work Hand External"/>
-				  <field name="external_workshop" />
-				  <field name="shop_id" invisible="1" />
-				  <field name="state" />
-			    </tree>
+                            <tree string="Order of Maintenance Activity">
+                              <field name="maintenance_order_id" invisible="1"/>
+                              <field name="product_id" /><!-- Actividad -->
+                              <field name="unit_id"  invisible="1"/>
+                              <field name="hours_estimated"  widget="float_time"/>
+                              <field name="hours_real" widget="float_time"/>
+                              <field name="parts_cost" sum="Work Hand"/>
+                              <field name="cost_service" sum="Spare Parts"/>
+                              <field name="parts_cost_external" sum="Manpower External"/>
+                              <field name="cost_service_external" sum="Spare Parts External"/>
+                              <field name="external_workshop" />
+                              <field name="shop_id" invisible="1" />
+                              <field name="state" />
+                            </tree>
 
-			</field>
+                        </field>
                         <separator string="Notes" colspan="4"/>
                         <field name="notes" nolabel="1" colspan="4"/>
 
@@ -154,8 +154,7 @@
                 <field name="spare_parts" sum="Spare Parts"/> 
                 <field name="manpower" sum="Manpower"/>
                 <field name="spare_parts_external" sum="Spare Parts Ext."/> 
-                <field name="manpower_external" sum="Manpower Ext"/>
-
+                <field name="manpower_external" sum="Manpower Ext."/>
                 <field name="state" />
             </tree>
 	    </field>

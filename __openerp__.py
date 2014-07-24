@@ -65,7 +65,7 @@ Takes from Freight Management Module:
                     'tms_analisys_04_view.xml',
                     #'tms_analisys_05_view.xml',  
                     #'activities_to_invoice_view.xml',    
-                    'create_invoice_view.xml',
+                    #'create_invoice_view.xml',
                     'stock_view.xml',
                     'tms_maintenance_driver_report_view.xml',
                    ], 

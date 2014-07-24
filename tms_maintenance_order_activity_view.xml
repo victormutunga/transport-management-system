@@ -44,6 +44,46 @@ Please note that:<br/>
 ############################################################################################################################
 
 ############################################################################################################################
+			### Create Supplier Invoice from Tasks ###
+
+        
+        
+    <record id="tms_maintenance_activity_invoice_form" model="ir.ui.view">
+        <field name="name">Create Supplier Invoice from Tasks</field>
+        <field name="model">tms.maintenance.order.activity.invoice</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+        <form string="Create Invoice" version="7.0">
+            <separator colspan="4" string="Create Supplier Invoice(s) from selected Tasks ?" />
+		    <p colspan="4">
+Please note that:<br/> 
+* Selected Tasks must be in Done State<br/>
+* In case you selected several Tasks from different Supplier, this process will 
+  create as many invoices as suppliers.<br/>
+			</p>
+            <footer>
+                <button name="button_generate_invoices" string="Create Invoice(s)" colspan="1" type="object" icon="gtk-ok"  />
+                or
+                <button special="cancel" string="Cancel" class="oe_link"/>
+            </footer>
+        </form>
+        </field>
+	</record>
+        
+
+                            ### ACTION ###
+    <act_window name="Create Supplier Invoice from Tasks"		    
+		res_model="tms.maintenance.order.activity.invoice"
+		src_model="tms.maintenance.order.activity"
+		view_mode="form"
+		target="new"
+		key2="client_action_multi"    
+		id="tms_maintenance_activity_invoice_action"/>
+
+############################################################################################################################
+        
+        
+############################################################################################################################
                             ### FORM ###
     <record model="ir.ui.view" id="tms_maintenance_order_activity_form">
             <field name="name">tms.maintenance.order.activity.form</field>
@@ -94,7 +134,7 @@ Please note that:<br/>
 				<field name="cost_service_external" />
 				<field name="parts_cost_external" />
 
-                        	<field name="shop_id" invisible="1" />
+                <field name="shop_id" invisible="1" />
 		    	</group>
 			<notebook col="4" colspan="4">
 			    <page string="Mechanics" attrs="{'invisible':[('external_workshop','in',True)]}">
@@ -133,26 +173,30 @@ Please note that:<br/>
 ############################################################################################################################
                             ### TREE ###
     <record model="ir.ui.view" id="tms_maintenance_order_activity_tree">
-            <field name="name">tms.maintenance.order.activity.tree</field>
-            <field name="model">tms.maintenance.order.activity</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Order of Maintenance Activity" create="false">
-
-		  <field name="maintenance_order_id" />
-                  <field name="product_id" /><!-- Actividad -->
-		  <field name="unit_id" />
-                  <field name="hours_estimated"  widget="float_time" sum="Sched. Time"/>
-                  <field name="hours_real" widget="float_time" sum="Real Time"/>
-		  <field name="cost_service" sum="Spare Parts"/>
-		  <field name="parts_cost" sum="Work Hand"/>
-		  <field name="cost_service_external" sum="Spare Parts External"/>
-		  <field name="parts_cost_external" sum="Work Hand External"/>
-		  <field name="mechanic_ids" />
-		  <field name="external_workshop" />
-                  <field name="shop_id" invisible="1" />
-                  <field name="state" />
-		</tree>
+        <field name="name">tms.maintenance.order.activity.tree</field>
+        <field name="model">tms.maintenance.order.activity</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Order of Maintenance Activity" create="false">
+                <field name="maintenance_order_id" />
+                <field name="product_id" /><!-- Actividad -->
+                <field name="unit_id" />
+                <field name="hours_estimated"  widget="float_time" sum="Sched. Time"/>
+                <field name="hours_real" widget="float_time" sum="Real Time"/>
+                <field name="cost_service" sum="Spare Parts"/>
+                <field name="parts_cost" sum="Work Hand"/>
+                <field name="cost_service_external" sum="Spare Parts External"/>
+                <field name="parts_cost_external" sum="Work Hand External"/>
+                <field name="mechanic_ids" />
+                <field name="external_workshop" />
+                <field name="supplier_id" />
+                <field name="supplier_invoiced" />
+				<field name="invoice_id" />
+				<field name="supplier_invoice_name" />
+				<field name="supplier_invoice_paid" />
+                <field name="shop_id" invisible="1" />
+                <field name="state" />
+            </tree>
 	    </field>
     </record>
 
@@ -193,8 +237,8 @@ Please note that:<br/>
             <filter icon="terp-gtk-media-pause" string="Without Workhand Assigned" domain="[('external_workshop','=',0),('mechanic_ids','=',False)]"/>
 	    <separator />
             <filter icon="terp-gtk-media-pause" string="External Workshop" domain="[('external_workshop','=',1)]"/>
-            <filter icon="terp-gtk-media-pause" string="Not Invoiced" domain="[('invoiced','=',0)]"/>
-            <filter icon="terp-gtk-media-pause" string="Invoiced" domain="[('invoiced','=',1)]"/>
+            <filter icon="terp-gtk-media-pause" string="Not Invoiced by Supplier" domain="[('supplier_invoiced','=',False)]"/>
+            <filter icon="terp-gtk-media-pause" string="Invoiced by Supplier" domain="[('supplier_invoiced','=',True)]"/>
 	    <separator />
           <group expand="0" string="Group By..." >
             <filter string="Activity" icon="terp-personal" domain="[]" context="{'group_by':'product_id'}"/>

@@ -30,6 +30,7 @@
                         	
                         	<field name="state_activity" invisible="1" />
                         	<field name="list_price" attrs="{'readonly':[('state','in',('delivered','cancel'))]}" />
+                            <field name="cost_amount" />
                             <field name="stock_move_id" readonly="1"/>
 				
 		    	</group>
@@ -52,7 +53,9 @@
                         <button string="Cancel"    name="action_cancel"    states="draft,pending"    icon="gtk-cancel"     type="object" />
                         	<field name="stock_move_id" invisible="1" />
                         	<field name="product_id" />
-                        	<field name="quantity" />
+                        	<field name="quantity" sum="Qty"/>
+                            <field name="list_price"/>
+                            <field name="cost_amount" sum="Amount"/>
                         	<field name="state" />
 		</tree>
 	    </field>

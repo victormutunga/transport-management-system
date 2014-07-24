@@ -30,11 +30,18 @@ import decimal_precision as dp
 import netsvc
 import openerp
 
+
 class tms_product_line(osv.Model):
     #_inherit = ['mail.thread', 'ir.needaction_mixin']
     _name = 'tms.product.line'
     _description = 'Material Line'
     _rec_name='product_id'
+    
+    def _get_cost(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for record in self.browse(cr, uid, ids, context=context):
+            res[record.id] = record.quantity * record.list_price
+        return res    
 
 ########################### Columnas : Atributos #######################################################################
     _columns = {
@@ -49,6 +56,8 @@ class tms_product_line(osv.Model):
         'activity_id'   : fields.many2one('tms.maintenance.order.activity','Activity id', readonly=True, ondelete='restrict'),
         ######## Related ########
         'shop_id'       : fields.related('activity_id','shop_id', type='char', string='Shop', readonly=True ,store=True),
+        'cost_amount'      : fields.function(_get_cost, string='Cost Amount', method=True, type='float',
+                                          digits_compute=dp.get_precision('Sale Price'), multi=False, store=False),
     }
     
 ########################### Metodos ####################################################################################
@@ -58,7 +67,7 @@ class tms_product_line(osv.Model):
 
     def get_product_product_list_price(self,cr,uid,ids):
         this = self.get_current_instance(cr, uid, ids)
-        return this['product_id']['list_price'] 
+        return this['product_id']['standard_price'] 
 
     def product_line_set_list_price(self,cr,uid,ids, context=None):
         price = self.get_product_product_list_price(cr,uid,ids)
@@ -90,7 +99,6 @@ class tms_product_line(osv.Model):
         if stock_move:
             stock_move.action_done(context)
         #### cambiar el estado de product line a 'delivered'
-        self.write(cr, uid, ids, {'state':'delivered'})
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -280,7 +288,11 @@ class tms_product_line(osv.Model):
 
     def change_state_to_delivered(self, cr, uid, id, context=None):  
         self.set_state(cr, uid, id, 'delivered')
-
+        print "Si entra aqui..."
+        #for rec in self.browse(cr, uid, id):
+        #    print "Tambien aqui..."
+        #    print "rec.activity_id.id: ", rec.activity_id.id 
+        #    self.pool.get('tms.maintenance.order.activity').write(cr, uid, [rec.activity_id.id], {'dummy_field' : not rec.activity_id.dummy_field})
     
         
 

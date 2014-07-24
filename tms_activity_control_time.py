@@ -29,6 +29,9 @@ from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, fl
 import decimal_precision as dp
 import netsvc
 import openerp
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+import pytz
 
 class tms_activity_control_time(osv.Model):
     #_inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -104,7 +107,9 @@ class tms_activity_control_time(osv.Model):
     ########## Metodos para el 'state' ##########
 
     def action_start(self, cr, uid, ids, context=None):
-        date_start = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        z = pytz.timezone(self.pool.get('res.users').browse(cr, uid, [uid])[0].tz) or pytz.utc
+        date_start  = pytz.utc.localize(datetime.today()).astimezone(z).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        #date_start = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         self.write(cr, uid, ids, {'date_begin':date_start})
         ## Fijar Suma Fecha Inicio Actividad en (order.activity) campo (date_start_real) 
         this = self.browse(cr, uid, ids)[0]
@@ -123,8 +128,10 @@ class tms_activity_control_time(osv.Model):
         self.create_time_rec(cr,uid,ids, time.strftime(DEFAULT_SERVER_DATETIME_FORMAT), 'pause')
         return True  
 
-    def action_end(self,cr,uid,ids,context=None): 
-        date_end = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+    def action_end(self,cr,uid,ids,context=None):
+        z = pytz.timezone(self.pool.get('res.users').browse(cr, uid, [uid])[0].tz) or pytz.utc
+        date_end  = pytz.utc.localize(datetime.today()).astimezone(z).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        #date_end = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         self.write(cr, uid, ids, {'state':'end','date_end':date_end})
         self.create_time_rec(cr,uid,ids, date_end, 'end')
 
