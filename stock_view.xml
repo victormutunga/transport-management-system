@@ -52,7 +52,7 @@
                     <field name="tms_order_id" on_change="on_change_tms_order(tms_order_id)"
                            domain="[('state','not in',('cancel','draft','done'))]" 
                            attrs="{'readonly':[('from_tms_order','=',True)]}"/>
-                    <field name="tms_order_state" attrs="{'invisible':[('tms_order_id','=',False)]}"/>
+                    <field name="tms_order_state"  invisible="1" />
                     <field name="unit_id" attrs="{'invisible':[('tms_order_id','=',False)]}"/>
                     <field name="mechanic_id" />
                 </field>

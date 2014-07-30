@@ -418,8 +418,8 @@ class tms_maintenance_order(osv.Model):
         return True
 
     def action_done(self,cr,uid,ids,context={}): 
-        self.calculate_parts_cost(cr,uid,ids)
-        self.calculate_cost_service(cr,uid,ids)
+        #self.calculate_parts_cost(cr,uid,ids)
+        #self.calculate_cost_service(cr,uid,ids)
         
         for service_order in self.browse(cr, uid, ids):
             if service_order.maint_program_id.id:
@@ -461,7 +461,7 @@ class tms_maintenance_order(osv.Model):
         return True 
 
     def action_released(self,cr,uid,ids,context={}): 
-
+        prod_line_obj = self.pool.get('tms.product.line')
         exist_activites = self.is_exist_activity_lines(cr,uid,ids)
 
         ##### Cerrar Todas las Actividades si es posible
@@ -474,8 +474,18 @@ class tms_maintenance_order(osv.Model):
             if not (self.is_exist_activities_process(cr, uid, ids)):                                                              ## IF 2
                 if (self.is_exist_activities_pending(cr, uid, ids)):                                                              ## IF 3
                     for line in self.get_activity_lines(cr, uid, ids):                                                            ## For
-                        if line['state'] in 'pending':                                                    
-                            line.action_cancel()
+                        if line['state'] in 'pending':
+                            x = 0
+                            for prod_line in line.product_line_ids:
+                                if prod_line.state=='delivered':
+                                    x += 1
+                                else:
+                                    prod_line_obj.action_cancel(cr, uid, [prod_line.id])
+                            if not x:
+                                line.action_cancel()
+                            else:
+                                line.action_done()
+                            
                     ## End For
                 ## END IF 3
                 self.write(cr, uid, ids, {'state':'released'})

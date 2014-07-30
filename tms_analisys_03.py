@@ -101,10 +101,20 @@ order by sm.date
         
         """
         
-        update tms_maintenance_order_activity a
+update tms_maintenance_order_activity a
 set state=(
 case when (select count(b.id) from tms_product_line b where a.id=b.activity_id and state='delivered') > 0 then 'done' else a.state end
-)
+);
+
+
+update tms_product_line pl
+set list_price=(
+select sum(case when aml.debit > 0 then aml.debit else pl.quantity * pl.list_price end)
+from stock_move sm 
+	left join account_move am on sm.am_id=am.id
+		left join account_move_line aml on am.id=aml.move_id and aml.state='valid' and aml.debit > 0
+where sm.id=pl.stock_move_id and sm.state='done'
+);
 
 
 update tms_maintenance_order_activity a
@@ -115,7 +125,16 @@ from tms_product_line pl
 		left join account_move am on sm.am_id=am.id
 			left join account_move_line aml on am.id=aml.move_id and aml.state='valid' and aml.debit > 0
 where pl.activity_id=a.id)
-where external_workshop = False
+where external_workshop = False;
+
+update tms_maintenance_order o
+set 
+spare_parts = (select sum(parts_cost) from tms_maintenance_order_activity a where a.maintenance_order_id = o.id and a.state<>'cancel'),
+manpower = (select sum(cost_service) from tms_maintenance_order_activity a where a.maintenance_order_id = o.id and a.state<>'cancel'),
+spare_parts_external = (select sum(parts_cost_external) from tms_maintenance_order_activity a where a.maintenance_order_id = o.id and a.state<>'cancel'),
+manpower_external = (select sum(cost_service_external) from tms_maintenance_order_activity a where a.maintenance_order_id = o.id and a.state<>'cancel')
+where o.state <> 'cancel';
+
 
 
 """
