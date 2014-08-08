@@ -46,8 +46,8 @@ class tms_travel(osv.osv):
         for travel in self.browse(cr, uid, ids, context=context):
             if travel.employee_id.tms_driver_license_expiration and travel.employee_id.tms_driver_license_expiration <= date.strftime(DEFAULT_SERVER_DATE_FORMAT):
                 raise osv.except_osv(_('Warning!'), _("You can not Dispatch this Travel because (%s) %s Driver's License Validity (%s) is expired or about to expire in next %s day(s)") % (travel.employee_id.id, travel.employee_id.name, travel.employee_id.tms_driver_license_expiration, val))
-            if travel.employee_id2 and travel.employee_id2.tms_driver_license_expiration and travel.employee_id2.tms_driver_license_expiration <= date.strftime(DEFAULT_SERVER_DATE_FORMAT):
-                raise osv.except_osv(_('Warning!'), _("You can not Dispatch this Travel because (%s) %s Driver's License Validity (%s)is expired or about to expire in next %s day(s)") % (travel.employee_id2.id, travel.employee_id2.name, travel.employee_id2.tms_driver_license_expiration, val)) 
+            if travel.employee2_id and travel.employee2_id.tms_driver_license_expiration and travel.employee2_id.tms_driver_license_expiration <= date.strftime(DEFAULT_SERVER_DATE_FORMAT):
+                raise osv.except_osv(_('Warning!'), _("You can not Dispatch this Travel because (%s) %s Driver's License Validity (%s)is expired or about to expire in next %s day(s)") % (travel.employee2_id.id, travel.employee2_id.name, travel.employee2_id.tms_driver_license_expiration, val)) 
         return super(tms_travel, self).action_dispatch(cr, uid, ids, context=context)
         
 
