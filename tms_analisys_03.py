@@ -127,14 +127,15 @@ from tms_product_line pl
 where pl.activity_id=a.id)
 where external_workshop = False;
 
+update tms_maintenance_order_activity set cost_service=0 where external_workshop;
+
 update tms_maintenance_order o
 set 
 spare_parts = (select sum(parts_cost) from tms_maintenance_order_activity a where a.maintenance_order_id = o.id and a.state<>'cancel'),
-manpower = (select sum(cost_service) from tms_maintenance_order_activity a where a.maintenance_order_id = o.id and a.state<>'cancel'),
+manpower = (select sum(cost_service) from tms_maintenance_order_activity a where a.maintenance_order_id = o.id and a.state<>'cancel' and not a.external_workshop),
 spare_parts_external = (select sum(parts_cost_external) from tms_maintenance_order_activity a where a.maintenance_order_id = o.id and a.state<>'cancel'),
-manpower_external = (select sum(cost_service_external) from tms_maintenance_order_activity a where a.maintenance_order_id = o.id and a.state<>'cancel')
+manpower_external = (select sum(cost_service_external) from tms_maintenance_order_activity a where a.maintenance_order_id = o.id and a.state<>'cancel' and a.external_workshop)
 where o.state <> 'cancel';
-
 
 
 """
