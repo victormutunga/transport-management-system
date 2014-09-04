@@ -431,10 +431,10 @@ class tms_maintenance_order(osv.Model):
                     program_obj.write(cr, uid, prog_id, {'mro_service_order_id'   : service_order.id})
                     prog_ids = program_obj.search(cr, uid, [('vehicle_id', '=', service_order.unit_id.id), ('sequence','>', service_order.program_sequence)], order='sequence')
                     service_trigger = service_order.accumulated_odometer
-                    prog_last = program_obj.read(cr, uid, prog_id, ['trigger'])[0]['trigger']
-                    x = 0                    
+                    diference = program_obj.read(cr, uid, prog_id, ['diference'])[0]['diference']
+                    x = 0
                     for rec in program_obj.browse(cr, uid, prog_ids):
-                        prog_next_trigger = rec.trigger - prog_last + service_trigger
+                        prog_next_trigger = rec.trigger + diference
                         program_obj.write(cr, uid, [rec.id], {'trigger' : prog_next_trigger})
                         if not x:
                             #print "service_order.date_end: ", service_order.date_end
@@ -448,7 +448,7 @@ class tms_maintenance_order(osv.Model):
                                               {'cycle_next_service'     : rec.mro_cycle_id.id, 
                                                #'date_next_service'      : date_next_service, 
                                                'main_odometer_next_service': prog_next_trigger, 
-                                               'odometer_next_service'  : service_order.current_odometer + (rec.trigger - prog_last), 
+                                               'odometer_next_service'  : service_order.current_odometer + (rec.trigger + diference), 
                                                'sequence_next_service'  : rec.sequence,
                                                })
                         x += 1

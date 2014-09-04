@@ -114,9 +114,10 @@ class fleet_vehicle(osv.osv):
             if last_trigger == cycle.trigger and last_cycle_id and cycle.mro_cycle_id.id in self.return_cycle_ids(cr, uid, ids, [last_cycle_id]):
                     program_obj.unlink(cr, uid, cycle.id)
             else:
+                diference = cycle.trigger - last_trigger
                 last_trigger = cycle.trigger
                 last_cycle_id = cycle.mro_cycle_id.id
-                program_obj.write(cr, uid, cycle.id, { 'sequence': seq })
+                program_obj.write(cr, uid, cycle.id, { 'sequence': seq , 'diference' : diference })
                 seq += 1
 
         return True
@@ -149,10 +150,12 @@ class fleet_vehicle_mro_program(osv.Model):
         'mro_service_order_date'     : fields.related('mro_service_order_id', 'date', type='datetime', string="Date", store=True, readonly=True),
         'mro_service_order_distance' : fields.related('mro_service_order_id', 'accumulated_odometer', type='float', string="mi/km", store=True, readonly=True),
         'next_date'     : fields.date('Date Next Service'),
+        'diference' : fields.integer('Distance in between'),
         }
 
     _defaults = {
         'next_date'      : lambda *a: time.strftime(DEFAULT_SERVER_DATE_FORMAT),
+        'diference' : lambda *a: 0,
         }
 
     _order = 'trigger,sequence'
