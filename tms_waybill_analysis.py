@@ -25,6 +25,7 @@
 
 from osv import fields,osv
 import tools
+from tools.translate import _
 
 class tms_waybill_analysis(osv.osv):
     _name = "tms.waybill.analysis"
@@ -44,10 +45,11 @@ class tms_waybill_analysis(osv.osv):
         'name'                  : fields.char('Name', size=64, readonly=True),
         'date_order'            : fields.date('Date', readonly=True),
         
-        'year'                  : fields.integer('Year', readonly=True),
-        'month'                 : fields.integer('Month', readonly=True),
-        'day'                   : fields.integer('Day', readonly=True),
-        'week'                  : fields.integer('Week of Year', readonly=True),
+        'year'      : fields.char('Year', size=4, readonly=True),
+        'day'       : fields.char('Day', size=128, readonly=True),
+        'month'     :fields.selection([('01',_('January')), ('02',_('February')), ('03',_('March')), ('04',_('April')),
+                                        ('05',_('May')), ('06',_('June')), ('07',_('July')), ('08',_('August')), ('09',_('September')),
+                                        ('10',_('October')), ('11',_('November')), ('12',_('December'))], 'Month',readonly=True),
         'partner_id'            : fields.many2one('res.partner', 'Customer', readonly=True),
         'travel_id'             : fields.many2one('tms.travel', 'Travel', readonly=True),
         'employee_id'           : fields.many2one('hr.employee', 'Driver', readonly=True),
@@ -93,11 +95,12 @@ class tms_waybill_analysis(osv.osv):
 create or replace view tms_waybill_analysis as
 select row_number() over() as id,
 a.shop_id, a.waybill_category, a.sequence_id,
-a.state, a.name, a.date_order, 
-EXTRACT(YEAR FROM a.date_order)::INTEGER as year,
-EXTRACT(MONTH FROM a.date_order)::INTEGER as month,
-EXTRACT(DAY FROM a.date_order)::INTEGER as day,
-EXTRACT(WEEK FROM a.date_order)::INTEGER as week,
+a.state, a.name, 
+date_order,
+--date_trunc('day', a.date_order) as date_order,
+to_char(date_trunc('day',a.date_order), 'YYYY') as year,
+to_char(date_trunc('day',a.date_order), 'MM') as month,
+to_char(date_trunc('day',a.date_order), 'YYYY-MM-DD') as day,
 a.partner_id, a.travel_id, d.employee_id, d.unit_id, d.trailer1_id, d.dolly_id, d.trailer2_id,
 d.route_id, e.departure_id, e.arrival_id,
 a.currency_id, a.waybill_type, a.invoice_id, a.invoice_name, a.user_id, c.tms_category, b.product_id, 

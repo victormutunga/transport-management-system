@@ -16,7 +16,6 @@
                     <field name="year"          invisible="1"/>
                     <field name="month"         invisible="1"/>
                     <field name="day"           invisible="1"/>
-                    <field name="week"          invisible="1"/>
                     <field name="partner_id" />
                     <field name="travel_id"/>
                     <field name="employee_id"/>
@@ -58,8 +57,6 @@
                 <field name="shop_id" />
                 <field name="sequence_id" />
                 <field name="state"  />
-                <field name="name" />
-                <field name="date_order"/>
                 <field name="partner_id"/>
                 <field name="product_id"/>
                 <field name="shipped_product_id"/>
@@ -92,24 +89,34 @@
                     <filter string="Route"          icon="STOCK_OK" domain="[]" context="{'group_by':'route_id'}"/>
                     <filter string="Departure"      icon="terp-gtk-go-back-rtl" domain="[]" context="{'group_by':'departure_id'}"/>
                     <filter string="Arrival"        icon="terp-gtk-jump-to-ltr" domain="[]" context="{'group_by':'arrival_id'}"/>
-                    <filter string="Framework"      icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'partner_id'}"/>
+                    <filter string="Framework"      icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'framework'}"/>
                     <filter string="Waybill Type"   icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'waybill_type'}"/>
-                    <filter string="Driver"         icon="terp-personal"    domain="[]" context="{'group_by':'employee_id'}"/>
                     <filter string="Day"            icon="terp-go-today"    domain="[]" context="{'group_by':'day'}"     help="Ordered Day of the Waybill"/>
                     <filter string="Month"          icon="terp-go-month"    domain="[]" context="{'group_by':'month'}"   help="Ordered Month of the Waybill"/>
                     <filter string="Year"           icon="terp-go-year"     domain="[]" context="{'group_by':'year'}"    help="Ordered Year of the Waybill"/>
-                    <filter string="Week"           icon="terp-go-week"     domain="[]" context="{'group_by':'week'}"    help="Ordered Week of Year of the Waybill"/>    
 			    </group>
                 </search>
 		</field>
 	</record>
+
+    <record id="view_tms_waybill_analysis_graph" model="ir.ui.view">
+        <field name="name">tms.waybill.analysis.graph</field>
+        <field name="model">tms.waybill.analysis</field>
+        <field name="type">graph</field>
+        <field name="arch" type="xml">
+            <graph string="Waybills" type="bar">
+                <field name="unit_id"/>
+                <field name="amount" operator="+"/>
+            </graph>
+        </field>
+    </record>
 
 
     <record id="action_tms_waybill_analysis" model="ir.actions.act_window">
         <field name="name">tms.waybill.analysis.action</field>
         <field name="res_model">tms.waybill.analysis</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">tree,graph</field>
         <field name="context">{"search_default_this_month":True,"search_default_my_waybills":True,"search_default_groupby_partner_id":True,"search_default_confirmed":True}</field>
         <field name="view_id" ref="view_tms_waybill_analysis_tree"></field>
        

@@ -25,6 +25,7 @@
 
 from osv import fields,osv
 import tools
+from tools.translate import _
 
 class tms_travel_analysis(osv.osv):
     _name = "tms.travel.analysis"
@@ -32,14 +33,16 @@ class tms_travel_analysis(osv.osv):
     _auto = False
     #_rec_name = 'name'
     _columns = {
-        'shop_id'               : fields.many2one('sale.shop', 'Shop', readonly=True),
-        'name'                  : fields.char('Name', size=64, readonly=True),
-        'date'                  : fields.date('Date', readonly=True),
-        'year'                  : fields.integer('Year', readonly=True),
-        'month'                 : fields.integer('Month', readonly=True),
-        'day'                   : fields.integer('Day', readonly=True),
-        'week'                  : fields.integer('Week of Year', readonly=True),
-        'state'                 : fields.selection([
+        'shop_id'   : fields.many2one('sale.shop', 'Shop', readonly=True),
+        'name'      : fields.char('Name', size=64, readonly=True),
+        'date'      : fields.date('Date', readonly=True),
+        'year'      : fields.char('Year', size=4, readonly=True),
+        'day'       : fields.char('Day', size=128, readonly=True),
+        'month'     : fields.selection([('01',_('January')), ('02',_('February')), ('03',_('March')), ('04',_('April')),
+                                        ('05',_('May')), ('06',_('June')), ('07',_('July')), ('08',_('August')), ('09',_('September')),
+                                        ('10',_('October')), ('11',_('November')), ('12',_('December'))], 'Month',readonly=True),
+
+        'state'     : fields.selection([
                                     ('draft', 'Pending'),
                                     ('progress', 'Progress'),
                                     ('done', 'Done'),
@@ -99,13 +102,15 @@ class tms_travel_analysis(osv.osv):
         cr.execute ("""
 CREATE OR REPLACE VIEW tms_travel_analysis as
 select row_number() over() as id,
-a.shop_id, a.name, a.date, 
-EXTRACT(YEAR FROM a.date)::INTEGER as year,
-EXTRACT(MONTH FROM a.date)::INTEGER as month,
-EXTRACT(DAY FROM a.date)::INTEGER as day,
-EXTRACT(WEEK FROM a.date)::INTEGER as week,
+a.shop_id, a.name, 
+
+a.date,
+to_char(date_trunc('day',a.date), 'YYYY') as year,
+to_char(date_trunc('day',a.date), 'MM') as month,
+to_char(date_trunc('day',a.date), 'YYYY-MM-DD') as day,
+
 a.state, a.employee_id, a.framework, f.unit_type_id, 
-a.unit_id, a.trailer1_id, a.dolly_id, a.trailer2_id, a.route_id, a.departure, a.arrival,
+a.unit_id, a.trailer1_id, a.dolly_id, a.trailer2_id, a.route_id, a.departure_id departure, a.arrival_id arrival,
 b.id as waybill_id, b.date_order as waybill_date, 
 case 
 when b.partner_id is null then 1
@@ -188,7 +193,7 @@ b.shop_id, b.id travel_id, b.trailer1_id, b.dolly_id, b.trailer2_id, b.employee_
 case when b.date is null then current_date else b.date end date, b.date_start, b.date_end, 
 case  when b.state is null then 'free' else b.state end state,
 b.framework,
-a.unit_type_id, b.route_id, b.departure, b.arrival,
+a.unit_type_id, b.route_id, b.departure_id departure, b.arrival_id arrival,
 c.id waybill_id,
 c.date_order waybill_date,
 c.partner_id,

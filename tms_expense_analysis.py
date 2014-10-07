@@ -25,6 +25,7 @@
 
 from osv import fields,osv
 import tools
+from tools.translate import _
 
 class tms_expense_analysis(osv.osv):
     _name = "tms.expense.analysis"
@@ -36,10 +37,11 @@ class tms_expense_analysis(osv.osv):
         'shop_id'               : fields.many2one('sale.shop', 'Shop', readonly=True),
         'name'                  : fields.char('Name', size=64, readonly=True),
         'date'                  : fields.date('Date', readonly=True),
-        'year'                  : fields.integer('Year', readonly=True),
-        'month'                 : fields.integer('Month', readonly=True),
-        'day'                   : fields.integer('Day', readonly=True),
-        'week'                  : fields.integer('Week of Year', readonly=True),
+        'year'                  : fields.char('Year', size=4, readonly=True),
+        'day'                   : fields.char('Day', size=128, readonly=True),
+        'month'                 : fields.selection([('01',_('January')), ('02',_('February')), ('03',_('March')), ('04',_('April')),
+                                        ('05',_('May')), ('06',_('June')), ('07',_('July')), ('08',_('August')), ('09',_('September')),
+                                        ('10',_('October')), ('11',_('November')), ('12',_('December'))], 'Month',readonly=True),
         'state'                 : fields.selection([
                 ('draft', 'Draft'),
                 ('approved', 'Approved'),
@@ -72,11 +74,11 @@ class tms_expense_analysis(osv.osv):
 CREATE OR REPLACE VIEW tms_expense_analysis as
 select b.id as id,
 a.driver_helper,
-a.shop_id, a.name, a.date, 
-EXTRACT(YEAR FROM a.date)::INTEGER as year,
-EXTRACT(MONTH FROM a.date)::INTEGER as month,
-EXTRACT(DAY FROM a.date)::INTEGER as day,
-EXTRACT(WEEK FROM a.date)::INTEGER as week,
+a.shop_id, a.name, 
+a.date,
+to_char(date_trunc('day',a.date), 'YYYY') as year,
+to_char(date_trunc('day',a.date), 'MM') as month,
+to_char(date_trunc('day',a.date), 'YYYY-MM-DD') as day,
 a.state, a.employee_id, a.unit_id, a.currency_id, 
 b.product_id, b.name expense_line_description,
 c.id travel_id, c.route_id, 
@@ -95,11 +97,11 @@ union
 
 select b.id as id,
 a.driver_helper,
-a.shop_id, a.name, a.date, 
-EXTRACT(YEAR FROM a.date)::INTEGER as year,
-EXTRACT(MONTH FROM a.date)::INTEGER as month,
-EXTRACT(DAY FROM a.date)::INTEGER as day,
-EXTRACT(WEEK FROM a.date)::INTEGER as week,
+a.shop_id, a.name, 
+a.date,
+to_char(date_trunc('day',a.date), 'YYYY') as year,
+to_char(date_trunc('day',a.date), 'MM') as month,
+to_char(date_trunc('day',a.date), 'YYYY-MM-DD') as day,
 a.state, a.employee_id, a.unit_id, a.currency_id, 
 b.product_id, b.name expense_line_description,
 c.id travel_id, c.route_id, 
