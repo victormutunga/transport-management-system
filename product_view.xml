@@ -72,6 +72,8 @@
                         <newline/>
                         <!-- <div attrs="{'invisible':[('tms_category','not in',('move','highway_tolls', 'insurance', 'fuel'))]}"> -->
                             <field name="tms_category_default" attrs="{'invisible':[('tms_category','not in',('move','highway_tolls', 'insurance', 'fuel'))]}" />
+                        <newline/>
+                        <field name="move_ag" attrs="{'invisible':[('tms_category','!=','real_expense')]}" />
 <!--                             <label for="tms_category_default" />
  -->      <!--                   </div> -->
                     </group>

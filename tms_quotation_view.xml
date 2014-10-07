@@ -147,8 +147,7 @@
         <field name="view_mode">tree,form</field>
     </record>    
 
-        <menuitem id="menu_tms_config_quotation" name="Quotation's" parent="tms.menu_tms_config" sequence="40"/>
-        <menuitem action="quotation_config_action" id="menu_tms_config_parameter" name="Parameter's" parent="menu_tms_config_quotation" sequence="1"/>
+        
 <!-- ####################################################################################################    -->
 
 
@@ -626,7 +625,7 @@
         <field name="view_mode">kanban,tree,form</field>
     </record>    
 
-    <menuitem action="quotation_tms_action" id="menu_tms_quotation" name="Quotation's" parent="tms.menu_tms_travels" sequence="1" />
+    
 <!-- 
 ##############################
 FACTOR.QUOTATION
@@ -696,5 +695,11 @@ FACTOR.QUOTATION
         <field name="view_mode">tree,form</field>
     </record>  
 
+
+    <!-- MENU -->
+    <menuitem id="menu_tms_config_quotation" name="Quotation's" parent="tms.menu_tms_config" sequence="40"/>
+    <menuitem action="quotation_config_action" id="menu_tms_config_parameter" name="Parameter's" parent="menu_tms_config_quotation" sequence="1"/>
+    <menuitem action="quotation_tms_action" id="menu_tms_quotation" name="Quotation's" parent="tms.menu_tms_travels" sequence="1" />
+    
     </data>
 </openerp>

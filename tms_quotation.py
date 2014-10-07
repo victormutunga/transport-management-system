@@ -1941,7 +1941,8 @@ class tms_quotation_agreement_wizard(osv.osv_memory):
 							expenses_list.append(xline_expense)
 
 					if quotation.move_travel_days > 0.0:
-						product_income_id = product_obj.search(cr, uid, [('tms_category', '=', 'real_expense'),('active','=', 1),('move_ag','=',1)], limit=1)
+						#product_income_id = product_obj.search(cr, uid, [('tms_category', '=', 'mover'),('active','=', 1),('move_ag','=',1)], limit=1)
+						product_income_id = product_obj.search(cr, uid, [('tms_category', '=', 'mover'),('active','=', 1)], limit=1)
 						product_browse = product_obj.browse(cr, uid, product_income_id, context)
 						fpos = quotation.partner_id.property_account_position.id or False
 						if not product_income_id:
