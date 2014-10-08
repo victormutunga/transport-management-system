@@ -119,13 +119,17 @@ class tms_activity_control_time(osv.Model):
         return self.action_process(cr, uid, ids, context)
 
     def action_process(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids,{'state':'process'}) 
-        self.create_time_rec(cr,uid,ids, time.strftime(DEFAULT_SERVER_DATETIME_FORMAT), 'process')
+        self.write(cr, uid, ids,{'state':'process'})
+        z = pytz.timezone(self.pool.get('res.users').browse(cr, uid, [uid])[0].tz) or pytz.utc
+        date_event  = pytz.utc.localize(datetime.today()).astimezone(z).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        self.create_time_rec(cr,uid,ids, date_event, 'process')
         return True
 
     def action_pause(self,cr,uid,ids,context=None): 
         self.write(cr, uid, ids, {'state':'pause'})
-        self.create_time_rec(cr,uid,ids, time.strftime(DEFAULT_SERVER_DATETIME_FORMAT), 'pause')
+        z = pytz.timezone(self.pool.get('res.users').browse(cr, uid, [uid])[0].tz) or pytz.utc
+        date_event  = pytz.utc.localize(datetime.today()).astimezone(z).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        self.create_time_rec(cr,uid,ids, date_event, 'pause')
         return True  
 
     def action_end(self,cr,uid,ids,context=None):

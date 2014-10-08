@@ -71,7 +71,7 @@ tms.maintenance.driver_report
             <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert" groups="tms_maintenance.group_report_setdraft" />
             <button name="action_cancel" states="draft,confirmed" string="Cancel" type="object" groups="tms_maintenance.group_report_cancel"/>
             <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-goto-last" class="oe_highlight" groups="tms_maintenance.group_report_confirm"/>
-            <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,closed" statusbar_colors='{"cancel":"red"}'/>/>
+            <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,closed" statusbar_colors='{"cancel":"red"}'/>
           </header>
           <sheet>
             <h1>

@@ -26,7 +26,7 @@
     'complexity': "normal",
     "author" : "HESATEC",
     "website": "http://www.hesatecnica.com",
-    "depends" : ["tms"],
+    "depends" : ["tms","stock_move_entries"],
     "description": """
 Fleet Maintenance Workshop Management
 =========================================

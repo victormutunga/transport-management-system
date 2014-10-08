@@ -81,14 +81,14 @@ class tms_maintenance_order(osv.Model):
         result = {}
         for line in self.pool.get('tms.product.line').browse(cr, uid, ids, context=context):
             result[line.activity_id.maintenance_order_id.id] = True
-        print "result tms.product.line : ", result
+        #print "result tms.product.line : ", result
         return result.keys()
     
     def _get_activity2(self, cr, uid, ids, context=None):
         result = {}
         for line in self.pool.get('tms.activity.control.time').browse(cr, uid, ids, context=context):
             result[line.activity_id.maintenance_order_id.id] = True
-        print "result tms.activity.control.time : ", result
+        #print "result tms.activity.control.time : ", result
         return result.keys()
 
     def _get_duration(self, cr, uid, ids, field_name, arg, context=None):
@@ -114,7 +114,7 @@ class tms_maintenance_order(osv.Model):
         'name'                 : fields.char('Name', readonly=True),
         'state'                : fields.selection([('cancel','Cancelled'), ('draft','Draft'), ('open','Open'), ('released','Released'), ('done','Done')],'State'),
         'description'          : fields.char('Description'),
-        'notes'                : fields.text('Notes', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),
+        'notes'                : fields.text('Notes', readonly=False, states={'cancel':[('readonly',True)]}),
 
         'partner_id'           : fields.many2one('res.partner', 'Supplier', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}, ondelete='restrict'),
         'internal_repair'      : fields.boolean('Internal Repair', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),

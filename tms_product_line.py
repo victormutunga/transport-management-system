@@ -79,8 +79,8 @@ class tms_product_line(osv.Model):
         return True
 
     def action_pending(self, cr, uid, ids, context=None):
-        if self.get_activity_obj(cr,uid,ids)['state'] in ('cancel'):#if self.get_activity_obj(cr,uid,ids)['state'] in ('cancel','done'):
-            raise osv.except_osv(_('Warning!'),_('You can not use Button Pending when Activity is in State Done'))#raise osv.except_osv(_('Warning!'),_('You can not use Button Pending when Activity is in State Done or Cancel'))
+        if self.get_activity_obj(cr,uid,ids)['state'] in ('cancel','pending'):
+            raise osv.except_osv(_('Warning!'),_('You can use this Button only when  Activity is in State Process or Done'))
         self.write(cr, uid, ids,{'state':'pending'}) 
 
         this = self.get_current_instance(cr, uid, ids)

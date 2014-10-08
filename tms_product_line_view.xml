@@ -11,7 +11,8 @@
             <field name="arch" type="xml">
                 <form string="Tms Product Line" version="7.0">
 		    <header>
-			<button string="Pending"   name="action_pending" states="draft" icon="gtk-go-forward" type="object" /> 
+			<button string="Pending"   name="action_pending" 
+                    states="draft" icon="gtk-go-forward" type="object" /> 
                         <button string="Cancel"  name="action_cancel"  states="draft,pending" icon="gtk-cancel" type="object" />
 
 			<!--<button string="Pending"   name="action_pending" states="draft" icon="gtk-go-forward" type="object" /> 
@@ -47,8 +48,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Tms Product Line">
-
-                        <button string="Request Materials"   name="action_pending"   states="draft"            icon="gtk-go-forward" type="object" /> 
+                        <button string="Request Materials"   name="action_pending" 
+                                states="draft" icon="gtk-go-forward" type="object" />
                 <!--<button string="Delivered" name="action_delivered" states="pending"          icon="gtk-apply"      type="object" />--> 
                         <button string="Cancel"    name="action_cancel"    states="draft,pending"    icon="gtk-cancel"     type="object" />
                         	<field name="stock_move_id" invisible="1" />
@@ -57,6 +58,7 @@
                             <field name="list_price"/>
                             <field name="cost_amount" sum="Amount"/>
                         	<field name="state" />
+                            <field name="state_activity" invisible="1"/>
 		</tree>
 	    </field>
     </record>
