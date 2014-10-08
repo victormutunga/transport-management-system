@@ -535,7 +535,9 @@ class tms_quotation(osv.Model):
 							raise osv.except_osv(
 								_('Could calculate Freight amount for quotation !'),
 								_('quotation %s is not assigned to a Travel') % (quotation.name))
-						x = (float(quotation.route_id.distance) if factor.factor_type=='distance' else float(quotation.route_id.distance_extraction)) if factor.framework == 'Any' else 0.0
+						x = (float(quotation.route_id.distance) if factor.factor_type=='distance' else float(quotation.route_id.distance_extraction))
+						#x = (float(quotation.route_id.distance) if factor.factor_type=='distance' else float(quotation.route_id.distance_extraction)) if factor.framework == 'Any' else 0.0
+
 					elif factor.factor_type == 'weight':
 						if not quotation.product_weight:
 							raise osv.except_osv(
@@ -577,7 +579,6 @@ class tms_quotation(osv.Model):
 				operator_salary = operator_salary
 			elif rec.operator_salary != operator_salary:
 				operator_salary = rec.operator_salary
-
 			salary_monthly = 0.0
 #			salary_percent = 0.0
 			if operator_salary > 0.0:
@@ -1726,7 +1727,6 @@ class tms_quotation_agreement_wizard(osv.osv_memory):
 							elif factor.factor_type == 'travel':
 								x = 1
 								ft = 'travel'
-
 							xline_factor = (0,0,{
 									    		'name'          : product_browse.name,
 										        'category'      : 'customer',
@@ -1747,7 +1747,6 @@ class tms_quotation_agreement_wizard(osv.osv_memory):
 	 
 									})
 							factor_list.append(xline_factor)
-
 					xline_agreement = (0,0,{
 								'line_type': 'product',
 								'name': product_browse.name,

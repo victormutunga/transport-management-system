@@ -430,7 +430,7 @@ class tms_agreement(osv.Model):
 					expense.unlink()
 			# for route in agreement.agreement_driver_factor:
 			# 	if route.control:
-			# 		route.unlink()
+			# 		route.unlink()e
 
 			####### INICIAMOS EL CALCULO DE LAS LINEAS GASTOS ETC
 			agreement.create_product_fleet_line()
@@ -745,6 +745,9 @@ class tms_agreement(osv.Model):
 		fpos_obj = self.pool.get('account.fiscal.position')
 		prod_uom_id = self.if_exist_product_uom_id(cr,uid,ids)      
 		for agreement in self.browse(cr,uid,ids,context=context):
+			print "############# CREANDO EL FLETE"
+			print "############# CREANDO EL FLETE"
+			print "############# CREANDO EL FLETE"
 			if agreement.agreement_customer_factor:
 				result = self.calculate(cr, uid, 'agreement', ids, 'client', False)
 				fpos = agreement.partner_id.property_account_position.id or False
@@ -796,7 +799,6 @@ class tms_agreement(osv.Model):
 		result = 0.0
 
 		if record_type == 'agreement':
-
 			agreement_obj = self.pool.get('tms.agreement')
 			for agreement in agreement_obj.browse(cr, uid, record_ids, context=context):
 				for factor in agreement.agreement_customer_factor:
@@ -806,6 +808,7 @@ class tms_agreement(osv.Model):
 								_('Could calculate Freight amount for agreement !'),
 								_('Agreement %s is not assigned to a Travel') % (agreement.name))
 						x = float(agreement.route_id.distance) if factor.factor_type=='distance' else float(agreement.route_id.distance_extraction)
+						# x = float(agreement.route_id.distance)
 
 					elif factor.factor_type == 'weight':
 						if not agreement.product_weight:
@@ -839,9 +842,11 @@ class tms_agreement(osv.Model):
 
 					elif factor.factor_type == 'special':
 						exec factor.factor_special_id.python_code
-
-					result += ((factor.fixed_amount if (factor.mixed or factor.factor_type=='travel') else 0.0) + (factor.factor * x if factor.factor_type != 'special' else x)) if ((x >= factor.range_start and x <= factor.range_end) or (factor.range_start == factor.range_end == 0.0)) else 0.0
-
+					### AQUI SUMARIZAMOS DEPENDIENDO EL TIPO DE FACTOR ###
+					if factor.factor_type=='travel':
+						result += factor.fixed_amount
+					else:
+						result += ((factor.fixed_amount if (factor.mixed or factor.factor_type=='travel') else 0.0) + (factor.factor * x if factor.factor_type != 'special' else x)) if ((x >= factor.range_start and x <= factor.range_end) or (factor.range_start == factor.range_end == 0.0)) else 0.0
 
 		elif record_type == 'salary':
 
