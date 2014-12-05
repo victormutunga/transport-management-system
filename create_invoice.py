@@ -100,6 +100,9 @@ class tms_maintenance_order_activity_invoice(osv.osv_memory):
                         'invoice_line_tax_id': [(6, 0, [x.id for x in activity.maintenance_order_id.product_id.supplier_taxes_id])],
                         'note'      : _('Invoice Created from Maintenance External Workshop Tasks'),
                         'account_analytic_id': False,
+                        'vehicle_id': activity.maintenance_order_id.unit_id.id,
+                        'employee_id': activity.maintenance_order_id.driver_id.id,
+                        'sale_shop_id': activity.maintenance_order_id.shop_id.id,
                        })
             invoice_lines.append(inv_line)
 
@@ -114,18 +117,18 @@ class tms_maintenance_order_activity_invoice(osv.osv_memory):
         
         
         vals = {    
-                    'name'              : 'Invoice TMS Maintenance',
+                    'name'              : _('Invoice TMS Maintenance'),
                     'origin'            : invoice_origin_description_string,
                     'type'              : 'in_invoice',
                     'journal_id'        : journal_id,
-                    'reference'         : 'Maintenance Activities Invoice',
+                    'reference'         : _('Maintenance Activities Invoice'),
                     'account_id'        : partner.property_account_payable.id,
                     'partner_id'        : partner.id,
                     'address_invoice_id': self.pool.get('res.partner').address_get(cr, uid, [partner.id], ['default'])['default'],
                     'address_contact_id': self.pool.get('res.partner').address_get(cr, uid, [partner.id], ['default'])['default'],
                     'invoice_line'      : [x for x in invoice_lines],                      #account.invoice.line
                     #'currency_id'       : data[1],                                     #res.currency
-                    'comment'           : 'Sin Comentarios',
+                    'comment'           : _('No Comments'),
                     #'payment_term'      : pay_term,                                    #account.payment.term
                     'fiscal_position'   : partner.property_account_position.id,
                     'date_invoice'      : time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),

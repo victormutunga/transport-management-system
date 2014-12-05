@@ -63,11 +63,11 @@
                       <field name="shop_id" />
 				      <field name="date" />
 				      <field name="unit_id" on_change="on_change_unit_id(unit_id)"/>
+                        <field name="accumulated_odometer" />
 				      <field name="driver_id" context="{'default_tms_category':'driver'}" domain="[('tms_category', '=', 'driver'),('tms_supplier_driver', '=', 0)]"/>
                       <field name="product_id" on_change="on_change_product_id(product_id, unit_id, date)"  
                              domain="[('tms_category', '=', 'maint_service_type')]"
                              context="{'default_tms_category':'maint_service_type', 'default_type':'service', 'default_sale_ok':0, 'default_purchase_ok':0}"/>
-                      <newline />
 
                       <field name="internal_repair" invisible="1" />
                       <field name="partner_id" attrs="{'invisible':[('internal_repair','=',True)], 'required':[('internal_repair','=',False)]}" 
@@ -111,8 +111,8 @@
                   </page>
                   <page string="MRO Program Details">
                     <group col="4">
-                      <field name="accumulated_odometer" />
                       <field name="current_odometer" />
+                        <newline />
                       <field name="maint_program_id" />
                       <newline />
                       <field name="maint_cycle_id" />
@@ -146,6 +146,7 @@
                 <field name="name" />
                 <field name="date" />
                 <field name="unit_id" />
+                <field name="accumulated_odometer" />
                 <field name="product_id" />
                 <!--<field name="partner_id" />
                 <field name="internal_repair" /> --> 

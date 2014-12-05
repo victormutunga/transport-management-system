@@ -30,6 +30,10 @@ import decimal_precision as dp
 import netsvc
 import openerp
 
+import sys
+reload(sys)  
+sys.setdefaultencoding('utf8')
+
 
 class tms_product_line(osv.Model):
     #_inherit = ['mail.thread', 'ir.needaction_mixin']
