@@ -200,9 +200,11 @@
 
                     <field name="upload_point"/>
                     <field name="download_point"/>
+                    <field name="type_travel" />
+                    <field name="dangerous_shipped" />
                     <field name="unit_ids"/>
                     <field name="state"/> 
-                    <field name="notes"/>
+                    <field name="notes" invisible="1"/>
 
                     <field name="company_id" invisible="1"/>
                     <field name="date"  invisible="1"/>
@@ -211,6 +213,7 @@
                     <field name="units_a" invisible="1"/>
                     <field name="quotation_id" invisible="1"/>
                     <field name="waybill_ref_id" invisible="1"/>
+                    
 
                     <button string="Confirmed" type="object" name="action_confirmed" states="draft" icon="gtk-go-forward" class="oe_highlight" />
                     <button string="Cancelled" type="object" name="action_cancel" states="confirmed" icon="gtk-cancel" class="oe_highlight" /> 
@@ -280,6 +283,9 @@
                         <field name="arrival_address_id" colspan="2" context="{'search_default_customer':1, 'show_address': 1}" options="{&quot;always_reload&quot;: True}"/>
                         <field name="upload_point" colspan="2"/> 
                         <field name="download_point" colspan="2"/>
+
+                        <field name="type_travel" />
+                        <field name="dangerous_shipped" />
                         <newline/>
                     </group>
                     <group col="6">
@@ -619,14 +625,30 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Agreement Search">
-                        <group>
-                        <separator string="search inside the greement " colspan="3"/>
-                        <filter string="Inactive" name="Inactive" domain="[('active','=',False)]" icon="gtk-close"/>
-                        <filter string="Unname" name="Unname" domain="[('name','=',False)]" icon="terp-personal-"/>
-                        <filter string="Draft" name="Draft" domain="[('state','=','draft')]" icon="gtk-convert"/>
-                        <filter string="Confirmed" name="Confirmed" domain="[('state','=','confirmed')]" icon="gtk-go-forward"/>
-                        <filter string="Cancelled" name="Cancelled" domain="[('state','=','cancel')]" icon="gtk-cancel"/>
-                        <filter string="Done" name="Done" domain="[('state','=','done')]" icon="gtk-apply"/>
+                        <group string="Filtros">
+                            
+                            <filter string="Inactive" name="Inactive" domain="[('active','=',False)]" icon="gtk-close"/>
+                            <filter string="Unname" name="Unname" domain="[('name','=',False)]" icon="terp-personal-"/>
+                            <filter string="Draft" name="Draft" domain="[('state','=','draft')]" icon="gtk-convert"/>
+                            <filter string="Confirmed" name="Confirmed" domain="[('state','=','confirmed')]" icon="gtk-go-forward"/>
+                            <filter string="Cancelled" name="Cancelled" domain="[('state','=','cancel')]" icon="gtk-cancel"/>
+                            <filter string="Done" name="Done" domain="[('state','=','done')]" icon="gtk-apply"/>
+                            <filter string="Sencillo" name="single" domain="[('type_travel','=','single')]" icon="gtk-apply"/>
+                            <filter string="Full" name="ful" domain="[('type_travel','=','full')]" icon="gtk-apply"/>
+                            <filter string="Carga Peligrosa" name="dangerous" domain="[('dangerous_shipped','=',True)]" icon="gtk-apply"/>
+                            <filter domain="[('user_id','=',uid)]" help="Mis Acuerdos" icon="terp-personal"/>
+                            <filter string="Name" icon="terp-stock_zoom" domain="[]" context="{'group_by':'name'}"/>
+                            <filter string="Custommer" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                            <filter string="Route" icon="STOCK_UNINDENT" domain="[]" context="{'group_by':'route_id'}"/>
+                            <filter string="Upload Point" icon="STOCK_SORT_ASCENDING" domain="[]" context="{'group_by':'upload_point'}"/>
+                            <filter string="Download Point" icon="STOCK_SORT_DESCENDING" domain="[]" context="{'group_by':'download_point'}"/>
+
+                            <filter string="Shop" icon="terp-go-home" domain="[]" context="{'group_by':'shop_id'}"/>
+
+                            <filter string="Tipo Viaje" domain="[]" context="{'group_by':'type_travel'}"/>
+                            <filter string="Carga Peligrosa" domain="[]" context="{'group_by':'dangerous_shipped'}"/>
+                        </group>
+
                         <newline/>
                         <field name="name"/>
                         <field name="partner_id"/>
@@ -635,9 +657,8 @@
                         <field name="departure_id"/>
                         <field name="arrival_id"/>
                         <field name="notes"/>
-                        <field name="user_id" select="1">
-                        <filter domain="[('user_id','=',uid)]" help="My Agreements" icon="terp-personal"/>
-                        </field>
+                        <field name="user_id" />
+                        
 
                         <field name="company_id" />
                         <field name="date"  />
@@ -655,17 +676,7 @@
                         <field name="user_id"  />
                         <field name="quotation_id" />
                         <field name="waybill_ref_id" />
-                        </group>
-                            <newline/>
-                            <group expand="0" string="Group By..." groups="base.groupagreement">
-                            <filter string="Name" icon="terp-stock_zoom" domain="[]" context="{'group_by':'name'}"/>
-                            <filter string="Custommer" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                            <filter string="Route" icon="STOCK_UNINDENT" domain="[]" context="{'group_by':'route_id'}"/>
-                            <filter string="Upload Point" icon="STOCK_SORT_ASCENDING" domain="[]" context="{'group_by':'upload_point'}"/>
-                            <filter string="Download Point" icon="STOCK_SORT_DESCENDING" domain="[]" context="{'group_by':'download_point'}"/>
-
-                            <filter string="Shop" icon="terp-go-home" domain="[]" context="{'group_by':'shop_id'}"/>
-                            </group>
+                            
                 </search>
             </field>
         </record>

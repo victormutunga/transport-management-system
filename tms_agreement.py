@@ -353,6 +353,10 @@ class tms_agreement(osv.Model):
 		'arrival': fields.boolean('Arrival'),
 		'arrival_2': fields.boolean('Arrival'),
 
+
+		#### NUEVOS CAMPOS ####
+		'type_travel': fields.selection([('single','Sencillo'),('full','Full')], 'Tipo de Viaje', required=True),
+		'dangerous_shipped': fields.boolean('Carga Peligrosa'),
 	}
 	_defaults = {
         'active'                : lambda *a:True,
