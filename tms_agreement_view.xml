@@ -637,6 +637,8 @@
                             <filter string="Full" name="ful" domain="[('type_travel','=','full')]" icon="gtk-apply"/>
                             <filter string="Carga Peligrosa" name="dangerous" domain="[('dangerous_shipped','=',True)]" icon="gtk-apply"/>
                             <filter domain="[('user_id','=',uid)]" help="Mis Acuerdos" icon="terp-personal"/>
+                        </group>
+                        <group string="Agrupar por...">
                             <filter string="Name" icon="terp-stock_zoom" domain="[]" context="{'group_by':'name'}"/>
                             <filter string="Custommer" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                             <filter string="Route" icon="STOCK_UNINDENT" domain="[]" context="{'group_by':'route_id'}"/>
