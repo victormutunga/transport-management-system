@@ -201,7 +201,7 @@
                     <field name="upload_point"/>
                     <field name="download_point"/>
                     <field name="type_travel" />
-                    <field name="dangerous_shipped" />
+                    <field name="type_shipped" />
                     <field name="unit_ids"/>
                     <field name="state"/> 
                     <field name="notes" invisible="1"/>
@@ -285,7 +285,7 @@
                         <field name="download_point" colspan="2"/>
 
                         <field name="type_travel" />
-                        <field name="dangerous_shipped" />
+                        <field name="type_shipped" />
                         <newline/>
                     </group>
                     <group col="6">
@@ -635,7 +635,9 @@
                             <filter string="Done" name="Done" domain="[('state','=','done')]" icon="gtk-apply"/>
                             <filter string="Sencillo" name="single" domain="[('type_travel','=','single')]" icon="gtk-apply"/>
                             <filter string="Full" name="ful" domain="[('type_travel','=','full')]" icon="gtk-apply"/>
-                            <filter string="Carga Peligrosa" name="dangerous" domain="[('dangerous_shipped','=',True)]" icon="gtk-apply"/>
+                            <filter string="Carga Peligrosa" name="dangerous" domain="[('type_shipped','=','dangerous')]" icon="gtk-apply"/>
+                            <filter string="Carga Refrigerada" name="refrigerated" domain="[('type_shipped','=','refrigerated')]" icon="gtk-apply"/>
+                            <filter string="Otro Tipo de Carga" name="other" domain="[('type_shipped','=','other')]" icon="gtk-apply"/>
                             <filter domain="[('user_id','=',uid)]" help="Mis Acuerdos" icon="terp-personal"/>
                         </group>
                         <group string="Agrupar por...">
@@ -648,7 +650,7 @@
                             <filter string="Shop" icon="terp-go-home" domain="[]" context="{'group_by':'shop_id'}"/>
 
                             <filter string="Tipo Viaje" domain="[]" context="{'group_by':'type_travel'}"/>
-                            <filter string="Carga Peligrosa" domain="[]" context="{'group_by':'dangerous_shipped'}"/>
+                            <filter string="Tipo de Carga" domain="[]" context="{'group_by':'type_shipped'}"/>
                         </group>
 
                         <newline/>
