@@ -390,6 +390,7 @@ class tms_agreement_travel(osv.osv_memory):
                         'name': a.name,
                         'sequence': a.sequence,
                         'agreement_control': True,
+                        'tax_id': [(6, 0, [x.id for x in a.product_id.taxes_id])],
                         }
                 self.pool.get('tms.waybill.line').create(cr, uid, vals, context)
 
