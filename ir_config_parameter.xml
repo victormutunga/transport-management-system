@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="1">
+
+
+	<!-- Block Vehicle from use when Srvice Order is Open -->
+	<record model="ir.config_parameter" id="tms_restrict_travel_distpatch_if_vehicle_has_open_service_order">               
+      <field name="key">tms_restrict_travel_distpatch_if_vehicle_has_open_service_order</field> 
+      <field name="value">1</field>              
+    </record>
+
+
+
+</data>
+</openerp>
