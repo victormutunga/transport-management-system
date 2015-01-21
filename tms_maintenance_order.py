@@ -116,7 +116,7 @@ class tms_maintenance_order(osv.Model):
         'description'          : fields.char('Description'),
         'notes'                : fields.text('Notes', readonly=False, states={'cancel':[('readonly',True)]}),
 
-        'partner_id'           : fields.many2one('res.partner', 'Supplier', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}, ondelete='restrict'),
+        'partner_id'           : fields.many2one('res.partner', 'Customer', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}, ondelete='restrict'),
         'internal_repair'      : fields.boolean('Internal Repair', readonly=True, states={'draft':[('readonly',False)], 'open':[('readonly',False)], 'released':[('readonly',False)]}),
         'date_start'           : fields.datetime('Date Start Sched', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'date_end'             : fields.datetime('Date End Sched', required=True, readonly=True, states={'draft':[('readonly',False)]}),
