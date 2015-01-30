@@ -95,9 +95,9 @@ class tms_maintenance_order_activity_invoice(osv.osv_memory):
                         'account_id': a,
                         'price_unit': activity['cost_service_external']+activity['parts_cost_external'],
                         'quantity'  : 1,
-                        'uos_id'    : activity.maintenance_order_id.product_id.uos_id.id,
+                        'uos_id'    : activity['product_id']['uom_id']['id'],
                         'product_id': activity['product_id']['id'],
-                        'invoice_line_tax_id': [(6, 0, [x.id for x in activity.maintenance_order_id.product_id.supplier_taxes_id])],
+                        'invoice_line_tax_id': [(6, 0, [x.id for x in activity['product_id']['supplier_taxes_id']])],
                         'note'      : _('Invoice Created from Maintenance External Workshop Tasks'),
                         'account_analytic_id': False,
                         'vehicle_id': activity.maintenance_order_id.unit_id.id,
@@ -127,7 +127,7 @@ class tms_maintenance_order_activity_invoice(osv.osv_memory):
                     'address_invoice_id': self.pool.get('res.partner').address_get(cr, uid, [partner.id], ['default'])['default'],
                     'address_contact_id': self.pool.get('res.partner').address_get(cr, uid, [partner.id], ['default'])['default'],
                     'invoice_line'      : [x for x in invoice_lines],                      #account.invoice.line
-                    #'currency_id'       : data[1],                                     #res.currency
+                    'currency_id'       : partner.property_product_pricelist_purchase.currency_id.id,                                     #res.currency
                     'comment'           : _('No Comments'),
                     #'payment_term'      : pay_term,                                    #account.payment.term
                     'fiscal_position'   : partner.property_account_position.id,
