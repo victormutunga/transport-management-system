@@ -54,11 +54,11 @@ class tms_expense_analysis(osv.osv):
         'product_id'            : fields.many2one('product.product', 'Line', readonly=True),
         'expense_line_description' : fields.char('Description',   size=256, readonly=True),
 
-        'travel_id'             : fields.many2one('tms.travel', 'Travel', readonly=True),
-        'route_id'              : fields.many2one('tms.route', 'Route', readonly=True),
+#        'travel_id'             : fields.many2one('tms.travel', 'Travel', readonly=True),
+#        'route_id'              : fields.many2one('tms.route', 'Route', readonly=True),
 #        'waybill_income'        : fields.float('Waybill Amount', digits=(18,2), readonly=True),        
 
-        'travels'               : fields.integer('Travels', readonly=True),        
+#        'travels'               : fields.integer('Travels', readonly=True),        
         'qty'                   : fields.float('Qty', digits=(18,2), readonly=True),        
         'price_unit'            : fields.float('Price Unit', digits=(18,4), readonly=True),        
         'subtotal'              : fields.float('SubTotal', digits=(18,2), readonly=True),        
@@ -81,16 +81,19 @@ to_char(date_trunc('day',a.date), 'MM') as month,
 to_char(date_trunc('day',a.date), 'YYYY-MM-DD') as day,
 a.state, a.employee_id, a.unit_id, a.currency_id, 
 b.product_id, b.name expense_line_description,
-c.id travel_id, c.route_id, 
+--c.id travel_id, c.route_id, 
 --c.waybill_income/ (select count(id) from tms_expense_line x where x.expense_id = a.id) waybill_income,
-(select count(name) from tms_travel where a.id=tms_travel.expense_id) travels,
-b.product_uom_qty / (select count(name) from tms_travel where a.id=tms_travel.expense_id) qty,
-b.price_unit / (select count(name) from tms_travel where a.id=tms_travel.expense_id) price_unit,
-b.price_subtotal / (select count(name) from tms_travel where a.id=tms_travel.expense_id) subtotal,
+--(select count(name) from tms_travel where a.id=tms_travel.expense_id) travels,
+--b.product_uom_qty / (select count(name) from tms_travel where a.id=tms_travel.expense_id) qty,
+b.product_uom_qty qty,
+--b.price_unit / (select count(name) from tms_travel where a.id=tms_travel.expense_id) price_unit,
+b.price_unit,
+--b.price_subtotal / (select count(name) from tms_travel where a.id=tms_travel.expense_id) subtotal,
+b.price_subtotal subtotal,
 b.operation_id
 from tms_expense a
 	inner join tms_expense_line b on a.id = b.expense_id 
-	inner join tms_travel c on a.id = c.expense_id
+	--inner join tms_travel c on a.id = c.expense_id
 	where a.state <> 'cancel'
 
 union
@@ -104,16 +107,19 @@ to_char(date_trunc('day',a.date), 'MM') as month,
 to_char(date_trunc('day',a.date), 'YYYY-MM-DD') as day,
 a.state, a.employee_id, a.unit_id, a.currency_id, 
 b.product_id, b.name expense_line_description,
-c.id travel_id, c.route_id, 
+--c.id travel_id, c.route_id, 
 --c.waybill_income/ (select count(id) from tms_expense_line x where x.expense_id = a.id) waybill_income,
-(select count(name) from tms_travel where a.id=tms_travel.expense2_id) travels,
-b.product_uom_qty / (select count(name) from tms_travel where a.id=tms_travel.expense2_id) qty,
-b.price_unit / (select count(name) from tms_travel where a.id=tms_travel.expense2_id) price_unit,
-b.price_subtotal / (select count(name) from tms_travel where a.id=tms_travel.expense2_id) subtotal,
+--(select count(name) from tms_travel where a.id=tms_travel.expense2_id) travels,
+--b.product_uom_qty / (select count(name) from tms_travel where a.id=tms_travel.expense2_id) qty,
+b.product_uom_qty qty,
+--b.price_unit / (select count(name) from tms_travel where a.id=tms_travel.expense2_id) price_unit,
+b.price_unit,
+--b.price_subtotal / (select count(name) from tms_travel where a.id=tms_travel.expense2_id) subtotal,
+b.price_subtotal subtotal,
 b.operation_id
 from tms_expense a
 	inner join tms_expense_line b on a.id = b.expense_id 
-	inner join tms_travel c on a.id = c.expense2_id
+	--inner join tms_travel c on a.id = c.expense2_id
 	where a.state <> 'cancel'
 
 order by shop_id, name, date
