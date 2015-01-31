@@ -44,7 +44,7 @@ class tms_maintenance_order_activity(osv.Model):
             paid = (record.invoice_id.state == 'paid') if record.invoice_id.id else False
             res[record.id] =  { 'supplier_invoiced': invoiced,
                                 'supplier_invoice_paid': paid,
-                                'supplier_invoice_name': record.invoice_id.supplier_invoice_number or record.invoice_id.reference
+                                'supplier_invoice_name': record.invoice_id.supplier_invoice_number
                                 }
         return res
     
@@ -109,10 +109,10 @@ class tms_maintenance_order_activity(osv.Model):
 
 
         'invoiced'          :               fields.boolean('Facturado'),
-        'invoice_id'        :             fields.many2one('account.invoice','Invoce', readonly=True, ondelete='restrict'),
+        'invoice_id'        :             fields.many2one('account.invoice','Invoice', readonly=True, ondelete='restrict'),
         'supplier_id':            fields.many2one('res.partner','Supplier', ondelete='restrict'),
 
-        'cost_service_external':    fields.float('Service Cost External'),
+        'cost_service_external':    fields.float('Service Cost External', states={'cancel':[('readonly',True)], 'done':[('readonly',True)]}),
         'parts_cost_external'   : fields.function(_get_costs, method=True, string='Spare Parts External', type='float', multi=True, digits_compute=dp.get_precision('Sale Price'), 
                                             store = {'tms.maintenance.order.activity': (lambda self, cr, uid, ids, c={}: ids, None, 10),
                                                      'tms.product.line': (_get_activity1, ['state', 'quantity', 'list_price'], 10),}),

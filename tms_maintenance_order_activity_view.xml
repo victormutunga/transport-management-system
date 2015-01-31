@@ -237,8 +237,8 @@ Please note that:<br/>
             <filter icon="terp-gtk-media-pause" string="Without Workhand Assigned" domain="[('external_workshop','=',0),('mechanic_ids','=',False)]"/>
 	    <separator />
             <filter icon="terp-gtk-media-pause" string="External Workshop" domain="[('external_workshop','=',1)]"/>
-            <filter icon="terp-gtk-media-pause" string="Not Invoiced by Supplier" domain="[('supplier_invoiced','=',False)]"/>
-            <filter icon="terp-gtk-media-pause" string="Invoiced by Supplier" domain="[('supplier_invoiced','=',True)]"/>
+            <filter icon="terp-gtk-media-pause" string="Not Invoiced by Supplier" domain="[('supplier_invoiced','=',0)]"/>
+            <filter icon="terp-gtk-media-pause" string="Invoiced by Supplier" domain="[('supplier_invoiced','=',1)]"/>
 	    <separator />
           <group expand="0" string="Group By..." >
             <filter string="Activity" icon="terp-personal" domain="[]" context="{'group_by':'product_id'}"/>
