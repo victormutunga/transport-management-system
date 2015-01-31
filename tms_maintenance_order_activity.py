@@ -718,8 +718,8 @@ class tms_maintenance_order_activity(osv.Model):
     _defaults = {
         'state'                 : lambda *a: 'pending',
         'breakdown'             : lambda *a: True,
-        'date_start'            : lambda self, cr, uid, context: pytz.utc.localize(datetime.today()).astimezone(pytz.timezone(self.pool.get('res.users').browse(cr, uid, [uid])[0].tz) or pytz.utc).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-        'date_end'              : lambda self, cr, uid, context: pytz.utc.localize(datetime.today()).astimezone(pytz.timezone(self.pool.get('res.users').browse(cr, uid, [uid])[0].tz) or pytz.utc).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        'date_start'            : lambda self, cr, uid, context: datetime.utcnow().replace(tzinfo = pytz.utc).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        'date_end'              : lambda self, cr, uid, context: datetime.utcnow().replace(tzinfo = pytz.utc).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
     }
 
 ########################### Criterio de ordenamiento ###################################################################

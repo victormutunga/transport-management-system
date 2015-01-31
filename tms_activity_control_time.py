@@ -88,7 +88,7 @@ class tms_activity_control_time(osv.Model):
                 temp_begin = time.date_event
             elif time.event in ('pause','end'):
                 sum_time += self.calculate_diference_time(temp_begin, time.date_event)
-        print "sum_time: ", sum_time
+        #print "sum_time: ", sum_time
         return sum_time
 
     def create_time_rec(self,cr,uid,ids, date_event, event):        
@@ -108,7 +108,8 @@ class tms_activity_control_time(osv.Model):
 
     def action_start(self, cr, uid, ids, context=None):
         z = pytz.timezone(self.pool.get('res.users').browse(cr, uid, [uid])[0].tz) or pytz.utc
-        date_start  = pytz.utc.localize(datetime.today()).astimezone(z).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        date_start  = datetime.utcnow().replace(tzinfo = pytz.utc).strftime('%Y-%m-%d %H:%M:%S')
+        #datetime.utcnow().replace(tzinfo = pytz.utc).astimezone(z).strftime('%Y-%m-%d %H:%M:%S')        
         #date_start = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         self.write(cr, uid, ids, {'date_begin':date_start})
         ## Fijar Suma Fecha Inicio Actividad en (order.activity) campo (date_start_real) 
@@ -121,20 +122,23 @@ class tms_activity_control_time(osv.Model):
     def action_process(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids,{'state':'process'})
         z = pytz.timezone(self.pool.get('res.users').browse(cr, uid, [uid])[0].tz) or pytz.utc
-        date_event  = pytz.utc.localize(datetime.today()).astimezone(z).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        date_event  = datetime.utcnow().replace(tzinfo = pytz.utc).strftime('%Y-%m-%d %H:%M:%S')
+        #datetime.utcnow().replace(tzinfo = pytz.utc).astimezone(z).strftime('%Y-%m-%d %H:%M:%S')
         self.create_time_rec(cr,uid,ids, date_event, 'process')
         return True
 
     def action_pause(self,cr,uid,ids,context=None): 
         self.write(cr, uid, ids, {'state':'pause'})
         z = pytz.timezone(self.pool.get('res.users').browse(cr, uid, [uid])[0].tz) or pytz.utc
-        date_event  = pytz.utc.localize(datetime.today()).astimezone(z).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        date_event  = datetime.utcnow().replace(tzinfo = pytz.utc).strftime('%Y-%m-%d %H:%M:%S')
+        #datetime.utcnow().replace(tzinfo = pytz.utc).astimezone(z).strftime('%Y-%m-%d %H:%M:%S')
         self.create_time_rec(cr,uid,ids, date_event, 'pause')
         return True  
 
     def action_end(self,cr,uid,ids,context=None):
         z = pytz.timezone(self.pool.get('res.users').browse(cr, uid, [uid])[0].tz) or pytz.utc
-        date_end  = pytz.utc.localize(datetime.today()).astimezone(z).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        date_end  = datetime.utcnow().replace(tzinfo = pytz.utc).strftime('%Y-%m-%d %H:%M:%S')
+        #datetime.utcnow().replace(tzinfo = pytz.utc).astimezone(z).strftime('%Y-%m-%d %H:%M:%S')
         #date_end = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         self.write(cr, uid, ids, {'state':'end','date_end':date_end})
         self.create_time_rec(cr,uid,ids, date_end, 'end')
