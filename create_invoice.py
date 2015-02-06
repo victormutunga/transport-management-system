@@ -55,7 +55,7 @@ class tms_maintenance_order_activity_invoice(osv.osv_memory):
                                 (activity.maintenance_order_id.product_id.name, activity.maintenance_order_id.product_id.id,))
             a = self.pool.get('account.fiscal.position').map_account(cr, uid, False, a)
             
-            if activity.supplier_id.id not in invoices_to_create and not activity.invoiced and activity.state=='done':
+            if activity.supplier_id.id not in invoices_to_create and activity.state=='done' and (not activity.invoiced or activity.invoice_id.state=='cancel'):
                 invoices_to_create.update(
                     {   
                         activity.supplier_id.id : 
@@ -82,7 +82,7 @@ class tms_maintenance_order_activity_invoice(osv.osv_memory):
                     }
                 )
                 
-            if not activity.invoiced and activity.state =='done':
+            if activity.state =='done' and (not activity.invoiced or activity.invoice_id.state=='cancel') :
                 inv_line = (0,0,{
                         'name'      : activity.maintenance_order_id.name + ', ' + activity.product_id.name, 
                         'origin'    : activity.maintenance_order_id.product_id.name,
