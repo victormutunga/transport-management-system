@@ -802,9 +802,9 @@ class tms_maintenance_order(osv.Model):
 ########################### Valores por Defecto ########################################################################
     _defaults = {
         'state'                 : lambda *a: 'draft',
-        'date'                  : lambda self, cr, uid, context: pytz.utc.localize(datetime.today()).astimezone(pytz.timezone(self.pool.get('res.users').browse(cr, uid, [uid])[0].tz) or pytz.utc).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-        'date_start'            : lambda self, cr, uid, context: pytz.utc.localize(datetime.today()).astimezone(pytz.timezone(self.pool.get('res.users').browse(cr, uid, [uid])[0].tz) or pytz.utc).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-        'date_end'              : lambda self, cr, uid, context: pytz.utc.localize(datetime.today()).astimezone(pytz.timezone(self.pool.get('res.users').browse(cr, uid, [uid])[0].tz) or pytz.utc).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        'date'                  : lambda self, cr, uid, context: datetime.utcnow().replace(tzinfo = pytz.utc).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        'date_start'            : lambda self, cr, uid, context: datetime.utcnow().replace(tzinfo = pytz.utc).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        'date_end'              : lambda self, cr, uid, context: datetime.utcnow().replace(tzinfo = pytz.utc).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
         'user_id'               : lambda obj, cr, uid, context: uid,
         'internal_repair'       : True,
     }
