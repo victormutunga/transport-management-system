@@ -53,31 +53,32 @@ class account_invoice(osv.osv):
     _inherit = "account.invoice"
     _columns = {
     'exced_credit': fields.boolean('Limite de Credito Excedido'),
-    'overdue_invoice': fields.boolean('Ignorar Factura Vencida', help='Si este campo esta Activo, esta Factura no Afectara el Credito del Cliente'),
+    'overdue_invoice': fields.boolean('Ignorar Credito', 
+        help="""Si este campo esta Activo, la Validacion de Credito para Clientes y las Facturas Vencidas, no afectara a esta Factura."""),
    # 'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True,states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Pricelist for current sales order", domain=[('type','=','sale')], change_default=True),
     'global_discount': fields.float('Descuento Global (%)', digits_compute= dp.get_precision('Account'), required=False),
-    'tipo_venta': fields.selection([('credit','Credito'),('cash','Contado')], 'Plazo'),
+    #'tipo_venta': fields.selection([('credit','Credito'),('cash','Contado')], 'Plazo'),
 
     }
 
     _defaults = {  
-        'tipo_venta': 'cash',
+    #    'tipo_venta': 'cash',
         }
      #### ON CHANGE CREDITO ####
-    def on_change_credito(self, cr, uid, ids, tipo_venta, partner_id, context=None):
-        res = {}
-        if not partner_id or not tipo_venta:
-            return {'value':{'tipo_venta':'cash'}}
-        partner_br = self.pool.get('res.partner').browse(cr, uid, partner_id, context=None)
-        if partner_br.is_company == False:
-            partner_br = partner_br.parent_id
-        if not partner_br.property_payment_term:
-            warning = {
-                        'title': '%s ' % (partner_br.name,),
-                        'message':'No tiene definido Plazo de Pago y solo podras Vender de Contado.\n Asigna Plazo ó Contacta al Administrador'}
-            return {'value':{'tipo_venta':'cash'},'warning':warning}
-        res.update({'payment_term':partner_br.property_payment_term.id})
-        return {'value':res}
+    # def on_change_credito(self, cr, uid, ids, tipo_venta, partner_id, context=None):
+    #     res = {}
+    #     if not partner_id:
+    #         return {'value':{'tipo_venta':'cash'}}
+    #     partner_br = self.pool.get('res.partner').browse(cr, uid, partner_id, context=None)
+    #     if partner_br.is_company == False:
+    #         partner_br = partner_br.parent_id
+    #     if not partner_br.property_payment_term:
+    #         warning = {
+    #                     'title': '%s ' % (partner_br.name,),
+    #                     'message':'No tiene definido Plazo de Pago y solo podras Vender de Contado.\n Asigna Plazo ó Contacta al Administrador'}
+    #         return {'value':{'tipo_venta':'cash'},'warning':warning}
+    #     res.update({'payment_term':partner_br.property_payment_term.id})
+    #     return {'value':res}
 
     def get_current_instance(self, cr, uid, id):
         lines = self.browse(cr,uid,id)
@@ -106,12 +107,31 @@ class account_invoice(osv.osv):
                 'title': title,
                 'message': message,
         }
-        
+
+        #cr.execute("select sum(amount_total) from tms_waybill where state='confirmed' and invoiced=False and partner_id=%s" % partner.id)
+        cr.execute("""select tw.id from tms_waybill as tw 
+            join account_invoice as aci
+            on aci.id=tw.invoice_id 
+            where tw.state='confirmed' 
+            and tw.partner_id=%s and aci.state='draft'""" % 
+            partner.id)
+        waybill_confirmed_cr = cr.fetchall()
+        waybill_confirmed_ids = []
+        if waybill_confirmed_cr:
+            waybill_confirmed_ids = [x[0] for x in waybill_confirmed_cr]
+        waybill_amount = 0.0
+        tms_waybill = self.pool.get('tms.waybill')
+        waybill_ids = tms_waybill.search(cr, uid, [('state','=','approved')])
+        if waybill_confirmed_ids:
+            waybill_ids = waybill_ids + waybill_confirmed_ids
+        for waybill in tms_waybill.browse(cr, uid, waybill_ids, context=None):
+            waybill_amount += waybill.amount_total
+
         credit_exc = 0.0
         if partner.credit == 0:
             credit_exc == 0.0
         elif partner.credit > 0.0:
-            credit_exc = partner.credit_limit - partner.credit
+            credit_exc = partner.credit_limit - (partner.credit+waybill_amount)
             if credit_exc < 0.0:
                 credit_exc = credit_exc * (-1)
 
@@ -125,7 +145,7 @@ class account_invoice(osv.osv):
             date = 'No se ah detectado Pago'
         result =  super(account_invoice, self).onchange_partner_id(cr, uid, ids, type, partner_id,\
             date_invoice, payment_term, partner_bank_id, company_id)
-        cadena = "Total a Cobrar: $ " +  str('{:,}'.format(partner.credit if partner.credit else 00)) +'   ' + '\nLimite de Credito: $ ' + str('{:,}'.format(partner.credit_limit if partner.credit_limit else 00 )) + '   '+ '\nCredito Excedido: $ ' + str('{:,}'.format(credit_exc if credit_exc else 00)) + '   ' + '\nFecha del Ultimo Pago: ' + date + '\n Le Recomendamos Realizar la Venta de Contado'
+        cadena = "Total a Cobrar: $ " +  str('{:,}'.format(partner.credit if partner.credit else 00)) +'   ' + '\nLimite de Credito: $ ' + str('{:,}'.format(partner.credit_limit if partner.credit_limit else 00 )) + '   '+ '\nCredito Excedido: $ ' + str('{:,}'.format(credit_exc if credit_exc else 00)) + '   ' + '\nFecha del Ultimo Pago: ' + date + '\n Le Recomendamos consultar al Administrador de Facturacion.'
         warning['message'] = message + str(cadena)
 
         date_act = datetime.now().strftime('%Y-%m-%d')
@@ -133,25 +153,27 @@ class account_invoice(osv.osv):
         invoice_overdue_ids = invoice_obj.search(cr, uid, [('date_due','<',date_act),('state','=','open'),('residual','>',0.0),('partner_id','=',partner.id),('type','=','out_invoice')])
         if invoice_overdue_ids:
             overdue_st = str(invoice_overdue_ids)
+            cr.execute("select number from account_invoice where id in %s",(tuple(invoice_overdue_ids),))
+            overdue_name_str = [ str(x[0]) for x in cr.fetchall()]
             warning_overdue = {
                         'title': "Error!",
-                        'message': "El Cliente %s tiene las Facturas Vencias con los IDS:\n %s \n Solicitar pago o Vender de Contado!!!" % (partner.name,overdue_st,),
+                        'message': "El Cliente %s tiene las Facturas Vencidas:\n %s \n Solicitar pago o activar el campo Ignorar Facturas Vencidas, de la ficha de Cliente." % (partner.name,overdue_name_str,),
                 }
             value_d = result.get('value',{})
-            value_d['tipo_venta']= 'cash'
+            #value_d['tipo_venta']= 'cash'
 
             return {'value': value_d, 'warning':warning_overdue}
 
         if partner.credit_limit < partner.credit:
             value_d = result.get('value',{})
             value_d['exced_credit']= True
-            value_d['tipo_venta']= 'cash'
+            #value_d['tipo_venta']= 'cash'
 
             return {'value': value_d, 'warning':warning}
         else:
             if partner.property_payment_term:
                 value_d = result.get('value',{})
-                value_d['tipo_venta']= 'credit'
+                #value_d['tipo_venta']= 'credit'
                 return {'value': value_d}
         return {'value': result.get('value',{})}
         
@@ -179,74 +201,94 @@ class account_invoice(osv.osv):
             #cr.execute("select sum(product_qty) from stock_move where picking_id=%s and product_id=%s", (picking_id,pr))
 
             ### VERIFICANDO LOS LIMITES DE CREDITO
+
             credit_exc = 0.0
             account_lines = 0
-            if order.tipo_venta == 'credit':
+            #if order.tipo_venta == 'credit':
+            if order.type == 'out_invoice':
+                ####### BUSCANDO LAS CARTAS PORTE PARA APLICAR LA RESTRICCION ######
+                cr.execute("""select tw.id from tms_waybill as tw 
+                join account_invoice as aci
+                on aci.id=tw.invoice_id 
+                where tw.state='confirmed' 
+                and tw.partner_id=%s and aci.state='draft'""" % 
+                partner_br.id)
+                waybill_confirmed_cr = cr.fetchall()
+                waybill_confirmed_ids = []
+                if waybill_confirmed_cr:
+                    waybill_confirmed_ids = [x[0] for x in waybill_confirmed_cr]
+                waybill_amount = 0.0
+                tms_waybill = self.pool.get('tms.waybill')
+                waybill_ids = tms_waybill.search(cr, uid, [('state','=','approved')])
+                if waybill_confirmed_ids:
+                    waybill_ids = waybill_ids + waybill_confirmed_ids
+                for waybill in tms_waybill.browse(cr, uid, waybill_ids, context=None):
+                    waybill_amount += waybill.amount_total
+                ##### END WAYBILL #####
 
-                if order.type == 'out_invoice':
-                    if order.payment_term:
-                        days = 0
-                        for line_p in order.payment_term.line_ids:
-                            days = line_p.days
-                            account_lines += 1
-                        if account_lines <= 1 and days == 0:
-                            contado = True
-                    ## Validando y Buscando Facturas Vencidas de Acuerdo a la Fecha de Vencimiento, el Estado y el monto pendiente > 0.0
-                    date_act = datetime.now().strftime('%Y-%m-%d')
-                    invoice_overdue_ids = invoice_obj.search(cr, uid, [('date_due','<',date_act),('state','=','open'),('residual','>',0.0),('partner_id','=',partner_br.id),('type','=','out_invoice'),('id','!=',ids[0])])
-                    invoice_ids = invoice_obj.search(cr, uid, [('date_invoice','<=',date_act),('state','=','open'),('residual','>',0.0),('partner_id','=',partner_br.id),('type','=','out_invoice'),('id','!=',ids[0])])
-                    
-                    if partner_br.credit_limit == 0.0:
-                        if contado == False:
-                            raise osv.except_osv(
-                                _('Error de Informacion! \n El Cliente %s ' % partner_br.name),
-                                _('No tiene Definido Limite de Credito se encuentra en 0.0\n Pague de Contado o Agregue un Credito') )
-                    # print "################################################## FACTURAS VENCIDAS", invoice_overdue_ids
+                if order.payment_term:
+                    days = 0
+                    for line_p in order.payment_term.line_ids:
+                        days = line_p.days
+                        account_lines += 1
+                    if account_lines <= 1 and days == 0:
+                        contado = True
+                ## Validando y Buscando Facturas Vencidas de Acuerdo a la Fecha de Vencimiento, el Estado y el monto pendiente > 0.0
+                date_act = datetime.now().strftime('%Y-%m-%d')
+                invoice_overdue_ids = invoice_obj.search(cr, uid, [('date_due','<',date_act),('state','=','open'),('residual','>',0.0),('partner_id','=',partner_br.id),('type','=','out_invoice'),('id','!=',ids[0])])
+                invoice_ids = invoice_obj.search(cr, uid, [('date_invoice','<=',date_act),('state','=','open'),('residual','>',0.0),('partner_id','=',partner_br.id),('type','=','out_invoice'),('id','!=',ids[0])])
+                
+                if partner_br.credit_limit == 0.0:
+                    if contado == False:
+                        raise osv.except_osv(
+                            _('Error de Informacion! \n El Cliente %s ' % partner_br.name),
+                            _('No tiene Definido Limite de Credito se encuentra en 0.0\n Agregue un Credito o active el campo Ignorar Credito') )
+                # print "################################################## FACTURAS VENCIDAS", invoice_overdue_ids
 
-                    # invoice_obj.write(cr, uid, invoice_overdue_ids, {'overdue_invoice':True})
+                # invoice_obj.write(cr, uid, invoice_overdue_ids, {'overdue_invoice':True})
 
-                    # raise osv.except_osv(
-                    #                     _('Flujo Interrumpido \n Las Facturas con los IDS %s estan Vencidas para el Cliente %s') % (invoice_overdue_ids, partner_br.name),
-                    #                     _(''))
-                    if invoice_overdue_ids:
-                        ### Aqui Trataremos de Alternar que puedan desmarcar esas Facturas para que Puedan Validar la Nueva y en caso de que no entonces arrojar el mensaje
-                        # overdue_ignored_ids = invoice_obj.search(cr, uid, [('overdue_invoice','=',False),('id','in',tuple(invoice_overdue_ids))])
-                        # # print ">>>>>>>>>>>> FACTURAS QUE NO ESTAN IGNORADAS", overdue_ignored_ids
-                        if partner_br.overdue_invoice == False:
-                            raise osv.except_osv(
-                                            _('Error de Validacion! \n Las Facturas con los IDS %s estan Vencidas para el Cliente %s') % (invoice_overdue_ids, partner_br.name),
-                                            _('Favor de solicitar pago o vender de contado') )
-                                            #_('Si necesita Omitir esta restriccion active el campo [Ignorar Facturas Vencidas] en la pestaña Contabilidad del Cliente') )
-                    #if invoice_ids:
-                    credit_total_partner = stock_to_invoice_amount + partner_br.credit
+                # raise osv.except_osv(
+                #                     _('Flujo Interrumpido \n Las Facturas con los IDS %s estan Vencidas para el Cliente %s') % (invoice_overdue_ids, partner_br.name),
+                #                     _(''))
+                if invoice_overdue_ids:
+                    ### Aqui Trataremos de Alternar que puedan desmarcar esas Facturas para que Puedan Validar la Nueva y en caso de que no entonces arrojar el mensaje
+                    # overdue_ignored_ids = invoice_obj.search(cr, uid, [('overdue_invoice','=',False),('id','in',tuple(invoice_overdue_ids))])
+                    # # print ">>>>>>>>>>>> FACTURAS QUE NO ESTAN IGNORADAS", overdue_ignored_ids
+                    if partner_br.overdue_invoice == False:
+                        raise osv.except_osv(
+                                        _('Error de Validacion! \n Las Facturas con los IDS %s estan Vencidas para el Cliente %s') % (invoice_overdue_ids, partner_br.name),
+                                        _('Favor de solicitar pago o active el campo Ignorar Facturas Vencidas, de la ficha del Cliente.') )
+                                        #_('Si necesita Omitir esta restriccion active el campo [Ignorar Facturas Vencidas] en la pestaña Contabilidad del Cliente') )
+                #if invoice_ids:
+                credit_total_partner = stock_to_invoice_amount + partner_br.credit + waybill_amount
 
-                    if credit_total_partner == 0:
-                        credit_exc = 0.0
-                    elif credit_total_partner > 0.0:
-                        credit_exc = partner_br.credit_limit - credit_total_partner
-                        if credit_exc < 0.0:
-                            credit_exc = credit_exc * (-1)
-                    if partner_br.credit_limit < credit_total_partner:
-                        if contado == False:
-                            raise osv.except_osv(
-                                    _('No se puede Confirmar !'),
-                                    _('El Cliente %s ah Excedido el Limite de Credito por la cantidad de %s \n Favor de solicitar pago o vender de contado' % (partner_br.name,str(credit_exc))))
+                if credit_total_partner == 0:
+                    credit_exc = 0.0
+                elif credit_total_partner > 0.0:
+                    credit_exc = partner_br.credit_limit - credit_total_partner
+                    if credit_exc < 0.0:
+                        credit_exc = credit_exc * (-1)
+                if partner_br.credit_limit < credit_total_partner:
+                    if contado == False:
+                        raise osv.except_osv(
+                                _('No se puede Confirmar !'),
+                                _('El Cliente %s ah Excedido el Limite de Credito por la cantidad de %s \n Favor de solicitar pago o active el campo Ignorar Credito' % (partner_br.name,str(credit_exc))))
 
-                        # future_credit = order.partner_id.credit + order.amount_total
-                        # if order.partner_id.credit_limit < future_credit:
-                        #     order.write({'exced_credit':True})
-                        # if order.partner_id.credit_limit < future_credit:
-                            # if contado == False:
-                            #     raise osv.except_osv(
-                            #         _('No se puede Confirmar !\n El Cliente %s ah Excedido el Limite de Credito con esta Venta'  % order.partner_id.name),
-                            #         _('Para autorizar Aumente el Limite de Credito'))
+                    # future_credit = order.partner_id.credit + order.amount_total
+                    # if order.partner_id.credit_limit < future_credit:
+                    #     order.write({'exced_credit':True})
+                    # if order.partner_id.credit_limit < future_credit:
+                        # if contado == False:
+                        #     raise osv.except_osv(
+                        #         _('No se puede Confirmar !\n El Cliente %s ah Excedido el Limite de Credito con esta Venta'  % order.partner_id.name),
+                        #         _('Para autorizar Aumente el Limite de Credito'))
             return  result
 account_invoice()
 
 
 class sale_order_extend_credit(osv.osv_memory):
     _name = 'sale.order.extend.credit'
-    _description = 'Asistente para Entender el Credito'
+    _description = 'Asistente para Extender el Credito'
     _columns = {
     'partner_id': fields.many2one('res.partner', 'Cliente', readonly=True),
     'credit': fields.float('Total a Cobrar', digits=(12,2), readonly=True),

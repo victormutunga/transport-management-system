@@ -26,26 +26,29 @@
     'name': 'Limite de Credito para Ventas',
     'version': '1',
     "author" : "Argil Consulting",
-    "category" : "TyP",
+    "category" : "TMS",
     'description': """
             Este modulo adapta la Facturacion Ligada con el campo Credito de Clientes.
             La Funcion Principal es que No se Pueda Validar Facturas por los siguiente Motivos:
                 - Si el Cliente Tiene Facturas Vencidas.
                     --> Aqui se Toma en Cuenta Si la Factura ya esta Vencida por el campo Fecha de Vencimiento.
                 - Si el Credito del Cliente Supera la Nueva Venta.
+                - Si el Cliente tiene Cartas Porte a Facturar se toma en cuenta el Saldo.
             Excepciones:
                 - Si el Pago es de Contado no afecta el Flujo.
-                - Si se necesita Omitir una Factura Vencida, activar el Campo Ignorar Factura Vencida en la pestaña Otra Informacion de cada Una.
-                - Se puede Aumentar el credito desde La Factura que se Intenta Validar, para ello, existe un Asistente de Extension de Credito, para hacer uso de este, activar la casilla Limite de Credito Excedido, de la pestaña Otra Informacion.
+                - Si se necesita Omitir una Factura Vencida, activar el Campo Ignorar Factura Vencida en la pestaña de cada Cliente.
                 - Los Usuarios Que podran hacer uso del Asistente Anterior deberan estar en el Grupo [Ventas / Permisos Especiales] y su contraseña de Usuario.
+            Seguridad:
+                - Existe un Grupo Llamado Ventas / Permisos Especiales. El cual puede cambiar la Venta a Contado y Continuar el Proceso ó Puede Omitir Facturas Vencidas en Clientes.
     """,
     "website" : "http://www.argil.mx",
     "license" : "AGPL-3",
-    "depends" : ["account","sale","purchase","account_voucher","account_accountant","crm","tms"],
+    "depends" : ["account","sale","purchase","account_voucher","account_accountant","tms"],
     "init_xml" : [],
     "demo_xml" : [],
     "update_xml" : [
                     "sale_view.xml",
+                    "tms_view.xml",
                     'security/ir.model.access.csv',
                     ],
     "installable" : True,
