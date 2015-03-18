@@ -206,6 +206,8 @@ class account_invoice(osv.osv):
             account_lines = 0
             #if order.tipo_venta == 'credit':
             if order.type == 'out_invoice':
+                if partner_br.overdue_invoice == True:
+                    return result
                 ####### BUSCANDO LAS CARTAS PORTE PARA APLICAR LA RESTRICCION ######
                 cr.execute("""select tw.id from tms_waybill as tw 
                 join account_invoice as aci
