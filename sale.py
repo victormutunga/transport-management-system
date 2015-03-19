@@ -121,7 +121,7 @@ class account_invoice(osv.osv):
             waybill_confirmed_ids = [x[0] for x in waybill_confirmed_cr]
         waybill_amount = 0.0
         tms_waybill = self.pool.get('tms.waybill')
-        waybill_ids = tms_waybill.search(cr, uid, [('state','=','approved')])
+        waybill_ids = tms_waybill.search(cr, uid, [('state','=','approved'),('partner_id','=',partner.id)])
         if waybill_confirmed_ids:
             waybill_ids = waybill_ids + waybill_confirmed_ids
         for waybill in tms_waybill.browse(cr, uid, waybill_ids, context=None):
@@ -221,7 +221,7 @@ class account_invoice(osv.osv):
                     waybill_confirmed_ids = [x[0] for x in waybill_confirmed_cr]
                 waybill_amount = 0.0
                 tms_waybill = self.pool.get('tms.waybill')
-                waybill_ids = tms_waybill.search(cr, uid, [('state','=','approved')])
+                waybill_ids = tms_waybill.search(cr, uid, [('state','=','approved'),('partner_id','=',partner.id)])
                 if waybill_confirmed_ids:
                     waybill_ids = waybill_ids + waybill_confirmed_ids
                 for waybill in tms_waybill.browse(cr, uid, waybill_ids, context=None):
@@ -241,7 +241,7 @@ class account_invoice(osv.osv):
                 invoice_ids = invoice_obj.search(cr, uid, [('date_invoice','<=',date_act),('state','=','open'),('residual','>',0.0),('partner_id','=',partner_br.id),('type','=','out_invoice'),('id','!=',ids[0])])
                 
                 if partner_br.credit_limit == 0.0:
-                    if contado == False:
+                    if order.overdue_invoice == False:
                         raise osv.except_osv(
                             _('Error de Informacion! \n El Cliente %s ' % partner_br.name),
                             _('No tiene Definido Limite de Credito se encuentra en 0.0\n Agregue un Credito o active el campo Ignorar Credito') )

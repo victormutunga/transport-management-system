@@ -100,7 +100,7 @@ class tms_waybill(osv.osv):
             waybill_confirmed_ids = [x[0] for x in waybill_confirmed_cr]
         waybill_amount = 0.0
         tms_waybill_obj = self.pool.get('tms.waybill')
-        waybill_ids = tms_waybill_obj.search(cr, uid, [('state','=','approved')])
+        waybill_ids = tms_waybill_obj.search(cr, uid, [('state','=','approved'),('partner_id','=',partner.id)])
         if waybill_confirmed_ids:
             waybill_ids = waybill_ids + waybill_confirmed_ids
         for waybill in tms_waybill_obj.browse(cr, uid, waybill_ids, context=None):
@@ -191,7 +191,7 @@ class tms_waybill(osv.osv):
                 waybill_confirmed_ids = [x[0] for x in waybill_confirmed_cr]
             waybill_amount = 0.0
             tms_waybill_obj = self.pool.get('tms.waybill')
-            waybill_ids = tms_waybill_obj.search(cr, uid, [('state','=','approved'),('id','!=',ids[0])])
+            waybill_ids = tms_waybill_obj.search(cr, uid, [('state','=','approved'),('id','!=',ids[0]),('partner_id','=',partner_br.id)])
             if waybill_confirmed_ids:
                 waybill_ids = waybill_ids + waybill_confirmed_ids
             for waybill in tms_waybill_obj.browse(cr, uid, waybill_ids, context=None):
@@ -229,8 +229,8 @@ class tms_waybill(osv.osv):
                                     _('Favor de solicitar  Pago o activar el Campo Ignorar Facturas Vencidas, de la ficha de Cliente.') )
                                     #_('Si necesita Omitir esta restriccion active el campo [Ignorar Facturas Vencidas] en la pestaña Contabilidad del Cliente') )
             #if invoice_ids:
-            credit_total_partner = stock_to_invoice_amount + partner_br.credit + waybill_amount
 
+            credit_total_partner = stock_to_invoice_amount + partner_br.credit + waybill_amount + order.amount_total
             if credit_total_partner == 0:
                 credit_exc = 0.0
             elif credit_total_partner > 0.0:
@@ -238,7 +238,7 @@ class tms_waybill(osv.osv):
                 if credit_exc < 0.0:
                     credit_exc = credit_exc * (-1)
             if partner_br.credit_limit < credit_total_partner:
-                if contado == False:
+                if order.overdue_invoice == False:
                     raise osv.except_osv(
                             _('No se puede Confirmar !'),
                             _('El Cliente %s ah Excedido el Limite de Credito por la cantidad de %s \n Favor de solicitar pago o active el campo Ignorar Credito.' % (partner_br.name,str(credit_exc))))
@@ -246,10 +246,99 @@ class tms_waybill(osv.osv):
             return  result
 
     def action_confirm(self, cr, uid, ids, context=None):
+        contado = False
+        invoice_obj = self.pool.get('account.invoice')
+        for order in self.browse(cr, uid, ids, context=context):
+            ### REVISANDO ALBARANES POR FACTURAR ###
+            partner_id = order.partner_id.id
+            partner_br = order.partner_id
+            if order.partner_id.is_company == False:
+                partner_id = order.partner_id.parent_id.id
+                partner_br = order.partner_id.parent_id
+            stock_to_invoice_amount = 0.0
+            stock_obj = self.pool.get('stock.picking.out')
+
+            ### VERIFICANDO LOS LIMITES DE CREDITO
+            if order.overdue_invoice:
+                return result
+            ###
+
+            credit_exc = 0.0
+            account_lines = 0
+            ###### REVISANDO LOS VIAJES SI ESTAN FINALIZADOS ENTONCES PERMITE VALIDAR ######
+
+            # if order.tipo_venta == 'credit':
+            ####### BUSCANDO LAS CARTAS PORTE PARA APLICAR LA RESTRICCION ######
+            cr.execute("""select tw.id from tms_waybill as tw 
+            join account_invoice as aci
+            on aci.id=tw.invoice_id 
+            where tw.state='confirmed' 
+            and tw.partner_id=%s and aci.state='draft'""" % 
+            partner_br.id)
+            waybill_confirmed_cr = cr.fetchall()
+            waybill_confirmed_ids = []
+            if waybill_confirmed_cr:
+                waybill_confirmed_ids = [x[0] for x in waybill_confirmed_cr]
+            waybill_amount = 0.0
+            tms_waybill_obj = self.pool.get('tms.waybill')
+            waybill_ids = tms_waybill_obj.search(cr, uid, [('state','=','approved'),('id','!=',ids[0]),('partner_id','=',partner_br.id)])
+            if waybill_confirmed_ids:
+                waybill_ids = waybill_ids + waybill_confirmed_ids
+            for waybill in tms_waybill_obj.browse(cr, uid, waybill_ids, context=None):
+                waybill_amount += waybill.amount_total
+            ##### END WAYBILL #####
+
+            if order.payment_term:
+                days = 0
+                for line_p in order.payment_term.line_ids:
+                    days = line_p.days
+                    account_lines += 1
+                if account_lines <= 1 and days == 0:
+                    contado = True
+            ## Validando y Buscando Facturas Vencidas de Acuerdo a la Fecha de Vencimiento, el Estado y el monto pendiente > 0.0
+            date_act = datetime.now().strftime('%Y-%m-%d')
+            invoice_overdue_ids = invoice_obj.search(cr, uid, [('date_due','<',date_act),('state','=','open'),('residual','>',0.0),('partner_id','=',partner_br.id),('type','=','out_invoice'),('id','!=',ids[0])])
+            invoice_ids = invoice_obj.search(cr, uid, [('date_invoice','<=',date_act),('state','=','open'),('residual','>',0.0),('partner_id','=',partner_br.id),('type','=','out_invoice'),('id','!=',ids[0])])
+            
+            if partner_br.credit_limit == 0.0:
+                if contado == False:
+                    raise osv.except_osv(
+                        _('Error de Informacion! \n El Cliente %s ' % partner_br.name),
+                        _('No tiene Definido Limite de Credito se encuentra en 0.0\n Agregue un Credito o Active el campo Ignorar Credito') )
+
+            if invoice_overdue_ids:
+                ### Aqui Trataremos de Alternar que puedan desmarcar esas Facturas para que Puedan Validar la Nueva y en caso de que no entonces arrojar el mensaje
+                # overdue_ignored_ids = invoice_obj.search(cr, uid, [('overdue_invoice','=',False),('id','in',tuple(invoice_overdue_ids))])
+                # # print ">>>>>>>>>>>> FACTURAS QUE NO ESTAN IGNORADAS", overdue_ignored_ids
+                if partner_br.overdue_invoice == False:
+                    cr.execute("select number from account_invoice where id in %s",(tuple(invoice_overdue_ids),))
+                    overdue_name_str = [ str(x[0]) for x in cr.fetchall()]
+
+                    raise osv.except_osv(
+                                    _('Error de Validacion! \n Las Facturas %s estan Vencidas para el Cliente %s') % (overdue_name_str, partner_br.name),
+                                    _('Favor de solicitar  Pago o activar el Campo Ignorar Facturas Vencidas, de la ficha de Cliente.') )
+                                    #_('Si necesita Omitir esta restriccion active el campo [Ignorar Facturas Vencidas] en la pestaña Contabilidad del Cliente') )
+            #if invoice_ids:
+
+            credit_total_partner = stock_to_invoice_amount + partner_br.credit + waybill_amount + order.amount_total
+            if credit_total_partner == 0:
+                credit_exc = 0.0
+            elif credit_total_partner > 0.0:
+                credit_exc = partner_br.credit_limit - credit_total_partner
+                if credit_exc < 0.0:
+                    credit_exc = credit_exc * (-1)
+            if partner_br.credit_limit < credit_total_partner:
+                if order.overdue_invoice == False:
+                    raise osv.except_osv(
+                            _('No se puede Confirmar !'),
+                            _('El Cliente %s ah Excedido el Limite de Credito por la cantidad de %s \n Favor de solicitar pago o active el campo Ignorar Credito.' % (partner_br.name,str(credit_exc))))
+
+        # for rec in self.browse(cr, uid, ids, context=None):
+            if order.invoice_id:
+                order.invoice_id.write({'overdue_invoice': order.overdue_invoice,}) #'tipo_venta': rec.tipo_venta})
+
         result = super(tms_waybill, self).action_confirm(cr, uid, ids, context)
-        for rec in self.browse(cr, uid, ids, context=None):
-            if rec.invoice_id:
-                rec.invoice_id.write({'overdue_invoice': rec.overdue_invoice,}) #'tipo_venta': rec.tipo_venta})
+
         return result
 
 class tms_waybill_invoice(osv.osv):
