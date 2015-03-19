@@ -195,7 +195,10 @@ class tms_waybill(osv.osv):
             tms_waybill_obj = self.pool.get('tms.waybill')
 
             waybill_confirmed_ids = tms_waybill_obj.search(cr, uid, [('state','=','confirmed'),('invoice_paid','=',False),('partner_id','=',partner_br.id)])
-
+            for waybll in tms_waybill_obj.browse(cr, uid, waybill_confirmed_ids, context=None):
+                if waybll.invoice_id.state == 'open':
+                    index_l = waybill_confirmed_ids.index(waybll.id)
+                    waybill_confirmed_ids.pop(index_l)
             waybill_amount = 0.0
             waybill_ids = tms_waybill_obj.search(cr, uid, [('state','=','approved'),('id','!=',ids[0]),('partner_id','=',partner_br.id)])
             if waybill_confirmed_ids:
@@ -287,6 +290,10 @@ class tms_waybill(osv.osv):
             #     waybill_confirmed_ids = [x[0] for x in waybill_confirmed_cr]
             tms_waybill_obj = self.pool.get('tms.waybill')
             waybill_confirmed_ids = tms_waybill_obj.search(cr, uid, [('state','=','confirmed'),('invoice_paid','=',False),('partner_id','=',partner_br.id)])
+            for waybll in tms_waybill_obj.browse(cr, uid, waybill_confirmed_ids, context=None):
+                if waybll.invoice_id.state == 'open':
+                    index_l = waybill_confirmed_ids.index(waybll.id)
+                    waybill_confirmed_ids.pop(index_l)
             waybill_amount = 0.0
             waybill_ids = tms_waybill_obj.search(cr, uid, [('state','=','approved'),('id','!=',ids[0]),('partner_id','=',partner_br.id)])
             if waybill_confirmed_ids:
