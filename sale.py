@@ -210,6 +210,10 @@ class account_invoice(osv.osv):
             if order.type == 'out_invoice':
                 if partner_br.overdue_invoice == True:
                     return result
+                waybill_invoice_ids = []
+                ####### Cartas Porte de la Factura ########
+                for waybll in order.waybill_ids:
+                    waybill_invoice_ids.append(waybll.id)
                 # ####### BUSCANDO LAS CARTAS PORTE PARA APLICAR LA RESTRICCION ######
                 # cr.execute("""select tw.id from tms_waybill as tw 
                 # join account_invoice as aci
@@ -223,7 +227,7 @@ class account_invoice(osv.osv):
                 #     waybill_confirmed_ids = [x[0] for x in waybill_confirmed_cr]
                 tms_waybill = self.pool.get('tms.waybill')
 
-                waybill_confirmed_ids = tms_waybill.search(cr, uid, [('state','=','confirmed'),('invoice_paid','=',False),('partner_id','=',partner_br.id)])
+                waybill_confirmed_ids = tms_waybill.search(cr, uid, [('state','=','confirmed'),('invoice_paid','=',False),('partner_id','=',partner_br.id),('id','!=',tuple(waybill_invoice_ids))])
 
                 waybill_amount = 0.0
                 
