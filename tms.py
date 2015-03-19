@@ -88,16 +88,17 @@ class tms_waybill(osv.osv):
         }
 
         #cr.execute("select sum(amount_total) from tms_waybill where state='confirmed' and invoiced=False and partner_id=%s" % partner.id)
-        cr.execute("""select tw.id from tms_waybill as tw 
-            join account_invoice as aci
-            on aci.id=tw.invoice_id 
-            where tw.state='confirmed' 
-            and tw.partner_id=%s and aci.state='draft'""" % 
-            partner.id)
-        waybill_confirmed_cr = cr.fetchall()
-        waybill_confirmed_ids = []
-        if waybill_confirmed_cr:
-            waybill_confirmed_ids = [x[0] for x in waybill_confirmed_cr]
+        # cr.execute("""select tw.id from tms_waybill as tw 
+        #     join account_invoice as aci
+        #     on aci.id=tw.invoice_id 
+        #     where tw.state='confirmed' 
+        #     and tw.partner_id=%s and aci.state='draft'""" % 
+        #     partner.id)
+        # waybill_confirmed_cr = cr.fetchall()
+        # waybill_confirmed_ids = []
+        # if waybill_confirmed_cr:
+        #     waybill_confirmed_ids = [x[0] for x in waybill_confirmed_cr]
+        waybill_confirmed_ids = tms_waybill.search(cr, uid, [('state','=','confirmed'),('invoice_paid','=',False),('partner_id','=',partner.id)])
         waybill_amount = 0.0
         tms_waybill_obj = self.pool.get('tms.waybill')
         waybill_ids = tms_waybill_obj.search(cr, uid, [('state','=','approved'),('partner_id','=',partner.id)])
@@ -179,16 +180,18 @@ class tms_waybill(osv.osv):
 
             # if order.tipo_venta == 'credit':
             ####### BUSCANDO LAS CARTAS PORTE PARA APLICAR LA RESTRICCION ######
-            cr.execute("""select tw.id from tms_waybill as tw 
-            join account_invoice as aci
-            on aci.id=tw.invoice_id 
-            where tw.state='confirmed' 
-            and tw.partner_id=%s and aci.state='draft'""" % 
-            partner_br.id)
-            waybill_confirmed_cr = cr.fetchall()
-            waybill_confirmed_ids = []
-            if waybill_confirmed_cr:
-                waybill_confirmed_ids = [x[0] for x in waybill_confirmed_cr]
+            # cr.execute("""select tw.id from tms_waybill as tw 
+            # join account_invoice as aci
+            # on aci.id=tw.invoice_id 
+            # where tw.state='confirmed' 
+            # and tw.partner_id=%s and aci.state='draft'""" % 
+            # partner_br.id)
+            # waybill_confirmed_cr = cr.fetchall()
+            # waybill_confirmed_ids = []
+            # if waybill_confirmed_cr:
+            #     waybill_confirmed_ids = [x[0] for x in waybill_confirmed_cr]
+            waybill_confirmed_ids = tms_waybill.search(cr, uid, [('state','=','confirmed'),('invoice_paid','=',False),('partner_id','=',partner_br.id)])
+
             waybill_amount = 0.0
             tms_waybill_obj = self.pool.get('tms.waybill')
             waybill_ids = tms_waybill_obj.search(cr, uid, [('state','=','approved'),('id','!=',ids[0]),('partner_id','=',partner_br.id)])
@@ -269,16 +272,17 @@ class tms_waybill(osv.osv):
 
             # if order.tipo_venta == 'credit':
             ####### BUSCANDO LAS CARTAS PORTE PARA APLICAR LA RESTRICCION ######
-            cr.execute("""select tw.id from tms_waybill as tw 
-            join account_invoice as aci
-            on aci.id=tw.invoice_id 
-            where tw.state='confirmed' 
-            and tw.partner_id=%s and aci.state='draft'""" % 
-            partner_br.id)
-            waybill_confirmed_cr = cr.fetchall()
-            waybill_confirmed_ids = []
-            if waybill_confirmed_cr:
-                waybill_confirmed_ids = [x[0] for x in waybill_confirmed_cr]
+            # cr.execute("""select tw.id from tms_waybill as tw 
+            # join account_invoice as aci
+            # on aci.id=tw.invoice_id 
+            # where tw.state='confirmed' 
+            # and tw.partner_id=%s and aci.state='draft'""" % 
+            # partner_br.id)
+            # waybill_confirmed_cr = cr.fetchall()
+            # waybill_confirmed_ids = []
+            # if waybill_confirmed_cr:
+            #     waybill_confirmed_ids = [x[0] for x in waybill_confirmed_cr]
+            waybill_confirmed_ids = tms_waybill.search(cr, uid, [('state','=','confirmed'),('invoice_paid','=',False),('partner_id','=',partner_br.id)])
             waybill_amount = 0.0
             tms_waybill_obj = self.pool.get('tms.waybill')
             waybill_ids = tms_waybill_obj.search(cr, uid, [('state','=','approved'),('id','!=',ids[0]),('partner_id','=',partner_br.id)])
