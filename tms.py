@@ -98,9 +98,11 @@ class tms_waybill(osv.osv):
         # waybill_confirmed_ids = []
         # if waybill_confirmed_cr:
         #     waybill_confirmed_ids = [x[0] for x in waybill_confirmed_cr]
+        tms_waybill_obj = self.pool.get('tms.waybill')
+        
         waybill_confirmed_ids = tms_waybill_obj.search(cr, uid, [('state','=','confirmed'),('invoice_paid','=',False),('partner_id','=',partner.id)])
         waybill_amount = 0.0
-        tms_waybill_obj = self.pool.get('tms.waybill')
+        
         waybill_ids = tms_waybill_obj.search(cr, uid, [('state','=','approved'),('partner_id','=',partner.id)])
         if waybill_confirmed_ids:
             waybill_ids = waybill_ids + waybill_confirmed_ids
@@ -190,10 +192,11 @@ class tms_waybill(osv.osv):
             # waybill_confirmed_ids = []
             # if waybill_confirmed_cr:
             #     waybill_confirmed_ids = [x[0] for x in waybill_confirmed_cr]
+            tms_waybill_obj = self.pool.get('tms.waybill')
+
             waybill_confirmed_ids = tms_waybill_obj.search(cr, uid, [('state','=','confirmed'),('invoice_paid','=',False),('partner_id','=',partner_br.id)])
 
             waybill_amount = 0.0
-            tms_waybill_obj = self.pool.get('tms.waybill')
             waybill_ids = tms_waybill_obj.search(cr, uid, [('state','=','approved'),('id','!=',ids[0]),('partner_id','=',partner_br.id)])
             if waybill_confirmed_ids:
                 waybill_ids = waybill_ids + waybill_confirmed_ids
@@ -282,9 +285,9 @@ class tms_waybill(osv.osv):
             # waybill_confirmed_ids = []
             # if waybill_confirmed_cr:
             #     waybill_confirmed_ids = [x[0] for x in waybill_confirmed_cr]
+            tms_waybill_obj = self.pool.get('tms.waybill')
             waybill_confirmed_ids = tms_waybill_obj.search(cr, uid, [('state','=','confirmed'),('invoice_paid','=',False),('partner_id','=',partner_br.id)])
             waybill_amount = 0.0
-            tms_waybill_obj = self.pool.get('tms.waybill')
             waybill_ids = tms_waybill_obj.search(cr, uid, [('state','=','approved'),('id','!=',ids[0]),('partner_id','=',partner_br.id)])
             if waybill_confirmed_ids:
                 waybill_ids = waybill_ids + waybill_confirmed_ids
