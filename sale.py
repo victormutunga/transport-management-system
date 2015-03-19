@@ -221,7 +221,7 @@ class account_invoice(osv.osv):
                     waybill_confirmed_ids = [x[0] for x in waybill_confirmed_cr]
                 waybill_amount = 0.0
                 tms_waybill = self.pool.get('tms.waybill')
-                waybill_ids = tms_waybill.search(cr, uid, [('state','=','approved'),('partner_id','=',partner.id)])
+                waybill_ids = tms_waybill.search(cr, uid, [('state','=','approved'),('partner_id','=',partner_br.id)])
                 if waybill_confirmed_ids:
                     waybill_ids = waybill_ids + waybill_confirmed_ids
                 for waybill in tms_waybill.browse(cr, uid, waybill_ids, context=None):
