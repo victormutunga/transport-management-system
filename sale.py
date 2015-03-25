@@ -182,9 +182,9 @@ class account_invoice(osv.osv):
 
 
     def invoice_validate(self, cr, uid, ids, context=None):
-        result =  super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
         contado = False
         invoice_obj = self.pool.get('account.invoice')
+        print "########## VALIDANDO >>>>>>>>> "
         for order in self.browse(cr, uid, ids, context=context):
             ### REVISANDO ALBARANES POR FACTURAR ###
             partner_id = order.partner_id.id
@@ -208,8 +208,9 @@ class account_invoice(osv.osv):
             account_lines = 0
             #if order.tipo_venta == 'credit':
             if order.type == 'out_invoice':
-                if partner_br.overdue_invoice == True:
-                    return result
+                print "########### FACTURA CLIENTE >>>>>>>>>>> "
+                if order.overdue_invoice == True:
+                    return super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
                 waybill_invoice_ids = []
                 ####### Cartas Porte de la Factura ########
                 for waybll in order.waybill_ids:
@@ -294,6 +295,8 @@ class account_invoice(osv.osv):
                         #     raise osv.except_osv(
                         #         _('No se puede Confirmar !\n El Cliente %s ah Excedido el Limite de Credito con esta Venta'  % order.partner_id.name),
                         #         _('Para autorizar Aumente el Limite de Credito'))
+            result =  super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
+
             return  result
 account_invoice()
 
