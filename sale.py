@@ -184,7 +184,7 @@ class account_invoice(osv.osv):
     def invoice_validate(self, cr, uid, ids, context=None):
         contado = False
         invoice_obj = self.pool.get('account.invoice')
-        print "########## VALIDANDO >>>>>>>>> "
+        # print "########## VALIDANDO >>>>>>>>> "
         for order in self.browse(cr, uid, ids, context=context):
             ### REVISANDO ALBARANES POR FACTURAR ###
             partner_id = order.partner_id.id
@@ -208,7 +208,7 @@ class account_invoice(osv.osv):
             account_lines = 0
             #if order.tipo_venta == 'credit':
             if order.type == 'out_invoice':
-                print "########### FACTURA CLIENTE >>>>>>>>>>> "
+                # print "########### FACTURA CLIENTE >>>>>>>>>>> "
                 if order.overdue_invoice == True:
                     return super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
                 waybill_invoice_ids = []
