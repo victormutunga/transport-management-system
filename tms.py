@@ -166,7 +166,7 @@ class tms_waybill(osv.osv):
         result =  super(tms_waybill, self).action_approve(cr, uid, ids, context=context)
         contado = False
         invoice_obj = self.pool.get('account.invoice')
-        print "############# APROBANDO CARTA PORTE >>>>>>>>"
+        # print "############# APROBANDO CARTA PORTE >>>>>>>>"
         for order in self.browse(cr, uid, ids, context=context):
             ### REVISANDO ALBARANES POR FACTURAR ###
             partner_id = order.partner_id.id
@@ -201,21 +201,21 @@ class tms_waybill(osv.osv):
             tms_waybill_obj = self.pool.get('tms.waybill')
 
             waybill_confirmed_ids = tms_waybill_obj.search(cr, uid, [('state','=','confirmed'),('invoice_paid','=',False),('partner_id','=',partner_br.id)])
-            print "######## WAYBILL CONFIRMED IDS >>>>>>>> ", waybill_confirmed_ids
+            # print "######## WAYBILL CONFIRMED IDS >>>>>>>> ", waybill_confirmed_ids
 
             for waybll in tms_waybill_obj.browse(cr, uid, waybill_confirmed_ids, context=None):
                 if waybll.invoice_id.state in ('open','paid'):
                     index_l = waybill_confirmed_ids.index(waybll.id)
                     waybill_confirmed_ids.pop(index_l)
-            print "########### WAYBILL FINALES A TOMAR EN CUENTA >>>>>> ", waybill_confirmed_ids
+            # print "########### WAYBILL FINALES A TOMAR EN CUENTA >>>>>> ", waybill_confirmed_ids
             waybill_amount = 0.0
             waybill_ids = tms_waybill_obj.search(cr, uid, [('state','=','approved'),('id','!=',ids[0]),('partner_id','=',partner_br.id)])
-            print "######### WAYBILLL IDS APROBADAS >>>>>> ", waybill_ids
+            # print "######### WAYBILLL IDS APROBADAS >>>>>> ", waybill_ids
             if waybill_confirmed_ids:
                 waybill_ids = waybill_ids + waybill_confirmed_ids
             for waybill in tms_waybill_obj.browse(cr, uid, waybill_ids, context=None):
                 waybill_amount += waybill.amount_total
-            print "################ WAYBILL AMOUNT >>>>> ", waybill_amount
+            # print "################ WAYBILL AMOUNT >>>>> ", waybill_amount
             ##### END WAYBILL #####
 
             if order.payment_term:
@@ -307,7 +307,7 @@ class tms_waybill(osv.osv):
                     waybill_confirmed_ids.pop(index_l)
             waybill_amount = 0.0
             waybill_ids = tms_waybill_obj.search(cr, uid, [('state','=','approved'),('id','!=',ids[0]),('partner_id','=',partner_br.id)])
-            print "######### WAYBILLL IDS APROBADAS >>>>>> ", waybill_ids
+            # print "######### WAYBILLL IDS APROBADAS >>>>>> ", waybill_ids
             if waybill_confirmed_ids:
                 waybill_ids = waybill_ids + waybill_confirmed_ids
             for waybill in tms_waybill_obj.browse(cr, uid, waybill_ids, context=None):
