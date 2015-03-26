@@ -102,9 +102,11 @@ class tms_waybill(osv.osv):
         
         waybill_confirmed_ids = tms_waybill_obj.search(cr, uid, [('state','=','confirmed'),('invoice_paid','=',False),('partner_id','=',partner.id)])
         waybill_amount = 0.0
+        if ids:
+            waybill_ids = tms_waybill_obj.search(cr, uid, [('state','=','approved'),('partner_id','=',partner.id),('id','!=',ids[0])])
+        else:
+            waybill_ids = tms_waybill_obj.search(cr, uid, [('state','=','approved'),('partner_id','=',partner.id)])
 
-        waybill_ids = tms_waybill_obj.search(cr, uid, [('state','=','approved'),('partner_id','=',partner.id),('id','!=',ids[0])])
-        
         if waybill_confirmed_ids:
             waybill_ids = waybill_ids + waybill_confirmed_ids
         for waybll in tms_waybill_obj.browse(cr, uid, waybill_confirmed_ids, context=None):
