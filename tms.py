@@ -144,7 +144,7 @@ class tms_waybill(osv.osv):
             overdue_name_str = [ str(x[0]) for x in cr.fetchall()]
             warning_overdue = {
                         'title': "Error!",
-                        'message': "El Cliente %s tiene las Facturas Vencias :\n %s \n Solicitar pago o active el campo Ignorar Facturas Vencidas, de la ficha del Cliente." % (partner.name,overdue_name_str,),
+                        'message': "El Cliente %s tiene las Facturas Vencidas :\n %s \n Solicitar pago o active el campo Ignorar Facturas Vencidas, de la ficha del Cliente." % (partner.name,overdue_name_str,),
                 }
             value_d = result.get('value',{})
             #value_d['tipo_venta']= 'credit'
