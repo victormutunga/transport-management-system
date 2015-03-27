@@ -122,6 +122,9 @@ class account_invoice(osv.osv):
         tms_waybill = self.pool.get('tms.waybill')
         waybill_confirmed_ids = tms_waybill.search(cr, uid, [('state','=','confirmed'),('invoice_paid','=',False),('partner_id','=',partner.id)])
         waybill_amount = 0.0
+
+        waybill_ids = tms_waybill.search(cr, uid, [('state','=','approved'),('partner_id','=',partner.id)])
+
         if waybill_confirmed_ids:
             cr.execute("""select tw.id from tms_waybill as tw 
                     join account_invoice as aci
@@ -134,9 +137,8 @@ class account_invoice(osv.osv):
             if waybill_confirmed_cr:
                 waybill_confirmed_ids = [x[0] for x in waybill_confirmed_cr]
 
-        waybill_ids = tms_waybill.search(cr, uid, [('state','=','approved'),('partner_id','=',partner.id)])
-        if waybill_confirmed_ids:
             waybill_ids = waybill_ids + waybill_confirmed_ids
+
         for waybill in tms_waybill.browse(cr, uid, waybill_ids, context=None):
             waybill_amount += waybill.amount_total
 
@@ -242,6 +244,7 @@ class account_invoice(osv.osv):
                 waybill_confirmed_ids = tms_waybill.search(cr, uid, [('state','=','confirmed'),('invoice_paid','=',False),('partner_id','=',partner_br.id),('id','!=',tuple(waybill_invoice_ids))])
                 # print "############## WAYBILL CONFIRMED SEARCH IDS >>>>>>>> ", waybill_confirmed_ids
                 waybill_amount = 0.0
+                waybill_ids = tms_waybill.search(cr, uid, [('state','=','approved'),('partner_id','=',partner_br.id)])
                 if waybill_confirmed_ids:
                     cr.execute("""select tw.id from tms_waybill as tw 
                     join account_invoice as aci
@@ -254,8 +257,6 @@ class account_invoice(osv.osv):
                     if waybill_confirmed_cr:
                         waybill_confirmed_ids = [x[0] for x in waybill_confirmed_cr]
                 # print "################ WAYBILL CONFIRMED IDS FINALLLLL >>>>>>", waybill_confirmed_ids
-                waybill_ids = tms_waybill.search(cr, uid, [('state','=','approved'),('partner_id','=',partner_br.id)])
-                if waybill_confirmed_ids:
                     waybill_ids = waybill_ids + waybill_confirmed_ids
                 for waybill in tms_waybill.browse(cr, uid, waybill_ids, context=None):
                     waybill_amount += waybill.amount_total
