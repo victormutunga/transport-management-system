@@ -362,26 +362,28 @@ class tms_waybill(osv.osv):
                             _('El Cliente %s ah Excedido el Limite de Credito por la cantidad de %s \n Favor de solicitar pago o active el campo Ignorar Credito.' % (partner_br.name,str(credit_exc))))
 
         # for rec in self.browse(cr, uid, ids, context=None):
-            if order.invoice_id:
-                order.invoice_id.write({'overdue_invoice': order.overdue_invoice,}) #'tipo_venta': rec.tipo_venta})
+            # if order.invoice_id:
+            #     order.invoice_id.write({'overdue_invoice': order.overdue_invoice,}) #'tipo_venta': rec.tipo_venta})
 
         result = super(tms_waybill, self).action_confirm(cr, uid, ids, context)
-
+        for rec in self.browse(cr, uid, ids, context=None):
+            if rec.invoice_id:
+                rec.invoice_id.write({'overdue_invoice': rec.overdue_invoice,})
         return result
 
-class tms_waybill_invoice(osv.osv):
-    _name = 'tms.waybill.invoice'
-    _inherit ='tms.waybill.invoice'
-    _columns = {
-        }
+# class tms_waybill_invoice(osv.osv):
+#     _name = 'tms.waybill.invoice'
+#     _inherit ='tms.waybill.invoice'
+#     _columns = {
+#         }
 
-    _defaults = {
-        }
-    def makeWaybillInvoices(self, cr, uid, ids, context=None):
-        result = super(tms_waybill_invoice, self).makeWaybillInvoices(cr, uid, ids, context)
-        tms_waybill_obj = self.pool.get('tms.waybill')
-        active_ids = context.get('active_ids',[])
-        for waybill in tms_waybill_obj.browse(cr, uid, active_ids, context=None):
-            if waybill.invoice_id:
-                waybill.invoice_id.write({'overdue_invoice': waybill.overdue_invoice,}) #'tipo_venta': waybill.tipo_venta})
-        return result
+#     _defaults = {
+#         }
+#     def makeWaybillInvoices(self, cr, uid, ids, context=None):
+#         result = super(tms_waybill_invoice, self).makeWaybillInvoices(cr, uid, ids, context)
+#         tms_waybill_obj = self.pool.get('tms.waybill')
+#         active_ids = context.get('active_ids',[])
+#         for waybill in tms_waybill_obj.browse(cr, uid, active_ids, context=None):
+#             if waybill.invoice_id:
+#                 waybill.invoice_id.write({'overdue_invoice': waybill.overdue_invoice,}) #'tipo_venta': waybill.tipo_venta})
+#         return result

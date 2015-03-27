@@ -227,11 +227,21 @@ class account_invoice(osv.osv):
                 # if waybill_confirmed_cr:
                 #     waybill_confirmed_ids = [x[0] for x in waybill_confirmed_cr]
                 tms_waybill = self.pool.get('tms.waybill')
-
+                # print "################ WAYBILL OF INVOICE IDS >>>>> ", waybill_invoice_ids
                 waybill_confirmed_ids = tms_waybill.search(cr, uid, [('state','=','confirmed'),('invoice_paid','=',False),('partner_id','=',partner_br.id),('id','!=',tuple(waybill_invoice_ids))])
-
+                # print "############## WAYBILL CONFIRMED SEARCH IDS >>>>>>>> ", waybill_confirmed_ids
                 waybill_amount = 0.0
-                
+                cr.execute("""select tw.id from tms_waybill as tw 
+                join account_invoice as aci
+                on aci.id=tw.invoice_id 
+                where tw.state='confirmed' 
+                and aci.state in ('draft','cancel') and tw.id in %s""", 
+                (tuple(waybill_confirmed_ids),))
+                waybill_confirmed_cr = cr.fetchall()
+                waybill_confirmed_ids = []
+                if waybill_confirmed_cr:
+                    waybill_confirmed_ids = [x[0] for x in waybill_confirmed_cr]
+                # print "################ WAYBILL CONFIRMED IDS FINALLLLL >>>>>>", waybill_confirmed_ids
                 waybill_ids = tms_waybill.search(cr, uid, [('state','=','approved'),('partner_id','=',partner_br.id)])
                 if waybill_confirmed_ids:
                     waybill_ids = waybill_ids + waybill_confirmed_ids
