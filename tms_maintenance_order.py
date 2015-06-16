@@ -813,21 +813,27 @@ class tms_maintenance_order(osv.Model):
     _order = 'date, name'
 
     def _check_unique_draft_open_state_per_vehicle(self, cr, uid, ids, context=None):
-        for record in self.browse(cr, uid, ids, context=context):
-            res = self.search(cr, uid, [('unit_id','=',record.unit_id.id),('state','in',('draft','open')),('shop_id','=',record.shop_id.id)])
-            return not(res and res[0] and res[0] != record.id and record.state in ('draft','open'))
+        val = self.pool.get('ir.config_parameter').get_param(cr, uid, 'tms_maint_restrict_more_than_one_service_order_in_draft_open_state', context=context)
+        restrict = int(val) or 0
+        if restrict:
+            for record in self.browse(cr, uid, ids, context=context):
+                res = self.search(cr, uid, [('unit_id','=',record.unit_id.id),('state','in',('draft','open')),('shop_id','=',record.shop_id.id)])
+                return not(res and res[0] and res[0] != record.id and record.state in ('draft','open'))
         return True
 
     def _check_unique_released_state_per_vehicle(self, cr, uid, ids, context=None):
-        for record in self.browse(cr, uid, ids, context=context):
-            res = self.search(cr, uid, [('unit_id','=',record.unit_id.id),('state','=','released'),('shop_id','=',record.shop_id.id)])
-            return not(res and res[0] and res[0] != record.id and record.state=='released')
+        val = self.pool.get('ir.config_parameter').get_param(cr, uid, 'tms_maint_restrict_more_than_one_service_order_in_released_state', context=context)
+        restrict = int(val) or 0
+        if restrict:
+            for record in self.browse(cr, uid, ids, context=context):
+                res = self.search(cr, uid, [('unit_id','=',record.unit_id.id),('state','=','released'),('shop_id','=',record.shop_id.id)])
+                return not(res and res[0] and res[0] != record.id and record.state=='released')
         return True
 
     
     _constraints = [
         (_check_unique_draft_open_state_per_vehicle, 'Error ! You can''t have more than one Service Order in Draft / Open state for this Vehicle', ['state']),
-        (_check_unique_released_state_per_vehicle, 'Error ! You can''t have more than one Service Order in Released state for this Vehicle', ['date']),        
+        (_check_unique_released_state_per_vehicle, 'Error ! You can''t have more than one Service Order in Released state for this Vehicle', ['state']),        
         ]
 
 

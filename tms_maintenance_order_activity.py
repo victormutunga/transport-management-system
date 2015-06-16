@@ -260,7 +260,7 @@ class tms_maintenance_order_activity(osv.Model):
         suma = 0.0
         this = self.get_current_instance(cr, uid, ids)
         for line in this['control_time_ids']:
-            cost_mechanic = line.hr_employee_id.job_id.tms_global_salary
+            cost_mechanic = line.hr_employee_id and line.hr_employee_id.job_id and line.hr_employee_id.job_id.tms_global_salary or 0.0
             suma += (cost_mechanic * line['hours_mechanic'])
         self.set_cost_service(cr,uid,ids, suma)
         ### Si es Taller Externo la Actividad entonces eejecutara su propia sumatoria
