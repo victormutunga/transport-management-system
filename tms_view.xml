@@ -12,7 +12,7 @@
                 <field name="download_point" position="after">
                     <!-- <field name="payment_term" />
                     <field name="tipo_venta" attrs="{'readonly':[('state','!=','draft')]}" on_change="on_change_credito(tipo_venta,partner_id)" groups="tms_sale_credit_client.credit_limit_manager"/> -->
-                    <field name="overdue_invoice" groups="tms_sale_credit_client.credit_limit_manager"/>
+                    <field name="overdue_invoice" groups="tms_sale_credit_client.credit_limit_manager" attrs="{'readonly':[('state','!=','draft')]}" />
                 </field>
 
             </data>
