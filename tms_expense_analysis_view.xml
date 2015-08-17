@@ -15,7 +15,7 @@
               <field name="month" invisible="1" />
               <field name="day" invisible="1" />
               <field name="employee_id" invisible="1"/>
-              <field name="unit_id" invisible="1"/>
+              <field name="unit_char" invisible="1"/>
               <field name="currency_id" invisible="1" />
               <field name="product_id"  invisible="1" />
               <field name="expense_line_description" />
@@ -43,7 +43,7 @@
                 <field name="name" />
                 <field name="date"/>
                 <field name="employee_id"/>
-                <field name="unit_id"/>
+                <field name="unit_char"/>
                 <field name="product_id"/>
 
                 <filter string="This month" icon="terp-check" domain="[('date','&gt;=', time.strftime('%%Y-%%m-01'))]" name="this_month" />
@@ -51,7 +51,7 @@
                 <filter string="Driver Helper" icon="terp-check" domain="[('driver_helper','=', True)] " name="driver_helper" />
 			  <group expand="1" string="Group By...">
 			    <filter string="Name"        icon="terp-partner"                 domain="[]" context="{'group_by':'name'}" name="groupby_name"/>
-			    <filter string="Unit"        icon="terp-stage"                   domain="[]" context="{'group_by':'unit_id'}"/>
+			    <filter string="Unit"        icon="terp-stage"                   domain="[]" context="{'group_by':'unit_char'}"/>
 			    <filter string="Driver"      icon="terp-personal"                domain="[]" context="{'group_by':'employee_id'}" name="groupby_driver"/>
 			    <filter string="Product"     icon="terp-accessories-archiver"    domain="[]" context="{'group_by':'product_id'}" name="groupby_product"/>
                 <filter string="State"       icon="terp-accessories-archiver"    domain="[]" context="{'group_by':'state'}" name="groupby_state"/>
@@ -73,7 +73,7 @@
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Travel Expenses" type="bar">
-                    <field name="unit_id"/>
+                    <field name="unit_char"/>
                     <field name="subtotal" operator="+"/>
                 </graph>
             </field>

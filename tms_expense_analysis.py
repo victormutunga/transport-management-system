@@ -50,6 +50,7 @@ class tms_expense_analysis(osv.osv):
                 ], 'State',readonly=True),
         'employee_id'           : fields.many2one('hr.employee', 'Driver', readonly=True),
         'unit_id'               : fields.many2one('fleet.vehicle', 'Unit', readonly=True),
+        'unit_char'             : fields.char('Unidad', size=64, readonly=True),
         'currency_id'           : fields.many2one('res.currency', 'Currency', readonly=True),
         'product_id'            : fields.many2one('product.product', 'Line', readonly=True),
         'expense_line_description' : fields.char('Description',   size=256, readonly=True),
@@ -79,20 +80,15 @@ a.date,
 to_char(date_trunc('day',a.date), 'YYYY') as year,
 to_char(date_trunc('day',a.date), 'MM') as month,
 to_char(date_trunc('day',a.date), 'YYYY-MM-DD') as day,
-a.state, a.employee_id, a.unit_id, a.currency_id, 
+a.state, a.employee_id, a.unit_id, fv.name as unit_char, a.currency_id, 
 b.product_id, b.name expense_line_description,
---c.id travel_id, c.route_id, 
---c.waybill_income/ (select count(id) from tms_expense_line x where x.expense_id = a.id) waybill_income,
---(select count(name) from tms_travel where a.id=tms_travel.expense_id) travels,
---b.product_uom_qty / (select count(name) from tms_travel where a.id=tms_travel.expense_id) qty,
 b.product_uom_qty qty,
---b.price_unit / (select count(name) from tms_travel where a.id=tms_travel.expense_id) price_unit,
 b.price_unit,
---b.price_subtotal / (select count(name) from tms_travel where a.id=tms_travel.expense_id) subtotal,
 b.price_subtotal subtotal,
 b.operation_id
 from tms_expense a
 	inner join tms_expense_line b on a.id = b.expense_id 
+    left join fleet_vehicle fv on fv.id=a.unit_id
 	--inner join tms_travel c on a.id = c.expense_id
 	where a.state <> 'cancel'
 
@@ -105,20 +101,15 @@ a.date,
 to_char(date_trunc('day',a.date), 'YYYY') as year,
 to_char(date_trunc('day',a.date), 'MM') as month,
 to_char(date_trunc('day',a.date), 'YYYY-MM-DD') as day,
-a.state, a.employee_id, a.unit_id, a.currency_id, 
+a.state, a.employee_id, a.unit_id, fv.name as unit_char, a.currency_id, 
 b.product_id, b.name expense_line_description,
---c.id travel_id, c.route_id, 
---c.waybill_income/ (select count(id) from tms_expense_line x where x.expense_id = a.id) waybill_income,
---(select count(name) from tms_travel where a.id=tms_travel.expense2_id) travels,
---b.product_uom_qty / (select count(name) from tms_travel where a.id=tms_travel.expense2_id) qty,
 b.product_uom_qty qty,
---b.price_unit / (select count(name) from tms_travel where a.id=tms_travel.expense2_id) price_unit,
 b.price_unit,
---b.price_subtotal / (select count(name) from tms_travel where a.id=tms_travel.expense2_id) subtotal,
 b.price_subtotal subtotal,
 b.operation_id
 from tms_expense a
 	inner join tms_expense_line b on a.id = b.expense_id 
+    left join fleet_vehicle fv on fv.id=a.unit_id
 	--inner join tms_travel c on a.id = c.expense2_id
 	where a.state <> 'cancel'
 

@@ -19,7 +19,7 @@
                     <field name="partner_id" />
                     <field name="travel_id"/>
                     <field name="employee_id"/>
-                    <field name="unit_id"/>
+                    <field name="unit_char"/>
                     <field name="trailer1_id"   invisible="1"/>
                     <field name="dolly_id"      invisible="1"/>
                     <field name="trailer2_id"   invisible="1"/>
@@ -62,7 +62,7 @@
                 <field name="shipped_product_id"/>
                 <group expand="0" string="Extended Filters...">
                     <field name="employee_id"/>
-                    <field name="unit_id"/>
+                    <field name="unit_char"/>
                     <field name="trailer1_id"/>
                     <field name="dolly_id"/>
                     <field name="trailer2_id"/>
@@ -74,7 +74,7 @@
 			    <group expand="1" string="Group By...">
                     <filter string="Name"     icon="terp-partner"                 domain="[]" context="{'group_by':'name'}" name="groupby_name"/>
                     <filter string="Partner"     icon="terp-partner"                 domain="[]" context="{'group_by':'partner_id'}" name="groupby_partner_id"/>
-                    <filter string="Unit"        icon="terp-stage"                   domain="[]" context="{'group_by':'unit_id'}" />
+                    <filter string="Unit"        icon="terp-stage"                   domain="[]" context="{'group_by':'unit_char'}" />
                     <filter string="Driver"      icon="terp-personal"                domain="[]" context="{'group_by':'employee_id'}"/>
                     <filter string="Product"     icon="terp-accessories-archiver"    domain="[]" context="{'group_by':'product_id'}"/>
                     <filter string="Shipped Product"     icon="terp-accessories-archiver"    domain="[]" context="{'group_by':'shipped_product_id'}"/>
@@ -105,7 +105,7 @@
         <field name="type">graph</field>
         <field name="arch" type="xml">
             <graph string="Waybills" type="bar">
-                <field name="unit_id"/>
+                <field name="unit_char"/>
                 <field name="amount" operator="+"/>
             </graph>
         </field>

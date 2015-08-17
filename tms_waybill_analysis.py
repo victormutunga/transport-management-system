@@ -54,6 +54,7 @@ class tms_waybill_analysis(osv.osv):
         'travel_id'             : fields.many2one('tms.travel', 'Travel', readonly=True),
         'employee_id'           : fields.many2one('hr.employee', 'Driver', readonly=True),
         'unit_id'               : fields.many2one('fleet.vehicle', 'Unit', readonly=True),
+        'unit_char'             : fields.char('Unidad', size=64, readonly=True),
         'trailer1_id'           : fields.many2one('fleet.vehicle', 'Trailer 1', readonly=True),
         'dolly_id'              : fields.many2one('fleet.vehicle', 'Dolly', readonly=True),
         'trailer2_id'           : fields.many2one('fleet.vehicle', 'Trailer 2', readonly=True),
@@ -101,7 +102,7 @@ date_order,
 to_char(date_trunc('day',a.date_order), 'YYYY') as year,
 to_char(date_trunc('day',a.date_order), 'MM') as month,
 to_char(date_trunc('day',a.date_order), 'YYYY-MM-DD') as day,
-a.partner_id, a.travel_id, d.employee_id, d.unit_id, d.trailer1_id, d.dolly_id, d.trailer2_id,
+a.partner_id, a.travel_id, d.employee_id, d.unit_id, fv.name as unit_char, d.trailer1_id, d.dolly_id, d.trailer2_id,
 d.route_id, e.departure_id, e.arrival_id,
 a.currency_id, a.waybill_type, a.invoice_id, a.invoice_name, a.user_id, c.tms_category, b.product_id, 
 d.framework, 
@@ -124,11 +125,12 @@ from tms_waybill a
 	left join tms_waybill_line b on (b.waybill_id = a.id and b.line_type = 'product')
 	left join product_product c on (c.id = b.product_id)
 	left join tms_travel d on (a.travel_id = d.id)
+    left join fleet_vehicle fv on (d.unit_id = fv.id)
 	left join tms_route e on (d.route_id = e.id)
 	left join tms_waybill_shipped_product f on (f.waybill_id = a.id)
 group by a.id, c.id, a.shop_id, a.sequence_id,
 a.state, a.name, a.date_order, 
-a.partner_id, a.travel_id, d.employee_id, d.unit_id, d.trailer1_id, d.dolly_id, d.trailer2_id,
+a.partner_id, a.travel_id, d.employee_id, d.unit_id, fv.name, d.trailer1_id, d.dolly_id, d.trailer2_id,
 d.route_id, e.departure_id, e.arrival_id,
 a.currency_id, a.waybill_type, a.invoice_id, a.invoice_name, a.user_id, c.tms_category, b.product_id, 
 d.framework, b.price_subtotal, f.product_id

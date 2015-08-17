@@ -14,7 +14,7 @@
                     <field name="year" invisible="1" />
                     <field name="month" invisible="1" />
                     <field name="day" invisible="1" />
-                    <field name="unit_id" />
+                    <field name="unit_char" />
                     <field name="employee_id" />
                     <field name="framework" invisible="1" />
                     <field name="unit_type_id" invisible="1" />
@@ -65,7 +65,7 @@
 
               <filter string="Freight Income" icon="terp-check" domain="[('tms_category','=', 'freight')]" />
 
-              <field name="unit_id"/>
+              <field name="unit_char"/>
               <field name="state"  />
               <field name="partner_id"/>
               <field name="product_id"/>
@@ -84,7 +84,7 @@
 			  <group expand="1" string="Group By...">
                 <filter string="Date"     icon="terp-partner"                 domain="[]" context="{'group_by':'date'}"/>
 			    <filter string="Partner"     icon="terp-partner"                 domain="[]" context="{'group_by':'partner_id'}"/>
-			    <filter string="Unit"        icon="terp-stage"                   domain="[]" context="{'group_by':'unit_id'}" name="groupby_unit_id"/>
+			    <filter string="Unit"        icon="terp-stage"                   domain="[]" context="{'group_by':'unit_char'}" name="groupby_unit_id"/>
 			    <filter string="Driver"      icon="terp-personal"                domain="[]" context="{'group_by':'employee_id'}"/>
                 <filter string="State"          icon="terp-stock_symbol-selection"  domain="[]" context="{'group_by':'state'}"/>
                 <filter string="Route"          icon="STOCK_OK" domain="[]" context="{'group_by':'route_id'}"/>
@@ -117,7 +117,7 @@
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Travels" type="bar">
-                    <field name="unit_id"/>
+                    <field name="unit_char"/>
                     <field name="amount" operator="+"/>
                 </graph>
             </field>

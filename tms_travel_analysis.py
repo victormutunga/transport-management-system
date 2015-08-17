@@ -53,6 +53,7 @@ class tms_travel_analysis(osv.osv):
         'framework'             : fields.char('Framework', size=64, readonly=True),
         'unit_type_id'          : fields.many2one('tms.unit.category', 'Unit Type', readonly=True),
         'unit_id'               : fields.many2one('fleet.vehicle', 'Unit', readonly=True),
+        'unit_char'             : fields.char('Unidad', size=64, readonly=True),
         'trailer1_id'           : fields.many2one('fleet.vehicle', 'Trailer 1', readonly=True),
         'dolly_id'              : fields.many2one('fleet.vehicle', 'Dolly', readonly=True),
         'trailer2_id'           : fields.many2one('fleet.vehicle', 'Trailer 2', readonly=True),
@@ -110,7 +111,7 @@ to_char(date_trunc('day',a.date), 'MM') as month,
 to_char(date_trunc('day',a.date), 'YYYY-MM-DD') as day,
 
 a.state, a.employee_id, a.framework, f.unit_type_id, 
-a.unit_id, a.trailer1_id, a.dolly_id, a.trailer2_id, a.route_id, a.departure_id departure, a.arrival_id arrival,
+a.unit_id, f.name as unit_char, a.trailer1_id, a.dolly_id, a.trailer2_id, a.route_id, a.departure_id departure, a.arrival_id arrival,
 b.id as waybill_id, b.date_order as waybill_date, 
 case 
 when b.partner_id is null then 1
