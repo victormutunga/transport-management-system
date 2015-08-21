@@ -9,7 +9,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="invoice_date" position="after">
-                    <field name="invoice_xml_file"  attrs="{'invisible':[('is_invoice','=',False)],'required':[('is_invoice','=',True)]}" colspan="4"/>
+                    <field name="invoice_xml_file"  attrs="{'invisible':[('is_invoice','=',False)]}" colspan="4"/>
                     <field name="invoice_pdf_file"  attrs="{'invisible':[('is_invoice','=',False)]}" colspan="4"/>
                 </field>
             </field>
