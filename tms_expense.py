@@ -115,23 +115,25 @@ class tms_expense_invoice(osv.osv_memory):
                     invoice_tax_obj.write(cr, uid, [tax_line.id], {'amount':line.special_tax_amount})
                     
         ###############################################
-        fname_xml = line.invoice_number.replace(' ','') + '.xml'
-        attach = self.pool.get('ir.attachment').create(cr, uid, {
-                    'name': fname_xml,
-                    'datas': line.invoice_xml_file,
-                    'datas_fname': fname_xml,
-                    'res_model': 'account.invoice',
-                    'res_id': inv_id,
-                }, context=None)
-        fname_pdf = line.invoice_number.replace(' ','') + '.pdf'
-        if line.invoice_pdf_file:
+        if line.invoice_xml_file:
+            fname_xml = line.invoice_number.replace(' ','') + '.xml'
             attach = self.pool.get('ir.attachment').create(cr, uid, {
-                    'name': fname_pdf,
-                    'datas': line.invoice_pdf_file,
-                    'datas_fname': fname_pdf,
-                    'res_model': 'account.invoice',
-                    'res_id': inv_id,
+                        'name': fname_xml,
+                        'datas': line.invoice_xml_file,
+                        'datas_fname': fname_xml,
+                        'res_model': 'account.invoice',
+                        'res_id': inv_id,
                     }, context=None)
+        if line.invoice_pdf_file:
+            fname_pdf = line.invoice_number.replace(' ','') + '.pdf'
+            if line.invoice_pdf_file:
+                attach = self.pool.get('ir.attachment').create(cr, uid, {
+                        'name': fname_pdf,
+                        'datas': line.invoice_pdf_file,
+                        'datas_fname': fname_pdf,
+                        'res_model': 'account.invoice',
+                        'res_id': inv_id,
+                        }, context=None)
         ###############################################
         wf_service = netsvc.LocalService('workflow')
         wf_service.trg_validate(uid, 'account.invoice', inv_id, 'invoice_open', cr)
