@@ -371,6 +371,29 @@ class tms_waybill(osv.osv):
                 rec.invoice_id.write({'overdue_invoice': rec.overdue_invoice,})
         return result
 
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(tms_waybill, self).write(cr, uid, ids, vals, context=context)
+        user_br = self.pool.get('res.users').browse(cr, uid, uid, context)
+        if 'overdue_invoice' in vals:
+            overdue_invoice = vals['overdue_invoice']
+            if overdue_invoice == True:
+                self.message_post(cr, uid, ids, 
+                    body=_("Se Omitio Credito y Facturas Vencias del Cliente.<br/> Usuario: <b> %s </b>.") % (user_br.name,),  context=context)
+        return res
+
+    def create(self, cr, uid, vals, context=None):
+
+        res = super(tms_waybill, self).create(cr, uid, vals, context=context)
+        
+        user_br = self.pool.get('res.users').browse(cr, uid, uid, context)
+        if 'overdue_invoice' in vals:
+            overdue_invoice = vals['overdue_invoice']
+            if overdue_invoice == True:
+                self.message_post(cr, uid, [res], 
+                    body=_("Se Omitio Credito y Facturas Vencias del Cliente.<br/> Usuario: <b> %s </b>.") % (user_br.name,),  context=context)
+        return res
+
+
 # class tms_waybill_invoice(osv.osv):
 #     _name = 'tms.waybill.invoice'
 #     _inherit ='tms.waybill.invoice'
