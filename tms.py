@@ -48,6 +48,14 @@ class tms_waybill(osv.osv):
     _defaults = {
         }
 
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        default = default or {}
+        default.update({
+                        'overdue_invoice': False,
+                        })
+        return super(tms_waybill, self).copy(cr, uid, id, default, context)
+
     def get_current_instance(self, cr, uid, id):
         lines = self.browse(cr,uid,id)
         obj = None
