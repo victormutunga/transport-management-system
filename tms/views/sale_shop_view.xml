@@ -62,6 +62,6 @@
               </p>
             </field>
         </record>
-        <menuitem action="action_shop_form" id="menu_action_shop_form" parent="base.menu_base_config" sequence="35"/>
+        <menuitem action="action_shop_form" id="menu_action_shop_form" parent="base.menu_sale_config" sequence="35"/>
     </data>
 </openerp>

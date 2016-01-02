@@ -73,11 +73,11 @@
                         <field name="tms_account_ids" nolabel="1" />
                     </page>
                 </notebook>
-                <field name="property_account_income" position="after">
+                <field name="property_account_income_id" position="after">
                     <field name="tms_property_account_income"                            
                            domain="[('type','=','other')]"/> <!-- attrs="{'required':[('tms_category','in',('freight', 'insurance', 'highway_tolls','other'))], 'invisible' : [('tms_category','not in',('freight', 'insurance', 'highway_tolls','other'))]}" -->
                 </field>
-                <field name="property_account_expense" position="after">
+                <field name="property_account_expense_id" position="after">
                     <field name="tms_property_account_expense"                            
                            domain="[('type','=','other')]"/> <!-- attrs="{'required':[('tms_category','in',('fuel'))], 'invisible' : [('tms_category','not in',('fuel'))]}" -->
                 </field>
@@ -95,11 +95,11 @@
             <field name="inherit_id" ref="account.view_category_property_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <field name="property_account_income_categ" position="after">
+                    <field name="property_account_income_categ_id" position="after">
                         <field name="tms_property_account_income_categ"                            
                            domain="[('type','=','other'), ('tms_vehicle_mandatory', '=', 1)]"/>
                     </field>
-                    <field name="property_account_expense_categ" position="after">
+                    <field name="property_account_expense_categ_id" position="after">
                         <field name="tms_property_account_expense_categ"                            
                            domain="[('type','=','other'), ('tms_vehicle_mandatory', '=', 1)]"/>
                     </field>
