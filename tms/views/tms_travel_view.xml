@@ -130,24 +130,26 @@ TMS.travel
                             <field name="name" class="oe_inline" readonly="1"/>
                         </h1>
                         <group colspan="4" col="4">
-                            <field name="shop_id"/>
-                            <field name="date" />
-                            <field name="kit_id" on_change="onchange_kit_id(kit_id)"/>
-                            <field name="operation_id" domain="[('state','=','process')]"/>
                             <group col="2" colspan="2">
 
                               <field name="unit_id" on_change="onchange_unit_id(unit_id)"/>
                             
                               <field name="trailer1_id" domain="[('id','!=',trailer2_id), ('fleet_type','=','trailer')]" required="1"
-									 context="{'default_fleet_type': 'trailer'}"   
-									 attrs="{'required':['|', ('dolly_id','!=',False),('trailer2_id','!=',False)]}"/>
-                              <field name="dolly_id" 	domain="[('fleet_type','=','dolly')]"
-									 context="{'default_fleet_type': 'dolly'}"
-									 attrs="{'required':[('trailer2_id','!=',False)]}"/>
-                              <field name="trailer2_id" 	domain="[('id','!=',trailer1_id), ('fleet_type','=','trailer')]"
-									 context="{'default_fleet_type': 'trailer'}"
-									 attrs="{'required':[('dolly_id','!=',False)]}"/>
+                   context="{'default_fleet_type': 'trailer'}"   
+                   attrs="{'required':['|', ('dolly_id','!=',False),('trailer2_id','!=',False)]}"/>
+                              <field name="dolly_id"  domain="[('fleet_type','=','dolly')]"
+                   context="{'default_fleet_type': 'dolly'}"
+                   attrs="{'required':[('trailer2_id','!=',False)]}"/>
+                              <field name="trailer2_id"   domain="[('id','!=',trailer1_id), ('fleet_type','=','trailer')]"
+                   context="{'default_fleet_type': 'trailer'}"
+                   attrs="{'required':[('dolly_id','!=',False)]}"/>
 
+                            </group>
+                            <group col="2" colspan="2">
+                              <field name="shop_id"/>
+                              <field name="date" />
+                              <field name="kit_id" on_change="onchange_kit_id(kit_id)"/>
+                              <field name="operation_id" domain="[('state','=','process')]"/>
                             </group>
                             <group col="2" colspan="2">
                               <field name="supplier_unit" attrs="{'invisible':[('supplier_unit','!=',True)]}" />
@@ -161,10 +163,16 @@ TMS.travel
                               <field name="framework_supplier" 
                                      attrs="{'required':[('supplier_id','!=',False)], 'invisible':[('supplier_id','=',False)]}"/>
                             </group>
-                            <field name="route_id" on_change="onchange_route_id(route_id, unit_id, trailer1_id, dolly_id, trailer2_id)" colspan="4"/>
-                            <field name="departure_id" readonly="1" />
-                            <field name="arrival_id" readonly="1" />
-			                 <field name="user_id" />
+                            <group col="2" colspan="4">
+                              <field name="route_id" on_change="onchange_route_id(route_id, unit_id, trailer1_id, dolly_id, trailer2_id)" colspan="4"/>
+                            </group>
+                            <group col="2" colspan="2">
+                              <field name="departure_id" readonly="1" />
+  			                      <field name="user_id" />
+                            </group>
+                            <group col="2" colspan="2">
+                              <field name="arrival_id" readonly="1" />
+                            </group>
                         </group>                    
                         <notebook colspan="4">
                             <page string="Fuel Vouchers" attrs="{'invisible':[('supplier_unit','=',True)]}">
