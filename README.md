@@ -34,18 +34,23 @@ The list of proposed modules is:
 addon | version | summary
 --- | --- | ---
 [tms](tms/) | 0.1 (unported) | this module is the base module, it contains fleet, travel, waybills and travel expenses.
-[tms_maintenance](tms_maintenance/) | 0.1 (unported) | this module make maintainance program to vehicles.
-[tms_second_driver](tms_second_driver/) | 0.1 (unported) | this module allow to select a second driver in the travels and control travel expenses with it.
-[tms_operations](tms_operations/) | 0.1 (unported) | this module allow to create operations to group all freight related objects in one place.
-[tms_gps_base](tms_gps_base/) | 0.1 (unported) | this module contains a base framework ease the development of gps connectors.
-[tms_operating_units](tms_operating_units/) | 0.1 (unported) | this module allow to use operating units with TMS read more at [OCA Operating Units](https://github.com/oca/operating-unit)
-[tms_toll_stations](tms_toll_stations/) | 0.1 (unported) | this module improve add tolls to route and automate travel expenses.
-[tms_driver_loan](tms_driver_loan/) | 0.1 (unported) | this module allow to make loans to drivers and then charge it in travel expenses.
-[tms_analysis](tms_analysis/) | 0.1 (unported) | this module add BI functionalities to TMS.
-[tms_driver_license](tms_driver_license/) | 0.1 (unported) | this module manage expiry of Driver license.
-[tms_vehicle_insurance](tms_vehicle_insurance/) | 0.1 (unported) | this module adds insurance expiry to Vehicle.
-[tms_internal_fuel](tms_internal_fuel/) | 0.1 (unported) | this module allow to use internal fuel, connected with warehouse.
+[tms_account_invoice_merge](tms_account_invoice_merge/) | 0.1 (unported) | This module extends Elicorp's module >account_invoice_merge because it does not take vehicle_id and driver_id to add it to invoice lines.
 [tms_agreement](tms_agreement/) | 0.1 (unported) | this module automate the flow based on a contract.
+[tms_analysis](tms_analysis/) | 0.1 (unported) | this module add BI functionalities to TMS.
+[tms_blocked_balance](tms_blocked_balance/) | 0.1 (unported) | This module block invoces from maintenance orders to not modify amount.
+[tms_driver_license](tms_driver_license/) | 0.1 (unported) | this module manage expiry of Driver license.
+[tms_driver_loan](tms_driver_loan/) | 0.1 (unported) | this module allow to make loans to drivers and then charge it in travel expenses.
+[tms_expense_eaccount](tms_expense_eaccount/) | 0.1 (unported) | This module adds options to add XML Invoice file for Mexico's e-Account
+[tms_gps_base](tms_gps_base/) | 0.1 (unported) | this module contains a base framework ease the development of gps connectors.
+[tms_ifrs_vehicle_filter](tms_ifrs_vehicle_filter/) | 0.1 (unported) | This module adds Filter by Vehicle in Wizard
+[tms_internal_fuel](tms_internal_fuel/) | 0.1 (unported) | this module allow to use internal fuel, connected with warehouse.
+[tms_maintenance](tms_maintenance/) | 0.1 (unported) | this module make maintainance program to vehicles.
+[tms_operating_units](tms_operating_units/) | 0.1 (unported) | this module allow to use operating units with TMS read more at [OCA Operating Units](https://github.com/oca/operating-unit)
+[tms_operations](tms_operations/) | 0.1 (unported) | this module allow to create operations to group all freight related objects in one place.
+[tms_sale_credit_client](tms_sale_credit_client/) | 0.1 (unported) | This module blocks customer invoices when credit limit is reached, it's also linked with Waybills
+[tms_second_driver](tms_second_driver/) | 0.1 (unported) | this module allow to select a second driver in the travels and control travel expenses with it.
+[tms_toll_stations](tms_toll_stations/) | 0.1 (unported) | this module improve add tolls to route and automate travel expenses.
+[tms_vehicle_insurance](tms_vehicle_insurance/) | 0.1 (unported) | this module adds insurance expiry to Vehicle.
 
 [//]: # (end addons)
 
