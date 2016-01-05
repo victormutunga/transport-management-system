@@ -1,9 +1,11 @@
 <openerp>
 <data>
 
-        <menuitem icon="terp-account" id="menu_tms" name="Freights" sequence="10"
-            web_icon="images/logistics.png"
-            web_icon_hover="images/logistics-hover.png"/>
+        <menuitem name="Freights"
+            id="menu_tms"
+            icon="fa-truck"
+            web_icon="tms,static/description/icon.png"
+            sequence="10"/>
         <menuitem id="menu_tms_travels" name="Freights" parent="menu_tms" sequence="10"/>            
         <menuitem id="menu_tms_config" name="Configuration" parent="menu_tms" sequence="99"/>
         <menuitem id="menu_tms_config_unit" name="Units" parent="menu_tms_config" sequence="3"/>
@@ -30,7 +32,7 @@
     
         <menuitem id="menu_tms_config_drivers" name="Drivers" parent="menu_tms_config" sequence="2"/>
     
-        <menuitem name="Products by Category" id="menu_tms_product_by_category_stock_form" action="product.product_category_action"
+        <menuitem name="Products by Category" id="menu_tms_product_by_category_stock_form" action="product.product_category_action_form"
             parent="menu_tms_config_product" sequence="0"/>
 
 ############################################################################################################################
@@ -234,8 +236,8 @@ FLEET.VEHICLE - (former TMS.UNIT)
                     </div>
                 </div>
 
-                <group col="2" string="General Properties" position="replace" >
-                </group>
+                <!--<group col="2" string="General Properties" position="replace" >
+                </group>-->
 
                 <group col="2" position="replace" >
 
