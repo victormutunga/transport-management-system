@@ -23,7 +23,7 @@
 from openerp.osv import osv, fields
 
 
-class hr_job(osv.osv):
+class HrJob(osv.osv):
     _name = "hr.job"
     _inherit = "hr.job"
 
