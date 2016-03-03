@@ -130,6 +130,8 @@ class tms_fuelvoucher(osv.osv):
         #'picking_id_cancel' : fields.many2one('stock.picking.in', 'Stock Picking', required=False, readonly=True, ondelete='restrict'),
         'driver_helper' : fields.boolean('For Driver Helper', help="Check this if you want to give this Fuel Voucher to Driver Helper.", states={'cancel':[('readonly',True)], 'approved':[('readonly',True)], 'confirmed':[('readonly',True)], 'closed':[('readonly',True)]}),
         'no_travel'     : fields.boolean('No Travel', help="Check this if you want to create Fuel Voucher with no Travel.", states={'cancel':[('readonly',True)], 'approved':[('readonly',True)], 'confirmed':[('readonly',True)], 'closed':[('readonly',True)]}),
+        'expense_id':fields.many2one('tms.expense', 'Expense Record', required=False, readonly=True),
+        'expense2_id'   : fields.many2one('tms.expense', 'Expense Record for Drivef Helper', required=False, readonly=True),
         }
 
     _defaults = {
