@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.    
 #
 ##############################################################################
 
@@ -29,8 +29,7 @@ class product_product(osv.osv):
     _inherit ='product.product'
 
     _columns = {
-        'tms_category':fields.selection([
-                                          ('no_tms_product','No TMS Product'), 
+        'tms_category':fields.selection([('no_tms_product','No TMS Product'), 
                                           ('transportable','Transportable'), 
                                           ('freight','Freight'), 
                                           ('move','Move'), 

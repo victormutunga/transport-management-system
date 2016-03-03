@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -28,8 +28,8 @@ class hr_job(osv.osv):
     _inherit = "hr.job"
 
     _columns = {
-        'tms_global_salary' : fields.float('Global Salary', digits=(18,6)),
-      }
+        'tms_global_salary': fields.float('Global Salary', digits=(18, 6)),
+    }
 
     _defaults = {
         'tms_global_salary': lambda *a: 0.0,
