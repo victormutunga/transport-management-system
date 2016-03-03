@@ -37,16 +37,20 @@ class AccountInvoice(osv.osv):
             product = ''
             arrival_id = departure_id = unit_id = False
             for waybill in invoice.waybill_ids:
-                product = waybill.waybill_shipped_product[0].product_id.name.split(' ')[0]
+                product = waybill.waybill_shipped_product[
+                    0].product_id.name.split(' ')[0]
                 arrival_id = waybill.travel_id.route_id.arrival_id.id
                 departure_id = waybill.travel_id.route_id.departure_id.id
                 unit_id = waybill.unit_id.id
                 for factor in waybill.waybill_customer_factor:
-                    waybill_rate = factor.factor if factor.factor_type=='weight' else factor.fixed_amount
+                    waybill_rate = (factor.factor if factor.factor_type ==
+                                    'weight' else factor.fixed_amount)
                     continue
                 continue
             for taxes in invoice.tax_line:
-                invoice_positive_taxes += taxes.amount if taxes.amount > 0.0 else 0.0 
+                invoice_positive_taxes += (taxes.amount
+                                           if taxes.amount > 0.0
+                                           else 0.0)
                 invoice_negative_taxes += taxes.amount if taxes.amount < 0.0 else 0.0 
             res[invoice.id] =  {'product'       : product,
                                 'waybill_rate'  : waybill_rate,
