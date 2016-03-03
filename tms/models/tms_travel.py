@@ -197,6 +197,11 @@ class tms_travel(osv.osv):
         'date_drafted'  : fields.datetime('Date Drafted', readonly=True),
         'user_id'       : fields.many2one('res.users', 'Salesman', select=True, readonly=False, states={'cancel':[('readonly',True)], 'closed':[('readonly',True)]}),
         'parameter_distance': fields.integer('Distance Parameter', help="1 = Travel, 2 = Travel Expense, 3 = Manual, 4 = Tyre"),
+        'expense_ids'   : fields.many2many('tms.expense', 'tms_expense_travel_rel', 'travel_id', 'expense_id', 'Expense Record'),
+        'expense_ids2'   : fields.many2many('tms.expense', 'tms_expense_travel_rel2', 'travel_id', 'expense_id', 'Expense Record for Driver Helper'),
+        'expense_id'    : fields.many2one('tms.expense', 'Expense Record', required=False, readonly=True),
+        'expense2_id'   : fields.many2one('tms.expense', 'Expense Record for Driver Helper', required=False, readonly=True),
+        'event_ids': fields.one2many('tms.event', 'travel_id', string='Events'),
         }
 
 
