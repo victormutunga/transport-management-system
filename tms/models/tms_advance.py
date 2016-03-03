@@ -112,6 +112,8 @@ class tms_advance(osv.osv):
                                             help="Check this if you want this product and amount to be automatically created when Travel Expense Record is created.",
                                             states={'cancel':[('readonly',True)], 'confirmed':[('readonly',True)],'closed':[('readonly',True)]}),
         'driver_helper' : fields.boolean('For Driver Helper', help="Check this if you want to give this advance to Driver Helper.",states={'cancel':[('readonly',True)], 'approved':[('readonly',True)], 'confirmed':[('readonly',True)], 'closed':[('readonly',True)]}),
+        'expense_id':fields.many2one('tms.expense', 'Expense Record', required=False, readonly=True),
+        'expense2_id'   : fields.many2one('tms.expense', 'Expense Record for Drivef Helper', required=False, readonly=True),
         }
 
     _defaults = {
