@@ -195,6 +195,7 @@ class tms_travel(osv.osv):
         'expense_ids2'   : fields.many2many('tms.expense', 'tms_expense_travel_rel2', 'travel_id', 'expense_id', 'Expense Record for Driver Helper'),
         'expense_id'    : fields.many2one('tms.expense', 'Expense Record', required=False, readonly=True),
         'expense2_id'   : fields.many2one('tms.expense', 'Expense Record for Driver Helper', required=False, readonly=True),
+        'event_ids': fields.one2many('tms.event', 'travel_id', string='Events'),
         }
 
 
