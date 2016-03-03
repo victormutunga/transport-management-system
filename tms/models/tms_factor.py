@@ -200,35 +200,6 @@ For next option you only have to type Special Python Code:
                 result += res1 + res2
         return result
 
-class tms_factor_special(osv.osv):
-    _name = "tms.factor.special"
-    _description = "Python Code calculate Payment (Driver/Supplier) & Client charge"
-    _columns = {
-        'name'            : fields.char('Special Name', size=200, required=True),
-        'active'          : fields.boolean('Active'),
-        'date'            : fields.date('Date', required=True),
-        'description'     : fields.text('Description'),
-        'python_code'     : fields.text('Python Code', required=True),
-        'factor_ids'      : fields.one2many('tms.factor', 'factor_special_id', 'Factor'),
-        'type'            : fields.selection([
-                ('salary', 'Driver Salary'),
-                ('salary_distribution', 'Salary Distribution'),
-                ('retention', 'Salary Retentions & Discounts'),
-                ('supplier', 'Supplier Payment'),
-                ], 'Type', required=True, help="""
-Driver Salary => Use this for special Driver Salary calculation
-Salary Distribution => Useful in some countries, you can make a Wage distribution on several expenses, so Salary is masked for Tax purposes
-Salary Retentions & Discounts => Use this for Driver Tax retentions
-Supplier => Use this to calculate Supplier Travel Payment
-                """),
-        'company_id'      : fields.many2one('res.company', 'Company', required=False),
-        }
-
-    _defaults = {
-        'active' : True,
-        'date'   : time.strftime( DEFAULT_SERVER_DATE_FORMAT),
-        }
-
     def _check_only_one(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids):
             cr.execute("select count(id) from tms_factor_special where type='%s' and active;" % (rec.type))
@@ -240,28 +211,3 @@ Supplier => Use this to calculate Supplier Travel Payment
     _constraints = [
         (_check_only_one, _('Error ! You can not have two active Factor with the same Type'), ['type']),
     ]
-
-class tms_waybill(osv.osv):
-    _inherit = 'tms.waybill'
-    _columns = {
-        'waybill_customer_factor': fields.one2many('tms.factor', 'waybill_id', 'Waybill Customer Charge Factors', domain=[('category', '=', 'customer')],
-                                readonly=False, states={'confirmed': [('readonly', True)],'closed':[('readonly',True)]}), 
-        'waybill_supplier_factor': fields.one2many('tms.factor', 'waybill_id', 'Waybill Supplier Payment Factors', domain=[('category', '=', 'supplier')],
-                                readonly=False, states={'cancel': [('readonly', True)],'closed':[('readonly',True)]}),
-        'expense_driver_factor': fields.one2many('tms.factor', 'waybill_id', 'Travel Driver Payment Factors', domain=[('category', '=', 'driver')],
-                                readonly=False, states={'cancel':[('readonly',True)], 'closed':[('readonly',True)]}),
-    }
-
-class tms_travel(osv.osv):
-    _inherit = 'tms.travel'
-    _columns = {
-        'expense_driver_factor': fields.one2many('tms.factor', 'travel_id', 'Travel Driver Payment Factors', domain=[('category', '=', 'driver')],
-                                readonly=False, states={'cancel':[('readonly',True)], 'done':[('readonly',True)]}),
-    }
-
-class tms_route(osv.osv):
-    _inherit = 'tms.route'
-    _columns = {
-        'expense_driver_factor': fields.one2many('tms.factor', 'route_id', 'Travel Driver Payment Factors', domain=[('category', '=', 'driver')],
-                                readonly=False),
-    }

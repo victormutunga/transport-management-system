@@ -46,6 +46,8 @@ class tms_route(osv.osv):
         'fuel_efficiency_2trailer': fields.float('Fuel Efficiency Two Trailer', required=False, digits=(14,4)),
         'notes': fields.text('Notes'),
         'active':fields.boolean('Active'),
+        'expense_driver_factor': fields.one2many('tms.factor', 'route_id', 'Travel Driver Payment Factors', domain=[('category', '=', 'driver')],
+                                readonly=False),
         'tms_route_tollstation_ids' : fields.many2many('tms.route.tollstation', 'tms_route_tollstation_route_rel', 'tollstation_id', 'route_id', 'Toll Station in this Route'),
         }
 

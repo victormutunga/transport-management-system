@@ -120,6 +120,12 @@ class tms_travel(osv.osv):
         return res
     
     _columns = {
+        'waybill_ids': fields.many2many('tms.waybill', 'tms_waybill_travel_rel', 'travel_id', 'waybill_id', 'Waybills'),
+        'default_waybill_id': fields.one2many('tms.waybill', 'travel_id', 'Waybill', readonly=True),
+        'partner_id' : fields.related('default_waybill_id', 'partner_id', type='many2one', relation='res.partner', string='Customer', store=True),
+        'arrival_address_id' : fields.related('default_waybill_id', 'arrival_address_id', type='many2one', relation='res.partner', string='Arrival Address', store=True),
+        'expense_driver_factor': fields.one2many('tms.factor', 'travel_id', 'Travel Driver Payment Factors', domain=[('category', '=', 'driver')],
+                                readonly=False, states={'cancel':[('readonly',True)], 'done':[('readonly',True)]}),
         'operation_id'  : fields.many2one('tms.operation', 'Operation', ondelete='restrict', required=False, readonly=False, states={'cancel':[('readonly',True)], 'done':[('readonly',True)], 'closed':[('readonly',True)]}),
         'shop_id'       : fields.many2one('sale.shop', 'Shop', ondelete='restrict', required=True, readonly=False, states={'cancel':[('readonly',True)], 'done':[('readonly',True)], 'closed':[('readonly',True)]}),
         'company_id'    : fields.related('shop_id','company_id',type='many2one',relation='res.company',string='Company',store=True,readonly=True),
