@@ -23,7 +23,7 @@
 # Please note that these reports are not multi-currency !!!
 #
 
-from osv import fields,osv
+from osv import fields, osv
 import tools
 from tools.translate import _
 

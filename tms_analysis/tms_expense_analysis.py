@@ -23,11 +23,12 @@
 # Please note that these reports are not multi-currency !!!
 #
 
-from osv import fields,osv
+from osv import fields, osv
 import tools
 from tools.translate import _
 
-class tms_expense_analysis(osv.osv):
+
+class TmsExpenseAnalysis(osv.osv):
     _name = "tms.expense.analysis"
     _description = "Travel Expenses Analisys"
     _auto = False
