@@ -24,7 +24,7 @@ from openerp.tools.translate import _
 
 
 # Products => We need flags for some process with TMS Module
-class product_product(osv.osv):
+class ProductProduct(osv.osv):
     _name = 'product.product'
     _inherit ='product.product'
 
@@ -162,19 +162,3 @@ class product_product(osv.osv):
                 'sale': False,
                 }
         return {'value': val}
-
-
-class product_category(osv.osv):
-    _name = "product.category"
-    _inherit = "product.category"
-    
-    _columns = {
-        'tms_property_account_income_categ': fields.many2one(
-            'account.account',
-            string="Breakdown Income Account",
-            help="Use this to define breakdown income account per vehicle for Freights, Moves, Insurance, etc."),
-        'tms_property_account_expense_categ': fields.many2one(
-            'account.account',
-            string="Breakdown Expense Account",
-            help="Use this to define breakdown expense account per vehicle for Fuel, Travel Expenses, etc."),
-    }

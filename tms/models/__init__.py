@@ -2,6 +2,7 @@
 from . import sale_shop
 from . import ir_sequence
 from . import product
+from . import product_category
 from . import account_tax
 from . import account_account
 from . import account_journal
