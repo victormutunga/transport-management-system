@@ -24,3 +24,4 @@ from . import stock
 from . import tms_expense_loan
 from . import account_invoice_line
 from . import tms_waybill_shipped_grouped
+from . import tms_sale_shop_fuel_supplier_seq
