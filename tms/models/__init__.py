@@ -8,8 +8,8 @@ from . import account_journal
 from . import account_move_line
 from . import account_invoice
 from . import partner
-from . import hr
-from . import sale
+from . import hr_job
+from . import hr_employee
 from . import tms
 from . import tms_travel
 from . import tms_fuelvoucher
