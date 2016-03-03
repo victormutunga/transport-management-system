@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,24 +15,23 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-
 
 
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 
-class account_invoice(osv.osv):
-    _inherit ='account.invoice'
+
+class AccountInvoice(osv.osv):
+    _inherit = 'account.invoice'
 
     def _get_waybill_info(self, cr, uid, ids, field_name, args, context=None):
         if context is None:
             context = {}
-        res = {}            
+        res = {}
         for invoice in self.browse(cr, uid, ids, context=context):
             waybill_rate = invoice_positive_taxes = invoice_negative_taxes = 0
             product = ''
@@ -164,39 +163,3 @@ class account_invoice(osv.osv):
                 })]
         return iml
 
-# Grouped Shipped Quantity by Product
-class tms_waybill_shipped_grouped(osv.osv):
-    _name = "tms.waybill.shipped_grouped"
-    _description = "Waybill Grouped Shipped Qty by Product"
-
-    _columns = {        
-        'invoice_id': fields.many2one('account.invoice', 'Invoice', required=True, ondelete='cascade'),
-        'product_id': fields.many2one('product.product', 'Product', required=True), 
-        'quantity': fields.float('Quantity', digits=(16, 2),required=True),
-        'product_uom': fields.many2one('product.uom', 'Unit of Measure ',required=True),
-        }
-
-    _defaults = {
-        'quantity': 0,
-    }
-
-    
-class account_invoice_line(osv.osv):
-    _inherit ='account.invoice.line'
-    
-    _columns = {
-            'vehicle_id'    : fields.many2one('fleet.vehicle', 'Vehicle', readonly=True, required=False),
-            'employee_id'   : fields.many2one('hr.employee', 'Driver', readonly=True, required=False),
-            'sale_shop_id'  : fields.many2one('sale.shop', 'Shop', readonly=True, required=False),
-    }
-
-    def move_line_get_item(self, cr, uid, line, context=None):
-        res = super(account_invoice_line, self).move_line_get_item(cr, uid, line, context=context)
-        res.update({
-            'vehicle_id'    : line.vehicle_id.id if line.vehicle_id else False,
-            'employee_id'   : line.employee_id.id if line.employee_id else False,
-            'sale_shop_id'  : line.sale_shop_id.id if line.sale_shop_id else False,
-            'line_id'       : line.id,
-            'account_id2'   : line.account_id.id,
-            })
-        return res
