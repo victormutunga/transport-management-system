@@ -25,18 +25,33 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-import tms
-import tms_agreement
-import tms_agreement_travel
-import tms_expense
-import sale
-import tms_waybill
+import crm_case
+import sale_shop
+import week_days
 import tms_factor
+import tms_travel
 import res_partner
+import tms_waybill
+import tms_agreement
 import tms_quotation
-import product
-# import crm
 import account_invoice
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+import product_product
+import factor_quotation
+import tms_waybill_line
+import tms_configuration
+import tms_travel_wizard
+import charging_equipment
+import tms_agreement_line
+import tms_direct_expense
+import tms_operating_cost
+import fleet_vehicle_model
+import tms_quotation_route
+import tms_agreement_travel
+import tms_indirect_expense
+import tms_quotation_config
+import tms_waybill_extradata
+import fleet_vehicle_category
+import tms_administrative_cost
+import tms_waybill_shipped_product
+import tms_agreement_shipped_product
+import tms_quotation_agreement_wizard

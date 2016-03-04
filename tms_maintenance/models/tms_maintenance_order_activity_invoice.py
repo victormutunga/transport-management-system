@@ -30,6 +30,7 @@ import decimal_precision as dp
 import netsvc
 import openerp
 
+
 class tms_maintenance_order_activity_invoice(osv.osv_memory):
 
     _name = 'tms.maintenance.order.activity.invoice'

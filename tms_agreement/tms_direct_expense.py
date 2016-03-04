@@ -28,36 +28,6 @@ import decimal_precision as dp
 import netsvc
 import openerp
 
-class tms_indirect_expense(osv.osv):
-    _name = 'tms.indirect.expense'
-    _description = 'Indirect Expense for Agreement'
-    _rec_name='product_id'
-
-    _columns = {
-        'product_id'        : openerp.osv.fields.many2one('product.product', 'Product',domain=[('tms_category', '=','indirect_expense')] ),
-        'agreement_id'		: openerp.osv.fields.many2one('tms.agreement', 'Agreement', required=False, ondelete='cascade', select=True, readonly=True),
-#        'period_day'        : openerp.osv.fields.integer('Period Day', size=2, help="Defines the day to close the accounting period accounts for the indirect expenses this day must be between 1 and 15"),
-        'description'       : openerp.osv.fields.related('product_id', 'product_tmpl_id', 'description', type="text", string="Descripcion", readonly=True),
-        'notes'             : openerp.osv.fields.text('Notes'),
-        'total_mount_indirect'		: openerp.osv.fields.float('Total Mount', digits=(16, 2)),
-        'automatic'         : openerp.osv.fields.boolean('Automatic', help="If this field is enabled the amount of expenses will be calculated automatically"),
-            }
-
-    def get_current_instance(self, cr, uid, id):
-        line = self.browse(cr,uid,id)
-        obj = None
-        for i in line:
-            obj = i
-        return obj
-
-
-    _defaults = {
-        'automatic': False,
-     
-    }
-tms_indirect_expense()
-
-
 
 class tms_direct_expense(osv.osv):
     _name = 'tms.direct.expense'
@@ -168,6 +138,3 @@ class tms_direct_expense(osv.osv):
                         }
                 }
         return res
-
-# Wizard que permite validar la cancelacion de una Liquidacion
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

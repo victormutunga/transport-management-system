@@ -19,4 +19,23 @@
 #
 ##############################################################################
 
-from . import models
+from osv import osv, fields
+import time
+from datetime import datetime, date
+from tools.translate import _
+from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, float_compare
+import decimal_precision as dp
+import netsvc
+import openerp
+
+
+class tms_waybill_shipped_product(osv.osv):
+    _name = "tms.waybill.shipped_product"
+    _inherit = "tms.waybill.shipped_product"
+    _columns = {        
+        'agreement_id': openerp.osv.fields.many2one('tms.agreement', 'Agreement', required=False, ondelete='cascade', readonly=True),
+        'agreement_control': openerp.osv.fields.boolean('Agreement Control', readonly=True),
+
+    }
+
+tms_waybill_shipped_product()

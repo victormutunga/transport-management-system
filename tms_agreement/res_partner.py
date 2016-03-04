@@ -32,20 +32,6 @@ from datetime import datetime, date
 import openerp
 import calendar
 
-class week_days(osv.osv):
-    _name = 'week.days'
-
-    _columns = {
-        'name': fields.char('Name', size=256, required=True),
-        # 'partner_p_id': fields.many2one('res.partner',' ID P' ),
-        # 'partner_r_id': fields.many2one('res.partner',' ID R' ),
-        # 'partner_id': fields.many2one('res.partner', 'ID partner'),
-
-    }
-
-
-week_days() 
-
 
 # TMS - Special Category for TMS module
 class res_partner(osv.osv):
@@ -98,27 +84,3 @@ class res_partner(osv.osv):
     }
 
 res_partner()
-
-class charging_equipment(osv.osv):
-    _name = 'charging.equipment'
-    _rec_name = 'product_id'
-
-    _columns = {
-        'product_id': fields.many2one('product.product','Product' ),
-        'measures': fields.char('Measures', size=512),
-        'tons_month': fields.integer('Emb. Tons/Month'),
-        'origin': fields.char('Origin', size=512),
-        'destination': fields.char('Destination', size=512),
-        'parent_r_id': fields.many2one('res.partner',' ID R' ),
-        'note': fields.char('Description', size=512),
-        # 'partner_id': fields.many2one('res.partner', 'ID partner'),
-
-    }
-
-
-charging_equipment() 
-
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

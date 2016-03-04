@@ -19,25 +19,24 @@
 #
 ##############################################################################
 
-
-from osv import osv, fields
-import netsvc
-import pooler
-from tools.translate import _
-import decimal_precision as dp
-from osv.orm import browse_record, browse_null
-import time
-from datetime import datetime, date
-
-# Agregamos manejar una secuencia por cada tienda para controlar viajes 
-class sale_shop(osv.osv):
-    _name = "sale.shop"
-    _inherit = "sale.shop"
-    
-    _columns = {
-            'tms_agreement_seq': fields.many2one('ir.sequence', 'Agreement Sequence'),
-        }
-
-sale_shop()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+from . import fleet_vehicle
+from . import fleet_vehicle_mro_program
+from . import fleet_vehicle_mro_program_reschedule
+from . import fleet_vehicle_mro_program_reschedule_line
+from . import product_product
+from . import sale_shop
+from . import stock_move
+from . import stock_picking
+from . import tms_activity_control_time
+from . import tms_analisys_01
+from . import tms_analisys_02
+from . import tms_analisys_03
+from . import tms_analisys_04
+from . import tms_analisys_05 
+from . import tms_maintenance_driver_report
+from . import tms_maintenance_order
+from . import tms_maintenance_order_activity
+from . import tms_maintenance_order_activity_invoice
+from . import tms_product_line
+from . import tms_time
+from . import tms_travel
