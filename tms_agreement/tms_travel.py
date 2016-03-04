@@ -27,19 +27,6 @@ import decimal_precision as dp
 import netsvc
 import openerp
 
-
-# Extra data fields for Waybills & Negotiations
-class fleet_vehicle_category(osv.osv):
-    _name = "tms.unit.category"
-    _inherit = "tms.unit.category"
-    _columns = {        
-        'agreement_id': openerp.osv.fields.many2one('tms.agreement', 'Agreement', required=False, ondelete='cascade', select=True, readonly=True),
-#        'axis_number': openerp.osv.fields.integer('Axis number maximum', required=True),
-
-    }
-
-fleet_vehicle_category()
-
 # Definicion del Viaje de Ida
 class tms_travel(osv.osv):
     _name = "tms.travel"

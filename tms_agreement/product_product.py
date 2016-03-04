@@ -118,6 +118,33 @@ class product_product(osv.osv):
         return True
 
 
+    # def onchange_tms_category(self, cr, uid, ids, tms_category):
+    #     print "################################### CATEGORIA DEL PRODUCTO", tms_category
+    #     print "################################### CATEGORIA DEL PRODUCTO", tms_category
+    #     val = {}
+    #     if not tms_category or tms_category=='standard':
+    #         return val
+    #     result = super(product_product, self).onchange_tms_category(cr, uid, ids, tms_category)
+    #     vals= result.get('value',{})
+    #     print "########################################## VALORES", vals
+    #     print "########################################## VALORES", vals
+    #     if tms_category in ['move', 'real_expense', 'salary']:
+    #         vals.update({
+    #             'type': 'service',
+    #             'procure_method':'make_to_stock',
+    #             'supply_method': 'buy',
+    #             'purchase': False,
+    #             'sale': False,
+    #             })
+    #     print "################################### VALORES AL FINAL DE LAS COMPARACIONES", vals
+    #     print "################################### VALORES AL FINAL DE LAS COMPARACIONES", vals
+    #     return {'value': vals}
+    # _default = {
+    #         }
+    # product_product()
+
+
+
     def onchange_tms_category(self, cr, uid, ids, tms_category):
             val = {}
             if not tms_category or tms_category=='standard':
@@ -150,3 +177,32 @@ class product_product(osv.osv):
     ]
 
 product_product()
+
+# # Products 
+# class product_product(osv.osv):
+#   _name = 'product.product'
+#   _inherit ='product.product'
+
+#   _columns = {
+#       }
+
+
+#   def onchange_tms_category(self, cr, uid, ids, tms_category):
+
+#       val = {}
+#       if not tms_category or tms_category=='standard':
+#           return val
+#       result = super(product_product, self).onchange_tms_category(cr, uid, ids, tms_category)
+#       vals= result.get('value',{})
+#       if tms_category in ['move', 'real_expense', 'salary']:
+#           vals.update({
+#               'type': 'service',
+#               'procure_method':'make_to_stock',
+#               'supply_method': 'buy',
+#               'purchase': False,
+#               'sale': False,
+#               })
+#       return {'value': vals}
+#   _default = {
+#           }
+# product_product()

@@ -21,22 +21,22 @@
 
 from osv import osv, fields
 import time
-from datetime import datetime, date
-import decimal_precision as dp
+from datetime import date, datetime, time, timedelta
+from osv.orm import browse_record, browse_null
+from osv.orm import except_orm
 from tools.translate import _
+from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, float_compare
+import decimal_precision as dp
+import netsvc
 import openerp
+from pytz import timezone
 
-# Extra data fields for Waybills & Agreement
-# Factors
-class tms_factor(osv.osv):
-    _name = "tms.factor"
-    _inherit = "tms.factor"
-    _columns = {        
-        'agreement_id': openerp.osv.fields.many2one('tms.agreement', 'Agreement', required=False, ondelete='cascade'),# select=True, readonly=True),
-        'sequence': openerp.osv.fields.integer('Sequence', help="Gives the sequence calculation for these factors."),
-        'notes': openerp.osv.fields.text('Notes'),
-        'control': openerp.osv.fields.boolean('Control'),
 
+class tms_travel_wizard(osv.osv_memory):
+    _name = "tms.travel.wizard"
+    _columns = {
+        'travel_id': openerp.osv.fields.many2one('tms.travel', 'Travel', required=False),        
+        'wizard_id': openerp.osv.fields.many2one('tms.agreement.travel', 'Wizard Id', required=False, ondelete='cascade'),# select=True, readonly=True),
     }
 
-tms_factor()
+tms_travel_wizard()

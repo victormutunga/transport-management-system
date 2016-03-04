@@ -32,14 +32,6 @@ import openerp
 from pytz import timezone
 
 
-class tms_travel_wizard(osv.osv_memory):
-    _name = "tms.travel.wizard"
-    _columns = {
-        'travel_id': openerp.osv.fields.many2one('tms.travel', 'Travel', required=False),        
-        'wizard_id': openerp.osv.fields.many2one('tms.agreement.travel', 'Wizard Id', required=False, ondelete='cascade'),# select=True, readonly=True),
-    }
-
-tms_travel_wizard()
 class tms_agreement_travel(osv.osv_memory):
     _name = 'tms.agreement.travel'
     _description = 'Make Travel from Agreement'
@@ -850,6 +842,3 @@ class tms_agreement_travel(osv.osv_memory):
             return {}        
         kit = self.pool.get('tms.unit.kit').browse(cr, uid, kit_id)
         return {'value' : {'unit_id': kit.unit_id.id, 'trailer1_id': kit.trailer1_id.id, 'dolly_id': kit.dolly_id.id, 'trailer2_id': kit.trailer2_id.id, 'employee_id': kit.employee_id.id}}
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

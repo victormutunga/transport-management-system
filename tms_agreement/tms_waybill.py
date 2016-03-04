@@ -29,17 +29,6 @@ import netsvc
 import openerp
 
 
-# Extra data fields for Waybills & Negotiations
-class tms_waybill_extradata(osv.osv):
-    _name = "tms.waybill.extradata"
-    _inherit = "tms.waybill.extradata"
-    _columns = {        
-        'agreement_id': openerp.osv.fields.many2one('tms.agreement', 'Agreement', required=False, ondelete='cascade', select=True, readonly=True),
-        'agreement_control': openerp.osv.fields.boolean('Agreement Control', readonly=True),
-
-    }
-
-tms_waybill_extradata()
 
 class tms_waybill(osv.osv):
     _name = "tms.waybill"
@@ -85,27 +74,3 @@ class tms_waybill(osv.osv):
         return res
 
 tms_waybill()
-
-################HERENCIAS A TMS###################3
-class tms_waybill_line(osv.osv):
-    _name = "tms.waybill.line"
-    _inherit = "tms.waybill.line"
-    _columns = {        
-        'agreement_id': openerp.osv.fields.many2one('tms.agreement', 'Agreement', required=False, ondelete='cascade', select=True, readonly=True),
-        'agreement_control': openerp.osv.fields.boolean('Agreement Control', readonly=True),
-
-    }
-
-tms_waybill_line()
-
-class tms_waybill_shipped_product(osv.osv):
-    _name = "tms.waybill.shipped_product"
-    _inherit = "tms.waybill.shipped_product"
-    _columns = {        
-        'agreement_id': openerp.osv.fields.many2one('tms.agreement', 'Agreement', required=False, ondelete='cascade', readonly=True),
-        'agreement_control': openerp.osv.fields.boolean('Agreement Control', readonly=True),
-
-    }
-
-tms_waybill_shipped_product()
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
