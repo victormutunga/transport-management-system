@@ -19,24 +19,23 @@
 #
 ##############################################################################
 
+
 from osv import osv, fields
+import netsvc
+import pooler
+from tools.translate import _
+import decimal_precision as dp
+from osv.orm import browse_record, browse_null
 import time
 from datetime import datetime, date
-import decimal_precision as dp
-from tools.translate import _
-import openerp
 
-# Extra data fields for Waybills & Agreement
-# Factors
-class tms_factor(osv.osv):
-    _name = "tms.factor"
-    _inherit = "tms.factor"
-    _columns = {        
-        'agreement_id': openerp.osv.fields.many2one('tms.agreement', 'Agreement', required=False, ondelete='cascade'),# select=True, readonly=True),
-        'sequence': openerp.osv.fields.integer('Sequence', help="Gives the sequence calculation for these factors."),
-        'notes': openerp.osv.fields.text('Notes'),
-        'control': openerp.osv.fields.boolean('Control'),
+# Agregamos manejar una secuencia por cada tienda para controlar viajes 
+class sale_shop(osv.osv):
+    _name = "sale.shop"
+    _inherit = "sale.shop"
+    
+    _columns = {
+            'tms_agreement_seq': fields.many2one('ir.sequence', 'Agreement Sequence'),
+        }
 
-    }
-
-tms_factor()
+sale_shop()

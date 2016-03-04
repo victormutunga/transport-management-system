@@ -1,8 +1,8 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,28 +15,34 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
+
 from osv import osv, fields
+import netsvc
+import pooler
+from tools.translate import _
+import decimal_precision as dp
+from osv.orm import browse_record, browse_null
+from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, float_compare
 import time
 from datetime import datetime, date
-import decimal_precision as dp
-from tools.translate import _
 import openerp
+import calendar
 
-# Extra data fields for Waybills & Agreement
-# Factors
-class tms_factor(osv.osv):
-    _name = "tms.factor"
-    _inherit = "tms.factor"
-    _columns = {        
-        'agreement_id': openerp.osv.fields.many2one('tms.agreement', 'Agreement', required=False, ondelete='cascade'),# select=True, readonly=True),
-        'sequence': openerp.osv.fields.integer('Sequence', help="Gives the sequence calculation for these factors."),
-        'notes': openerp.osv.fields.text('Notes'),
-        'control': openerp.osv.fields.boolean('Control'),
+
+class week_days(osv.osv):
+    _name = 'week.days'
+
+    _columns = {
+        'name': fields.char('Name', size=256, required=True),
+        # 'partner_p_id': fields.many2one('res.partner',' ID P' ),
+        # 'partner_r_id': fields.many2one('res.partner',' ID R' ),
+        # 'partner_id': fields.many2one('res.partner', 'ID partner'),
 
     }
 
-tms_factor()
+
+week_days() 

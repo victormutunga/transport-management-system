@@ -18,25 +18,24 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-
 from osv import osv, fields
 import time
 from datetime import datetime, date
-import decimal_precision as dp
 from tools.translate import _
+from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, float_compare
+import decimal_precision as dp
+import netsvc
 import openerp
 
-# Extra data fields for Waybills & Agreement
-# Factors
-class tms_factor(osv.osv):
-    _name = "tms.factor"
-    _inherit = "tms.factor"
+
+# Extra data fields for Waybills & Negotiations
+class fleet_vehicle_category(osv.osv):
+    _name = "tms.unit.category"
+    _inherit = "tms.unit.category"
     _columns = {        
-        'agreement_id': openerp.osv.fields.many2one('tms.agreement', 'Agreement', required=False, ondelete='cascade'),# select=True, readonly=True),
-        'sequence': openerp.osv.fields.integer('Sequence', help="Gives the sequence calculation for these factors."),
-        'notes': openerp.osv.fields.text('Notes'),
-        'control': openerp.osv.fields.boolean('Control'),
+        'agreement_id': openerp.osv.fields.many2one('tms.agreement', 'Agreement', required=False, ondelete='cascade', select=True, readonly=True),
+#        'axis_number': openerp.osv.fields.integer('Axis number maximum', required=True),
 
     }
 
-tms_factor()
+fleet_vehicle_category()

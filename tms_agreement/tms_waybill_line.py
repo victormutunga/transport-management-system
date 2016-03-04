@@ -22,21 +22,21 @@
 from osv import osv, fields
 import time
 from datetime import datetime, date
-import decimal_precision as dp
 from tools.translate import _
+from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, float_compare
+import decimal_precision as dp
+import netsvc
 import openerp
 
-# Extra data fields for Waybills & Agreement
-# Factors
-class tms_factor(osv.osv):
-    _name = "tms.factor"
-    _inherit = "tms.factor"
+
+################HERENCIAS A TMS###################3
+class tms_waybill_line(osv.osv):
+    _name = "tms.waybill.line"
+    _inherit = "tms.waybill.line"
     _columns = {        
-        'agreement_id': openerp.osv.fields.many2one('tms.agreement', 'Agreement', required=False, ondelete='cascade'),# select=True, readonly=True),
-        'sequence': openerp.osv.fields.integer('Sequence', help="Gives the sequence calculation for these factors."),
-        'notes': openerp.osv.fields.text('Notes'),
-        'control': openerp.osv.fields.boolean('Control'),
+        'agreement_id': openerp.osv.fields.many2one('tms.agreement', 'Agreement', required=False, ondelete='cascade', select=True, readonly=True),
+        'agreement_control': openerp.osv.fields.boolean('Agreement Control', readonly=True),
 
     }
 
-tms_factor()
+tms_waybill_line()

@@ -19,25 +19,23 @@
 #
 ##############################################################################
 
-
 from osv import osv, fields
-import netsvc
-import pooler
-from tools.translate import _
-import decimal_precision as dp
-from osv.orm import browse_record, browse_null
 import time
 from datetime import datetime, date
+from tools.translate import _
+from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, float_compare
+import decimal_precision as dp
+import netsvc
+import openerp
 
-# Agregamos manejar una secuencia por cada tienda para controlar viajes 
-class sale_shop(osv.osv):
-    _name = "sale.shop"
-    _inherit = "sale.shop"
-    
-    _columns = {
-            'tms_agreement_seq': fields.many2one('ir.sequence', 'Agreement Sequence'),
-        }
 
-sale_shop()
+class tms_waybill_shipped_product(osv.osv):
+    _name = "tms.waybill.shipped_product"
+    _inherit = "tms.waybill.shipped_product"
+    _columns = {        
+        'agreement_id': openerp.osv.fields.many2one('tms.agreement', 'Agreement', required=False, ondelete='cascade', readonly=True),
+        'agreement_control': openerp.osv.fields.boolean('Agreement Control', readonly=True),
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    }
+
+tms_waybill_shipped_product()
