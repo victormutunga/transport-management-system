@@ -22,7 +22,7 @@
 #
 ##############################################################################
 import fleet_vehicle
-import report
+import fleet_vehicle_expired_insurance
 import tms_travel
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

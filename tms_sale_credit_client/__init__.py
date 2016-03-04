@@ -28,3 +28,4 @@ import account_invoice
 import res_partner
 import sale_order_extend_credit
 import stock_partial_picking
+import tms_waybill
