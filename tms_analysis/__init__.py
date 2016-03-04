@@ -1,8 +1,11 @@
-# -*- coding: utf-8 -*-
-##############################################################################
-#    
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+# -*- encoding: utf-8 -*-
+###########################################################################
+#    Module Writen to OpenERP, Open Source Management Solution
+#
+#    Copyright (c) 2014 Argil Consulting - http://www.argil.mx
+############################################################################
+#    Coded by: Israel Cruz Argil (israel.cruz@argil.mx)
+############################################################################
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,16 +18,8 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import tms_waybill_analysis
-import tms_travel_analysis
-import tms_expense_analysis
-#import tms_performance_unit
-#import tms_report_performance_unit_fuel_route
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+from . import models

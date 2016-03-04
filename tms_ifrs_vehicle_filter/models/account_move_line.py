@@ -22,4 +22,21 @@
 #
 ##############################################################################
 
-from . import models
+import netsvc
+from osv import fields, osv
+from tools.translate import _
+
+class account_move_line(osv.osv):
+    _inherit = "account.move.line"
+
+
+    def _query_get(self, cr, uid, obj='l', context=None):
+        if context is None:
+            context = {}
+        result =  super(account_move_line, self)._query_get(cr, uid, obj=obj, context=context)
+        if context.get('vehicle_ids', False):
+            result += " AND " +obj+".vehicle_id in (%s)" % str(context.get('vehicle_ids')).strip("[]")
+        return result
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

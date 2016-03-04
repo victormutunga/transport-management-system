@@ -19,4 +19,24 @@
 #
 ##############################################################################
 
-from . import models
+from osv import osv, fields
+import time
+from datetime import date, datetime, time, timedelta
+from osv.orm import browse_record, browse_null
+from osv.orm import except_orm
+from tools.translate import _
+from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, float_compare
+import decimal_precision as dp
+import netsvc
+import openerp
+from pytz import timezone
+
+
+class tms_travel_wizard(osv.osv_memory):
+    _name = "tms.travel.wizard"
+    _columns = {
+        'travel_id': openerp.osv.fields.many2one('tms.travel', 'Travel', required=False),        
+        'wizard_id': openerp.osv.fields.many2one('tms.agreement.travel', 'Wizard Id', required=False, ondelete='cascade'),# select=True, readonly=True),
+    }
+
+tms_travel_wizard()

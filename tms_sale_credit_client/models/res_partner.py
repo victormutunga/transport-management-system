@@ -19,4 +19,33 @@
 #
 ##############################################################################
 
-from . import models
+
+from osv import osv, fields
+
+### HERENCIA A CLIENTES PARA IGNORAR VENCIMIENTO ###
+class res_partner(osv.osv):
+    _name = 'res.partner'
+    _inherit ='res.partner'
+    _columns = {
+    'overdue_invoice': fields.boolean('Ignorar Facturas Vencidas', help='Si este campo esta Activo, las facturas Vencidas no afectaran si el Cliente aun tiene Credito'),
+
+        }
+
+    _defaults = {
+        }
+res_partner()
+
+
+######### HERENCIA DE FACTURACION DESDE ALBARANES ##############
+class stock_partial_picking(osv.osv):
+    _name = 'stock.partial.picking'
+    _inherit ='stock.partial.picking'
+    _columns = {
+        }
+
+    def do_partial(self, cr, uid, ids, context=None):
+        res = super(stock_partial_picking, self).do_partial(cr, uid, ids, context)
+        
+        return res
+
+stock_partial_picking()

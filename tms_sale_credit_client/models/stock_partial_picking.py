@@ -19,4 +19,20 @@
 #
 ##############################################################################
 
-from . import models
+
+from osv import osv
+
+
+# ######## HERENCIA DE FACTURACION DESDE ALBARANES ##############
+class stock_partial_picking(osv.osv):
+    _name = 'stock.partial.picking'
+    _inherit ='stock.partial.picking'
+    _columns = {
+        }
+
+    def do_partial(self, cr, uid, ids, context=None):
+        res = super(stock_partial_picking, self).do_partial(cr, uid, ids, context)
+        
+        return res
+
+stock_partial_picking()

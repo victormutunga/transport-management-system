@@ -19,4 +19,24 @@
 #
 ##############################################################################
 
-from . import models
+from osv import osv, fields
+import time
+from datetime import datetime, date
+from tools.translate import _
+from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, float_compare
+import decimal_precision as dp
+import netsvc
+import openerp
+
+
+################HERENCIAS A TMS###################3
+class tms_waybill_line(osv.osv):
+    _name = "tms.waybill.line"
+    _inherit = "tms.waybill.line"
+    _columns = {        
+        'agreement_id': openerp.osv.fields.many2one('tms.agreement', 'Agreement', required=False, ondelete='cascade', select=True, readonly=True),
+        'agreement_control': openerp.osv.fields.boolean('Agreement Control', readonly=True),
+
+    }
+
+tms_waybill_line()

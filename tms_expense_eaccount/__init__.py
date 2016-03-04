@@ -22,8 +22,4 @@
 #
 ##############################################################################
 
-import tms_expense_invoice
-import tms_expense_line
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+from . import models

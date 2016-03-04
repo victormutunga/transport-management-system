@@ -19,4 +19,23 @@
 #
 ##############################################################################
 
-from . import models
+
+from osv import osv, fields
+import netsvc
+import pooler
+from tools.translate import _
+import decimal_precision as dp
+from osv.orm import browse_record, browse_null
+import time
+from datetime import datetime, date
+
+# Agregamos manejar una secuencia por cada tienda para controlar viajes 
+class sale_shop(osv.osv):
+    _name = "sale.shop"
+    _inherit = "sale.shop"
+    
+    _columns = {
+            'tms_agreement_seq': fields.many2one('ir.sequence', 'Agreement Sequence'),
+        }
+
+sale_shop()
