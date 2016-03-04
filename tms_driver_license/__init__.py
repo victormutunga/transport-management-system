@@ -23,6 +23,6 @@
 ##############################################################################
 import hr_employee
 import tms_travel
-import report
+import hr_employee_expired_license
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

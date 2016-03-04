@@ -25,14 +25,8 @@
 
 from osv import osv, fields
 import netsvc
-import pooler
 from tools.translate import _
-import decimal_precision as dp
-from osv.orm import browse_record, browse_null
-import time
-from datetime import datetime, date, timedelta
-import openerp
-from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, float_compare
+from datetime import datetime
 import base64
 
 class hr_employee(osv.osv):
@@ -108,62 +102,3 @@ class hr_employee(osv.osv):
         return True
 
 
-class hr_employee_expired_license(osv.osv_memory):
-    _name = 'hr.employee.expired_license'
-    _description = "Wizard to get Driver's Licenses about to expire"
-
-    
-    def _get_date(self, cr, uid, ids, context=None):
-        val = self.pool.get('ir.config_parameter').get_param(cr, uid, 'tms_driver_license_notification_x_days', context=context)
-        xdays = int(val) or 0
-        date = datetime.now()  + timedelta(days=xdays)
-        return date.strftime(DEFAULT_SERVER_DATE_FORMAT)
-    
-    _columns = {
-            'date'    : fields.date('Date', required=True),
-            'include' : fields.selection([
-                                ('all', 'All Drivers (Internal & External)'),
-                                ('int', 'Internal Drivers only'),
-                                ('ext', 'External Drivers only'),
-                                ], 'Include', required=True),
-            }
-
-    _defaults = {
-        'date'   : _get_date,
-        'include' : 'all',
-            }
-    
-    def button_get_licenses_to_expire(self, cr, uid, ids, to_attach=False, context=None):
-        """
-        To get the date and print the report
-        @return : return report
-        """
-        if context is None:
-            context = {}
-
-        
-        date = self.browse(cr, uid, ids)[0].date
-        include = self.browse(cr, uid, ids)[0].include
-        hr_emp_obj = self.pool.get('hr.employee')
-        condition = [('tms_driver_license_expiration',"<=", date), ('tms_category','=','driver')]
-        if include=='int':
-            condition.append(('tms_supplier_driver','=',False))
-        elif include=='ext':
-            condition.append(('tms_supplier_driver','=',True))
-        employee_ids = hr_emp_obj.search(cr, uid, condition, order='tms_driver_license_expiration desc')
-        
-        if employee_ids:
-            datas = {   'ids': employee_ids, 
-                        'count': len(employee_ids),
-                        'date': date}
-            return {
-                'type': 'ir.actions.report.xml',
-                'report_name': 'hr.employee.expired_licenses.report.webkit',
-                'datas': datas,
-                }
-        else:
-            raise osv.except_osv(_('Warning!'), _('There are no Driver Licenses expired or to expire on this date'))
-
-        
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

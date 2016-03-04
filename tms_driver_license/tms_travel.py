@@ -23,17 +23,11 @@
 ##############################################################################
 
 
-from osv import osv, fields
-import netsvc
-import pooler
+from osv import osv
 from tools.translate import _
-import decimal_precision as dp
-from osv.orm import browse_record, browse_null
-import time
-from datetime import datetime, date, timedelta
-import openerp
-from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, float_compare
-import base64
+from datetime import datetime, timedelta
+from tools import DEFAULT_SERVER_DATE_FORMAT
+
 
 class tms_travel(osv.osv):
     _inherit='tms.travel'
