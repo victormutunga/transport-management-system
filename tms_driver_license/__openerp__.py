@@ -44,9 +44,9 @@ expire in next [parameter] days, to [parameter] users.
             "report_webkit"
                 ],
     "demo": [],
-    "data": ["hr_employee_view.xml", 
-             "ir_config_parameter.xml",
-             "hr_employee_expired_license_report.xml"],
+    "data": ["views/hr_employee_view.xml", 
+             "views/ir_config_parameter.xml",
+             "views/hr_employee_expired_license_report.xml"],
     "installable": True,
     "active": False,
 }

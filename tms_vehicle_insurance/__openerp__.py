@@ -42,9 +42,9 @@ expire in next [parameter] days, to [parameter] users.
             "report_webkit"
                 ],
     "demo": [],
-    "data": ["fleet_vehicle_view.xml", 
-             "ir_config_parameter.xml",
-             "fleet_vehicle_expired_insurance_report.xml"],
+    "data": ["views/fleet_vehicle_view.xml", 
+             "views/ir_config_parameter.xml",
+             "views/fleet_vehicle_expired_insurance_report.xml"],
     "installable": True,
     "active": False,
 }

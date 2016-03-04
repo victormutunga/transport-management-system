@@ -47,8 +47,8 @@
     "init_xml" : [],
     "demo_xml" : [],
     "update_xml" : [
-                    "sale_view.xml",
-                    "tms_view.xml",
+                    "views/sale_view.xml",
+                    "views/tms_view.xml",
                     'security/ir.model.access.csv',
                     ],
     "installable" : True,
