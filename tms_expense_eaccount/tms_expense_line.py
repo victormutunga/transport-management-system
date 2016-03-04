@@ -22,8 +22,17 @@
 #
 ##############################################################################
 
-import tms_expense_invoice
-import tms_expense_line
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+from osv import fields, osv
 
+
+class tms_expense_line(osv.osv):
+    _inherit = 'tms.expense.line'
+
+    _columns = {
+        'invoice_xml_file': fields.binary('Archivo XML', filters='*.xml', required=False, help='Aquí se debe subir el archivo XML de la Factura CFDI'),        
+        'invoice_pdf_file': fields.binary('Archivo PDF', filters='*.pdf', required=False, help='Aquí se puede subir el archivo PDF de la Factura CFDI'),        
+        
+        }
+
+ 
