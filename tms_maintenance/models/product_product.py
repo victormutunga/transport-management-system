@@ -77,7 +77,7 @@ class product_product(osv.osv):
         'mro_frequency'    : fields.integer('Frequency'),
         'mro_preventive'   : fields.boolean('Preventive MRO'),
         'mro_cycle_ids'    : fields.many2many('product.product',  'tms_maintenance_cycle_program_rel',  'program_id', 'program_child_id',  'Service Programs', domain=[('tms_category','=','maint_service_cycle')]),
-  
+
         }
 
 
@@ -104,9 +104,3 @@ class product_product(osv.osv):
     _constraints = [
         (_check_tms_product, 'Error ! Product is not defined correctly...Please see TMS Category tooltip...', ['tms_category'])
         ]
-
-
-product_product()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

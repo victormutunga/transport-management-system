@@ -31,7 +31,6 @@ import netsvc
 import openerp
 
 
-
 # Modificamos el objeto Vehiculo para agregar los campos requeridos para MRO
 class fleet_vehicle(osv.osv):
     _name = 'fleet.vehicle'
@@ -134,111 +133,4 @@ class fleet_vehicle(osv.osv):
             date_next_service = date_origin + delta
             ##print date_next_service
             return date_next_service.date().isoformat()
-
-        
-    
-class fleet_vehicle_mro_program(osv.Model):
-    _name = 'fleet.vehicle.mro_program'
-    _description = 'Fleet Vehicle MRO Program'
-
-    _columns = {
-        'vehicle_id'     : fields.many2one('fleet.vehicle', 'Vehicle', required=True, ondelete='restrict'),
-        'mro_cycle_id'   : fields.many2one('product.product', 'MRO Cycle', required=True, ondelete='restrict'),
-        'trigger'        : fields.integer('Scheduled at', required=True),
-        'sequence'       : fields.integer('Sequence', required=True),
-        'mro_service_order_id'       : fields.many2one('tms.maintenance.order', 'MRO Service Order', ondelete='restrict'),
-        'mro_service_order_date'     : fields.related('mro_service_order_id', 'date', type='datetime', string="Date", store=True, readonly=True),
-        'mro_service_order_distance' : fields.related('mro_service_order_id', 'accumulated_odometer', type='float', string="mi/km", store=True, readonly=True),
-        'next_date'     : fields.date('Date Next Service'),
-        'diference' : fields.integer('Distance in between'),
-        }
-
-    _defaults = {
-        'next_date'      : lambda *a: time.strftime(DEFAULT_SERVER_DATE_FORMAT),
-        'diference' : lambda *a: 0,
-        }
-
-    _order = 'trigger,sequence'
-
-    def button_set_next_cycle_service(self, cr, uid, ids, context=None):
-        #print "context: ", context
-        if not ids:
-            return False
-        ##print "ids: ", ids
-        for program_line in self.browse(cr, uid, ids):
-            ##print "program_line.mro_cycle_id: ", program_line.mro_cycle_id
-            ##print "program_line.sequence: ", program_line.sequence
-            ##print "program_line.vehicle_id.odometer: ", program_line.vehicle_id.odometer
-            ##print "program_line.vehicle_id.current_odometer_read: ", program_line.vehicle_id.current_odometer_read
-            vehicle_obj = self.pool.get('fleet.vehicle')
-            vehicle_obj.write(cr, uid, [program_line.vehicle_id.id], {'cycle_next_service' : program_line.mro_cycle_id.id, 
-                                                                      'date_next_service' : program_line.next_date or time.strftime('%Y-%m-%d'), 
-                                                                      'sequence_next_service' : program_line.sequence,
-                                                                      'main_odometer_next_service' : program_line.trigger,
-                                                                      'odometer_next_service' : program_line.trigger})
-            ##print "Despues del desmadre..."
-        
-        return False
-
-
-class fleet_vehicle_mro_program_reschedule(osv.osv_memory):
-    _name ='fleet.vehicle.mro_program.re_schedule'
-    _description = 'Vehicle MRO Program re-schedule on avg distance/time per day'
-
-    _columns = {
-        'control'     : fields.boolean('Control'),
-        'vehicle_ids' : fields.one2many('fleet.vehicle.mro_program.re_schedule.line', 'wizard_id', 'Vehicles'),
-        }
-    
-    def do_re_schedule(self, cr, uid, ids, context=None):
-        for rec in self.browse(cr, uid, ids):
-            vehicle_obj = self.pool.get('fleet.vehicle')
-            for vehicle in rec.vehicle_ids:
-                vehicle_obj.write(cr, uid, [vehicle.vehicle_id.id], {'date_next_service':vehicle.next_date})
-                
-        return {'type': 'ir.actions.act_window_close'}
-    
-    
-    def _get_vehicle_ids(self, cr, uid, context=None):
-        vehicle_ids = []
-        ids = context.get('active_ids', False)
-        if ids:
-            vehicle_obj = self.pool.get('fleet.vehicle')
-            for rec in vehicle_obj.browse(cr, uid, ids):
-                vehicle_ids.append({'vehicle_id'        : rec.id,
-                                    'mro_program_id'    : rec.mro_program_id.id,
-                                    'cycle_next_service': rec.cycle_next_service.id,
-                                    'sequence_next_service': rec.sequence_next_service,
-                                    'odometer'          : rec.odometer,
-                                    'current_odometer'  : rec.current_odometer_read,
-                                    'avg_odometer_uom_per_day'  : rec.avg_odometer_uom_per_day,
-                                    'date_next_service' : rec.date_next_service,
-                                    'next_date'         : vehicle_obj.get_next_service_date(cr, uid, [rec.id]), 
-                                    })
-
-        return vehicle_ids
-    
-    _defaults = {
-            'vehicle_ids'   : _get_vehicle_ids,
-            'control'       : False,
-             }
-    
-class fleet_vehicle_mro_program_reschedule_line(osv.osv_memory):
-    _name ='fleet.vehicle.mro_program.re_schedule.line'
-    _description = 'Vehicle MRO Program re-schedule line'
-    _columns = {
-        'wizard_id'                 : fields.many2one('fleet.vehicle.mro_program.re_schedule', string="Wizard", ondelete='CASCADE'),
-        'vehicle_id'                : fields.many2one('fleet.vehicle', 'Vehicle', required=True, readonly=True),
-        'mro_program_id'            : fields.related('vehicle_id', 'mro_program_id', type='many2one', relation='product.product', string='Maintenance Program', readonly=True),
-        'cycle_next_service'        : fields.related('vehicle_id', 'cycle_next_service', type='many2one', relation='product.product', string='Next Maintenance Service', readonly=True),
-        'sequence_next_service'     : fields.related('vehicle_id', 'sequence_next_service', string='Cycle Seq. Next Serv.', readonly=True),
-        'odometer'                  : fields.related('vehicle_id', 'odometer', string='Accumulated Odometer', readonly=True),
-        'current_odometer'          : fields.related('vehicle_id', 'current_odometer_read', string='Current Odometer', readonly=True),
-        'avg_odometer_uom_per_day'  : fields.related('vehicle_id', 'avg_odometer_uom_per_day', string='Avg Distance/Time per day', readonly=True),
-        'date_next_service'         : fields.related('vehicle_id', 'date_next_service', type='date', string='Date Next Serv.', readonly=True),
-        'next_date'                 : fields.date('NEW Next Service', required=True),
-        
-        }
-
-            
 
