@@ -15,27 +15,21 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 
-from osv import osv, fields
-import netsvc
-import pooler
-from tools.translate import _
-import decimal_precision as dp
-from osv.orm import browse_record, browse_null
-import time
-from datetime import datetime, date
+from Openerp import models, fields
 
-# Agregamos manejar una secuencia por cada tienda para controlar viajes 
-class sale_shop(osv.osv):
+# Agregamos manejar una secuencia por cada tienda para controlar viajes
+
+
+class sale_shop(models.Model):
     _name = "sale.shop"
     _inherit = "sale.shop"
-    
-    _columns = {
-            'tms_agreement_seq': fields.many2one('ir.sequence', 'Agreement Sequence'),
-        }
+
+    tms_agreement_seq = fields.Many2one('ir.sequence', 'Agreement Sequence'),
+
 
 sale_shop()
