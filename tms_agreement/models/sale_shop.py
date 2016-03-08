@@ -20,7 +20,7 @@
 ##############################################################################
 
 
-from Openerp import models, fields
+from openerp import models, fields
 
 # Agregamos manejar una secuencia por cada tienda para controlar viajes
 
