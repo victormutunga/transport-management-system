@@ -131,5 +131,3 @@ class TmsUnitCategory(models.Model):
             default = {}
         default['name'] = categ['name'] + ' (copy)'
         return super(TmsUnitCategory, self).copy(self, id, default)
-
-

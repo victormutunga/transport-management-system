@@ -114,7 +114,7 @@ class TmsWaybillCancel(osv.osv_memory):
                     if waybill.move_id.id:
                         move_obj = self.pool.get('account.move')
                         if waybill.move_id.state != 'draft':
-                            move_obj.button_cancel([waybill.move_id.id]) 
+                            move_obj.button_cancel([waybill.move_id.id])
                         move_obj.unlink([waybill.move_id.id])
 
                     waybill_obj.write(record_id, {

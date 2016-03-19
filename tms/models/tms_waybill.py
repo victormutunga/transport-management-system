@@ -840,13 +840,19 @@ class TmsWaybill(models.Model):
                 tms_prod_income_account = (
                     waybill_line.product_id.tms_property_account_income.id if
                     waybill_line.product_id.tms_property_account_income.id else
-                    waybill_line.product_id.categ_id.tms_property_account_income_categ.id
-                    if waybill_line.product_id.categ_id.tms_property_account_income_categ.id
+                    (waybill_line.product_id.categ_id.
+                     tms_property_account_income_categ.id)
+                    if (waybill_line.product_id.categ_id.
+                        tms_property_account_income_categ.id)
                     else False)
-                prod_income_account = (waybill_line.product_id.property_account_income.id
-                                       if waybill_line.product_id.property_account_income.id else
-                                       waybill_line.product_id.categ_id.property_account_income_categ.id if
-                                       waybill_line.product_id.categ_id.property_account_income_categ.id
+                prod_income_account = ((waybill_line.product_id.
+                                        property_account_income.id)
+                                       if (waybill_line.product_id.
+                                           property_account_income.id) else
+                                       (waybill_line.product_id.categ_id.
+                                        property_account_income_categ.id) if
+                                       (waybill_line.product_id.categ_id.
+                                        property_account_income_categ.id)
                                        else False)
 
                 if not (tms_prod_income_account & prod_income_account):
@@ -943,4 +949,3 @@ class TmsWaybill(models.Model):
 #        context=context)
 
 TmsWaybill()
-
