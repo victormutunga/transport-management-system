@@ -45,7 +45,7 @@ expire in next [parameter] days, to [parameter] users.
     "data": ["views/fleet_vehicle_view.xml", 
              "views/ir_config_parameter.xml",
              "views/fleet_vehicle_expired_insurance_report.xml"],
-    "installable": True,
+    "installable": False,
     "active": False,
 }
 

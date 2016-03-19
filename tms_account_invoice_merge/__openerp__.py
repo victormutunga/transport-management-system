@@ -37,7 +37,7 @@
     'data': [],
     'test': [],
     'demo': [],
-    'installable': True,
+    'installable': False,
     'active': False,
     'certificate': False,
 }

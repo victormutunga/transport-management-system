@@ -47,7 +47,7 @@ expire in next [parameter] days, to [parameter] users.
     "data": ["views/hr_employee_view.xml", 
              "views/ir_config_parameter.xml",
              "views/hr_employee_expired_license_report.xml"],
-    "installable": True,
+    "installable": False,
     "active": False,
 }
 

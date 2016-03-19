@@ -40,7 +40,7 @@ This module adds options to add XML Invoice file for Mexico's e-Account
                 'views/tms_expense_eaccount_view.xml',
             ],
     'website': 'http://www.argil.mx',
-    'installable': True,
+    'installable': False,
     'active': True,
 }
 

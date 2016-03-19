@@ -34,7 +34,7 @@ este campo es el encargado de no permitir editar los Importes, si se desactiva e
     "data": [
             "views/tms_view.xml",
     ],
-    "installable": True,
+    "installable": False,
     "active": False,
 }
 
