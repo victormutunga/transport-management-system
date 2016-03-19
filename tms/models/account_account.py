@@ -19,30 +19,19 @@
 #
 ##############################################################################
 
-from openerp.osv import osv, fields
+from openerp import models, fields
 
 
 # Additionat field to set Account Journal for Advances and Travel Expenses
-class AccountAccount(osv.osv):
+class AccountAccount(models.Model):
     _inherit = 'account.account'
 
-    _columns = {
-        'tms_vehicle_mandatory':
-        fields.boolean('TMS Vehicle Mandatory',
-                       help='If set to True then it will require to add \
-                       Vehicle to Move Line'),
-        'tms_employee_mandatory':
-        fields.boolean('TMS Employee Mandatory',
-                       help='If set to True then it will require to add \
-                       Employee to Move Line'),
-        'tms_sale_shop_mandatory':
-        fields.boolean('TMS Sale Shop Mandatory',
-                       help='If set to True then it will require to add \
-                       Sale Shop to Move Line'),
-    }
-    _defaults = {
-        'tms_vehicle_mand\
-        atory': lambda *a: False,
-        'tms_employee_mandatory': lambda *a: False,
-        'tms_sale_shop_mandatory': lambda *a: False,
-    }
+    tms_vehicle_mandatory = fields.Boolean(
+        string='TMS Vehicle Mandatory', help='If set to True then it will require to add \
+            Vehicle to Move Line', default=lambda *a: False)
+    tms_employee_mandatory = fields.Boolean(
+        string='TMS Vehicle Mandatory', help='If set to True then it will require to add \
+            Vehicle to Move Line', default=lambda *a: False)
+    tms_sale_shop_mandatory = fields.Boolean(
+        string='TMS Sale Shop Mandatory', help='If set to True then it will require to add \
+                       Sale Shop to Move Line', default=lambda *a: False)

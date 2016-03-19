@@ -20,17 +20,12 @@
 ##############################################################################
 
 
-from openerp.osv import osv, fields
+from openerp import models, fields
 
 
-class HrJob(osv.osv):
+class HrJob(models.Model):
     _name = "hr.job"
     _inherit = "hr.job"
 
-    _columns = {
-        'tms_global_salary': fields.float('Global Salary', digits=(18, 6)),
-    }
-
-    _defaults = {
-        'tms_global_salary': lambda *a: 0.0,
-    }
+    tms_global_salary = fields.Float(
+        string='Global Salary', digits=(18, 6), default=(lambda *a: 0.0))

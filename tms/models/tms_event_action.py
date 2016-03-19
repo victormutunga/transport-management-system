@@ -18,27 +18,31 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import osv, fields
+from openerp import models, fields
 
 
 # Actions triggered by Events category
 
 
-class tms_event_action(osv.osv):
+class TmsEventAction(models.Model):
     _name = "tms.event.action"
     _description = "Actions triggered by Events categories"
-    _columns = {
-        'name': fields.char('Name', size=128, required=True, translate=True),
-        'event_category_ids': fields.many2many('tms.event.category', 'tms_event_action_rel', 'action_id', 'event_category_id', 'Event Categories'),
-        'field_id': fields.many2one('ir.model.fields', 'Field to update'),
-        'object_id': fields.related('field_id', 'model_id', type='many2one', relation='ir.model', string='Object', store=True, readonly=True),
-        'get_value': fields.text('Python Code'),
-        'notes': fields.text('Notes'),
-        'active': fields.boolean('Active'),
-    }
+
+    name = fields.Char('Name', size=128, required=True, translate=True)
+    event_category_ids = fields.Many2many(
+        'tms.event.category', 'tms_event_action_rel', 'action_id',
+        'event_category_id', 'Event Categories')
+    field_id = fields.Many2one('ir.model.fields', 'Field to update')
+    object_id = fields.Many2one(
+        compute='field_id.model_id', relation='ir.model', string='Object',
+        store=True, readonly=True)
+    get_value = fields.Text('Python Code')
+    notes = fields.Text('Notes')
+    active = fields.Boolean('Active', default=True)
+
     _defaults = {
         'active': True,
     }
-    _sql_constraints = [('name_uniq', 'unique(name)', 'Category name must be unique !')]
+    _sql_constraints = [
+        ('name_uniq', 'unique(name)', 'Category name must be unique !')]
     _order = "name"
-

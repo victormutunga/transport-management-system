@@ -23,28 +23,28 @@ from openerp.osv import osv, fields
 import time
 from openerp.tools.translate import _
 from openerp import netsvc
+import DEFAULT_SERVER_DATETIME_FORMAT
 
 
 # Wizard que permite hacer una copia de la carta porte al momento de cancelarla
-class tms_waybill_cancel(osv.osv_memory):
+class TmsWaybillCancel(osv.osv_memory):
 
     """ To create a copy of Waybill when cancelled"""
 
     _name = 'tms.waybill.cancel'
     _description = 'Make a copy of Cancelled Waybill'
 
-    _columns = {
-            'company_id'    : fields.many2one('res.company', 'Company'),
-            'copy_waybill'  : fields.boolean('Create copy of this waybill?', required=False),
-            'sequence_id'   : fields.many2one('ir.sequence', 'Sequence', required=False),
-            'date_order'    : fields.date('Date', required=False),
-        }
+    company_id = fields.Many2one(
+        'res.company', 'Company',
+        default=(lambda self, cr, uid, context: self.pool.get(
+            'res.users').browse(cr, uid, uid).company_id.id))
+    copy_waybill = fields.Boolean(
+        'Create copy of this waybill?', required=False)
+    sequence_id = fields.Many2one('ir.sequence', 'Sequence', required=False)
+    date_order = fields.Date(
+        'Date', required=False, default=(fields.date.context_today))
 
-    _defaults = {'date_order'   : fields.date.context_today,
-                 'company_id'   :  lambda self, cr, uid, context: self.pool.get('res.users').browse(cr, uid, uid).company_id.id
-                 }
-
-    def make_copy(self, cr, uid, ids, context=None):
+    def make_copy(self):
 
         """
              To copy Waybills when cancelling them
@@ -55,65 +55,86 @@ class tms_waybill_cancel(osv.osv_memory):
              @return : retrun view of Invoice
         """
 
-        record_id =  context.get('active_ids',[])
+        record_id = self.pool.get('active_ids', [])
 
-        #print record_id
+        # print record_id
 
         if record_id:
-            #print "Si entra..."
-            for record in self.browse(cr,uid, ids):
-                #print record.company_id.name
-                #print record.date_order
+            # print "Si entra..."
+            for record in self.browse(self):
+                # print record.company_id.name
+                # print record.date_order
                 waybill_obj = self.pool.get('tms.waybill')
-                for waybill in waybill_obj.browse(cr, uid, record_id):
-                    #print waybill.name
+                for waybill in waybill_obj.browse(record_id):
+                    # print waybill.name
                     if waybill.invoiced and waybill.invoice_paid:
-                        raise osv.except_osv(
-                                _('Could not cancel Waybill !'),
-                                _('This Waybill\'s Invoice is already paid'))
+                        raise Warning(
+                            _('Could not cancel Waybill !'),
+                            _('This Waybill\'s Invoice is already paid'))
                         return False
-                    elif waybill.invoiced and waybill.invoice_id and waybill.invoice_id.id and waybill.invoice_id.state != 'cancel' and waybill.billing_policy=='manual':
-                        raise osv.except_osv(
-                                _('Could not cancel Waybill !'),
-                                _('This Waybill is already Invoiced'))
+                    elif (waybill.invoiced and waybill.invoice_id and
+                          waybill.invoice_id.id and waybill.invoice_id.state !=
+                          'cancel' and waybill.billing_policy == 'manual'):
+                        raise Warning(
+                            _('Could not cancel Waybill !'),
+                            _('This Waybill is already Invoiced'))
                         return False
-                    elif waybill.waybill_type=='outsourced' and waybill.supplier_invoiced and waybill.supplier_invoice_paid:
-                        raise osv.except_osv(
-                                _('Could not cancel Waybill !'),
-                                _('This Waybill\'s Supplier Invoice is already paid'))
+                    elif (waybill.waybill_type == 'outsourced' and
+                          waybill.supplier_invoiced and
+                          waybill.supplier_invoice_paid):
+                        raise Warning(
+                            _('Could not cancel Waybill !'),
+                            _('This Waybill\'s Supplier Invoice is already \
+                                paid'))
                         return False
 
-                    elif waybill.billing_policy=='automatic' and waybill.invoiced and not waybill.invoice_paid:
+                    elif (waybill.billing_policy == 'automatic' and
+                          waybill.invoiced and not waybill.invoice_paid):
                         wf_service = netsvc.LocalService("workflow")
-                        wf_service.trg_validate(uid, 'account.invoice', waybill.invoice_id.id, 'invoice_cancel', cr)
-                        invoice_obj=self.pool.get('account.invoice')
-                        invoice_obj.unlink(cr, uid, [waybill.invoice_id.id], context=None)
-        #            elif waybill.state in ('draft','approved','confirmed') and waybill.travel_id.state in ('closed'):
-        #                raise osv.except_osv(
+                        wf_service.trg_validate(
+                            'account.invoice', waybill.invoice_id.id,
+                            'invoice_cancel')
+                        invoice_obj = self.pool.get('account.invoice')
+                        invoice_obj.unlink([waybill.invoice_id.id])
+        #            elif waybill.state in ('draft','approved','confirmed') and
+        #               waybill.travel_id.state in ('closed'):
+        #                raise Warning(
         #                        _('Could not cancel Advance !'),
-        #                        _('This Waybill is already linked to Travel Expenses record'))
-                    #print "record_id:", record_id
-                    elif waybill.waybill_type=='outsourced' and waybill.supplier_invoiced:
-                        raise osv.except_osv(
+        #                        _('This Waybill is already linked to Travel
+        #            Expenses record'))
+                    # print "record_id:", record_id
+                    elif (waybill.waybill_type == 'outsourced' and
+                          waybill.supplier_invoiced):
+                        raise Warning(
                             _('Could not cancel Waybill !'),
-                            _('This Waybill\'s Supplier Invoice is already created. First, cancel Supplier Invoice and then try again'))
-                        
-                    if waybill.move_id.id:                
+                            _('This Waybill\'s Supplier Invoice is already \
+                            created. First, cancel Supplier Invoice and \
+                            then try again'))
+
+                    if waybill.move_id.id:
                         move_obj = self.pool.get('account.move')
                         if waybill.move_id.state != 'draft':
-                            move_obj.button_cancel(cr, uid, [waybill.move_id.id]) 
-                        move_obj.unlink(cr, uid, [waybill.move_id.id])
-                    
-                    waybill_obj.write(cr, uid, record_id, {'move_id' : False, 'state':'cancel', 'cancelled_by':uid,'date_cancelled':time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-          
-                    if record.copy_waybill:                        
-                        default ={} 
-                        default.update({'replaced_waybill_id': waybill.id,'move_id':False })
+                            move_obj.button_cancel([waybill.move_id.id]) 
+                        move_obj.unlink([waybill.move_id.id])
+
+                    waybill_obj.write(record_id, {
+                        'move_id': False,
+                        'state': 'cancel',
+                        'cancelled_by': self,
+                        'date_cancelled':
+                        time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+
+                    if record.copy_waybill:
+                        default = {}
+                        default.update({
+                            'replaced_waybill_id': waybill.id,
+                            'move_id': False})
                         if record.sequence_id.id:
-                            default.update({'sequence_id': record.sequence_id.id })
+                            default.update({
+                                'sequence_id': record.sequence_id.id})
                         if record.date_order:
-                            default.update({'date_order': record.date_order })
-                        waybill=waybill_obj.copy(cr, uid, record_id[0], default=default)
+                            default.update({'date_order': record.date_order})
+                        waybill = waybill_obj.copy(record_id[0])
         return {'type': 'ir.actions.act_window_close'}
 
-tms_waybill_cancel()
+TmsWaybillCancel()

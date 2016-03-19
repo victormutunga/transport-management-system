@@ -19,19 +19,20 @@
 #
 ##############################################################################
 
-from openerp.osv import osv
-
+from openerp import models
 
 # Add special tax calculation for Mexico
-class AccountTax(osv.osv):
+
+
+class AccountTax(models.Model):
     _name = 'account.tax'
     _inherit = 'account.tax'
 
     def compute_all_tax_and_retention(
-            self, cr, uid, taxes, price_unit, quantity, tax_type=None):
+            self, taxes, price_unit, quantity, tax_type=None):
         res = 0.0
         precision = self.pool.get('decimal.precision').precision_get(
-            cr, uid, 'Account')
+            'Account')
         total = round(price_unit * quantity, precision)
         for tax in taxes:
             if not (tax_type == 'negative' and tax.amount >= 0.00):

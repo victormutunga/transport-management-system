@@ -1,7 +1,7 @@
 
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -16,26 +16,31 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 
-from openerp.osv import osv, fields
+from openerp import models, fields
 
 
 # Route Fuel Efficiency by Motor
-class tms_route_fuelefficiency(osv.osv):
+class TmsRouteFuelefficiency(models.Model):
     _name = "tms.route.fuelefficiency"
     _description = "Fuel Efficiency by Motor"
 
-    _columns = {
-        'tms_route_id' : fields.many2one('tms.route', 'Route', required=True),        
-        'motor_id':fields.many2one('tms.unit.category', 'Motor', domain="[('type','=','motor')]", required=True),
-        'type': fields.selection([('tractor','Drive Unit'), ('one_trailer','Single Trailer'), ('two_trailer','Double Trailer')], 'Type', required=True),
-        'performance' :fields.float('Performance', required=True, digits=(14,4), help='Fuel Efficiency for this motor type'),
-        }
-    
+    tms_route_id = fields.Many2one('tms.route', 'Route', required=True)
+    motor_id = fields.Many2one(
+        'tms.unit.category', 'Motor', domain="[('type','=','motor')]",
+        required=True)
+    type = fields.Selection(
+        [('tractor', 'Drive Unit'), ('one_trailer', 'Single Trailer'),
+         ('two_trailer', 'Double Trailer')], 'Type', required=True)
+    performance = fields.Float(
+        'Performance', required=True, digits=(14, 4),
+        help='Fuel Efficiency for this motor type')
+
     _sql_constraints = [
-        ('route_motor_type_uniq', 'unique(tms_route_id, motor_id, type)', 'Motor + Type must be unique !'),
-        ]
+        ('route_motor_type_uniq', 'unique(tms_route_id, motor_id, type)',
+            'Motor + Type must be unique !'),
+    ]

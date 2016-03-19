@@ -1,7 +1,7 @@
 
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -16,29 +16,35 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 
-from openerp.osv import osv, fields
+from openerp import models, fields
 # Units for Transportation EXPIRY EXTRA DATA
 
 
-class tms_unit_expiry(osv.osv):
+class TmsUnitExpiry(models.Model):
     _name = "tms.unit.expiry"
     _description = "Expiry Extra Data for Units"
 
-    _columns = {
-        'unit_id'       : fields.many2one('fleet.vehicle', 'Unit Name', required=True, ondelete='cascade', select=True,),        
-        'expiry_id'     :fields.many2one('tms.unit.category', 'Field', domain="[('type','=','expiry')]", required=True),
-        'extra_value'   : fields.date('Value', required=True),
-        'name'          : fields.char('Valor', size=10, required=True),
-        }
+    unit_id = fields.Many2one(
+        'fleet.vehicle', 'Unit Name', required=True, ondelete='cascade',
+        select=True)
+    expiry_id = fields.Mmany2one(
+        'tms.unit.category', 'Field', domain="[('type','=','expiry')]",
+        required=True)
+    extra_value = fields.Date('Value', required=True)
+    name = fields.Char('Valor', size=10, required=True)
 
     _sql_constraints = [
-        ('name_uniq', 'unique(unit_id,expiry_id)', 'Expiry Data Field must be unique for each unit !'),
-        ]
+        ('name_uniq',
+         'unique(unit_id,expiry_id)',
+         'Expiry Data Field must be unique for each unit !'),
+    ]
 
-    def on_change_extra_value(self, cr, uid, ids, extra_value):
-        return {'value': {'name': extra_value[8:] + '/' + extra_value[5:-3] + '/' + extra_value[:-6]}}
+    def on_change_extra_value(self, extra_value):
+        return {'value': {
+            'name': extra_value[8:] + '/' +
+            extra_value[5:-3] + '/' + extra_value[:-6]}}

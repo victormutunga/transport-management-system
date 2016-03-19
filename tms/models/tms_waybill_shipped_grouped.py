@@ -20,27 +20,20 @@
 ##############################################################################
 
 
-from openerp.osv import osv, fields
+from openerp import models, fields
 
 # Grouped Shipped Quantity by Product
 
 
-class TmsWaybillShippedGrouped(osv.osv):
+class TmsWaybillShippedGrouped(models.Model):
     _name = "tms.waybill.shipped_grouped"
     _description = "Waybill Grouped Shipped Qty by Product"
 
-    _columns = {
-        'invoice_id':
-        fields.many2one('account.invoice', 'Invoice',
-                        required=True, ondelete='cascade'),
-        'product_id':
-        fields.many2one('product.product', 'Product', required=True),
-        'quantity':
-        fields.float('Quantity', digits=(16, 2), required=True),
-        'product_uom':
-        fields.many2one('product.uom', 'Unit of Measure ', required=True),
-    }
-
-    _defaults = {
-        'quantity': 0,
-    }
+    invoice_id = fields.Many2one(
+        'account.invoice', 'Invoice',
+        required=True, ondelete='cascade')
+    product_id = fields.Many2one('product.product', 'Product', required=True)
+    quantity = fields.Float(
+        'Quantity', digits=(16, 2), required=True, default=0)
+    product_uom = fields.Many2one(
+        'product.uom', 'Unit of Measure ', required=True)

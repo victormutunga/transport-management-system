@@ -19,30 +19,19 @@
 #
 ##############################################################################
 
-from openerp.osv import osv, fields
-import time
-from datetime import datetime, date
-from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
-import openerp.addons.decimal_precision as dp
-from openerp import netsvc
-from pytz import timezone
+from openerp import models, fields
 
 
 # Waybill Category
-class tms_waybill_category(osv.osv):
+class TmsWaybillCategory(models.Model):
     _name = 'tms.waybill.category'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = 'Waybill Categories'
 
-    _columns = {
-        'shop_id'     : fields.many2one('sale.shop', 'Shop'),
-        'company_id'  : fields.related('shop_id','company_id',type='many2one',relation='res.company',string='Company',store=True,readonly=True),
-        'name'        : fields.char('Name', size=64, required=True),
-        'description' : fields.text('Description'),
-        'active'      : fields.boolean('Active'),
-        }
-
-    _defaults = {
-        'active' : True,
-        }
+    shop_id = fields.Many2one('sale.shop', 'Shop')
+    company_id = fields.Many2one(
+        'shop_id', 'company_id', relation='res.company',
+        string='Company', store=True, readonly=True)
+    name = fields.Char('Name', size=64, required=True)
+    description = fields.Text('Description')
+    active = fields.Boolean('Active', default=True)

@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,26 +15,26 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 
-from openerp.osv import osv, fields
+from openerp import models, fields
 
 # Units PHOTOS
 
 
-class tms_unit_photo(osv.osv):
+class tms_unit_photo(models.Model):
     _name = "tms.unit.photo"
     _description = "Units Photos"
 
-    _columns = {
-        'unit_id' : fields.many2one('fleet.vehicle', 'Unit Name', required=True, ondelete='cascade'),
-        'name': fields.char('Description', size=64, required=True),
-        'photo': fields.binary('Photo'),
-        }
+    unit_id = fields.Many2one(
+        'fleet.vehicle', 'Unit Name', required=True, ondelete='cascade')
+    name = fields.Char('Description', size=64, required=True)
+    photo = fields.Binary('Photo')
 
     _sql_constraints = [
-        ('name_uniq', 'unique(unit_id,name)', 'Photo name number must be unique for each unit !'),
-        ]
+        ('name_uniq', 'unique(unit_id,name)',
+         'Photo name number must be unique for each unit !'),
+    ]

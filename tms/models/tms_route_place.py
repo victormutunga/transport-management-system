@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,25 +15,28 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 
-from openerp.osv import osv, fields
+from openerp import models, fields
 
 
-class tms_route_place(osv.osv):
+class TmsRoutePlace(models.Model):
     _name = 'tms.route.place'
     _description = 'Intermediate Places in Routes'
 
-    _columns = {
-        'route_id'  : fields.many2one('tms.route', 'Route', required=True),
-        'place_id'  : fields.many2one('tms.place', 'Place', required=True),
-        'state_id'  : fields.related('place_id', 'state_id', type='many2one', relation='res.country.state', string='State', store=True, readonly=True),
-        'country_id': fields.related('place_id', 'country_id', type='many2one', relation='res.country', string='Country', store=True, readonly=True),
-        'sequence'  : fields.integer('Sequence', help="Gives the sequence order when displaying this list."),
-    }
+    route_id = fields.Many2one('tms.route', 'Route', required=True)
+    place_id = fields.Many2one('tms.place', 'Place', required=True)
+    state_id = fields.Many2one(
+        'place_id', 'state_id', relation='res.country.state',
+        string='State', store=True, readonly=True)
+    country_id = fields.Many2one(
+        'place_id', 'country_id', relation='res.country', string='Country',
+        store=True, readonly=True)
+    sequence = fields.Integer(
+        'Sequence', help="Gives the sequence order when displaying this list.")
 
     _defaults = {
         'sequence': 10,

@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,36 +15,45 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import osv, fields
+from openerp import models, fields
 
 
-# Agregamos manejar una secuencia por cada tienda para controlar viajes 
-#class sale_shop(osv.osv):
+# Agregamos manejar una secuencia por cada tienda para controlar viajes
+# class sale_shop(osv.osv):
 #    _name = "sale.shop"
 #    _inherit = "sale.shop"
-#    
+#
 #    _columns = {
-#            'tms_travel_seq': fields.many2one('ir.sequence', 'Travel Sequence'),
-#            'tms_advance_seq': fields.many2one('ir.sequence', 'Advance Sequence'),
-#            'tms_travel_expenses_seq': fields.many2one('ir.sequence', 'Travel Expenses Sequence'),
-#            'tms_loan_seq': fields.many2one('ir.sequence', 'Loan Sequence'),
-#            'tms_fuel_sequence_ids': fields.one2many('tms.sale.shop.fuel.supplier.seq', 'shop_id', 'Fuel Sequence per Supplier'),
+#            'tms_travel_seq': fields.many2one(
+#                    'ir.sequence', 'Travel Sequence'),
+#            'tms_advance_seq': fields.many2one(
+#                    'ir.sequence', 'Advance Sequence'),
+#            'tms_travel_expenses_seq': fields.many2one(
+#                    'ir.sequence', 'Travel Expenses Sequence'),
+#            'tms_loan_seq': fields.many2one(
+#                    'ir.sequence', 'Loan Sequence'),
+#            'tms_fuel_sequence_ids': fields.one2many(
+#                    'tms.sale.shop.fuel.supplier.seq', 'shop_id',
+#                    'Fuel Sequence per Supplier'),
 #        }
 
-# Agregamos el detalle de las secuencias por proveedor de combustible por cada tienda. 
-class tms_sale_shop_fuel_supplier_seq(osv.osv):
+# Agregamos el detalle de las secuencias por proveedor de combustible
+#  por cada tienda.
+class TmsSaleShopFuelSupplier_seq(models.Model):
     _name = "tms.sale.shop.fuel.supplier.seq"
     _description = "TMS Sale Shop Fuel Supplier Sequences"
-    
-    _columns = {
-            'shop_id': fields.many2one('sale.shop', 'Shop', required=True),
-            'partner_id': fields.many2one('res.partner', 'Fuel Supplier', required=True),
-            'fuel_sequence': fields.many2one('ir.sequence', 'Fuel Sequence', required=True),
-            }
+
+    shop_id = fields.Many2one(
+        'sale.shop', 'Shop', required=True)
+    partner_id = fields.Many2one(
+        'res.partner', 'Fuel Supplier', required=True)
+    fuel_sequence = fields.Many2one(
+        'ir.sequence', 'Fuel Sequence', required=True)
 
     _sql_constraints = [
-        ('tms_shop_fuel_supplier', 'unique(shop_id, partner_id)', 'Partner must be unique !'),
-        ]
+        ('tms_shop_fuel_supplier', 'unique(shop_id, partner_id)',
+            'Partner must be unique !'),
+    ]

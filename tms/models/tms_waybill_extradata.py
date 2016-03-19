@@ -19,79 +19,80 @@
 #
 ##############################################################################
 
-from openerp.osv import osv, fields
+from openerp import models, fields
 from datetime import datetime, date
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from pytz import timezone
 
 
 # Extra data fields for Waybills & Negotiations
-class tms_waybill_extradata(osv.osv):
+class TmsWaybillExtradata(models.Model):
     _name = "tms.waybill.extradata"
     _description = "Tms Waybill Extra Data"
 
-    _columns = {        
-        'name': fields.char('Name', size=30, required=True),
-        'notes': fields.text('Notes'),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying this list of categories."),
-        'mandatory': fields.boolean('Mandatory'),
-        'type_extra': fields.selection([
-            ('char', 'String (250)'),
-            ('text', 'Text'),
-            ('integer', 'Integer'),
-            ('float', 'Float'),
-            ('date', 'Date'),
-            ('datetime', 'Datetime')
-            ], 'Data Type', help="Useful to set wich field is used for extra data field", select=True),
-
-        'value_char'    : fields.char('Value', size=250),
-        'value_text'    : fields.text('Value'),
-        'value_integer' : fields.integer('Value'),
-        'value_float'   : fields.float('Value',digits=(16, 4)),
-        'value_date'    : fields.date('Value'),
-        'value_datetime': fields.datetime('Value'),
-        'value_extra'   : fields.text('Value'),
-
-        'waybill_id': fields.many2one('tms.waybill', 'Waybill', required=False, ondelete='cascade'), #, select=True, readonly=True),
-#        'agreement_id': fields.many2one('tms.agreement', 'Agreement', required=False, ondelete='cascade', select=True, readonly=True),
-        
-    }
-
-    _defaults = {
-#        'mandatory': True, 
-        'sequence':10,
-    }
-
+    name = fields.Char('Name', size=30, required=True)
+    notes = fields.Text('Notes')
+    sequence = fields.Integer(
+        'Sequence', help="Gives the sequence order when \
+        displaying this list of categories.", default=10)
+    mandatory = fields.Boolean('Mandatory')
+    type_extra = fields.Selection([
+        ('char', 'String (250)'),
+        ('text', 'Text'),
+        ('integer', 'Integer'),
+        ('float', 'Float'),
+        ('date', 'Date'),
+        ('datetime', 'Datetime')],
+        'Data Type',
+        help="Useful to set wich field is used for extra data field",
+        select=True)
+    value_char = fields.Char('Value', size=250)
+    value_text = fields.Text('Value')
+    value_integer = fields.Integer('Value')
+    value_float = fields.Float('Value', digits=(16, 4))
+    value_date = fields.Date('Value')
+    value_datetime = fields.Datetime('Value')
+    value_extra = fields.Text('Value')
+    waybill_id = fields.Many2one(
+        'tms.waybill', 'Waybill', required=False,
+        ondelete='cascade')
+    # , select=True, readonly=True)
+# 'agreement_id': fields.many2one('tms.agreement', 'Agreement',
+# required=False, ondelete='cascade', select=True, readonly=True),
 
     _order = "sequence"
 
-
-    def on_change_value(self, cr, uid, ids, type_extra, value):
+    def on_change_value(self, type_extra, value):
         if not type_extra and not value:
             return {}
         if type_extra == 'char' or type_extra == 'text':
-            return {'value': {'value_extra' : value}}
-        elif type_extra == 'integer' or type_extra=='float':
-            return {'value': {'value_extra' : str(value)}}
+            return {'value': {'value_extra': value}}
+        elif type_extra == 'integer' or type_extra == 'float':
+            return {'value': {'value_extra': str(value)}}
         elif type_extra == 'date':
-            xdate = filter(None, map(lambda x:int(x), value.split('-'))) 
-            return {'value': {'value_extra' : date(xdate[0], xdate[1], xdate[2]).strftime(DEFAULT_SERVER_DATE_FORMAT)}}                
+            xdate = filter(None, map(lambda x: int(x), value.split('-')))
+            return {'value': {'value_extra': date(
+                xdate[0], xdate[1],
+                xdate[2]).strftime(DEFAULT_SERVER_DATE_FORMAT)}}
         elif type_extra == 'datetime':
-            #print "value: ", value            
+            # print "value: ", value
             xvalue = value.split(' ')
-            xdate = filter(None, map(lambda x:int(x), xvalue[0].split('-'))) 
-            xtime = map(lambda x:int(x), xvalue[1].split(':')) 
+            xdate = filter(None, map(lambda x: int(x), xvalue[0].split('-')))
+            xtime = map(lambda x: int(x), xvalue[1].split(':'))
 
-            tzone = timezone(self.pool.get('res.users').browse(cr, uid, uid).tz)
-            value = tzone.localize(datetime(xdate[0], xdate[1], xdate[2], xtime[0], xtime[1], xtime[2]))
+            tzone = timezone(self.pool.get('res.users').browse(self).tz)
+            value = tzone.localize(datetime(
+                xdate[0], xdate[1], xdate[2],
+                xtime[0], xtime[1], xtime[2]))
 
-            #print value
+            # print value
             xvalue = value.split(' ')
-            xdate = filter(None, map(lambda x:int(x), xvalue[0].split('-'))) 
-            xtime = map(lambda x:int(x), xvalue[1].split(':')) 
-            return {'value': {'value_extra' : datetime(xdate[0], xdate[1], xdate[2], xtime[0], xtime[1], xtime[2]).strftime( DEFAULT_SERVER_DATETIME_FORMAT)}}                
+            xdate = filter(None, map(lambda x: int(x), xvalue[0].split('-')))
+            xtime = map(lambda x: int(x), xvalue[1].split(':'))
+            return {'value': {'value_extra': datetime(
+                xdate[0], xdate[1], xdate[2], xtime[0],
+                xtime[1], xtime[2]).strftime(DEFAULT_SERVER_DATETIME_FORMAT)}}
         return False
 
-
-    
-tms_waybill_extradata()
+TmsWaybillExtradata()

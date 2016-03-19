@@ -18,12 +18,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import osv, fields
+from openerp import models, fields
 
 # Events category
 
 
-class tms_event_category(osv.osv):
+class TmsEventCategory(models.Model):
     _name = "tms.event.category"
     _description = "Events categories"
 
@@ -43,42 +43,51 @@ class tms_event_category(osv.osv):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
-    _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
-        'gps_code': fields.char('GPS Code', size=64, help="This is used to link a Code from a GPS message"),
-        'gps_type': fields.selection([('in', 'Received from GPS'),
-                                      ('out', 'Sent to GPS'),
-                                      ('none', 'None'),
-                                      ], 'GPS Type'),
-        'complete_name': fields.function(_name_get_fnc, method=True, type="char", size=300, string='Complete Name', store=True),
-        'parent_id': fields.many2one('tms.event.category', 'Parent Category', select=True),
-        'child_id': fields.one2many('tms.event.category', 'parent_id', string='Child Categories'),
-        'action_ids': fields.many2many('tms.event.action', 'tms_event_action_rel', 'event_category_id', 'action_id', 'Actions'),
-        'notes': fields.text('Notes'),
-        'active': fields.boolean('Active'),
-        'company_id': fields.many2one('res.company', 'Company', required=False),
-    }
+    name = fields.Char('Name', size=64, required=True, translate=True)
+    gps_code = fields.Char(
+        'GPS Code', size=64,
+        help="This is used to link a Code from a GPS message")
+    gps_type = fields.Selection([('in', 'Received from GPS'),
+                                 ('out', 'Sent to GPS'),
+                                 ('none', 'None'),
+                                 ], 'GPS Type')
+    complete_name = fields.Char(
+        compute=_name_get_fnc, method=True, size=300,
+        string='Complete Name', store=True)
+    parent_id = fields.Many2one('tms.event.category', 'Parent Category',
+                                select=True)
+    child_id = fields.One2many('tms.event.category', 'parent_id',
+                               string='Child Categories')
+    action_ids = fields.Many2many(
+        'tms.event.action', 'tms_event_action_rel',
+        'event_category_id', 'action_id', 'Actions')
+    notes = fields.Text('Notes')
+    active = fields.Boolean('Active')
+    company_id = fields.Many2one('res.company', 'Company', required=False)
 
     _defaults = {
         'active': True,
         'gps_type': 'none',
     }
 
-    _sql_constraints = [('name_uniq', 'unique(name)', 'Category name must be unique !')]
+    _sql_constraints = [
+        ('name_uniq', 'unique(name)', 'Category name must be unique !')]
 
     _order = "name"
 
     def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from tms_event_category where id IN %s', (tuple(ids)))
+            cr.execute('select distinct parent_id from tms_event_category \
+                where id IN %s', (tuple(ids)))
             ids = filter(None, map(lambda x: x[0], cr.fetchall()))
             if not level:
                 return False
             level -= 1
         return True
     _constraints = [
-        (_check_recursion, 'Error ! You can not create recursive categories.', ['parent_id'])
+        (_check_recursion,
+         'Error ! You can not create recursive categories.', ['parent_id'])
     ]
 
     def child_get(self, cr, uid, ids):

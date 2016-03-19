@@ -20,28 +20,22 @@
 ##############################################################################
 
 
-from openerp.osv import osv, fields
-from openerp.tools.translate import _
-import openerp.addons.decimal_precision as dp
+from openerp import models, fields
 
 
-class AccountInvoiceLine(osv.osv):
+class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
-    _columns = {
-        'vehicle_id':
-        fields.many2one('fleet.vehicle', 'Vehicle',
-                        readonly=True, required=False),
-        'employee_id':
-        fields.many2one('hr.employee', 'Driver',
-                        readonly=True, required=False),
-        'sale_shop_id':
-        fields.many2one('sale.shop', 'Shop', readonly=True, required=False),
-    }
+    vehicle_id = fields.Many2one(
+        'fleet.vehicle', 'Vehicle', readonly=True, required=False)
+    employee_id = fields.Many2one(
+        'hr.employee', 'Driver', readonly=True, required=False)
+    sale_shop_id = fields.Many2one(
+        'sale.shop', 'Shop', readonly=True, required=False)
 
-    def move_line_get_item(self, cr, uid, line, context=None):
+    def move_line_get_item(self, line):
         res = super(AccountInvoiceLine, self).move_line_get_item(
-            cr, uid, line, context=context)
+            self)
         res.update({
             'vehicle_id':
             line.vehicle_id.id if line.vehicle_id else False,

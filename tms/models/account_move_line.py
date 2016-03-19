@@ -19,23 +19,18 @@
 #
 ##############################################################################
 
-from openerp.osv import osv, fields
+from openerp import models, fields
 
 # Fields <vechicle_id>, <employee_id> added to acount_move_line for
 # reporting and analysis and constraint added
 
 
-class AccountMoveLine(osv.osv):
+class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
-    _columns = {
-        'vehicle_id':
-        fields.many2one('fleet.vehicle', 'Vehicle', required=False),
-        'employee_id':
-        fields.many2one('hr.employee', 'Driver', required=False),
-        'sale_shop_id':
-        fields.many2one('sale.shop', 'Shop', required=False),
-    }
+    vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', required=False)
+    employee_id = fields.Many2one('hr.employee', 'Driver', required=False)
+    sale_shop_id = fields.Many2one('sale.shop', 'Shop', required=False)
 
     def _check_mandatory_vehicle(self, cr, uid, ids, context=None):
         for record in self.browse(cr, uid, ids, context=context):
