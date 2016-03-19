@@ -53,4 +53,7 @@ docs/_build/
 # PyBuilder
 target/
 
- .DS_Store
+.DS_Store
+.coveragerc
+.coveralls.yml
+odoo.tar.gz
