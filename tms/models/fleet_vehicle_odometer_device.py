@@ -141,7 +141,7 @@ class FleetVehicleOdometerDevice(models.Model):
     def write(self, vals):
         values = vals
         # print self._name, " vals: ", vals
-        return super(fleet_vehicle_odometer_device, self).write(values)
+        return super(FleetVehicleOdometerDevice, self).write(values)
 
     def on_change_vehicle_id(self, vehicle_id, date_start):
         odom_obj = self.pool.get('fleet.vehicle.odometer.device')

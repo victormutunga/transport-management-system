@@ -23,7 +23,7 @@
 from openerp import models
 import time
 from openerp.tools.translate import _
-from openerp import netsvc
+# from openerp import netsvc
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 # Wizard que permite generar la poliza con el monto a pagar correspondiente a
@@ -52,7 +52,7 @@ class TmsExpenseInvoice(models.TransientModel):
         else:
             record_ids = self.pool.get('active_ids', [])
         if record_ids:
-            res = False
+            # res = False
             # invoices = []
             # property_obj = self.pool.get('ir.property')
             # partner_obj = self.pool.get('res.partner')
@@ -61,8 +61,8 @@ class TmsExpenseInvoice(models.TransientModel):
             account_jrnl_obj = self.pool.get('account.journal')
             # invoice_obj = self.pool.get('account.invoice')
             expense_obj = self.pool.get('tms.expense')
-            expense_line_obj = self.pool.get('tms.expense.line')
-            period_obj = self.pool.get('account.period')
+            # expense_line_obj = self.pool.get('tms.expense.line')
+            # period_obj = self.pool.get('account.period')
             move_obj = self.pool.get('account.move')
             journal_id = account_jrnl_obj.search(
                 [('type', '=', 'general'),
@@ -100,7 +100,8 @@ class TmsExpenseInvoice(models.TransientModel):
                                 date %s. Period does not exists or is already \
                                 closed') % (expense.date,))
                     if not (expense.employee_id.tms_advance_account_id.id and
-                            expense.employee_id.tms_expense_negative_balance_account_id.id):
+                            expense.employee_id.
+                            tms_expense_negative_balance_account_id.id):
                         raise Warning(
                             _('Warning !'),
                             _('There is no advance account and/or Travel \
@@ -116,8 +117,10 @@ class TmsExpenseInvoice(models.TransientModel):
                                 driver: "%s" (id:%d)') % (
                                 expense.employee_id.name,
                                 expense.employee_id.id,))
-                    advance_account = expense.employee_id.tms_advance_account_id.id
-                    negative_balance_account = expense.employee_id.tms_expense_negative_balance_account_id.id
+                    advance_account = (expense.employee_id.
+                                       tms_advance_account_id.id)
+                    negative_balance_account = (expense.employee_id.
+                                                tms_expense_negative_balance_account_id.id)
                     advance_account = account_fiscal_obj.map_account(
                         False, advance_account)
                     negative_balance_account = account_fiscal_obj.map_account(
@@ -157,11 +160,16 @@ class TmsExpenseInvoice(models.TransientModel):
                                 line.fuel_voucher):
                             prod_account = (
                                 negative_balance_account
-                                if line.product_id.tms_category == 'negative_balance'
-                                else line.product_id.property_account_expense.id
-                                if line.product_id.property_account_expense.id
-                                else line.product_id.categ_id.property_account_expense_categ.id
-                                if line.product_id.categ_id.property_account_expense_categ.id
+                                if (line.product_id.
+                                    tms_category == 'negative_balance')
+                                else (line.product_id.
+                                      property_account_expense.id)
+                                if (line.product_id.
+                                    property_account_expense.id)
+                                else (line.product_id.categ_id.
+                                      property_account_expense_categ.id)
+                                if (line.product_id.categ_id.
+                                    property_account_expense_categ.id)
                                 else False)
                             if not prod_account:
                                 raise Warning(
@@ -174,8 +182,8 @@ class TmsExpenseInvoice(models.TransientModel):
                             if line.is_invoice:
                                 inv_id = self.create_supplier_invoice(line)
                                 invoice_ids.append(inv_id)
-                                yres = expense_line_obj.write(
-                                    [line.id], {'invoice_id': inv_id})
+                                # yres = expense_line_obj.write(
+                                #    [line.id], {'invoice_id': inv_id})
                             # ## Creamos la partida de cada Gasto "Valido"
                             move_line = (0, 0, {
                                 'name': (expense.name + ((' |%s|' % (inv_id))
@@ -218,7 +226,9 @@ class TmsExpenseInvoice(models.TransientModel):
                             # impuestos, generamos las partidas
                             # correspondientes.
                             for tax in line.product_id.supplier_taxes_id:
-                                tax_account = tax.account_collected_voucher_id.id
+                                tax_account = (tax.
+                                               account_collected_voucher_id.
+                                               id)
                                 if not tax_account:
                                     raise Warning(
                                         _('Warning !'),
@@ -306,7 +316,9 @@ class TmsExpenseInvoice(models.TransientModel):
                         })
                         notes += '\n' + _('Debit Balance')
                     else:
-                        b = line.employee_id.address_home_id.property_account_payable.id
+                        b = (line.employee_id.
+                             address_home_id.
+                             property_account_payable.id)
                         if not b:
                             raise Warning(
                                 _('Warning !'),
@@ -402,9 +414,9 @@ class TmsExpenseInvoice(models.TransientModel):
         return
 
     def create_supplier_invoice(self, line):
-        invoice_obj = self.pool.get('account.invoice')
-        invoice_tax_obj = self.pool.get('account.invoice.tax')
-        expense_line_obj = self.pool.get('tms.expense.line')
+        # invoice_obj = self.pool.get('account.invoice')
+        # invoice_tax_obj = self.pool.get('account.invoice.tax')
+        # expense_line_obj = self.pool.get('tms.expense.line')
         journal_id = self.pool.get('account.journal').search(
             [('type', '=', 'purchase'),
              ('tms_expense_suppliers_journal', '=', 1)])
@@ -424,61 +436,62 @@ class TmsExpenseInvoice(models.TransientModel):
                     _('There is no expense account defined for this \
                         product: "%s" (id:%d)') % (line.product_id.name,
                                                    line.product_id.id,))
-        else:
-            a = property_obj.get(
-                'property_account_expense_categ', 'product.category').id
-        account_fiscal_obj = self.pool.get('account.fiscal.position')
-        a = account_fiscal_obj.map_account(cr, uid, False, a)
-        inv_line = (0, 0, {
-            'name': _('%s (TMS Expense Record %s)') % (line.product_id.name,
-                                                       line.expense_id.name),
-            'origin': line.expense_id.name,
-            'account_id': a,
-            'quantity': line.product_uom_qty,
-            'price_unit': line.price_unit,
-            'invoice_line_tax_id':
-            [(6, 0,
-                [x.id for x in line.product_id.supplier_taxes_id])],
-            'uos_id': line.product_uom.id,
-            'product_id': line.product_id.id,
-            'notes': line.name,
-            'account_analytic_id': False,
-            'vehicle_id': line.expense_id.unit_id.id,
-            'employee_id': line.expense_id.employee_id.id,
-            'sale_shop_id': line.expense_id.shop_id.id,
-        })
+        # else:
+            # a = property_obj.get(
+            #    'property_account_expense_categ', 'product.category').id
+        # account_fiscal_obj = self.pool.get('account.fiscal.position')
+        # a = account_fiscal_obj.map_account(cr, uid, False, a)
+        # inv_line = (0, 0, {
+        #     'name': _('%s (TMS Expense Record %s)') % (line.product_id.name,
+        #                                                line.expense_id.name),
+        #     'origin': line.expense_id.name,
+        #     'account_id': a,
+        #     'quantity': line.product_uom_qty,
+        #     'price_unit': line.price_unit,
+        #     'invoice_line_tax_id':
+        #     [(6, 0,
+        #         [x.id for x in line.product_id.supplier_taxes_id])],
+        #     'uos_id': line.product_uom.id,
+        #     'product_id': line.product_id.id,
+        #     'notes': line.name,
+        #     'account_analytic_id': False,
+        #     'vehicle_id': line.expense_id.unit_id.id,
+        #     'employee_id': line.expense_id.employee_id.id,
+        #     'sale_shop_id': line.expense_id.shop_id.id,
+        # })
         # print "Subtotal Factura: ", round(line.price_subtotal /
         #     line.product_uom_qty, 4)
-        notes = line.expense_id.name + ' - ' + line.product_id.name
+        # notes = line.expense_id.name + ' - ' + line.product_id.name
         a = line.partner_id.property_account_payable.id
-        inv = {
-            'supplier_invoice_number': line.invoice_number,
-            'name': line.expense_id.name + ' - ' + line.invoice_number,
-            'origin': line.expense_id.name,
-            'type': 'in_invoice',
-            'journal_id': journal_id,
-            'reference': line.expense_id.name + ' - ' + line.invoice_number,
-            'account_id': a,
-            'partner_id': line.partner_id.id,
-            'invoice_line': [inv_line],
-            'currency_id': line.expense_id.currency_id.id,
-            'comment': line.expense_id.name + ' - ' + line.invoice_number,
-            'payment_term': (
-                line.partner_id.property_payment_term and
-                line.partner_id.property_payment_term.id or False),
-            'fiscal_position':
-            line.partner_id.property_account_position.id or False,
-            'comment': notes,
-        }
+        # inv = {
+        #     'supplier_invoice_number': line.invoice_number,
+        #     'name': line.expense_id.name + ' - ' + line.invoice_number,
+        #     'origin': line.expense_id.name,
+        #     'type': 'in_invoice',
+        #     'journal_id': journal_id,
+        #     'reference': line.expense_id.name + ' - ' + line.invoice_number,
+        #     'account_id': a,
+        #     'partner_id': line.partner_id.id,
+        #     'invoice_line': [inv_line],
+        #     'currency_id': line.expense_id.currency_id.id,
+        #     'comment': line.expense_id.name + ' - ' + line.invoice_number,
+        #     'payment_term': (
+        #         line.partner_id.property_payment_term and
+        #         line.partner_id.property_payment_term.id or False),
+        #     'fiscal_position':
+        #     line.partner_id.property_account_position.id or False,
+        #     'comment': notes,
+        # }
 
-        inv_id = invoice_obj.create(cr, uid, inv)
-        if line.special_tax_amount:
-            invoice_obj.button_reset_taxes(cr, uid, [inv_id])
-            for tax_line in invoice_obj.browse(cr, uid, inv_id).tax_line:
-                if tax_line.amount == 0.0:
-                    invoice_tax_obj.write(
-                        [tax_line.id], {'amount': line.special_tax_amount})
-        wf_service = netsvc.LocalService('workflow')
-        wf_service.trg_validate(uid, 'account.invoice', inv_id, 'invoice_open')
-        res = expense_line_obj.write([line.id], {'invoice_id': inv_id})
-        return inv_id
+        # inv_id = invoice_obj.create(cr, uid, inv)
+        # if line.special_tax_amount:
+        #     invoice_obj.button_reset_taxes(cr, uid, [inv_id])
+        #     for tax_line in invoice_obj.browse(cr, uid, inv_id).tax_line:
+        #         if tax_line.amount == 0.0:
+        #             invoice_tax_obj.write(
+        #                 [tax_line.id], {'amount': line.special_tax_amount})
+        # wf_service = netsvc.LocalService('workflow')
+        # wf_service.trg_validate(uid, 'account.invoice',
+        #                         inv_id, 'invoice_open')
+        # res = expense_line_obj.write([line.id], {'invoice_id': inv_id})
+        # return inv_id

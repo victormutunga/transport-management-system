@@ -941,7 +941,7 @@ class TmsExpense(models.Model):
         values = vals
         if 'vehicle_id' in vals and vals['vehicle_id']:
             values['unit_id'] = vals['vehicle_id']
-        super(tms_expense, self).write(values)
+        super(TmsExpense, self).write(values)
         for rec in self.browse(self):
             if (('state' in vals and vals['state'] not in
                  ('cancel', 'confirmed')) ^ (rec.state not in
@@ -976,7 +976,7 @@ class TmsExpense(models.Model):
                 _('Warning !'),
                 _('You can not have more than one Travel Expense \
                     Record in  Draft / Approved State'))
-        res = super(tms_expense, self).create(values)
+        res = super(TmsExpense, self).create(values)
         self.get_salary_advances_and_fuel_vouchers([res], vals)
         self.get_salary_retentions([res])
         self.pool.get('tms.expense.loan').get_loan_discounts(

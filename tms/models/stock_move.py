@@ -37,7 +37,7 @@ class StockMove(models.Model):
             self, move, src_account_id, dest_account_id, reference_amount,
             reference_currency_id):
         # print "Si entra en _create_account_move_line"
-        res_prev = super(stock_move, self)._create_account_move_line(
+        res_prev = super(StockMove, self)._create_account_move_line(
             move, src_account_id, dest_account_id, reference_amount,
             reference_currency_id, context=None)
         res = res_prev
@@ -66,7 +66,8 @@ class StockMove(models.Model):
                      'account_id':
                      (move.product_id.tms_property_account_expense.id if
                       move.product_id.tms_property_account_expense.id else
-                      move.product_id.categ_id.tms_property_account_expense_categ.id)
+                      move.product_id.categ_id.
+                      tms_property_account_expense_categ.id)
                      }
                 )
             else:
@@ -75,8 +76,10 @@ class StockMove(models.Model):
                      'employee_id': move.employee_id.id,
                      'account_id':
                      (move.product_id.tms_property_account_expense.id if
-                      move.product_id.tms_property_account_expense.id else
-                      move.product_id.categ_id.tms_property_account_expense_categ.id)
+                      move.product_id.
+                      tms_property_account_expense.id else
+                      move.product_id.categ_id.
+                      tms_property_account_expense_categ.id)
                      }
                 )
                 res[1][2].update(
