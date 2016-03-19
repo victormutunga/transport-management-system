@@ -19,16 +19,16 @@
 #
 ##############################################################################
 
-{   
-    "name"        : "Freight Management",
-    "version"     : "1.0",
-    "category"    : "Vertical",
-    'complexity'  : "normal",
-    "author"      : "HESATEC",
-    "website"     : "http://www.hesatecnica.com",
-    "depends"     : ["hr", "account_voucher", "purchase","sale", "fleet"],
-    "summary"     : "Management System for Carriers, Trucking companies and other freight companies",
-    "data" : [
+{
+    "name": "Freight Management",
+    "version": "1.0",
+    "category": "Vertical",
+    'complexity': "normal",
+    "author": "HESATEC",
+    "website": "http://www.hesatecnica.com",
+    "depends": ["hr", "account_voucher", "purchase", "sale", "fleet"],
+    "summary": "Management System for Carriers, Trucking companies and other freight companies",
+    "data": [
 #        'security/tms_security.xml',
         'views/sale_shop_view.xml',
 #        'security/ir.model.access.csv',
