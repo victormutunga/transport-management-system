@@ -121,9 +121,9 @@ class TmsExpenseLine(models.Model):
         compute='expense_id.company_id', type='many2one',
         relation='res.company', string='Company', store=True, readonly=True)
     date = fields.Date(
-        'expense_id', 'date', string='Date', store=True, readonly=True)
+        string='Date', store=True, readonly=True)
     state = fields.Char(
-        'expense_id', 'state', string='State', size=64, store=True,
+        string='State', size=64, store=True,
         readonly=True)
     fuel_voucher = fields.Boolean('Fuel Voucher'),
     control = fields.Boolean('Control')

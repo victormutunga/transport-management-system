@@ -25,7 +25,7 @@ from openerp import models, fields
 # Routes toll stations cost per axis
 
 
-class TmsRouteTollstationCostperaxis(models):
+class TmsRouteTollstationCostperAxis(models.Model):
     _name = 'tms.route.tollstation.costperaxis'
     _description = 'Routes toll stations cost per axis'
 

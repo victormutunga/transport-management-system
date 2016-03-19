@@ -45,17 +45,16 @@ class TmsPlace(models.Model):
     state_id = fields.Many2one(
         'res.country.state', 'State Name', required=True)
     country_id = fields.Many2one(
-        'state_id', 'country_id', relation='res.country',
-        string='Country'),
+        'state_id', 'country_id', relation='res.country')
     latitude = fields.Float(
         'Latitude', required=False, digits=(20, 10),
-        help='GPS Latitude'),
+        help='GPS Latitude')
     longitude = fields.Float(
         'Longitude', required=False, digits=(20, 10),
-        help='GPS Longitude'),
+        help='GPS Longitude')
     route_ids = fields.Many2many(
         'tms.route', 'tms_route_places_rel', 'place_id',
-        'route_id', 'Routes with this Place'),
+        'route_id', 'Routes with this Place')
 
     _rec_name = 'complete_name'
 

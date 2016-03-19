@@ -82,7 +82,7 @@ class TmsExpenseLoan(models.Model):
         ('cancel', 'Cancelled')], 'State', readonly=True,
         help="State of the Driver Loan. ", select=True,
         default=(lambda *a: 'draft'))
-    discount_method = fields.selection([
+    discount_method = fields.Selection([
         ('each', 'Each Travel Expense Record'),
         ('weekly', 'Weekly'),
         ('fortnightly', 'Fortnightly'),
@@ -96,7 +96,7 @@ class TmsExpenseLoan(models.Model):
     discounts in each month, applied the 14th and 28th day of the month.
 - Monthy: Discount will be applied only once a month, applied the 28th day
     of the month.""", select=True, required=True)
-    discount_type = fields.selection([
+    discount_type = fields.Selection([
         ('fixed', 'Fixed'),
         ('percent', 'Loan Percentage'), ], 'Discount Type', readonly=True,
         states={'draft': [('readonly', False)],

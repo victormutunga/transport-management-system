@@ -12,11 +12,9 @@ import fleet_vehicle_odometer_device
 import hr_employee
 import hr_job
 import ir_sequence
-import partner
 import product_category
 import product_product
 import sale_shop
-import stock
 import tms_advance
 import tms_advance_invoice
 import tms_advance_payment

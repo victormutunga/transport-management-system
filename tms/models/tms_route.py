@@ -58,7 +58,7 @@ class TmsRoute(models.Model):
     expense_driver_factor = fields.One2many(
         'tms.factor', 'route_id', 'Travel Driver Payment Factors',
         domain=[('category', '=', 'driver')], readonly=False)
-    tms_route_tollstation_ids = fields.many2many(
+    tms_route_tollstation_ids = fields.Many2many(
         'tms.route.tollstation', 'tms_route_tollstation_route_rel',
         'tollstation_id', 'route_id', 'Toll Station in this Route')
 

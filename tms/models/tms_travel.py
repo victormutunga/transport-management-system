@@ -142,10 +142,10 @@ class TmsTravel(models.Model):
         'tms.waybill', 'travel_id', 'Waybill', readonly=True)
     partner_id = fields.Many2one(
         'default_waybill_id', 'partner_id', relation='res.partner',
-        string='Customer', store=True)
+        store=True)
     arrival_address_id = fields.Many2one(
         'default_waybill_id', 'arrival_address_id', relation='res.partner',
-        string='Arrival Address', store=True)
+        store=True)
     expense_driver_factor = fields.One2many(
         'tms.factor', 'travel_id', 'Travel Driver Payment Factors',
         domain=[('category', '=', 'driver')], readonly=False,
@@ -162,7 +162,7 @@ class TmsTravel(models.Model):
                                 'done': [('readonly', True)],
                                 'closed': [('readonly', True)]})
     company_id = fields.Many2one(
-        'shop_id', 'company_id', relation='res.company', string='Company',
+        'shop_id', 'company_id', relation='res.company',
         store=True, readonly=True)
     name = fields.Char('Travel Number', size=64, required=False)
     state = fields.Selection(
@@ -186,7 +186,7 @@ class TmsTravel(models.Model):
         'unit_id', 'supplier_unit', string='Supplier Unit', store=True,
         readonly=True)
     supplier_id = fields.Many2one(
-        'unit_id', 'supplier_id', relation='res.partner', string='Supplier',
+        'unit_id', 'supplier_id', relation='res.partner',
         store=True, readonly=True)
     trailer1_id = fields.Many2one(
         'fleet.vehicle', 'Trailer1', required=False,
@@ -297,10 +297,10 @@ class TmsTravel(models.Model):
         states={'cancel': [('readonly', True)],
                 'closed': [('readonly', True)]})
     departure_id = fields.Many2one(
-        'route_id', 'departure_id', relation='tms.place', string='Departure',
+        'route_id', 'departure_id', relation='tms.place',
         store=True, readonly=True)
     arrival_id = fields.Many2one(
-        'route_id', 'arrival_id', relation='tms.place', string='Arrival',
+        'route_id', 'arrival_id', relation='tms.place',
         store=True, readonly=True)
     notes = fields.Text(
         'Descripción', required=False,
