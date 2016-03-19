@@ -116,7 +116,7 @@ class TmsWaybillLine(models.Model):
         'waybill_id', 'company_id', relation='res.company', string='Company',
         store=True, readonly=True)
     control = fields.Boolean('Control')
- 
+
     _order = 'sequence, id desc'
 
     def on_change_product_id(self, product_id, partner_id):

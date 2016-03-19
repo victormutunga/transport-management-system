@@ -58,9 +58,9 @@ class TmsWaybillInvoice(models.TransientModel):
         group_lines = self.browse(self)[0].group_line_product
 
         if record_ids:
-            res = False
+            # res = False
             invoices = []
-            shipped_grouped_obj = self.pool.get('tms.waybill.shipped_grouped')
+            # shipped_grouped_obj=self.pool.get('tms.waybill.shipped_grouped')
             property_obj = self.pool.get('ir.property')
             partner_obj = self.pool.get('res.partner')
             # user_obj = self.pool.get('res.users')
@@ -138,9 +138,11 @@ class TmsWaybillInvoice(models.TransientModel):
                     for line in waybill.waybill_line:
                         if line.line_type == 'product':
                             if line.product_id:
-                                a = line.product_id.product_tmpl_id.property_account_income.id
+                                a = (line.product_id.product_tmpl_id.
+                                     property_account_income.id)
                                 if not a:
-                                    a = line.product_id.categ_id.property_account_income_categ.id
+                                    a = (line.product_id.categ_id.
+                                         property_account_income_categ.id)
                                 if not a:
                                     a = property_obj.get(
                                         'property_account_income_categ',
@@ -173,7 +175,8 @@ class TmsWaybillInvoice(models.TransientModel):
                                         line.waybill_id.travel_id.unit_id.id if
                                         line.waybill_id.travel_id else False),
                                     'employee_id': (
-                                        line.waybill_id.travel_id.employee_id.id if
+                                        (line.waybill_id.travel_id.
+                                         employee_id.id) if
                                         line.waybill_id.travel_id else False),
                                     'sale_shop_id': line.waybill_id.shop_id.id,
                                     'note': line.notes,
