@@ -59,7 +59,7 @@ class FleetVehicleOdometer(models.Model):
     ]
 
     def on_change_vehicle(self, vehicle_id):
-        res = super(fleet_vehicle_odometer, self).on_change_vehicle(
+        res = super(FleetVehicleOdometer, self).on_change_vehicle(
             vehicle_id)
         for vehicle in self.pool.get('fleet.vehicle').browse([vehicle_id]):
             odom_obj = self.pool.get('fleet.vehicle.odometer.device')
@@ -123,7 +123,7 @@ class FleetVehicleOdometer(models.Model):
                 [vals['odometer_id']])[0].odometer_end + vals['distance']
             odom_obj.write(
                 [vals['odometer_id']], {'odometer_end': odometer_end})
-        return super(fleet_vehicle_odometer, self).create(values)
+            return super(FleetVehicleOdometer, self).create(values)
 
     def create_odometer_log(
             self, expense_id, travel_id, vehicle_id, distance):

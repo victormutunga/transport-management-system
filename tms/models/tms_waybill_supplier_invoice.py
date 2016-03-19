@@ -55,7 +55,7 @@ class TmsWaybillSupplierInvoice(models.TransientModel):
             invoices = []
             # factor = self.pool.get('tms.factor')
             # property_obj = self.pool.get('ir.property')
-            partner_obj = self.pool.get('res.partner')
+            # partner_obj = self.pool.get('res.partner')
             fpos_obj = self.pool.get('account.fiscal.position')
             prod_obj = self.pool.get('product.product')
             account_jrnl_obj = self.pool.get('account.journal')
@@ -83,7 +83,8 @@ class TmsWaybillSupplierInvoice(models.TransientModel):
             # print "product.name : ", product.name
             prod_account = product.product_tmpl_id.property_account_expense.id
             if not prod_account:
-                prod_account = product.categ_id.property_account_expense_categ.id
+                prod_account = (product.categ_id.
+                                property_account_expense_categ.id)
                 if not prod_account:
                     raise Warning(
                         ('Error !'),
@@ -157,8 +158,10 @@ class TmsWaybillSupplierInvoice(models.TransientModel):
                                 defined.') % (waybill.supplier_id.name))
 
                     if (waybill.supplier_id.id and
-                            waybill.supplier_id.property_supplier_payment_term.id):
-                        pay_term = waybill.supplier_id.property_supplier_payment_term.id
+                            waybill.supplier_id.
+                            property_supplier_payment_term.id):
+                        pay_term = (waybill.supplier_id.
+                                    property_supplier_payment_term.id)
                     else:
                         pay_term = False
 
@@ -199,7 +202,7 @@ class TmsWaybillSupplierInvoice(models.TransientModel):
 
                 inv_id = invoice_obj.create(inv)
                 invoices.append(inv_id)
- 
+
                 waybill_obj.write(
                     waybill_ids,
                     {'supplier_invoice_id': inv_id,

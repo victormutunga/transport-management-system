@@ -168,11 +168,11 @@ class FleetVehicle(models.Model):
         default['unit_extradata_ids'] = []
         default['unit_expiry_ids'] = []
         default['unit_photo_ids'] = []
-        return super(fleet_vehicle, self).copy(id, default)
+        return super(FleetVehicle, self).copy(id, default)
 
     def create(self, vals):
         values = vals
-        res = super(fleet_vehicle, self).create(values)
+        res = super(FleetVehicle, self).create(values)
         odom_obj = self.pool.get('fleet.vehicle.odometer.device')
         rec = {
             'name': _('Odometer device created when vehicle %s was \
