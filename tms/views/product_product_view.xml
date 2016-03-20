@@ -78,5 +78,24 @@
                 </field>
             </field>
         </record>
+
+        <record id="tms_product_normal_action" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_id" ref="product.product_product_tree_view"/> 
+            <field name="search_view_id" ref="tms_product_search_form_view"/>
+            <field name="domain">[('tms_category','in',('transportable','freight','move','insurance','highway_tolls','other','real_expense','madeup_expense','salary','salary_retention','salary_discount','negative_balance','fuel','indirect_expense'))]</field>
+           <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new Freight related product.
+              </p><p>
+                You can define products for everything related to Freight Management.
+              </p>
+            </field>
+        </record>
+        <menuitem action="tms_product_normal_action" id="menu_tms_config_product_product" parent="menu_tms_config_product" sequence="1"/>
     </data>
 </openerp>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <!-- 
+##############################
+fleet.vehicle.odometer.device
+##############################
+-->
+<!-- SEARCH View for fleet.vehicle.odometer.device --> 
+        <record id="view_fleet_vehicle_odometer_device_search" model="ir.ui.view">
+            <field name="name">fleet.vehicle.odometer.device.search</field>
+            <field name="model">fleet.vehicle.odometer.device</field>
+            <field name="arch" type="xml">
+                <search string="Vehicle Odometer Device">
+                   <field name="vehicle_id" />
+                   <field name="name" />
+                   <filter string="Active" icon="terp-accessories-archiver" domain="[('state' , '=' , 'active')]" />
+                   <filter string="Inactive" icon="terp-accessories-archiver" domain="[('state' , '=' , 'inactive')]" />
+                   <filter string="Draft" icon="terp-accessories-archiver" domain="[('state' , '=' , 'draft')]" />
+                   <filter string="Cancel" icon="terp-accessories-archiver" domain="[('state' , '=' , 'cancel')]" />
+                   <group  expand='0' string='Group by...'>
+                       <filter string='State' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'state'}" />
+                       <filter string='Vehicle' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'vehicle_id'}" />
+                       <separator orientation="vertical"/>
+                       <filter string='Date' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'date'}" />
+                   </group>
+                </search>
+            </field>
+        </record>
+
+<!-- TREE View for fleet.vehicle.odometer.device --> 
+    <record model="ir.ui.view" id="view_fleet_vehicle_odometer_device_tree">
+        <field name="name">fleet.vehicle.odometer.device.tree</field>
+        <field name="model">fleet.vehicle.odometer.device</field>
+        <field name="arch" type="xml">
+            <tree string="Vehicle Odometer Device" colors="gray:state=='cancel';red:state=='draft';gray:state=='inactive';blue:state=='active';">
+                <field name="state"/>
+                <field name="date"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="name"/>
+                <field name="vehicle_id" />
+                <field name="accumulated_start"/>
+                <field name="odometer_start" />
+                <field name="odometer_end" />
+                <field name="replacement_of"/>
+            </tree>
+        </field>
+    </record>
+
+<!-- FORM View for fleet.vehicle.odometer.device -->
+
+        <record id="view_fleet_vehicle_odometer_device_form" model="ir.ui.view">
+            <field name="name">fleet.vehicle.odometer.device.form</field>
+            <field name="model">fleet.vehicle.odometer.device</field>
+            <field name="arch" type="xml">
+                <form string="Vehicle Odometer Device" version="7.0">
+                    <header>
+                        <button name="action_cancel" states="draft" string="Cancel" type="object"/>
+                        <button name="action_activate" states="draft" string="Activate" type="object" icon="gtk-go-forward" class="oe_highlight" />
+                        <button name="action_inactivate" states="active" string="Inactivate" type="object" icon="gtk-goto-last" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,active,inactive"/>
+                    </header>
+                    <sheet>
+                        <h1>
+                            <label string="Odometer History"/>
+                        </h1>
+                        <group col="4">
+                            <field name="name" colspan="4"/>
+                            <field name="vehicle_id"  on_change="on_change_vehicle_id(vehicle_id, date_start)"/>
+                            <field name="date"/>
+                            <field name="date_start" />
+                            <field name="date_end" />
+                            <field name="replacement_of" invisible="1"/>
+                            <field name="accumulated_start" invisible="1" />
+                            <field name="odometer_start" />
+                            <field name="odometer_end" />
+                <separator string="Odometer Readings" colspan="4" />
+                            <field name="odometer_reading_ids" nolabel="1" colspan="4"/>
+            </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread" placeholder="Share a message..."/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+       <record id="view_fleet_vehicle_odometer_device" model="ir.ui.view">
+            <field name="name">fleet.vehicle.odometer.device.gantt</field>
+            <field name="model">fleet.vehicle.odometer.device</field>
+            <field name="arch" type="xml">
+                <gantt date_start="date_start" date_stop="date_end" string="Odometer History" default_group_by="vehicle_id" color="vehicle_id">
+                </gantt>
+            </field>
+        </record>
+
+<!-- Action for fleet.vehicle.odometer.device -->
+    <record model="ir.actions.act_window" id="open_view_fleet_vehicle_odometer_device_form">
+        <field name="name">Vehicle Odometer Device</field>
+        <field name="res_model">fleet.vehicle.odometer.device</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,gantt</field>
+    </record>
+
+<!-- Menu for fleet.vehicle.odometer.device -->
+    <menuitem name="Vehicle Odometer Device" 
+              parent="menu_tms_config_unit" 
+              id="menu_tms_config_fleet_vehicle_odometer_device_form" 
+              action="open_view_fleet_vehicle_odometer_device_form"
+        sequence="24"/>
+
+
+    </data>
+</openerp>
