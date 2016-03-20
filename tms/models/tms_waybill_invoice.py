@@ -19,14 +19,13 @@
 #
 ##############################################################################
 
-from openerp import models, fields
 import time
+
+from openerp import fields, models
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
-import DEFAULT_SERVER_DATETIME_FORMAT
 
 
-# Wizard que permite crear la factura de cliente de la(s) cartas porte(s)
-# seleccionadas
 class TmsWaybillInvoice(models.TransientModel):
 
     """ To create invoice for each Waybill"""
@@ -39,7 +38,7 @@ class TmsWaybillInvoice(models.TransientModel):
         help='Group Waybill Lines Quantity & Subtotal by Product',
         default=True)
 
-    def makeWaybillInvoices(self, ids, context=None):
+    def make_waybill_invoices(self, ids, context=None):
 
         """
              To get Waybills and create Invoices
@@ -263,7 +262,7 @@ class TmsWaybillInvoice(models.TransientModel):
                         self.pool.get('res.partner').address_get(
                             [partner.id], ['default'])['default'],
                     'invoice_line': [x for x in inv_lines],
-                    'comment': 'Fact. de Cartas Porte',
+                    'comment': 'Fact. de Cartas Porte' + notes,
                     'payment_term': pay_term,
                     'fiscal_position': partner.property_account_position.id,
                     'pay_method_id': partner.pay_method_id.id,
@@ -271,7 +270,6 @@ class TmsWaybillInvoice(models.TransientModel):
                         partner.bank_ids[0].id if
                         partner.bank_ids and
                         partner.bank_ids[0] else False),
-                    'comment': notes,
                     'tms_type': (
                         'invoice' if waybill.billing_policy ==
                         'manual' else 'waybill')
@@ -306,5 +304,3 @@ class TmsWaybillInvoice(models.TransientModel):
             result['domain'] = "[('id','in', [" + ','.join(map(
                 str, invoices)) + "])]"
             return result
-
-TmsWaybillInvoice()

@@ -62,7 +62,8 @@ class TmsExpensePayment(models.TransientModel):
                 amount += expense.amount_balance
                 for move_line in expense.move_id.line_id:
                     if (move_line.credit > 0.0 and
-                            expense.employee_id.address_home_id.property_account_payable.id ==
+                            expense.employee_id.address_home_id.
+                            property_account_payable.id ==
                             move_line.account_id.id):
                         move_line_ids.append(move_line.id)
         if not amount:

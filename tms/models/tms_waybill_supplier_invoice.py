@@ -19,14 +19,13 @@
 #
 ##############################################################################
 
-from openerp import models
 import time
+
+from openerp import models
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
-import DEFAULT_SERVER_DATETIME_FORMAT
 
 
-# Wizard que permite crear la factura de proveedor de la(s)
-# cartas porte(s) seleccionadas
 class TmsWaybillSupplierInvoice(models.TransientModel):
 
     """ To create Supplier invoice for each Waybill"""
@@ -186,7 +185,6 @@ class TmsWaybillSupplierInvoice(models.TransientModel):
                     'payment_term': pay_term,
                     'fiscal_position':
                         waybill.supplier_id.property_account_position.id,
-                    'comment': notes,
                     'tms_type': (
                         'invoice' if waybill.billing_policy == 'manual'
                         else 'waybill')

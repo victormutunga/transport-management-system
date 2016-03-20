@@ -19,15 +19,15 @@
 #
 ##############################################################################
 
-from openerp import models, fields
 import time
-from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+
+from openerp import fields, models
 import openerp.addons.decimal_precision as dp
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from openerp.tools.translate import _
 
 
-# TMS Travel Expenses
 class TmsExpense(models.Model):
     _name = 'tms.expense'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -925,7 +925,7 @@ class TmsExpense(models.Model):
     def on_change_vehicle_odometer(
             self, vehicle_id, last_odometer, vehicle_odometer,
             global_fuel_efficiency_real):
-        return {}
+        # return {}
         distance = vehicle_odometer - self.pool.get('fleet.vehicle').browse(
             [vehicle_id])[0].odometer
         current_odometer = last_odometer + distance

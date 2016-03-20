@@ -20,11 +20,11 @@
 #
 ##############################################################################
 
-from openerp import models
 import time
-from openerp.tools.translate import _
-# from openerp import netsvc
+
+from openerp import models
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools.translate import _
 
 # Wizard que permite generar la poliza con el monto a pagar correspondiente a
 # la liquidación del Operador
@@ -62,7 +62,7 @@ class TmsExpenseInvoice(models.TransientModel):
             # invoice_obj = self.pool.get('account.invoice')
             expense_obj = self.pool.get('tms.expense')
             # expense_line_obj = self.pool.get('tms.expense.line')
-            # period_obj = self.pool.get('account.period')
+            period_obj = self.pool.get('account.period')
             move_obj = self.pool.get('account.move')
             journal_id = account_jrnl_obj.search(
                 [('type', '=', 'general'),
@@ -119,8 +119,9 @@ class TmsExpenseInvoice(models.TransientModel):
                                 expense.employee_id.id,))
                     advance_account = (expense.employee_id.
                                        tms_advance_account_id.id)
-                    negative_balance_account = (expense.employee_id.
-                                                tms_expense_negative_balance_account_id.id)
+                    negative_balance_account = (
+                        expense.employee_id.
+                        tms_expense_negative_balance_account_id.id)
                     advance_account = account_fiscal_obj.map_account(
                         False, advance_account)
                     negative_balance_account = account_fiscal_obj.map_account(

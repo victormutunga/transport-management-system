@@ -19,15 +19,15 @@
 #
 ##############################################################################
 
-from openerp import models, fields
 import time
-from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+
+from openerp import fields, models
 import openerp.addons.decimal_precision as dp
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from openerp.tools.translate import _
 
 
-# TMS Waybills
 class TmsWaybill(models.Model):
     _name = 'tms.waybill'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -39,7 +39,6 @@ class TmsWaybill(models.Model):
         res = {}
         for waybill in self.browse(self):
             res[waybill.id] = {
-                'amount_freight': 0.0,
                 'amount_freight': 0.0,
                 'amount_move': 0.0,
                 'amount_highway_tolls': 0.0,

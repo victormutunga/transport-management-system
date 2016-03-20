@@ -71,14 +71,14 @@ class TmsWaybillCancel(osv.osv_memory):
                         raise Warning(
                             _('Could not cancel Waybill !'),
                             _('This Waybill\'s Invoice is already paid'))
-                        return False
+                        # return False
                     elif (waybill.invoiced and waybill.invoice_id and
                           waybill.invoice_id.id and waybill.invoice_id.state !=
                           'cancel' and waybill.billing_policy == 'manual'):
                         raise Warning(
                             _('Could not cancel Waybill !'),
                             _('This Waybill is already Invoiced'))
-                        return False
+                        # return False
                     elif (waybill.waybill_type == 'outsourced' and
                           waybill.supplier_invoiced and
                           waybill.supplier_invoice_paid):
@@ -86,7 +86,7 @@ class TmsWaybillCancel(osv.osv_memory):
                             _('Could not cancel Waybill !'),
                             _('This Waybill\'s Supplier Invoice is already \
                                 paid'))
-                        return False
+                        # return False
 
                     elif (waybill.billing_policy == 'automatic' and
                           waybill.invoiced and not waybill.invoice_paid):

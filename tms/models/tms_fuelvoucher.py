@@ -19,17 +19,16 @@
 #
 ##############################################################################
 
-
-from openerp import models, fields
-from openerp import netsvc
-from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-import openerp.addons.decimal_precision as dp
 import time
 
+from openerp import fields, models
+from openerp import netsvc
+import openerp.addons.decimal_precision as dp
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from openerp.tools.translate import _
 
-# Trip Fuel Vouchers
+
 class TmsFuelvoucher(models.Model):
     _name = 'tms.fuelvoucher'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -352,7 +351,9 @@ class TmsFuelvoucher(models.Model):
             'special_tax_amount': special_tax}}
 
     def create(self, vals):
-        'travel_id' in vals and vals['travel_id'] and 'no_travel' in vals and vals['no_travel'] and vals.pop('travel_id')
+        # Esta va junta
+        # 'travel_id' in vals and vals['travel_id'] and 'no_travel' in
+        # vals and vals['no_travel'] and vals.pop('travel_id')
         shop_id = 'shop_id' in vals and vals['shop_id'] or False
         # print "vals: ", vals
         if 'travel_id' in vals and vals['travel_id']:
@@ -404,13 +405,13 @@ class TmsFuelvoucher(models.Model):
     def action_cancel_draft(self, *args):
         if not len(self):
             return False
-        for fuelvoucher in self.browse(self):
-            if fuelvoucher.travel_id.state in ('cancel', 'closed'):
+        for voucher in self.browse(self):
+            if voucher.travel_id.state in ('cancel', 'closed'):
                 raise Warning(
                     _('Warning !!! '),
                     _('Could not set to draft this Fuel Voucher, Travel is \
                         Closed or Cancelled !!!'))
-            elif fuelvoucher.picking_id.id and fuelvoucher.picking_id_cancel.id:
+            elif voucher.picking_id.id and voucher.picking_id_cancel.id:
                 raise Warning(
                     _('Warning !!! '),
                     _('Could not set to draft this Fuel Voucher because it \
@@ -535,25 +536,25 @@ class TmsFuelvoucher(models.Model):
         return True
 
     def action_confirm(self):
-        for fuelvoucher in self.browse(self):
-            if fuelvoucher.product_uom_qty <= 0.0:
+        for voucher in self.browse(self):
+            if voucher.product_uom_qty <= 0.0:
                 raise Warning(
                     _('Could not confirm Fuel Voucher !'),
                     _('Product quantity must be greater than zero.'))
-            elif (fuelvoucher.partner_id.tms_category == 'fuel' and
-                  fuelvoucher.partner_id.tms_fuel_internal):
-                if (fuelvoucher.product_id.qty_available <
-                        fuelvoucher.product_uom_qty):
+            elif (voucher.partner_id.tms_category == 'fuel' and
+                  voucher.partner_id.tms_fuel_internal):
+                if (voucher.product_id.qty_available <
+                        voucher.product_uom_qty):
                     raise Warning(
                         _('Warning !'),
                         _('There is no enough Product Inventory to Confirm \
-                            Fuel Voucher %s') % (fuelvoucher.name,))
-                picking_id = self.create_picking(fuelvoucher, 'out', 'False')
+                            Fuel Voucher %s') % (voucher.name,))
+                picking_id = self.create_picking(voucher, 'out', 'False')
                 self.write(
                     {'picking_id': picking_id,
                      'price_total':
-                     (fuelvoucher.product_id.standard_price *
-                      fuelvoucher.product_uom_qty),
+                     (voucher.product_id.standard_price *
+                      voucher.product_uom_qty),
                      'state': 'confirmed', 'confirmed_by': self,
                      'date_confirmed':
                      time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
@@ -562,15 +563,15 @@ class TmsFuelvoucher(models.Model):
                 period_obj = self.pool.get('account.period')
                 account_jrnl_obj = self.pool.get('account.journal')
                 period_id = period_obj.search(
-                    [('date_start', '<=', fuelvoucher.date),
-                     ('date_stop', '>=', fuelvoucher.date),
+                    [('date_start', '<=', voucher.date),
+                     ('date_stop', '>=', voucher.date),
                      ('state', '=', 'draft')], context=None)
                 if not period_id:
                     raise Warning(
                         _('Warning !'),
                         _('There is no valid account period for this date %s. \
                             Period does not exists or is already closed\
-                            ') % (fuelvoucher.date,))
+                            ') % (voucher.date,))
                 journal_id = account_jrnl_obj.search(
                     [('type', '=', 'general'),
                      ('tms_fuelvoucher_journal', '=', 1)], context=None)
@@ -584,84 +585,90 @@ class TmsFuelvoucher(models.Model):
                     'Account')
                 notes = _("Fuel Voucher: %s\nTravel: %s\nDriver: (ID %s) %s\n\
                             Vehicle: %s") % (
-                    (fuelvoucher.name, fuelvoucher.travel_id and
-                        fuelvoucher.travel_id.name or 'N/A'),
-                    (fuelvoucher.travel_id and
-                        fuelvoucher.travel_id.employee_id.id or 0),
-                    (fuelvoucher.travel_id.employee_id and
-                        fuelvoucher.travel_id.employee_id.name or 'N/A'),
-                    (fuelvoucher.travel_id and
-                        fuelvoucher.travel_id.unit_id and
-                        fuelvoucher.travel_id.unit_id.name or
-                        fuelvoucher.unit_id.name))
+                    (voucher.name, voucher.travel_id and
+                        voucher.travel_id.name or 'N/A'),
+                    (voucher.travel_id and
+                        voucher.travel_id.employee_id.id or 0),
+                    (voucher.travel_id.employee_id and
+                        voucher.travel_id.employee_id.name or 'N/A'),
+                    (voucher.travel_id and
+                        voucher.travel_id.unit_id and
+                        voucher.travel_id.unit_id.name or
+                        voucher.unit_id.name))
                 # #print "notes: ", notes
-                if not (fuelvoucher.product_id.property_account_expense.id
-                        if fuelvoucher.product_id.property_account_expense.id
-                        else fuelvoucher.product_id.categ_id.property_account_expense_categ.id
-                        if fuelvoucher.product_id.categ_id.property_account_expense_categ.id
+                if not (voucher.product_id.property_account_expense.id
+                        if voucher.product_id.property_account_expense.id
+                        else voucher.product_id.categ_id.
+                        property_account_expense_categ.id
+                        if voucher.product_id.categ_id.
+                        property_account_expense_categ.id
                         else False):
                     raise Warning(
                         _('Missing configuration !!!'),
                         _('You have not defined expense Account for \
-                            Product %s...') % (fuelvoucher.product_id.name))
+                            Product %s...') % (voucher.product_id.name))
                 move_line = (0, 0, {
-                    'name': _('Fuel Voucher: %s') % (fuelvoucher.name),
+                    'name': _('Fuel Voucher: %s') % (voucher.name),
                     'account_id':
-                        (fuelvoucher.product_id.property_account_expense.id if
-                         fuelvoucher.product_id.property_account_expense.id
+                        (voucher.product_id.property_account_expense.id if
+                         voucher.product_id.property_account_expense.id
                          else
-                         fuelvoucher.product_id.categ_id.property_account_expense_categ.id),
+                         voucher.product_id.categ_id.
+                         property_account_expense_categ.id),
                     'debit': 0.0,
-                    'credit': round(fuelvoucher.price_subtotal, precision),
+                    'credit': round(voucher.price_subtotal, precision),
                     'journal_id': journal_id,
                     'period_id': period_id[0],
-                    'vehicle_id': fuelvoucher.unit_id.id,
-                    'employee_id': (fuelvoucher.employee_id and
-                                    fuelvoucher.employee_id.id or False),
-                    'sale_shop_id': fuelvoucher.shop_id.id,
-                    'product_id': fuelvoucher.product_id.id,
-                    'product_uom_id': fuelvoucher.product_id.uom_id.id,
-                    'quantity': fuelvoucher.product_uom_qty
+                    'vehicle_id': voucher.unit_id.id,
+                    'employee_id': (voucher.employee_id and
+                                    voucher.employee_id.id or False),
+                    'sale_shop_id': voucher.shop_id.id,
+                    'product_id': voucher.product_id.id,
+                    'product_uom_id': voucher.product_id.uom_id.id,
+                    'quantity': voucher.product_uom_qty
                 })
                 move_lines.append(move_line)
-                if not (fuelvoucher.product_id.tms_property_account_expense.id
+                if not (voucher.product_id.tms_property_account_expense.id
                         if
-                        fuelvoucher.product_id.tms_property_account_expense.id
+                        voucher.product_id.tms_property_account_expense.id
                         else
-                        fuelvoucher.product_id.categ_id.tms_property_account_expense_categ.id
+                        voucher.product_id.categ_id.
+                        tms_property_account_expense_categ.id
                         if
-                        fuelvoucher.product_id.categ_id.tms_property_account_expense_categ.id
+                        voucher.product_id.categ_id.
+                        tms_property_account_expense_categ.id
                         else False):
                     raise Warning(
                         _('Missing configuration !!!'),
                         _('You have not defined breakdown Account for \
-                            Product %s...') % (fuelvoucher.product_id.name))
+                            Product %s...') % (voucher.product_id.name))
                 move_line = (0, 0, {
-                    'name': _('Fuel Voucher: %s') % (fuelvoucher.name),
+                    'name': _('Fuel Voucher: %s') % (voucher.name),
                     'account_id':
-                    (fuelvoucher.product_id.tms_property_account_expense.id if
-                        fuelvoucher.product_id.tms_property_account_expense.id
+                    (voucher.product_id.tms_property_account_expense.id if
+                        voucher.product_id.tms_property_account_expense.id
                         else
-                        fuelvoucher.product_id.categ_id.tms_property_account_expense_categ.id),
-                    'debit': round(fuelvoucher.price_subtotal, precision),
+                        voucher.product_id.categ_id.
+                        tms_property_account_expense_categ.id),
+                    'debit': round(voucher.price_subtotal, precision),
                     'credit': 0.0,
                     'journal_id': journal_id,
                     'period_id': period_id[0],
-                    'vehicle_id': fuelvoucher.unit_id.id,
-                    'employee_id': (fuelvoucher.employee_id and
-                                    fuelvoucher.employee_id.id or False),
-                    'sale_shop_id': fuelvoucher.shop_id.id,
-                    'product_id': fuelvoucher.product_id.id,
-                    'product_uom_id': fuelvoucher.product_id.uom_id.id,
-                    'quantity': fuelvoucher.product_uom_qty
+                    'vehicle_id': voucher.unit_id.id,
+                    'employee_id': (voucher.employee_id and
+                                    voucher.employee_id.id or False),
+                    'sale_shop_id': voucher.shop_id.id,
+                    'product_id': voucher.product_id.id,
+                    'product_uom_id': voucher.product_id.uom_id.id,
+                    'quantity': voucher.product_uom_qty
                 })
                 move_lines.append(move_line)
                 move = {
-                    'ref': _('Fuel Voucher: %s') % (fuelvoucher.name),
+                    'ref': _('Fuel Voucher: %s') % (voucher.name),
                     'journal_id': journal_id,
                     'narration': notes,
                     'line_id': [x for x in move_lines],
-                    'date': fuelvoucher.date,
+                    'date': voucher.date,
                     'period_id': period_id[0],
                 }
                 move_id = move_obj.create(move)
