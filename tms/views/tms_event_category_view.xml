@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <!-- 
+##############################
+TMS.EVENT.CATEGORY 
+##############################
+-->
+<!-- TREE View for tms.event.category --> 
+    <record model="ir.ui.view" id="view_tms_event_category_tree">
+        <field name="name">tms.event.category.tree</field>
+        <field name="model">tms.event.category</field>
+        <field name="arch" type="xml">
+            <tree string="TMS Event Categories">
+                <field name="complete_name" />
+                <field name="name" />
+                <field name="gps_code" />
+                <field name="gps_type" />
+                <field name="parent_id" />
+                <field name="notes"/>
+                <field name="company_id" />
+            </tree>
+        </field>
+    </record>
+
+
+<!-- FORM View for tms.event.category-->
+    
+        <record id="view_tms_event_category_form" model="ir.ui.view">
+            <field name="name">tms.event.category.form</field>
+            <field name="model">tms.event.category</field>
+            <field name="arch" type="xml">
+                <form string="TMS Unit Categories">
+                    <field name="name" select="1"/>
+                    <field name="parent_id" />
+                    <field name="gps_code" />
+                    <field name="gps_type" />
+                    <field name="active" select="1"/>
+                    <field name="company_id" />
+                    <separator string="Actions" colspan="4" />
+                    <field name="action_ids" colspan="4" nolabel="1"/>
+                    <separator string="Notes" colspan="4" />
+                    <field name="notes" colspan="4" nolabel="1"/>
+                </form>
+            </field>
+        </record>
+
+<!-- Action for tms.event.category -->
+    <record model="ir.actions.act_window" id="open_view_tms_event_category_form">
+        <field name="name">TMS Events Categories</field>
+        <field name="res_model">tms.event.category</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+<!-- Menu for tms.event.category  -->
+    <menuitem id="menu_tms_events" name="Events and Actions" parent="menu_tms_config" sequence="10"/>    
+
+    <menuitem name="Events Categories" 
+              parent="menu_tms_events" 
+              id="menu_tms_config_event_category_form" 
+              action="open_view_tms_event_category_form"/>
+
+    </data>
+</openerp>

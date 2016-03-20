@@ -1,13 +1,5 @@
 <openerp>
-<data>
-
-<!-- Add fields to product.product object
-'tms_category'
--->
-############################################################################################################################
-### Cambios en la vista de Product ###                                                                                                                                                                                                                                   
-                                                                                                          
-
+    <data>
         <record id="tms_product_search_form_view" model="ir.ui.view">
             <field name="name">tms.product.search.form</field>
             <field name="model">product.product</field>
@@ -74,11 +66,11 @@
                     </page>
                 </notebook>
                 <field name="property_account_income_id" position="after">
-                    <field name="tms_property_account_income"                            
+                    <field name="tms_property_account_income"
                            domain="[('type','=','other')]"/> <!-- attrs="{'required':[('tms_category','in',('freight', 'insurance', 'highway_tolls','other'))], 'invisible' : [('tms_category','not in',('freight', 'insurance', 'highway_tolls','other'))]}" -->
                 </field>
                 <field name="property_account_expense_id" position="after">
-                    <field name="tms_property_account_expense"                            
+                    <field name="tms_property_account_expense"
                            domain="[('type','=','other')]"/> <!-- attrs="{'required':[('tms_category','in',('fuel'))], 'invisible' : [('tms_category','not in',('fuel'))]}" -->
                 </field>
                 <field name="property_stock_production" position="replace">
@@ -86,29 +78,5 @@
                 </field>
             </field>
         </record>
-
-
-    
-        <record id="tms_view_category_property_form" model="ir.ui.view">
-            <field name="name">tms.product.category.property.form.inherit</field>
-            <field name="model">product.category</field>
-            <field name="inherit_id" ref="account.view_category_property_form"/>
-            <field name="arch" type="xml">
-                <data>
-                    <field name="property_account_income_categ_id" position="after">
-                        <field name="tms_property_account_income_categ"                            
-                           domain="[('type','=','other'), ('tms_vehicle_mandatory', '=', 1)]"/>
-                    </field>
-                    <field name="property_account_expense_categ_id" position="after">
-                        <field name="tms_property_account_expense_categ"                            
-                           domain="[('type','=','other'), ('tms_vehicle_mandatory', '=', 1)]"/>
-                    </field>
-
-                </data>
-            </field>
-        </record>
-    
-
-
-</data>
+    </data>
 </openerp>

@@ -1,0 +1,101 @@
+<openerp>
+    <data>
+        <record id="tms_product_search_form_view" model="ir.ui.view">
+            <field name="name">tms.product.search.form</field>
+            <field name="model">product.product</field>
+            <field name="priority">50</field>
+            <field name="inherit_id" ref="product.product_search_form_view"/>
+            <field name="arch" type="xml">
+                <search string="Product">
+                   <field name="categ_id" position="after">
+                     <filter string="Waybill Related" icon="terp-accessories-archiver" 
+                             domain="[('tms_category','in',('transportable','freight','move','insurance','highway_tolls','other'))]"/>
+                     <separator/>
+                     <filter string="Travel Expense Related" icon="terp-accessories-archiver" 
+                             domain="[('tms_category','in',('real_expense','salary','salary_retention','salary_discount','negative_balance','fuel','madeup_expense'))]"/>
+                     <separator/>
+                     <filter string="Indirect Expense (Agreements)" icon="terp-accessories-archiver" domain="[('tms_category','=','indirect_expense')]" name="indirect_expense"/>
+                   </field>
+                  <group  expand='0' string='More groups...'>
+                     <separator />
+                       <filter string='TMS Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'tms_category'}"/>
+                  </group>
+
+                </search>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="tms_product_normal_tree_view">
+            <field name="name">TMS product.normal.tree</field>
+            <field name="model">product.product</field>
+            <field name="priority">50</field>
+            <field name="inherit_id" ref="product.product_product_tree_view"/>
+            <field name="arch" type="xml">
+              <field name="uom_id" position="after" >
+                <field name="tms_category" />
+              </field>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="tms_product_normal_form_view">
+            <field name="name">TMS product.normal.form</field>
+            <field name="model">product.product</field>
+            <field name="priority">50</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <field name="lst_price" position="after">
+                    <separator string="TMS" colspan="2"/>
+                    <newline />
+                    <field name="tms_category" on_change="onchange_tms_category(tms_category)" required="True"/>
+                    <newline />
+                    <field name="tms_default_freight" attrs="{'invisible':[('tms_category','!=','freight')]}"/>
+                    <newline />
+                    <field name="tms_default_supplier_freight" attrs="{'invisible':[('tms_category','!=','freight')]}"/>
+                    <newline />
+                    <field name="tms_default_salary" attrs="{'invisible':[('tms_category','!=','salary')]}"/>
+                    <new_line />
+                    <field name="tms_default_fuel_discount" attrs="{'invisible':[('tms_category','!=','salary_discount')]}"/>
+                    <newline />
+                    <field name="tms_activity_duration" attrs="{'invisible':[('tms_category','!=','maint_activity')], 'required':[('tms_category','=','maint_activity')]}" widget="float_time"/>
+                </field>
+                <notebook position="inside">
+                    <page string="TMS Expense Accounts" attrs="{'invisible':[('tms_category','!=','indirect_expense')]}" >
+                        <field name="tms_account_ids" nolabel="1" />
+                    </page>
+                </notebook>
+                <field name="property_account_income_id" position="after">
+                    <field name="tms_property_account_income"
+                           domain="[('type','=','other')]"/> <!-- attrs="{'required':[('tms_category','in',('freight', 'insurance', 'highway_tolls','other'))], 'invisible' : [('tms_category','not in',('freight', 'insurance', 'highway_tolls','other'))]}" -->
+                </field>
+                <field name="property_account_expense_id" position="after">
+                    <field name="tms_property_account_expense"
+                           domain="[('type','=','other')]"/> <!-- attrs="{'required':[('tms_category','in',('fuel'))], 'invisible' : [('tms_category','not in',('fuel'))]}" -->
+                </field>
+                <field name="property_stock_production" position="replace">
+                    <field name="property_stock_production" domain="[('usage','=','production')]"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="tms_product_normal_action" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_id" ref="product.product_product_tree_view"/> 
+            <field name="search_view_id" ref="tms_product_search_form_view"/>
+            <field name="domain">[('tms_category','in',('transportable','freight','move','insurance','highway_tolls','other','real_expense','madeup_expense','salary','salary_retention','salary_discount','negative_balance','fuel','indirect_expense'))]</field>
+           <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new Freight related product.
+              </p><p>
+                You can define products for everything related to Freight Management.
+              </p>
+            </field>
+        </record>
+        <menuitem action="tms_product_normal_action" id="menu_tms_config_product_product" parent="menu_tms_config_product" sequence="1"/>
+    </data>
+</openerp>

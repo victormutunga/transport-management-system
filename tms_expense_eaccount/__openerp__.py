@@ -36,10 +36,11 @@ This module adds options to add XML Invoice file for Mexico's e-Account
 """,
     'author': 'Argil Consulting',
     'depends': ['asti_eaccounting_mx_base_70'],
-    'data': ['tms_expense_eaccount_view.xml',
+    'data': [
+                'views/tms_expense_eaccount_view.xml',
             ],
     'website': 'http://www.argil.mx',
-    'installable': True,
+    'installable': False,
     'active': True,
 }
 

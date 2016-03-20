@@ -32,7 +32,7 @@ access_tms_fleet_vehicle_odometer_device,fleet.vehicle.odometer.device,model_fle
 access_tms_operation,tms.operation,model_tms_operation,tms.group_tms_manager,1,1,1,0
 access_tms_waybill_taxes,tms.waybill.taxes,model_tms_waybill_taxes,tms.group_tms_manager,1,1,1,1
 access_tms_advance,tms.advance,model_tms_advance,tms.group_tms_user,1,1,1,0
-access_tms_event,tms.event,model_tms_event,tms.group_tms_user,1,1,1,1
+access_tms_event,tms.event,model_tms_event,tms.group_tms_user,1,0,0,0
 access_tms_event_action,tms.event.action,model_tms_event_action,tms.group_tms_user,1,0,0,0
 access_tms_event_category,tms.event.category,model_tms_event_category,tms.group_tms_user,1,1,1,1
 access_tms_expense,tms.expense,model_tms_expense,tms.group_tms_user,1,1,1,0

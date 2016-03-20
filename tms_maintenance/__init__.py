@@ -19,28 +19,4 @@
 #
 ##############################################################################
 
-import product
-
-import tms_maintenance_order
-import tms_maintenance_order_activity
-import tms_maintenance
-import tms_product_line
-import sale
-import stock_picking
-import stock_move
-
-import tms_activity_control_time
-import tms_time
-
-import tms_analisys_01
-import tms_analisys_02
-import tms_analisys_03
-import tms_analisys_04
-#import tms_analisys_05 
-#import activities_to_invoice
-import create_invoice
-import tms_maintenance_driver_report
-import tms_travel
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+#from . import models

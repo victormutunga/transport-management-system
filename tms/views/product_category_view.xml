@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="tms_view_category_property_form" model="ir.ui.view">
+            <field name="name">tms.product.category.property.form.inherit</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="account.view_category_property_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="property_account_income_categ_id" position="after">
+                        <field name="tms_property_account_income_categ"                            
+                           domain="[('type','=','other'), ('tms_vehicle_mandatory', '=', 1)]"/>
+                    </field>
+                    <field name="property_account_expense_categ_id" position="after">
+                        <field name="tms_property_account_expense_categ"                            
+                           domain="[('type','=','other'), ('tms_vehicle_mandatory', '=', 1)]"/>
+                    </field>
+
+                </data>
+            </field>
+        </record>
+    </data>
+</openerp>

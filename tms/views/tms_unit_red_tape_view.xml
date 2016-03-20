@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <!-- 
+##############################
+TMS.UNIT.red_tape
+##############################
+-->
+<!-- SEARCH View for tms.unit.red_tape --> 
+        <record id="view_tms_unit_red_tape_search" model="ir.ui.view">
+            <field name="name">tms.unit.red_tape.search</field>
+            <field name="model">tms.unit.red_tape</field>
+            <field name="arch" type="xml">
+                <search string="Unit Red Tapes">
+                   <filter string="Motorized Units" icon="terp-accessories-archiver" domain="[('unit_id.fleet_type','=','tractor')]"/>
+                   <filter string="Trailers" icon="terp-accessories-archiver" domain="[('unit_id.fleet_type','=','trailer')]"/>
+                   <filter string="Dolly's" icon="terp-accessories-archiver" domain="[('unit_id.fleet_type','=','dolly')]"/>
+                   <filter string="Others" icon="terp-accessories-archiver" domain="[('unit_id.fleet_type','=','other')]"/>
+                   <separator orientation="vertical"/>
+                   <field name="unit_id"/>
+                   <field name="date" />
+                   <field name="red_tape_id" />
+                   <field name="name" />
+                   <newline/>
+                   <group  expand='0' string='Group by...'>
+                       <filter string='State' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'state'}" />
+                       <filter string='Unit' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'unit_id'}" />
+                       <filter string='Unit Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'unit_type_id'}" />
+                       <separator orientation="vertical"/>                                                                
+                       <filter string='Red Tape' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'red_tape_id'}" />
+                       <separator orientation="vertical"/>
+                       <filter string='Date' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'date'}" />
+                   </group>
+                </search>
+            </field>
+        </record>
+
+<!-- TREE View for tms.unit.red_tape --> 
+    <record model="ir.ui.view" id="view_tms_unit_red_tape_tree">
+          <field name="name">tms.unit.red_tape.tree</field>
+          <field name="model">tms.unit.red_tape</field>
+      <field name="arch" type="xml">
+            <tree string="Unit Red Tapes" colors="gray:state=='cancel';red:state=='draft';">
+              <field name="state"/>
+              <field name="date"/>
+              <field name="unit_id" />
+              <field name="unit_type_id" invisible="1"/>
+              <field name="red_tape_id" />
+              <field name="partner_id" />
+              <field name="amount" sum="Amount"/>
+              <field name="amount_paid" sum="Amount Paid"/>
+        </tree>
+      </field>
+    </record>
+
+<!-- FORM View for tms.unit.active_history -->
+
+        <record id="view_tms_unit_red_tape_form" model="ir.ui.view">
+            <field name="name">tms.unit.red_tape.form</field>
+            <field name="model">tms.unit.red_tape</field>
+            <field name="arch" type="xml">
+                <form string="Units Red Tapes" version="7.0">
+                    <header>
+                        <button name="action_cancel" states="draft,pending,progress" string="Cancel" type="object"/>
+            <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
+                        <button name="action_pending" states="draft" string="Pending" type="object" icon="terp-gtk-media-pause" class="oe_highlight" />
+                        <button name="action_progress" states="pending" string="Progress" type="object" icon="gtk-go-forward" class="oe_highlight" />
+                        <button name="action_done" states="progress" string="Done" type="object" icon="gtk-goto-last" class="oe_highlight" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,pending,progress,done"/>
+                    </header>
+                    <sheet>
+              <group col="4" colspan="4">
+                        <h1>
+                          <label string="Vehicle:"/>
+                          <field name="unit_id" class="oe_inline"/>
+                          <label string="Red Tape:"/>
+              <field name="red_tape_id" context="{'default_type':'red_tape'}" on_change="on_change_red_tape_id(red_tape_id)" class="oe_inline"/>
+                        </h1>
+              </group>
+                        <group col="4">
+                            <field name="date"/>
+                            <field name="partner_id"/>
+                            <field name="unit_type_id"/>
+                            <newline />
+                            <field name="name" colspan="4"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="amount"/>
+                            <field name="amount_paid"/>
+                        </group>
+                        <notebook colspan="6">
+                            <page string="Notes">
+                                <field name="notes" nolabel="1" />
+                            </page>
+                            <page string="Log">
+                                <group col="4">
+                                    <field name="create_uid" readonly="1" />
+                                    <field name="create_date" readonly="1" />
+                                    <field name="pending_by" readonly="1" />
+                                    <field name="date_pending" readonly="1" />
+                                    <field name="progress_by" readonly="1" />
+                                    <field name="date_progress" readonly="1" />
+                                    <field name="done_by" readonly="1" />
+                                    <field name="date_done" readonly="1" />
+                                    <field name="cancelled_by" readonly="1" />
+                                    <field name="date_cancelled" readonly="1" />
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread" placeholder="Share a message..."/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+<!-- Action for tms.unit.red_tape -->
+    <record model="ir.actions.act_window" id="open_view_tms_unit_red_tape_form">
+        <field name="name">Vehicle Red Tape</field>
+        <field name="res_model">tms.unit.red_tape</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+<!-- Menu for tms.unit.red_tape -->
+    <menuitem name="Vehicle Red Tape" 
+              parent="menu_tms_config_unit" 
+              id="menu_tms_config_unit_red_tape_form" 
+              action="open_view_tms_unit_red_tape_form"
+        sequence="24"/>
+
+
+    </data>
+</openerp>

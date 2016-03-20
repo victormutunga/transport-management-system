@@ -36,10 +36,10 @@ This module adds Filter by Vehicle in Wizard
 """,
     'author': 'Argil Consulting',
     'depends': ['ifrs_report'],
-    'data': ['tms_ifrs_report_wizard_view.xml',
+    'data': ['views/tms_ifrs_report_wizard_view.xml',
             ],
     'website': 'http://www.argil.mx',
-    'installable': True,
+    'installable': False,
     'active': True,
 }
 

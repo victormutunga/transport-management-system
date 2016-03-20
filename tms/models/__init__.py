@@ -1,20 +1,59 @@
 # -*- encoding: utf-8 -*-
-from . import sale_shop
-from . import ir_sequence
-from . import product
-from . import account
-from . import account_invoice
-from . import partner
-from . import hr
-from . import sale
-from . import tms
-from . import tms_travel
-from . import tms_fuelvoucher
-from . import tms_advance
-from . import tms_waybill
-from . import tms_expense
-from . import tms_factor
-from . import tms_history
-from . import tms_operation
-from . import stock
-from . import tms_expense_loan
+
+# import account_account
+# import account_invoice
+# import account_invoice_line
+# import account_journal
+# import account_move_line
+# import account_tax
+# import fleet_vehicle
+# import fleet_vehicle_odometer
+# import fleet_vehicle_odometer_device
+# import hr_employee
+# import hr_job
+# import ir_sequence
+# import product_category
+# import product_product
+# import sale_shop
+# import tms_advance
+# import tms_advance_invoice
+# import tms_advance_payment
+# import tms_event
+# import tms_event_action
+# import tms_event_category
+# import tms_expense
+# import tms_expense_cancel
+# import tms_expense_invoice
+# import tms_expense_line
+# import tms_expense_loan
+# import tms_expense_payment
+# import tms_factor
+# import tms_factor_special
+# import tms_fuelvoucher
+# import tms_fuelvoucher_invoice
+# import tms_operation
+# import tms_place
+# import tms_route
+# import tms_route_fuelefficiency
+# import tms_route_place
+# import tms_route_tollstation
+# import tms_route_tollstation_costperaxis
+# import tms_sale_shop_fuel_supplier_seq
+# import tms_travel
+# import tms_unit_active_history
+# import tms_unit_category
+# import tms_unit_expiry
+# import tms_unit_extradata
+# import tms_unit_kit
+# import tms_unit_photo
+# import tms_unit_red_tape
+# import tms_waybill
+# import tms_waybill_cancel
+# import tms_waybill_category
+# import tms_waybill_extradata
+# import tms_waybill_invoice
+# import tms_waybill_line
+# import tms_waybill_shipped_grouped
+# import tms_waybill_shipped_product
+# import tms_waybill_supplier_invoice
+# import tms_waybill_taxes

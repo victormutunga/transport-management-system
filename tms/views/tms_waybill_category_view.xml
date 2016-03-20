@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <!-- 
+##############################
+TMS.waybill.category
+##############################
+-->
+<!-- SEARCH View for tms.waybill.category  --> 
+        <record id="view_tms_waybill_category_search" model="ir.ui.view">
+            <field name="name">tms.waybill.category.search</field>
+            <field name="model">tms.waybill.category</field>
+            <field name="arch" type="xml">
+                <search string="Waybill Categories">
+                   <field name="name"/>
+                   <group  expand='0' string='Group by...'>
+                       <filter string='Shop' icon="terp-go-home" domain="[]" context="{'group_by' : 'shop_id'}" />
+                   </group>
+                </search>
+            </field>
+        </record>
+
+<!-- TREE View for tms.waybill.category --> 
+    <record model="ir.ui.view" id="view_tms_waybill_category_tree">
+        <field name="name">tms.waybill.category.tree</field>
+        <field name="model">tms.waybill.category</field>
+        <field name="arch" type="xml">
+            <tree string="Waybill Categories">
+                <field name="name" />
+                <field name="shop_id" />
+                <field name="company_id" />
+                <field name="active" />
+            </tree>
+        </field>
+    </record>
+
+<!-- FORM View for tms.waybill.category -->
+        <record id="view_tms_waybill_category_form" model="ir.ui.view">
+            <field name="name">tms.waybill.category.form</field>
+            <field name="model">tms.waybill.category</field>
+            <field name="arch" type="xml">
+                <form string="Waybill Categories" version="7.0">
+                    <sheet>
+                      <group colspan="4" col="4">
+                        <h1>
+                            <label string="Category"/>
+                            <field name="name" class="oe_inline"/>
+                        </h1>
+                      </group>
+                      <group colspan="4" col="4">
+                        <field name="shop_id"/>
+                        <field name="active" />
+                        <separator string="Description" colspan="4" />
+                        <field name="description" nolabel="1" colspan="4"/>
+                      </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread" placeholder="Share a message..."/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+
+
+<!-- Action for tms.waybill.category -->
+    <record model="ir.actions.act_window" id="open_view_tms_waybill_category_form">
+        <field name="name">Waybill Category</field>
+        <field name="res_model">tms.waybill.category</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+<!-- Menu for tms.waybill.category -->
+    <menuitem name="Waybill Categories" sequence="10"
+              parent="menu_tms_config_waybill" 
+              id="menu_tms_config_waybill_category_form" 
+              action="open_view_tms_waybill_category_form"/>
+
+w
+    </data>
+</openerp>
