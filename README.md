@@ -1,6 +1,6 @@
 [![License: AGPL-3](https://img.shields.io/badge/licence-AGPL--3-blue.svg)](http://www.gnu.org/licenses/agpl-3.0-standalone.html)
-[![Build Status](https://travis-ci.org/jarsa/transport-management-system.svg?branch=9.0)](https://travis-ci.org/jarsa/transport-management-system)
-[![Coverage Status](https://coveralls.io/repos/jarsa/transport-management-system/badge.svg?branch=9.0&service=github)](https://coveralls.io/github/jarsa/transport-management-system?branch=9.0)
+[![Build Status](https://travis-ci.org/Jarsa/transport-management-system.svg?branch=master)](https://travis-ci.org/Jarsa/transport-management-system)
+[![Coverage Status](https://coveralls.io/repos/github/Jarsa/transport-management-system/badge.svg?branch=9.0)](https://coveralls.io/github/Jarsa/transport-management-system?branch=9.0)
 
 Freight Management System
 ==========================

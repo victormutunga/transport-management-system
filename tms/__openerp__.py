@@ -30,6 +30,7 @@
     "summary": "Management System for Carriers, Trucking and other companies",
     "data": [
         'views/tms_view.xml',
+        'views/tms_config_settings_view.xml',
         # 'views/account_account_view.xml',
         # 'views/account_invoice_view.xml',
         # 'views/account_journal_view.xml',
