@@ -79,12 +79,12 @@ class TmsAdvance(models.Model):
                 [('move_id', 'in', move.keys())])
         return advance_ids
 
-    operation_id = fields.Many2one(
-        'tms.operation', 'Operation', ondelete='restrict', required=False,
-        readonly=False,
-        states={'cancel': [('readonly', True)],
-                'confirmed': [('readonly', True)],
-                'closed': [('readonly', True)]})
+    # operation_id = fields.Many2one(
+    #     'tms.operation', 'Operation', ondelete='restrict', required=False,
+    #     readonly=False,
+    #     states={'cancel': [('readonly', True)],
+    #             'confirmed': [('readonly', True)],
+    #             'closed': [('readonly', True)]})
     name = fields.Char('Anticipo', size=64, required=False)
     state = fields.Selection(
         [('draft', 'Draft'), ('approved', 'Approved'),
@@ -116,7 +116,7 @@ class TmsAdvance(models.Model):
         states={'cancel': [('readonly', True)],
                 'confirmed': [('readonly', True)],
                 'closed': [('readonly', True)]}, required=True)
-    shop_id = fields.Many2one('sale.shop', string='Shop')
+    # shop_id = fields.Many2one('sale.shop', string='Shop')
     product_id = fields.Many2one(
         'product.product', 'Product',
         domain=[('purchase_ok', '=', 1),

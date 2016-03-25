@@ -30,6 +30,8 @@
     "summary": "Management System for Carriers, Trucking and other companies",
     "data": [
         'views/tms_view.xml',
+        'security/tms_security.xml',
+        'security/ir.model.access.csv',
         'views/tms_config_settings_view.xml',
         # 'views/account_account_view.xml',
         # 'views/account_invoice_view.xml',
@@ -50,7 +52,7 @@
         # 'views/product_view.xml',
         # 'views/tms_advance_invoice_view.xml',
         # 'views/tms_advance_payment_view.xml',
-        # 'views/tms_advance_view.xml',
+        'views/tms_advance_view.xml',
         # 'views/tms_event_action_view.xml',
         # 'views/tms_event_category_view.xml',
         # 'views/tms_event_view.xml',
@@ -58,7 +60,7 @@
         # 'views/tms_expense_line_view.xml',
         # 'views/tms_expense_loan_view.xml',
         # 'views/tms_expense_payment_view.xml',
-        # 'views/tms_expense_view.xml',
+        'views/tms_expense_view.xml',
         # 'views/tms_factor_special_view.xml',
         # 'views/tms_factor_view.xml',
         # 'views/tms_fuelvoucher_invoice_view.xml',
@@ -79,8 +81,6 @@
         # 'views/tms_waybill_invoice_view.xml',
         # 'views/tms_waybill_supplier_invoice_view.xml',
         # 'views/tms_waybill_view.xml',
-        'security/ir.model.access.csv',
-        'security/tms_security.xml'
         ],
     "application": True,
     "installable": True

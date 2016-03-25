@@ -59,9 +59,9 @@ class TmsExpenseLine(models.Model):
             }
         return res
 
-    operation_id = fields.Many2one(
-        'tms.operation', 'Operation', ondelete='restrict',
-        required=False, readonly=False)
+    # operation_id = fields.Many2one(
+    #     'tms.operation', 'Operation', ondelete='restrict',
+    #     required=False, readonly=False)
     travel_id = fields.Many2one(
         'tms.travel', 'Travel', required=False)
     expense_id = fields.Many2one(
@@ -114,28 +114,29 @@ class TmsExpenseLine(models.Model):
     product_uom = fields.Many2one('product.uom', 'Unit of Measure ')
     notes = fields.Text('Notes')
     employee_id = fields.Many2one(
-        compute='expense_id.employee_id', relation='hr.employee',
+        'hr.employee',
+        related='expense_id.employee_id',
         store=True, string='Driver')
-    shop_id = fields.Many2one('sale.shop', string='Shop')
-    company_id = fields.Many2one(
-        compute='expense_id.company_id', type='many2one',
-        relation='res.company', string='Company', store=True, readonly=True)
+    # shop_id = fields.Many2one('sale.shop', string='Shop')
+    # company_id = fields.Many2one(
+    #     compute='expense_id.company_id', type='many2one',
+    #     relation='res.company', string='Company', store=True, readonly=True)
     date = fields.Date(
         string='Date', store=True, readonly=True)
     state = fields.Char(
         string='State', size=64, store=True,
         readonly=True)
-    fuel_voucher = fields.Boolean('Fuel Voucher'),
+    fuel_voucher = fields.Boolean('Fuel Voucher')
     control = fields.Boolean('Control')
     # Useful to mark those lines that must not be deleted for Expense Record
     # (like Fuel from Fuel Voucher, Toll Stations payed without cash
     # (credit card, voucher, etc)
     automatic = fields.Boolean(
         'Automatic', help="Check this if you want to create Advances and/or \
-        Fuel Vouchers for this line automatically"),
+        Fuel Vouchers for this line automatically")
     credit = fields.Boolean(
         'Credit', help="Check this if you want to create Fuel Vouchers for \
-        this line"),
+        this line")
     fuel_supplier_id = fields.Many2one(
         'res.partner', 'Fuel Supplier',
         domain=[('tms_category', '=', 'fuel')], required=False)

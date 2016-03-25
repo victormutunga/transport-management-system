@@ -30,21 +30,21 @@ class TmsWaybillTaxes(models.Model):
     _name = "tms.waybill.taxes"
     _description = "Waybill Taxes"
 
-    waybill_id = fields.Many2one('tms.waybill', 'Waybill', readonly=True),
-    name = fields.Char('Impuesto', size=64, required=True),
-    tax_id = fields.Many2one('account.tax', 'Impuesto', readonly=True),
+    waybill_id = fields.Many2one('tms.waybill', 'Waybill', readonly=True)
+    name = fields.Char('Impuesto', size=64, required=True)
+    tax_id = fields.Many2one('account.tax', 'Impuesto', readonly=True)
     account_id = fields.Many2one(
         'account.account', 'Tax Account', required=False,
         domain=[('type', '<>', 'view'),
                 ('type', '<>', 'income'),
-                ('type', '<>', 'closed')]),
+                ('type', '<>', 'closed')])
     account_analytic_id = fields.Many2one(
-        'account.analytic.account', 'Analytic account'),
+        'account.analytic.account', 'Analytic account')
     base = fields.Float(
-        'Base', digits_compute=dp.get_precision('Account'), readonly=True),
+        'Base', digits_compute=dp.get_precision('Account'), readonly=True)
     tax_amount = fields.Float(
         'Monto Impuesto', digits_compute=dp.get_precision('Account'),
-        readonly=True),
+        readonly=True)
 
     _order = "tax_amount desc"
 

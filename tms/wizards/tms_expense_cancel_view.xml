@@ -18,6 +18,8 @@
     </field>
     </record>
 
+    <!-- <button name="%(action_expense_cancel)d" states="draft,approved,confirmed" string="Cancel" type="action" groups="tms.group_expense_cancel"/> -->
+
 
     <record id="action_expense_cancel" model="ir.actions.act_window">
         <field name="name">Cancel Expense Record</field>

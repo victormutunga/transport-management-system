@@ -241,12 +241,13 @@ class TmsExpense(models.Model):
         return res
 
     name = fields.Char('Name', size=64, readonly=True, select=True)
-    shop_id = fields.Many2one(
-        'sale.shop', 'Shop', required=True, readonly=True,
-        states={'draft': [('readonly', False)]})
-    company_id = fields.Many2one(
-        compute='shop_id.company_id', relation='res.company',
-        string='Company', store=True, readonly=True)
+    # Commentet to add to operating unit module
+    # operating_unit_id = fields.Many2one(
+    #     'sale.shop', 'Shop', required=True, readonly=True,
+    #     states={'draft': [('readonly', False)]})
+    # company_id = fields.Many2one(
+    #     compute='shop_id.company_id', relation='res.company',
+    #     string='Company', store=True, readonly=True)
     employee_id = fields.Many2one(
         'hr.employee', 'Driver', required=True,
         domain=[('tms_category', '=', 'driver')], readonly=True,
@@ -382,7 +383,7 @@ class TmsExpense(models.Model):
         digits_compute=dp.get_precision('Sale Price'),
         string='SubTotal (All)', multi=True)
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle')
-    odometer_id = fields.Many2one('fleet.vehicle.odometer.device', 'Odometer')
+# odometer_id = fields.Many2one('fleet.vehicle.odometer.device', 'Odometer')
     last_odometer = fields.Float('Last Read', digits=(16, 2))
     vehicle_odometer = fields.Float('Vehicle Odometer', digits=(16, 2))
     current_odometer = fields.Float('Current Read', digits=(16, 2))

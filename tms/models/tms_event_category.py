@@ -64,7 +64,7 @@ class TmsEventCategory(models.Model):
         'event_category_id', 'action_id', 'Actions')
     notes = fields.Text('Notes')
     active = fields.Boolean('Active')
-    company_id = fields.Many2one('res.company', 'Company', required=False)
+    # company_id = fields.Many2one('res.company', 'Company', required=False)
 
     _defaults = {
         'active': True,

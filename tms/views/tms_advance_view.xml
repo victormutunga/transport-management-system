@@ -33,7 +33,7 @@ TMS.ADVANCE
           <field name="unit_id"/>
           <field name="employee_id"/>
           <field name="product_id"/>
-          <field name="operation_id"/>
+          <!-- <field name="operation_id"/> -->
           <newline/>
           <group  expand='0' string='Group by...'>
             <filter string='Travel' icon="terp-gdu-smart-failing" domain="[]" context="{'group_by' : 'travel_id'}" />
@@ -44,7 +44,7 @@ TMS.ADVANCE
             <filter string='Period' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'date'}" />
             <separator orientation="vertical"/>                                                                
             <filter string='Product' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'product_id'}" />
-            <filter string='Operation' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'operation_id'}" />
+            <!-- <filter string='Operation' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'operation_id'}" /> -->
             <filter string='For Driver Helper' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'driver_helper'}" />
           </group>
         </search>
@@ -69,7 +69,7 @@ TMS.ADVANCE
             <field name="total" sum="Total"/>
             <field name="auto_expense" />
             <field name="paid" />
-            <field name="operation_id" invisible="1"/>
+            <!-- <field name="operation_id" invisible="1"/> -->
             <field name="state" />
             <button name="action_approve" states="draft" string="Approve" type="object" icon="gtk-go-forward" groups="tms.group_advance_approve"/>
             <button name="action_confirm" states="approved" string="Confirm" type="object" icon="gtk-goto-last" groups="tms.group_advance_confirm"/>            
@@ -99,10 +99,10 @@ TMS.ADVANCE
             <group colspan="4" col="4">
                 <field name="employee1_id" invisible="1"/>
                 <field name="employee2_id" invisible="1"/>
-                <field name="shop_id" />
+                <!-- <field name="shop_id" /> -->
                 <field name="date" />
                 <field name="travel_id" domain="[('state','!=','cancel'),('state','!=','closed'), ('supplier_unit', '=', False)]" on_change="on_change_travel_id(travel_id)"/>
-                <field name="operation_id" domain="[('state','=','process')]" />
+                <!-- <field name="operation_id" domain="[('state','=','process')]" /> -->
                 <field name="unit_id" readonly="1"/>
                 <field name="employee_id" domain="[('id','in',(employee1_id, employee2_id))]"
                                         on_change="on_change_driver(employee_id,employee1_id, employee2_id)"  />

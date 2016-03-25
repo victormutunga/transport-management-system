@@ -137,34 +137,35 @@ class TmsTravel(models.Model):
         return res
 
     waybill_ids = fields.Many2many(
-        'tms.waybill', 'tms_waybill_travel_rel', 'travel_id',
-        'waybill_id', 'Waybills')
+        'tms.waybill', string='Waybills')
     default_waybill_id = fields.One2many(
-        'tms.waybill', 'travel_id', 'Waybill', readonly=True)
+        'tms.waybill', 'travel_id', string='Waybill', readonly=True)
     partner_id = fields.Many2one(
-        'default_waybill_id', 'partner_id', relation='res.partner',
+        'res.partner',
+        related='default_waybill_id.partner_id',
         store=True)
     arrival_address_id = fields.Many2one(
-        'default_waybill_id', 'arrival_address_id', relation='res.partner',
+        'res.partner',
+        related='default_waybill_id.arrival_address_id',
         store=True)
     expense_driver_factor = fields.One2many(
-        'tms.factor', 'travel_id', 'Travel Driver Payment Factors',
+        'tms.factor', 'travel_id', string='Travel Driver Payment Factors',
         domain=[('category', '=', 'driver')], readonly=False,
         states={'cancel': [('readonly', True)],
                 'done': [('readonly', True)]})
-    operation_id = fields.Many2one(
-        'tms.operation', 'Operation', ondelete='restrict', required=False,
-        readonly=False, states={'cancel': [('readonly', True)],
-                                'done': [('readonly', True)],
-                                'closed': [('readonly', True)]})
-    shop_id = fields.Many2one(
-        'sale.shop', 'Shop', ondelete='restrict', required=True,
-        readonly=False, states={'cancel': [('readonly', True)],
-                                'done': [('readonly', True)],
-                                'closed': [('readonly', True)]})
-    company_id = fields.Many2one(
-        'shop_id', 'company_id', relation='res.company',
-        store=True, readonly=True)
+    # operation_id = fields.Many2one(
+    #     'tms.operation', 'Operation', ondelete='restrict', required=False,
+    #     readonly=False, states={'cancel': [('readonly', True)],
+    #                             'done': [('readonly', True)],
+    #                             'closed': [('readonly', True)]})
+    # shop_id = fields.Many2one(
+    #     'sale.shop', 'Shop', ondelete='restrict', required=True,
+    #     readonly=False, states={'cancel': [('readonly', True)],
+    #                             'done': [('readonly', True)],
+    #                             'closed': [('readonly', True)]})
+    # company_id = fields.Many2one(
+    #     'shop_id', 'company_id', relation='res.company',
+    #     store=True, readonly=True)
     name = fields.Char('Travel Number', size=64, required=False)
     state = fields.Selection(
         [('draft', 'Pending'), ('progress', 'In Progress'), ('done', 'Done'),
@@ -184,11 +185,13 @@ class TmsTravel(models.Model):
         states={'cancel': [('readonly', True)],
                 'closed': [('readonly', True)]})
     supplier_unit = fields.Boolean(
-        'unit_id', 'supplier_unit', string='Supplier Unit', store=True,
+        related='unit_id.supplier_unit',
+        string='Supplier Unit',
         readonly=True)
     supplier_id = fields.Many2one(
-        'unit_id', 'supplier_id', relation='res.partner',
-        store=True, readonly=True)
+        'res.partner',
+        related='unit_id.supplier_id',
+        readonly=True)
     trailer1_id = fields.Many2one(
         'fleet.vehicle', 'Trailer1', required=False,
         domain=[('fleet_type', '=', 'trailer')],
@@ -284,7 +287,7 @@ class TmsTravel(models.Model):
     distance_empty = fields.Float(
         'Distance Empty (mi./km)', required=False, digits=(16, 2),
         states={'cancel': [('readonly', True)],
-                'closed': [('readonly', True)]}),
+                'closed': [('readonly', True)]})
     distance_extraction = fields.Float(
         'Distance Extraction (mi./km)', required=False, digits=(16, 2),
         states={'cancel': [('readonly', True)],
@@ -298,10 +301,12 @@ class TmsTravel(models.Model):
         states={'cancel': [('readonly', True)],
                 'closed': [('readonly', True)]})
     departure_id = fields.Many2one(
-        'route_id', 'departure_id', relation='tms.place',
+        'tms.place',
+        related='route_id.departure_id',
         store=True, readonly=True)
     arrival_id = fields.Many2one(
-        'route_id', 'arrival_id', relation='tms.place',
+        'tms.place',
+        related='route_id.arrival_id',
         store=True, readonly=True)
     notes = fields.Text(
         'Descripción', required=False,
@@ -320,24 +325,24 @@ class TmsTravel(models.Model):
         size=15, multi='framework')
     framework_count = fields.Integer(
         compute=_get_framework, string='Framework Count', method=True,
-        store=True, multi='framework'),
+        store=True, multi='framework')
     framework_supplier = fields.Selection(
         [('Unit', 'Unit'), ('Single', 'Single'), ('Double', 'Double')],
         'Framework', states={'cancel': [('readonly', True)],
                              'closed': [('readonly', True)]})
     create_uid = fields.Many2one('res.users', 'Created by', readonly=True)
-    create_date = fields.datetime('Creation Date', readonly=True, select=True)
+    create_date = fields.Datetime('Creation Date', readonly=True)
     cancelled_by = fields.Many2one('res.users', 'Cancelled by', readonly=True)
-    date_cancelled = fields.datetime('Date Cancelled', readonly=True)
+    date_cancelled = fields.Datetime('Date Cancelled', readonly=True)
     dispatched_by = fields.Many2one(
         'res.users', 'Dispatched by', readonly=True)
-    date_dispatched = fields.datetime('Date Dispatched', readonly=True)
+    date_dispatched = fields.Datetime('Date Dispatched', readonly=True)
     done_by = fields.Many2one('res.users', 'Ended by', readonly=True)
-    date_done = fields.datetime('Date Ended', readonly=True)
+    date_done = fields.Datetime('Date Ended', readonly=True)
     closed_by = fields.Many2one('res.users', 'Closed by', readonly=True)
-    date_closed = fields.datetime('Date Closed', readonly=True)
-    drafted_by = fields.Many2one('res.users', 'Drafted by', readonly=True),
-    date_drafted = fields.datetime('Date Drafted', readonly=True),
+    date_closed = fields.Datetime('Date Closed', readonly=True)
+    drafted_by = fields.Many2one('res.users', 'Drafted by', readonly=True)
+    date_drafted = fields.Datetime('Date Drafted', readonly=True)
     user_id = fields.Many2one(
         'res.users', 'Salesman', select=True, readonly=False,
         states={'cancel': [('readonly', True)],
@@ -351,20 +356,18 @@ class TmsTravel(models.Model):
                 cr, uid,
                 'tms_property_update_vehicle_distance', context=c)[0])))
     expense_ids = fields.Many2many(
-        'tms.expense', 'tms_expense_travel_rel', 'travel_id',
-        'expense_id', 'Expense Record')
+        'tms.expense', string='Expense Record')
     expense_ids2 = fields.Many2many(
-        'tms.expense', 'tms_expense_travel_rel2', 'travel_id',
-        'expense_id', 'Expense Record for Driver Helper')
+        'tms.expense', string='Expense Record for Driver Helper')
     expense_id = fields.Many2one(
         'tms.expense', 'Expense Record', required=False, readonly=True)
     expense2_id = fields.Many2one(
         'tms.expense', 'Expense Record for Driver Helper', required=False,
         readonly=True)
-    event_ids = fields.One2many('tms.event', 'travel_id', string='Events'),
+    # event_ids = fields.One2many('tms.event', 'travel_id', string='Events')
 
     _sql_constraints = [
-        ('name_uniq', 'unique(shop_id,name)',
+        ('name_uniq', 'unique(name)',
             'Travel number must be unique !'),
     ]
     _order = "date desc"

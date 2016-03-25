@@ -34,24 +34,28 @@ class TmsUnitKit(models.Model):
     name = fields.Char('Name', size=64, required=True)
     unit_id = fields.Many2one('fleet.vehicle', 'Unit', required=True)
     unit_type = fields.Many2one(
-        'unit_id', 'unit_type_id', relation='tms.unit.category',
+        'tms.unit.category',
+        related='unit_id.unit_type_id',
         string='Unit Type', store=True, readonly=True)
     trailer1_id = fields.Many2one('fleet.vehicle', 'Trailer 1', required=True)
     trailer1_type = fields.Many2one(
-        'trailer1_id', 'unit_type_id', relation='tms.unit.category',
+        'tms.unit.category',
+        related='trailer1_id.unit_type_id',
         string='Trailer 1 Type', store=True, readonly=True)
     dolly_id = fields.Many2one('fleet.vehicle', 'Dolly')
     dolly_type = fields.Many2one(
-        'dolly_id', 'unit_type_id', relation='tms.unit.category',
+        'tms.unit.category',
+        related='dolly_id.unit_type_id',
         string='Dolly Type', store=True, readonly=True)
     trailer2_id = fields.Many2one('fleet.vehicle', 'Trailer 2')
     trailer2_type = fields.Many2one(
-        'trailer2_id', 'unit_type_id', relation='tms.unit.category',
+        'tms.unit.category',
+        related='trailer2_id.unit_type_id',
         string='Trailer 2 Type', store=True, readonly=True)
     employee_id = fields.Many2one(
         'hr.employee', 'Driver', domain=[('tms_category', '=', 'driver')])
-    date_start = fields.Datetime('Date start', required=True),
-    date_end = fields.Datetime('Date end', required=True),
+    date_start = fields.Datetime('Date start', required=True)
+    date_end = fields.Datetime('Date end', required=True)
     notes = fields.Text('Notes')
     active = fields.Boolean('Active', default=(lambda *a: True))
 

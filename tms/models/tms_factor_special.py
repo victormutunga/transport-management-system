@@ -30,13 +30,13 @@ class TmsFactorSpecial(models.Model):
     _description = "Python Code calculate Payment (Driver/Supplier) & \
                         Client charge"
 
-    name = fields.Char('Special Name', size=200, required=True),
-    active = fields.Boolean('Active', default=True),
+    name = fields.Char('Special Name', size=200, required=True)
+    active = fields.Boolean('Active', default=True)
     date = fields.Date('Date', required=True,
-                       default=time.strftime(DEFAULT_SERVER_DATE_FORMAT)),
-    description = fields.Text('Description'),
-    python_code = fields.Text('Python Code', required=True),
-    factor_ids = fields.One2many('tms.factor', 'factor_special_id', 'Factor'),
+                       default=time.strftime(DEFAULT_SERVER_DATE_FORMAT))
+    description = fields.Text('Description')
+    python_code = fields.Text('Python Code', required=True)
+    factor_ids = fields.One2many('tms.factor', 'factor_special_id', 'Factor')
     type = fields.Selection([
         ('salary', 'Driver Salary'),
         ('salary_distribution', 'Salary Distribution'),
@@ -47,5 +47,5 @@ Salary Distribution => Useful in some countries, you can make a Wage
 distribution on several expenses, so Salary is masked for Tax purposes
 Salary Retentions & Discounts => Use this for Driver Tax retentions
 Supplier => Use this to calculate Supplier Travel Payment
-                """),
-    company_id = fields.Many2one('res.company', 'Company', required=False),
+                """)
+    # company_id = fields.Many2one('res.company', 'Company', required=False)

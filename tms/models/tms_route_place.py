@@ -30,11 +30,14 @@ class TmsRoutePlace(models.Model):
     route_id = fields.Many2one('tms.route', 'Route', required=True)
     place_id = fields.Many2one('tms.place', 'Place', required=True)
     state_id = fields.Many2one(
-        'place_id', 'state_id', relation='res.country.state',
+        'res.country.state',
+        related='place_id.state_id',
         store=True, readonly=True)
     country_id = fields.Many2one(
-        'place_id', 'country_id', relation='res.country',
-        store=True, readonly=True)
+        'res.country',
+        related='place_id.country_id',
+        string='Country',
+        readonly=True)
     sequence = fields.Integer(
         'Sequence', help="Gives the sequence order when displaying this list.")
 

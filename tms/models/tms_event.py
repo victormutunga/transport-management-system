@@ -107,12 +107,12 @@ class TmsEvent(models.Model):
         'Message', readonly=False,
         states={'confirmed': [('readonly', True)],
                 'cancel': [('readonly', True)]})
-    shop_id = fields.Many2one(
-        compute='travel_id.shop_id', relation='sale.shop',
-        string='Shop', store=True, readonly=True)
-    company_id = fields.Many2one(
-        compute='shop_id.company_id', relation='res.company',
-        string='Company', store=True, readonly=True)
+    # shop_id = fields.Many2one(
+    #     compute='travel_id.shop_id', relation='sale.shop',
+    #     string='Shop', store=True, readonly=True)
+    # company_id = fields.Many2one(
+    #     compute='shop_id.company_id', relation='res.company',
+    #     string='Company', store=True, readonly=True)
 
     _defaults = {
         'date': lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),

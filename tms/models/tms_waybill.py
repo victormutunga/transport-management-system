@@ -227,32 +227,36 @@ class TmsWaybill(models.Model):
         return result.keys()
 
     waybill_customer_factor = fields.One2many(
-        'tms.factor', 'waybill_id', 'Waybill Customer Charge Factors',
+        'tms.factor', 'waybill_id',
+        string='Waybill Customer Charge Factors',
         domain=[('category', '=', 'customer')],
         readonly=False, states={'confirmed': [('readonly', True)],
                                 'closed': [('readonly', True)]})
     waybill_supplier_factor = fields.One2many(
-        'tms.factor', 'waybill_id', 'Waybill Supplier Payment Factors',
+        'tms.factor', 'waybill_id',
+        string='Waybill Supplier Payment Factors',
         domain=[('category', '=', 'supplier')],
         readonly=False, states={'cancel': [('readonly', True)],
                                 'closed': [('readonly', True)]})
     expense_driver_factor = fields.One2many(
-        'tms.factor', 'waybill_id', 'Travel Driver Payment Factors',
+        'tms.factor', 'waybill_id',
+        string='Travel Driver Payment Factors',
         domain=[('category', '=', 'driver')], readonly=False,
         states={'cancel': [('readonly', True)],
                 'closed': [('readonly', True)]})
     tax_line = fields.One2many(
-        'tms.waybill.taxes', 'waybill_id', 'Tax Lines', readonly=True,
+        'tms.waybill.taxes', 'waybill_id',
+        string='Tax Lines', readonly=True,
         states={'draft': [('readonly', False)]})
     name = fields.Char('Name', size=64, readonly=False, select=True)
-    shop_id = fields.Many2one(
-        'sale.shop', 'Shop', required=True, readonly=False,
-        states={'confirmed': [('readonly', True)]})
-    operation_id = fields.Many2one(
-        'tms.operation', 'Operation', ondelete='restrict', required=False,
-        readonly=False, states={'cancel': [('readonly', True)],
-                                'done': [('readonly', True)],
-                                'closed': [('readonly', True)]})
+    # shop_id = fields.Many2one(
+    #     'sale.shop', 'Shop', required=True, readonly=False,
+    #     states={'confirmed': [('readonly', True)]})
+    # operation_id = fields.Many2one(
+    #     'tms.operation', 'Operation', ondelete='restrict', required=False,
+    #     readonly=False, states={'cancel': [('readonly', True)],
+    #                             'done': [('readonly', True)],
+    #                             'closed': [('readonly', True)]})
     waybill_category = fields.Many2one(
         'tms.waybill.category', 'Category', ondelete='restrict',
         required=False, readonly=False,
@@ -263,44 +267,61 @@ class TmsWaybill(models.Model):
         'ir.sequence', 'Sequence', required=True, ondelete='restrict',
         readonly=False, states={'confirmed': [('readonly', True)]})
     travel_ids = fields.Many2many(
-        'tms.travel', 'tms_waybill_travel_rel', 'waybill_id', 'travel_id',
-        'Travels', readonly=False, states={'confirmed': [('readonly', True)]})
+        'tms.travel',
+        string='Travels',
+        states={'confirmed': [('readonly', True)]})
     travel_id = fields.Many2one(
-        compute=_get_newer_travel_id, method=True, relation='tms.travel',
+        'tms.travel',
+        compute='_get_newer_travel_id',
         string='Actual Travel', readonly=True, store=True, ondelete='cascade')
     supplier_id = fields.Many2one(
-        'unit_id', 'supplier_id', type='many2one', relation='res.partner',
+        'res.partner',
+        related='unit_id.supplier_id',
         string='Freight Supplier', store=True, readonly=True)
     supplier_amount = fields.Float(
         compute=_get_supplier_amount, string='Supplier Freight Amount',
         method=True, digits_compute=dp.get_precision('Sale Price'),
         help="Freight Amount from Supplier.", multi=False, store=True)
     unit_id = fields.Many2one(
-        'travel_id', 'unit_id', relation='fleet.vehicle',
+        'fleet.vehicle',
+        related='travel_id.unit_id',
         string='Unit', store=True, readonly=True)
     trailer1_id = fields.Many2one(
-        'travel_id', 'trailer1_id', relation='fleet.vehicle',
+        'fleet.vehicle',
+        related='travel_id.trailer1_id',
         string='Trailer 1', store=True, readonly=True)
     dolly_id = fields.Many2one(
-        'travel_id', 'dolly_id', relation='fleet.vehicle', string='Dolly',
+        'fleet.vehicle',
+        relate='travel_id.dolly_id',
+        string='Dolly',
         store=True, readonly=True)
     trailer2_id = fields.Many2one(
-        'travel_id', 'trailer2_id', relation='fleet.vehicle',
+        'fleet.vehicle',
+        related='travel_id.trailer2_id',
         string='Trailer 2', store=True, readonly=True)
     employee_id = fields.Many2one(
-        'travel_id', 'employee_id', relation='hr.employee', string='Driver',
+        'hr.employee',
+        related='travel_id.employee_id',
+        string='Driver',
         store=True, readonly=True)
     employee2_id = fields.Many2one(
-        'travel_id', 'employee2_id', relation='hr.employee',
+        'hr.employee',
+        related='travel_id.employee2_id',
         string='Driver Helper', store=True, readonly=True)
     route_id = fields.Many2one(
-        'travel_id', 'route_id', relation='tms.route', string='Route',
+        'tms.route',
+        related='travel_id.route_id',
+        string='Route',
         store=True, readonly=True)
     departure_id = fields.Many2one(
-        'route_id', 'departure_id', relation='tms.place', string='Departure',
+        'tms.place',
+        related='route_id.departure_id',
+        string='Departure',
         store=True, readonly=True)
     arrival_id = fields.Many2one(
-        'route_id', 'arrival_id', relation='tms.place', string='Arrival',
+        'tms.place',
+        related='route_id.arrival_id',
+        string='Arrival',
         store=True, readonly=True)
     origin = fields.Char(
         'Source Document', size=64, help="Reference of the document that \
@@ -431,10 +452,12 @@ class TmsWaybill(models.Model):
     supplier_invoiced_date = fields.Datetime(
         'Suppl. Inv. Date', readonly=True, select=True)
     waybill_line = fields.One2many(
-        'tms.waybill.line', 'waybill_id', 'Waybill Lines', readonly=False,
+        'tms.waybill.line', 'waybill_id',
+        string='Waybill Lines', readonly=False,
         states={'confirmed': [('readonly', True)]})
     waybill_shipped_product = fields.One2many(
-        'tms.waybill.shipped_product', 'waybill_id', 'Shipped Products',
+        'tms.waybill.shipped_product', 'waybill_id',
+        string='Shipped Products',
         readonly=False, states={'confirmed': [('readonly', True)]})
     product_qty = fields.Float(
         compute=_shipped_product, method=True, string='Sum Qty',
@@ -449,7 +472,8 @@ class TmsWaybill(models.Model):
         compute=_shipped_product, method=True, string='Product UoM Type',
         size=64, store=True, multi='product_qty')
     waybill_extradata = fields.One2many(
-        'tms.waybill.extradata', 'waybill_id', 'Extra Data Fields',
+        'tms.waybill.extradata', 'waybill_id',
+        string='Extra Data Fields',
         readonly=False, states={'confirmed': [('readonly', True)]})
     amount_freight = fields.Float(
         compute=_amount_all, method=True,
@@ -499,16 +523,16 @@ class TmsWaybill(models.Model):
     date_confirmed = fields.Datetime('Date Confirmed', readonly=True)
     drafted_by = fields.Many2one('res.users', 'Drafted by', readonly=True)
     date_drafted = fields.Datetime('Date Drafted', readonly=True)
-    notes = fields.text('Notes', readonly=False)
+    notes = fields.Text('Notes', readonly=False)
     payment_term = fields.Many2one(
         'account.payment.term', 'Payment Term', readonly=False,
         states={'confirmed': [('readonly', True)]})
     fiscal_position = fields.Many2one(
         'account.fiscal.position', 'Fiscal Position', readonly=False,
         states={'confirmed': [('readonly', True)]})
-    company_id = fields.Many2one(
-        'shop_id', 'company_id', relation='res.company', string='Company',
-        store=True, readonly=True)
+    # company_id = fields.Many2one(
+    #     'shop_id', 'company_id', relation='res.company', string='Company',
+    #     store=True, readonly=True)
     date_start = fields.Datetime(
         'Load Date Sched', required=False, help="Date Start time for Load",
         default=(lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)))

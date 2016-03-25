@@ -29,7 +29,7 @@ class TmsRouteTollstation(models.Model):
     _name = 'tms.route.tollstation'
     _description = 'Routes toll stations'
 
-    company_id = fields.Many2one('res.company', 'Company', required=False)
+    # company_id = fields.Many2one('res.company', 'Company', required=False)
     name = fields.Char('Name', size=64, required=True)
     place_id = fields.Many2one('tms.place', 'Place', required=True)
     partner_id = fields.Many2one('res.partner', 'Partner', required=True)

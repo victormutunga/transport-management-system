@@ -50,17 +50,25 @@ class TmsWaybillShippedProduct(models.Model):
         default=1)
     notes = fields.Text('Notes')
     waybill_partner_id = fields.Many2one(
-        'waybill_id', 'partner_id', relation='res.partner', store=True,
+        'res.partner',
+        related='waybill_id.partner_id',
+        store=True,
         string='Customer')
     salesman_id = fields.Many2one(
-        'waybill_id', 'user_id', relation='res.users', store=True,
+        'res.users',
+        related='waybill_id.user_id',
+        store=True,
         string='Salesman')
-    shop_id = fields.Many2one(
-        'waybill_id', 'shop_id', relation='sale.shop', string='Shop',
-        store=True, readonly=True)
-    company_id = fields.Many2one(
-        'waybill_id', 'company_id', relation='res.company', string='Company',
-        store=True, readonly=True)
+    # shop_id = fields.Many2one(
+    #     'sale.shop',
+    #     related='waybill_id.shop_id.id',
+    #     string='Shop',
+    #     store=True, readonly=True)
+    # company_id = fields.Many2one(
+    #     'res.company',
+    #     related='waybill_id.company_id.id',
+    #     string='Company',
+    #     store=True, readonly=True)
     sequence = fields.Integer(
         'Sequence', help="Gives the sequence order when displaying a list of \
         sales order lines.", default=10)

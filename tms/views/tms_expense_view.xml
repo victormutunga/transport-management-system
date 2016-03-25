@@ -27,7 +27,7 @@ TMS.EXPENSE
                     <field name="amount_total_real" sum="Total Real"/>
                     <field name="amount_balance" sum="Balance"/>
                     <field name="move_id" invisible="1"/>
-                    <field name="shop_id" />
+                    <!-- <field name="shop_id" /> -->
                     <field name="driver_helper" />
                     <field name="paid"/>
                     <field name="state"/>
@@ -42,7 +42,6 @@ TMS.EXPENSE
             <field name="arch" type="xml">
                 <form string="Travel Expenses" version="7.0">
                 <header>
-                    <button name="%(action_expense_cancel)d" states="draft,approved,confirmed" string="Cancel" type="action" groups="tms.group_expense_cancel"/>
                     <button name="action_approve" states="draft" string="Approve" type="object" icon="gtk-go-forward" class="oe_highlight" groups="tms.group_expense_approve"/>
                     <button name="action_confirm" states="approved" string="Confirm" type="object" icon="gtk-ok" class="oe_highlight" groups="tms.group_expense_confirm"/>
                     <field name="state" widget="statusbar" statusbar_visible="cancel,draft,approved,confirmed"/> 
@@ -53,7 +52,7 @@ TMS.EXPENSE
                     <field name="name" class="oe_inline" readonly="1"/>
                 </h1>
                 <group col="4">
-                    <field name="shop_id" />
+                    <!-- <field name="shop_id" /> -->
                     <field name="date"/>
                     <field name="employee_id_control" required="1" context="{'default_tms_category': 'driver'}" 
                          domain="[('tms_supplier_driver','=', False)]" 
@@ -64,7 +63,7 @@ TMS.EXPENSE
                     <field name="unit_id" />
                     <field name="currency_id" />
                 </group>
-                <field name="company_id" readonly="1" invisible="1"/>
+                <!-- <field name="company_id" readonly="1" invisible="1"/> -->
                 <field name="employee_id" invisible="1"/>
                 <notebook>
                     <page string="Resume">
@@ -141,7 +140,7 @@ TMS.EXPENSE
                                 <field name="distance_real"  on_change="on_change_distance_real(vehicle_id, last_odometer, distance_real, fuel_qty_real)" />
                                 <field name="current_odometer"  on_change="on_change_current_odometer(vehicle_id, last_odometer, current_odometer, distance_real, global_fuel_efficiency_real, fuel_qty_real)" />
                                 <field name="vehicle_id" attrs="{'invisible':[('odometer_log_id','=',False)]}" />
-                                <field name="odometer_id" attrs="{'invisible':[('odometer_log_id','=',False)]}" />
+                                <!-- <field name="odometer_id" attrs="{'invisible':[('odometer_log_id','=',False)]}" /> -->
                                 <field name="last_odometer" attrs="{'invisible': True}" /> 
                                 <field name="vehicle_odometer"  attrs="{'invisible': True}" /> 
                                        <!--on_change="on_change_vehicle_odometer(vehicle_id, last_odometer, vehicle_odometer, global_fuel_efficiency_real)" /> -->

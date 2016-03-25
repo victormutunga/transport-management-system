@@ -105,16 +105,22 @@ class TmsWaybillLine(models.Model):
     discount = fields.Float(
         'Discount (%)', digits=(16, 2), help="Please use 99.99 format...",
         default=0.0)
-    notes = fields.text('Notes')
+    notes = fields.Text('Notes')
     waybill_partner_id = fields.Many2one(
-        'waybill_id', 'partner_id', relation='res.partner', store=True,
+        'res.partner',
+        related='waybill_id.partner_id',
+        store=True,
         string='Customer')
     salesman_id = fields.Many2one(
-        'waybill_id', 'user_id', relation='res.users', store=True,
+        'res.users',
+        related='waybill_id.user_id',
+        store=True,
         string='Salesman')
-    company_id = fields.Many2one(
-        'waybill_id', 'company_id', relation='res.company', string='Company',
-        store=True, readonly=True)
+    # company_id = fields.Many2one(
+    #     'res.company',
+    #     related='waybill_id.company_id.id',
+    #     string='Company',
+    #     store=True, readonly=True)
     control = fields.Boolean('Control')
 
     _order = 'sequence, id desc'

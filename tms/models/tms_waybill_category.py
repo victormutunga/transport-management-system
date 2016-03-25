@@ -28,10 +28,10 @@ class TmsWaybillCategory(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = 'Waybill Categories'
 
-    shop_id = fields.Many2one('sale.shop', 'Shop')
-    company_id = fields.Many2one(
-        'shop_id', 'company_id', relation='res.company',
-        string='Company', store=True, readonly=True)
+    # shop_id = fields.Many2one('sale.shop', 'Shop')
+    # company_id = fields.Many2one(
+    #     'shop_id', 'company_id', relation='res.company',
+    #     string='Company', store=True, readonly=True)
     name = fields.Char('Name', size=64, required=True)
     description = fields.Text('Description')
     active = fields.Boolean('Active', default=True)

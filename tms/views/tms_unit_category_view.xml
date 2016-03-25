@@ -34,7 +34,7 @@ TMS.UNIT.CATEGORY
         <field name="model">tms.unit.category</field>
         <field name="arch" type="xml">
             <tree string="Unit Master Data" colors="green:type in ('unit_type');blue:type in ('brand');black:type in ('model');red:type in ('extra_data');">
-                <field name="company_id" />
+                <!-- <field name="company_id" /> -->
                 <field name="name" />
                 <field name="complete_name" />
                 <field name="type"/>

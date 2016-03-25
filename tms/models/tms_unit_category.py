@@ -98,7 +98,7 @@ class TmsUnitCategory(models.Model):
     mandatory = fields.Boolean(
         'Mandatory',
         help="This field is used only when field <Category Type> = expiry")
-    company_id = fields.Many2one('res.company', 'Company', required=False)
+    # company_id = fields.Many2one('res.company', 'Company', required=False)
 
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'Category name number must be unique !'),

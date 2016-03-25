@@ -79,9 +79,9 @@ class HrEmployee(models.Model):
     tms_supplier_id = fields.Many2one(
         'res.partner', 'Supplier',
         domain=[('supplier', '=', 1)])
-    tms_global_salary = fields.Float(
-        compute='job_id.tms_global_salary',
-        digits=(18, 6), string='Salary', readonly=True)
+    # tms_global_salary = fields.Float(
+    #     compute='job_id.tms_global_salary',
+    #     digits=(18, 6), string='Salary', readonly=True)
     tms_alimony = fields.Float('Alimony', digits=(18, 6))
     tms_alimony_prod_id = fields.Many2one(
         'product.product', 'Alimony Product',
@@ -109,6 +109,6 @@ class HrEmployee(models.Model):
         'product.product', 'Salary Tax Product',
         domain=[('tms_category', '=', 'salary_retention')])
     tms_global_salary = fields.Float(
-        'Global Salary', digits=(18, 6)),
-    shop_id = fields.Many2one('sale.shop', 'Shop')
+        'Global Salary', digits=(18, 6))
+    # shop_id = fields.Many2one('sale.shop', 'Shop')
     # , domain=[('company_id', '=', user.company_id.id)]),
