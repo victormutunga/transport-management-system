@@ -21,7 +21,7 @@
 ##############################################################################
 
 
-from openerp import models, fields
+from openerp import fields, models
 from openerp.tools.translate import _
 
 # Vehicle Odometer records
@@ -34,15 +34,17 @@ class FleetVehicleOdometer(models.Model):
 # - CALCULAR LA DISTANCIA RECORRIDA ENTRE EL REGISTRO ACTUAL Y EL ANTERIOR
 # BASADA EN EL ODOMETRO ACTIVO. NO SE PUEDEN GUARDAR
 
-    odometer_id = fields.Many2one(
-        'fleet.vehicle.odometer.device', 'Odometer', required=True)
+    # odometer_id = fields.Many2one(
+    #     'fleet.vehicle.odometer.device',
+    #     string='Odometer',
+    #     required=True)
     last_odometer = fields.Float(
         string='Last Read', digits=(16, 2), required=True)
     current_odometer = fields.Float(
         string='Current Read', digits=(16, 2), required=True)
     distance = fields.Float(string='Distance', digits=(16, 2), required=True)
-    tms_expense_id = fields.Many2one('tms.expense', 'Expense Rec')
-    tms_travel_id = fields.Many2one('tms.travel', 'Travel')
+    # tms_expense_id = fields.Many2one('tms.expense', 'Expense Rec')
+    # tms_travel_id = fields.Many2one('tms.travel', 'Travel')
 
     def _check_values(self, cr, uid, ids, context=None):
         for record in self.browse(cr, uid, ids, context=context):

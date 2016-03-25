@@ -19,13 +19,14 @@
 #
 ##############################################################################
 
-from openerp import models, fields
 import time
+
+from openerp import fields, models
 import openerp.addons.decimal_precision as dp
 
 
 # Impuestos para desglose en Cartas Porte
-class tms_waybill_taxes(models.Model):
+class TmsWaybillTaxes(models.Model):
     _name = "tms.waybill.taxes"
     _description = "Waybill Taxes"
 

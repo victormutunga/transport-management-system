@@ -20,11 +20,11 @@
 #
 ##############################################################################
 
+import time
 
 from openerp import models
-from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-import time
+from openerp.tools.translate import _
 
 # Wizard que permite generar la partida contable a pagar correspondiente
 # al Anticipo del Operador

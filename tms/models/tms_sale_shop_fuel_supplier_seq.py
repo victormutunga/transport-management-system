@@ -18,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp import models, fields
+from openerp import fields, models
 
 
 # Agregamos manejar una secuencia por cada tienda para controlar viajes
@@ -42,7 +42,7 @@ from openerp import models, fields
 
 # Agregamos el detalle de las secuencias por proveedor de combustible
 #  por cada tienda.
-class TmsSaleShopFuelSupplier_seq(models.Model):
+class TmsSaleShopFuelSupplierSeq(models.Model):
     _name = "tms.sale.shop.fuel.supplier.seq"
     _description = "TMS Sale Shop Fuel Supplier Sequences"
 

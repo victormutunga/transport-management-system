@@ -19,12 +19,13 @@
 #
 ##############################################################################
 
-from openerp import models, fields
 import time
+
+from openerp import fields, models
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
-class tms_factor_special(models.Model):
+class TmsFactorSpecial(models.Model):
     _name = "tms.factor.special"
     _description = "Python Code calculate Payment (Driver/Supplier) & \
                         Client charge"

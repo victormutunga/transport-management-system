@@ -19,10 +19,11 @@
 #
 ##############################################################################
 
-
-from openerp import models, fields
-import simplejson as json
 import urllib as my_urllib
+
+from openerp import fields, models
+
+import simplejson as json
 
 
 # Cities / Places

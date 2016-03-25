@@ -20,12 +20,12 @@
 ##############################################################################
 
 
-from openerp import models, fields
+from openerp import fields, models
 
 # Units PHOTOS
 
 
-class tms_unit_photo(models.Model):
+class TmsUnitPhoto(models.Model):
     _name = "tms.unit.photo"
     _description = "Units Photos"
 

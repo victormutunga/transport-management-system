@@ -19,11 +19,12 @@
 #
 ##############################################################################
 
-
-from openerp import models, fields
-from openerp.tools.translate import _
-import simplejson as json
 import urllib as my_urllib
+
+from openerp import fields, models
+from openerp.tools.translate import _
+
+import simplejson as json
 
 
 # Routes

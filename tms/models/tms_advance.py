@@ -19,13 +19,13 @@
 #
 ##############################################################################
 
-
-from openerp import models, fields, api
-from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-import openerp.addons.decimal_precision as dp
 import time
+
+from openerp import api, fields, models
+import openerp.addons.decimal_precision as dp
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from openerp.tools.translate import _
 
 
 # Travel - Money advance payments for Travel expenses

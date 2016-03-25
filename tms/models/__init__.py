@@ -6,8 +6,8 @@
 # from . import account_journal
 # from . import account_move_line
 # from . import account_tax
-# from . import fleet_vehicle
-# from . import fleet_vehicle_odometer
+from . import fleet_vehicle
+from . import fleet_vehicle_odometer
 # from . import fleet_vehicle_odometer_device
 # from . import hr_employee
 # from . import hr_job
@@ -41,13 +41,13 @@ from . import tms_config_settings
 # from . import tms_route_tollstation_costperaxis
 # from . import tms_sale_shop_fuel_supplier_seq
 # from . import tms_travel
-# from . import tms_unit_active_history
-# from . import tms_unit_category
-# from . import tms_unit_expiry
-# from . import tms_unit_extradata
+from . import tms_unit_active_history
+from . import tms_unit_category
+from . import tms_unit_expiry
+from . import tms_unit_extradata
 # from . import tms_unit_kit
-# from . import tms_unit_photo
-# from . import tms_unit_red_tape
+from . import tms_unit_photo
+from . import tms_unit_red_tape
 # from . import tms_waybill
 # from . import tms_waybill_cancel
 # from . import tms_waybill_category

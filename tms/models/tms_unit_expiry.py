@@ -21,7 +21,7 @@
 ##############################################################################
 
 
-from openerp import models, fields
+from openerp import fields, models
 # Units for Transportation EXPIRY EXTRA DATA
 
 
@@ -32,8 +32,10 @@ class TmsUnitExpiry(models.Model):
     unit_id = fields.Many2one(
         'fleet.vehicle', 'Unit Name', required=True, ondelete='cascade',
         select=True)
-    expiry_id = fields.Mmany2one(
-        'tms.unit.category', 'Field', domain="[('type','=','expiry')]",
+    expiry_id = fields.Many2one(
+        'tms.unit.category',
+        string='Field',
+        domain="[('type','=','expiry')]",
         required=True)
     extra_value = fields.Date('Value', required=True)
     name = fields.Char('Valor', size=10, required=True)

@@ -19,10 +19,9 @@
 #
 ##############################################################################
 
-from openerp import models, fields
+from openerp import fields, models
 
 
-# Additionat field to set Account Journal for Advances and Travel Expenses
 class AccountAccount(models.Model):
     _inherit = 'account.account'
 

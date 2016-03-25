@@ -19,11 +19,11 @@
 #
 ##############################################################################
 
-
-from openerp import models, fields
-from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import time
+
+from openerp import fields, models
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools.translate import _
 
 
 # Units for Transportation
@@ -32,33 +32,23 @@ class FleetVehicle(models.Model):
     _inherit = ['fleet.vehicle']
     _description = "All motor/trailer units"
 
-    def _get_current_odometer(self):
-        res = {}
-        for record in self.browse(self):
-            odom_obj = self.pool.get('fleet.vehicle.odometer.device')
-            result = odom_obj.search(
-                [('vehicle_id', '=', record.id),
-                 ('state', '=', 'active')],
-                limit=1, context=None)
-            # print "result: ", result
-            if result and result[0]:
-                res[record.id] = result[0]
-        return res
+    # def _get_current_odometer(self):
+    #     res = {}
+    #     for record in self.browse(self):
+    #         odom_obj = self.pool.get('fleet.vehicle.odometer.device')
+    #         result = odom_obj.search(
+    #             [('vehicle_id', '=', record.id),
+    #              ('state', '=', 'active')],
+    #             limit=1, context=None)
+    #         if result and result[0]:
+    #             res[record.id] = result[0]
+    #     return res
 
-    shop_id = fields.Many2one(
-        'sale.shop', 'Shop', required=True, readonly=False)
-    # 'company_id = fields.related('shop_id','company_id',
-    # type='many2one',relation='res.company',string='Company',
-    # store=True,readonly=True),
     name = fields.Char(string='Unit Name', size=64, required=True)
     year_model = fields.Char(string='Year Model', size=64)
     unit_type_id = fields.Many2one(
         'tms.unit.category', 'Unit Type',
         domain="[('type','=','unit_type')]")
-    # 'unit_brand_id = fields.many2one('tms.unit.category', 'Brand',
-    # domain="[('type','=','brand')]"),
-    # 'unit_model_id = fields.many2one('tms.unit.category', 'Model',
-    # domain="[('type','=','model')]"),
     unit_motor_id = fields.Many2one(
         'tms.unit.category', 'Motor', domain="[('type','=','motor')]")
     serial_number = fields.Char(string='Serial Number', size=64)
@@ -75,21 +65,20 @@ class FleetVehicle(models.Model):
             ('none', 'Not Applicable'),
         ], string="Day no Circulation", translate=True)
     registration = fields.Char(string='Registration', size=64)
-    # Tarjeta de Circulacion
-    gps_supplier_id = fields.Many2one(
-        'res.partner', 'GPS Supplier', required=False, readonly=False,
-        domain="[('tms_category','=','gps'),('is_company', '=', True)]")
-    gps_id = fields.Char('GPS Id', size=64)
+    # This fields will be used in tms_gps related modules
+    # gps_supplier_id = fields.Many2one(
+    #     'res.partner', 'GPS Supplier', required=False, readonly=False,
+    #     domain="[('tms_category','=','gps'),('is_company', '=', True)]")
+    # gps_id = fields.Char('GPS Id', size=64)
     employee_id = fields.Many2one(
         'hr.employee', 'Driver', required=False,
         domain=[('tms_category', '=', 'driver')],
         help="This is used in TMS Module...")
     fleet_type = fields.Selection(
-        [
-            ('tractor', 'Motorized Unit'),
-            ('trailer', 'Trailer'),
-            ('dolly', 'Dolly'),
-            ('other', 'Other')],
+        [('tractor', 'Motorized Unit'),
+         ('trailer', 'Trailer'),
+         ('dolly', 'Dolly'),
+         ('other', 'Other')],
         'Unit Fleet Type', required=True, default=(lambda *a: 'tractor'))
     avg_odometer_uom_per_day = fields.Float(
         'Avg Distance/Time per day', required=False,
@@ -119,10 +108,10 @@ class FleetVehicle(models.Model):
     last_position_update = fields.Datetime(string='Last GPS Update')
     active_odometer = fields.Float(
         'Odometer', required=False, digits=(20, 10), help='Odometer')
-    active_odometer_id = fields.Many2one(
-        compute=_get_current_odometer,
-        relation="fleet.vehicle.odometer.device",
-        string="Active Odometer")
+    # active_odometer_id = fields.Many2one(
+    #     "fleet.vehicle.odometer.device",
+    #     compute=_get_current_odometer,
+    #     string="Active Odometer")
     current_odometer_read = fields.Float(
         compute='active_odometer_id.odometer_end',
         string='Last Odometer Read', readonly=True)
@@ -156,7 +145,7 @@ class FleetVehicle(models.Model):
 
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'Unit name number must be unique !'),
-        ('gps_id_uniq', 'unique(gps_id)', 'Unit GPS ID must be unique !'),
+        # ('gps_id_uniq', 'unique(gps_id)', 'Unit GPS ID must be unique !'),
     ]
 
     def copy(self, default=None):

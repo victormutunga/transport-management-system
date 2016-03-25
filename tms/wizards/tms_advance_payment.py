@@ -31,7 +31,7 @@ class TmsAdvancePayment(models.TransientModel):
     _name = 'tms.advance.payment'
     _description = 'Make Payment for Advances'
 
-    def makePayment(self, cr, uid, ids, context=None):
+    def make_payment(self, cr, uid, ids, context=None):
 
         if context is None:
             record_ids = ids

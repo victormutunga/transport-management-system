@@ -20,7 +20,7 @@
 ##############################################################################
 
 
-from openerp import models, fields
+from openerp import fields, models
 
 
 # Master catalog used for:
@@ -53,7 +53,7 @@ class TmsUnitCategory(models.Model):
 
     name = fields.Char('Name', size=30, required=True, translate=True)
     complete_name = fields.Char(
-        compute=_name_get_fnc, method=True, size=300, string='Complete Name',
+        compute='_name_get_fnc', method=True, size=300, string='Complete Name',
         store=True)
     parent_id = fields.Many2one(
         'tms.unit.category', 'Parent Category', select=True)

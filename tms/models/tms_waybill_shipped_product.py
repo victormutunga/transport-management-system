@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import models, fields
+from openerp import fields, models
 
 # Class for Waybill Shipped Products
 

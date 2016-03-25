@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import models, fields
+from openerp import fields, models
 
 # Fields <vechicle_id>, <employee_id> added to acount_move_line for
 # reporting and analysis and constraint added
@@ -30,7 +30,9 @@ class AccountMoveLine(models.Model):
 
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', required=False)
     employee_id = fields.Many2one('hr.employee', 'Driver', required=False)
-    sale_shop_id = fields.Many2one('sale.shop', 'Shop', required=False)
+# This will be changed to operating_units (check operating_units modules
+# for accounting)
+    # sale_shop_id = fields.Many2one('sale.shop', 'Shop', required=False)
 
     def _check_mandatory_vehicle(self, cr, uid, ids, context=None):
         for record in self.browse(cr, uid, ids, context=context):

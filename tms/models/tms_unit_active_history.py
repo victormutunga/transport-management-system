@@ -19,11 +19,11 @@
 #
 ##############################################################################
 
-
-from openerp import models, fields
-from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 import time
+
+from openerp import fields, models
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools.translate import _
 
 # Unit Active / Inactive history
 
@@ -41,8 +41,10 @@ class TmsUnitActiveHistory(models.Model):
         'fleet.vehicle', 'Unit Name', required=True, ondelete='cascade',
         domain=[('active', 'in', ('true', 'false'))])
     unit_type_id = fields.Many2one(
-        'unit_id', 'unit_type_id', relation='tms.unit.category',
-        store=True, string='Unit Type')
+        'tms.unit.category',
+        string='Unit Type',
+        related='unit_id.unit_type_id',
+        store=True)
     prev_state = fields.Selection(
         [('active', 'Active'), ('inactive', 'Inactive')],
         'Previous State', readonly=True)
@@ -52,7 +54,7 @@ class TmsUnitActiveHistory(models.Model):
     date = fields.Datetime(
         'Date', states={'cancel': [('readonly', True)],
                         'confirmed': [('readonly', True)]}, required=True,
-        efault=(lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)))
+        default=(lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)))
     state_cause_id = fields.Many2one(
         'tms.unit.category', 'Active/Inactive Cause',
         domain="[('type','=','active_cause')]",

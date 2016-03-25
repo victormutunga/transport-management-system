@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import models, fields
+from openerp import fields, models
 import openerp.addons.decimal_precision as dp
 
 # Class for Expense Lines

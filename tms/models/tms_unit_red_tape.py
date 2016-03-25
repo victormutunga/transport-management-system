@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-
-from openerp import models, fields
-from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-import openerp.addons.decimal_precision as dp
 import time
+
+from openerp import fields, models
+import openerp.addons.decimal_precision as dp
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools.translate import _
 
 
 # Unit Red Tape
@@ -42,15 +42,17 @@ class TmsUnitRedTape(models.Model):
         domain=[('active', 'in', ('true', 'false'))], readonly=True,
         states={'draft': [('readonly', False)]})
     unit_type_id = fields.Many2one(
-        'unit_id', 'unit_type_id', relation='tms.unit.category',
-        store=True, string='Unit Type', readonly=True)
+        'tms.unit.category',
+        string='Unit Type',
+        related='unit_id.unit_type_id',
+        store=True)
     date = fields.Datetime(
         'Date', required=True, readonly=True,
         states={'draft': [('readonly', False)],
                 'pending': [('readonly', False)]},
         default=(lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)))
     date_start = fields.Datetime('Date Start', readonly=True)
-    date_end = fields.Datetime('Date End', readonly=True),
+    date_end = fields.Datetime('Date End', readonly=True)
     red_tape_id = fields.Many2one(
         'tms.unit.category', 'Red Tape', domain="[('type','=','red_tape')]",
         required=True, readonly=True,
@@ -71,7 +73,7 @@ class TmsUnitRedTape(models.Model):
         'Amount', required=True, digits_compute=dp.get_precision('Sale Price'),
         readonly=False,
         states={'cancel': [('readonly', True)],
-                'done': [('readonly', True)]}, default=0.0),
+                'done': [('readonly', True)]}, default=0.0)
     amount_paid = fields.Float(
         'Amount Paid', required=True,
         digits_compute=dp.get_precision('Sale Price'), readonly=False,
@@ -158,6 +160,3 @@ class TmsUnitRedTape(models.Model):
             'date_end': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         })
         return True
-
-# Causes for active / inactive transportation units
-# Pendiente

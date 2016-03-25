@@ -87,8 +87,8 @@ TMS.UNIT.CATEGORY
 
 <!-- Menu for tms.unit.category (Types, Brands, Models, Motor Type for Transportation Units) -->
     <menuitem name="Vehicles Related Catalogs" 
-              parent="menu_tms_config_unit" 
-              id="menu_tms_config_unit_category_form" 
+              parent="menu_tms_settings_unit" 
+              id="menu_tms_settings_unit_category_form" 
               action="open_view_tms_unit_category_form"
           sequence="20"/>
 

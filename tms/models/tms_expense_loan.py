@@ -18,13 +18,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #############################################################################
-from openerp import models, fields
+
 import time
+
 from datetime import datetime
-from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+
+from openerp import fields, models
 import openerp.addons.decimal_precision as dp
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from openerp.tools.translate import _
 
 # TMS Travel Expenses
 

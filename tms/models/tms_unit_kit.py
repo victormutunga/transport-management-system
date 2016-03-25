@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
-
-from openerp import models, fields
-from openerp.tools.translate import _
 import time
+
+from openerp import fields, models
+from openerp.tools.translate import _
 
 
 # Units Kits

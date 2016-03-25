@@ -20,7 +20,7 @@
 ##############################################################################
 
 
-from openerp import models, fields
+from openerp import fields, models
 
 
 class AccountInvoiceLine(models.Model):
@@ -30,8 +30,10 @@ class AccountInvoiceLine(models.Model):
         'fleet.vehicle', 'Vehicle', readonly=True, required=False)
     employee_id = fields.Many2one(
         'hr.employee', 'Driver', readonly=True, required=False)
-    sale_shop_id = fields.Many2one(
-        'sale.shop', 'Shop', readonly=True, required=False)
+# This will be changed to operating_units (check operating_units modules
+# for accounting)
+    # sale_shop_id = fields.Many2one(
+    #     'sale.shop', 'Shop', readonly=True, required=False)
 
     def move_line_get_item(self, line):
         res = super(AccountInvoiceLine, self).move_line_get_item(

@@ -20,7 +20,7 @@
 ##############################################################################
 
 
-from openerp import models, fields
+from openerp import fields, models
 
 
 class HrJob(models.Model):

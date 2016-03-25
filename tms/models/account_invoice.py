@@ -20,9 +20,9 @@
 ##############################################################################
 
 
-from openerp import models, fields, api
-from openerp.tools.translate import _
+from openerp import api, fields, models
 import openerp.addons.decimal_precision as dp
+from openerp.tools.translate import _
 
 
 class AccountInvoice(models.Model):

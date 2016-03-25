@@ -11,7 +11,7 @@ FLEET.VEHICLE.ODOMETER
             <field name="inherit_id" ref="fleet.fleet_vehicle_odometer_tree"/>
             <field name="arch" type="xml">
                 <field name="vehicle_id" position="after">
-                    <field name="odometer_id" />
+                    <!-- <field name="odometer_id" /> -->
                     <field name="last_odometer" invisible="1"/>
                     <field name="current_odometer"  on_change="on_change_current_odometer(vehicle_id,last_odometer, current_odometer)"/>
                     <field name="distance"   on_change="on_change_distance(vehicle_id, last_odometer, distance)"/>

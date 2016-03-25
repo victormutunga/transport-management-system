@@ -18,8 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp import models, fields
+
 import time
+
+from openerp import fields, models
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 

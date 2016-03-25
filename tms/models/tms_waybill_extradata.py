@@ -19,10 +19,12 @@
 #
 ##############################################################################
 
-from openerp import models, fields
-from datetime import datetime, date
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from datetime import date, datetime
+
+from openerp import fields, models
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+
 from pytz import timezone
 
 

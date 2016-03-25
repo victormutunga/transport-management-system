@@ -19,15 +19,16 @@
 #
 ##############################################################################
 
-from openerp.osv import osv, fields
 import time
-from openerp.tools.translate import _
+
+from openerp import fields, models
 from openerp import netsvc
-import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools.translate import _
 
 
 # Wizard que permite hacer una copia de la carta porte al momento de cancelarla
-class TmsWaybillCancel(osv.osv_memory):
+class TmsWaybillCancel(models.TransientModel):
 
     """ To create a copy of Waybill when cancelled"""
 

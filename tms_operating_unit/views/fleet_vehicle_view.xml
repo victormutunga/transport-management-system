@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model='ir.ui.view' id='fleet_vehicle_operating_unit_form'>
+            <field name='name'>fleet_vehicle_operating_unit.form</field>
+            <field name='model'>fleet.vehicle</field>
+            <field name="inherit_id" ref="tms.fleet_vehicle_form_inherit_tms"/>
+            <field name='arch' type='xml'>
+                <field name="fleet_type" position="after">
+                    <field name="operating_unit_id"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>

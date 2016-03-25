@@ -20,7 +20,7 @@
 ##############################################################################
 
 
-from openerp import models, fields
+from openerp import fields, models
 
 # Agregamos un método en la clase ir_sequence para controlar secuencias de
 # Viajes / Cartas Porte / Anticipos / Vales de Combustible

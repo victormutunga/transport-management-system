@@ -58,7 +58,6 @@ FLEET.VEHICLE - (former TMS.UNIT)
                     <group col="4">
                         <field name="tag_ids" widget="many2many_tags" colspan="4"/>
                         <field name="fleet_type"/>
-                        <field name="shop_id" />
                         <field name="supplier_unit"/>
                         <field name="supplier_id" attrs="{'required':[('supplier_unit','=',True)], 'invisible':[('supplier_unit','=',False)]}"/>
                         <field name="license_plate" />
@@ -84,11 +83,11 @@ FLEET.VEHICLE - (former TMS.UNIT)
                                         <field name="odometer_unit" class="oe_inline" attrs="{'invisible':[('odometer_uom','!=','distance')]}"/>                                        
                                         <newline />
                                     </div>
-                                    <label for="active_odometer_id" />
+                                    <!-- <label for="active_odometer_id" />
                                     <div>
                                         <field name="active_odometer_id" class="oe_inline" readonly="1"/>
                                         <newline />
-                                    </div>
+                                    </div> -->
                                      <field name="current_odometer_read" readonly="1"/>
                                      <field name="avg_odometer_uom_per_day" />
                                     <field name="acquisition_date" />
@@ -122,8 +121,9 @@ FLEET.VEHICLE - (former TMS.UNIT)
                                 <field name="registration" />
                                 <field name="employee_id" context="{'default_tms_category':'driver'}" domain="[('tms_category', '=', 'driver')]"/>
                                 <field name="day_no_circulation"/>
-                                <field name="gps_supplier_id"/>
-                                <field name="gps_id" attrs="{'required':[('gps_supplier_id','!=',False)]}"/>
+                                <!-- TO USE IN tms_gps related modules -->
+                                <!-- <field name="gps_supplier_id"/>
+                                <field name="gps_id" attrs="{'required':[('gps_supplier_id','!=',False)]}"/> -->
 
                             </group>
                         </page>
@@ -217,8 +217,8 @@ FLEET.VEHICLE - (former TMS.UNIT)
 
 <!-- Menu for fleet.vehicle (Transportation Units) -->
     <menuitem name="Vehicles" 
-              parent="menu_tms_config_unit" 
-              id="menu_tms_config_unit_form" 
+              parent="menu_tms_settings_unit" 
+              id="menu_tms_settings_unit_form" 
               action="open_view_tms_unit_form"
           sequence="21"/>
 
