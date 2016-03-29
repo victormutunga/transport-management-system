@@ -178,8 +178,9 @@ class TmsAdvance(models.Model):
         is only for Travel Expense Records with balance < 0.0")
     paid = fields.Boolean(
         compute=_paid, method=True, string='Paid', multi=False,
-        store={'account.move.reconcile': (
-            _get_move_line_from_reconcile, None, 50)})
+        store=True)
+    # {'account.move.reconcile': (
+    #     _get_move_line_from_reconcile, None, 50)})
     currency_id = fields.Many2one(
         'res.currency', 'Currency', required=True,
         states={'cancel': [('readonly', True)],

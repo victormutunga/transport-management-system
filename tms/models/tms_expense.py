@@ -420,9 +420,10 @@ class TmsExpense(models.Model):
         help="Link to the automatically generated Journal Items.")
     paid = fields.Boolean(
         compute=_paid, method=True, string='Paid', multi=False,
-        store={'tms.expense': (lambda self, cr, uid, ids, c={}: ids, None, 10),
-               'account.move.reconcile':
-               (_get_move_line_from_reconcile, None, 50)})
+        store=True)
+    # {'tms.expense': (lambda self, cr, uid, ids, c={}: ids, None, 10),
+    #        'account.move.reconcile':
+    #        (_get_move_line_from_reconcile, None, 50)})
     fuelvoucher_ids = fields.One2many(
         'tms.fuelvoucher', 'expense_id', string='Fuel Vouchers', readonly=True)
     advance_ids = fields.One2many(
