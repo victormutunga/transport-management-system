@@ -24,7 +24,7 @@ import time
 from openerp import fields, models
 import openerp.addons.decimal_precision as dp
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.tools.translate import _
+# from openerp.tools.translate import _
 
 
 # Unit Red Tape
@@ -93,70 +93,78 @@ class TmsUnitRedTape(models.Model):
     date_drafted = fields.Datetime('Date Drafted', readonly=True)
 
     def on_change_red_tape_id(self, red_tape_id):
-        return {'value': {
-            'name': self.pool.get('tms.unit.category').browse(
-                [red_tape_id])[0].name}}
+        # return {'value': {
+        #     'name': self.pool.get('tms.unit.category').browse(
+        #         [red_tape_id])[0].name}}
+        return 'comida'
 
     def create(self):
-        if 'unit_id' in self:
-            res = self.search(
-                [('unit_id', '=', self['unit_id']),
-                 ('state', '=', 'draft')], context=None)
-            if res and res[0]:
-                raise Warning(
-                    _('Warning!'),
-                    _('You can not create a new record for this unit \
-                    because theres is already a record for this unit \
-                    in Draft State.'))
-        return super(TmsUnitRedTape, self).create(self)
+        # if 'unit_id' in self:
+        #     res = self.search(
+        #         [('unit_id', '=', self['unit_id']),
+        #          ('state', '=', 'draft')], context=None)
+        #     if res and res[0]:
+        #         raise Warning(
+        #             _('Warning!'),
+        #             _('You can not create a new record for this unit \
+        #             because theres is already a record for this unit \
+        #             in Draft State.'))
+        # return super(TmsUnitRedTape, self).create(self)
+        return 'comida'
 
     def unlink(self):
-        for rec in self.browse(self):
-            if rec.state == 'confirmed':
-                raise Warning(
-                    _('Warning!'),
-                    _('You can not delete a record if is already Confirmed!!! \
-                        Click Cancel button to continue.'))
+        # for rec in self.browse(self):
+        #     if rec.state == 'confirmed':
+        #         raise Warning(
+        #             _('Warning!'),
+        #           _('You can not delete a record if is already Confirmed!!! \
+        #                 Click Cancel button to continue.'))
 
-        super(TmsUnitRedTape, self).unlink(self)
-        return True
+        # super(TmsUnitRedTape, self).unlink(self)
+        # return True
+        return 'comida'
 
     def action_cancel(self):
-        for rec in self.browse(self):
-            if rec.state == 'confirmed':
-                raise Warning(
-                    _('Warning!'),
-                    _('You can not cancel a record if already \
-                            Confirmed!!!'))
-        self.write(
-            {'state': 'cancel', 'cancelled_by': self,
-             'date_cancelled': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-        return True
+        # for rec in self.browse(self):
+        #     if rec.state == 'confirmed':
+        #         raise Warning(
+        #             _('Warning!'),
+        #             _('You can not cancel a record if already \
+        #                     Confirmed!!!'))
+        # self.write(
+        #     {'state': 'cancel', 'cancelled_by': self,
+        #      'date_cancelled': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        # return True
+        return 'comida'
 
     def action_pending(self):
-        self.write(
-            {'state': 'pending', 'pending_by': self,
-             'date_pending': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-        return True
+        # self.write(
+        #     {'state': 'pending', 'pending_by': self,
+        #      'date_pending': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        # return True
+        return 'comida'
 
     def action_cancel_draft(self):
-        self.write(
-            {'state': 'draft', 'drafted_by': self,
-             'date_drafted': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-        return True
+        # self.write(
+        #     {'state': 'draft', 'drafted_by': self,
+        #      'date_drafted': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        # return True
+        return 'comida'
 
     def action_progress(self):
-        self.write({
-            'state': 'progress', 'progress_by': self,
-            'date_progress': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-            'date_start': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        })
-        return True
+        # self.write({
+        #     'state': 'progress', 'progress_by': self,
+        #     'date_progress': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        #     'date_start': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        # })
+        # return True
+        return 'comida'
 
     def action_done(self):
-        self.write({
-            'state': 'done', 'done_by': self,
-            'date_done': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-            'date_end': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        })
-        return True
+        # self.write({
+        #     'state': 'done', 'done_by': self,
+        #     'date_done': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        #     'date_end': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        # })
+        # return True
+        return 'comida'

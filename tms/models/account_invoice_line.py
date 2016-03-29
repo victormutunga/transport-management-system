@@ -36,18 +36,18 @@ class AccountInvoiceLine(models.Model):
     #     'sale.shop', 'Shop', readonly=True, required=False)
 
     def move_line_get_item(self, line):
-        res = super(AccountInvoiceLine, self).move_line_get_item(
-            self)
-        res.update({
-            'vehicle_id':
-            line.vehicle_id.id if line.vehicle_id else False,
-            'employee_id':
-            line.employee_id.id if line.employee_id else False,
-            'sale_shop_id':
-            line.sale_shop_id.id if line.sale_shop_id else False,
-            'line_id':
-            line.id,
-            'account_id2':
-            line.account_id.id,
-        })
-        return res
+        # res = super(AccountInvoiceLine, self).move_line_get_item(
+        #     self)
+        # res.update({
+        #     'vehicle_id':
+        #     line.vehicle_id.id if line.vehicle_id else False,
+        #     'employee_id':
+        #     line.employee_id.id if line.employee_id else False,
+        #     'sale_shop_id':
+        #     line.sale_shop_id.id if line.sale_shop_id else False,
+        #     'line_id':
+        #     line.id,
+        #     'account_id2':
+        #     line.account_id.id,
+        # })
+        return 'comida'

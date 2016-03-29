@@ -30,13 +30,11 @@ class AccountTax(models.Model):
 
     def compute_all_tax_and_retention(
             self, taxes, price_unit, quantity, tax_type=None):
-        res = 0.0
-        precision = self.pool.get('decimal.precision').precision_get(
-            'Account')
-        total = round(price_unit * quantity, precision)
-        for tax in taxes:
-            if not (tax_type == 'negative' and tax.amount >= 0.00):
-                res += round((total * tax.amount), precision)
-        return {
-            'res': res
-        }
+        # res = 0.0
+        # precision = self.pool.get('decimal.precision').precision_get(
+        #     'Account')
+        # total = round(price_unit * quantity, precision)
+        # for tax in taxes:
+        #     if not (tax_type == 'negative' and tax.amount >= 0.00):
+        #         res += round((total * tax.amount), precision)
+        return 'comida'

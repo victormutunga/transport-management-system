@@ -76,13 +76,13 @@ class TmsWaybillShippedProduct(models.Model):
     _order = 'sequence, id desc'
 
     def on_change_product_id(self, product_id):
-        res = {}
-        if not product_id:
-            return {}
-        prod_obj = self.pool.get('product.product')
-        for product in prod_obj.browse([product_id], context=None):
-            res = {'value': {'product_uom': product.uom_id.id,
-                             'name': product.name}}
-        return res
+        # res = {}
+        # if not product_id:
+        #     return {}
+        # prod_obj = self.pool.get('product.product')
+        # for product in prod_obj.browse([product_id], context=None):
+        #     res = {'value': {'product_uom': product.uom_id.id,
+        #                      'name': product.name}}
+        return 'comida'
 
 TmsWaybillShippedProduct()

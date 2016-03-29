@@ -47,6 +47,7 @@ class TmsUnitExpiry(models.Model):
     ]
 
     def on_change_extra_value(self, extra_value):
-        return {'value': {
-            'name': extra_value[8:] + '/' +
-            extra_value[5:-3] + '/' + extra_value[:-6]}}
+        # return {'value': {
+        #     'name': extra_value[8:] + '/' +
+        #     extra_value[5:-3] + '/' + extra_value[:-6]}}
+        return 'comida'

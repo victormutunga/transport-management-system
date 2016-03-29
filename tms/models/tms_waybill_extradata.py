@@ -19,13 +19,13 @@
 #
 ##############################################################################
 
-from datetime import date, datetime
+# from datetime import date, datetime
 
 from openerp import fields, models
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+# from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+# from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 
-from pytz import timezone
+# from pytz import timezone
 
 
 # Extra data fields for Waybills & Negotiations
@@ -66,35 +66,35 @@ class TmsWaybillExtradata(models.Model):
     _order = "sequence"
 
     def on_change_value(self, type_extra, value):
-        if not type_extra and not value:
-            return {}
-        if type_extra == 'char' or type_extra == 'text':
-            return {'value': {'value_extra': value}}
-        elif type_extra == 'integer' or type_extra == 'float':
-            return {'value': {'value_extra': str(value)}}
-        elif type_extra == 'date':
-            xdate = filter(None, map(lambda x: int(x), value.split('-')))
-            return {'value': {'value_extra': date(
-                xdate[0], xdate[1],
-                xdate[2]).strftime(DEFAULT_SERVER_DATE_FORMAT)}}
-        elif type_extra == 'datetime':
-            # print "value: ", value
-            xvalue = value.split(' ')
-            xdate = filter(None, map(lambda x: int(x), xvalue[0].split('-')))
-            xtime = map(lambda x: int(x), xvalue[1].split(':'))
+        # if not type_extra and not value:
+        #     return {}
+        # if type_extra == 'char' or type_extra == 'text':
+        #     return {'value': {'value_extra': value}}
+        # elif type_extra == 'integer' or type_extra == 'float':
+        #     return {'value': {'value_extra': str(value)}}
+        # elif type_extra == 'date':
+        #     xdate = filter(None, map(lambda x: int(x), value.split('-')))
+        #     return {'value': {'value_extra': date(
+        #         xdate[0], xdate[1],
+        #         xdate[2]).strftime(DEFAULT_SERVER_DATE_FORMAT)}}
+        # elif type_extra == 'datetime':
+        #     # print "value: ", value
+        #     xvalue = value.split(' ')
+        #     xdate = filter(None, map(lambda x: int(x), xvalue[0].split('-')))
+        #     xtime = map(lambda x: int(x), xvalue[1].split(':'))
 
-            tzone = timezone(self.pool.get('res.users').browse(self).tz)
-            value = tzone.localize(datetime(
-                xdate[0], xdate[1], xdate[2],
-                xtime[0], xtime[1], xtime[2]))
+        #     tzone = timezone(self.pool.get('res.users').browse(self).tz)
+        #     value = tzone.localize(datetime(
+        #         xdate[0], xdate[1], xdate[2],
+        #         xtime[0], xtime[1], xtime[2]))
 
-            # print value
-            xvalue = value.split(' ')
-            xdate = filter(None, map(lambda x: int(x), xvalue[0].split('-')))
-            xtime = map(lambda x: int(x), xvalue[1].split(':'))
-            return {'value': {'value_extra': datetime(
-                xdate[0], xdate[1], xdate[2], xtime[0],
-                xtime[1], xtime[2]).strftime(DEFAULT_SERVER_DATETIME_FORMAT)}}
-        return False
+        #     # print value
+        #     xvalue = value.split(' ')
+        #     xdate = filter(None, map(lambda x: int(x), xvalue[0].split('-')))
+        #     xtime = map(lambda x: int(x), xvalue[1].split(':'))
+        #     return {'value': {'value_extra': datetime(
+        #         xdate[0], xdate[1], xdate[2], xtime[0],
+        #        xtime[1], xtime[2]).strftime(DEFAULT_SERVER_DATETIME_FORMAT)}}
+        return 'comida'
 
 TmsWaybillExtradata()

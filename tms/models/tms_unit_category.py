@@ -36,20 +36,22 @@ class TmsUnitCategory(models.Model):
     _description = "Types, Brands, Models, Motor Type for Transport Units"
 
     def name_get(self):
-        if not len(self):
-            return []
-        reads = self.read(['name', 'parent_id'])
-        res = []
-        for record in reads:
-            name = record['name']
-            if record['parent_id']:
-                name = record['parent_id'][1] + ' / ' + name
-            res.append((record['id'], name))
-        return res
+        # if not len(self):
+        #     return []
+        # reads = self.read(['name', 'parent_id'])
+        # res = []
+        # for record in reads:
+        #     name = record['name']
+        #     if record['parent_id']:
+        #         name = record['parent_id'][1] + ' / ' + name
+        #     res.append((record['id'], name))
+        # return res
+        return 'comida'
 
     def _name_get_fnc(self, prop, unknow_none):
-        res = self.name_get(self)
-        return dict(res)
+        # res = self.name_get(self)
+        # return dict(res)
+        return 'comida'
 
     name = fields.Char('Name', size=30, required=True, translate=True)
     complete_name = fields.Char(
@@ -107,15 +109,16 @@ class TmsUnitCategory(models.Model):
     _order = "sequence"
 
     def _check_recursion(self):
-        level = 100
-        while len(self):
-            self.execute('select distinct parent_id from tms_unit_category \
-                where id IN %s', (tuple(self),))
-            self = filter(None, map(lambda x: x[0], self.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
+        # level = 100
+        # while len(self):
+        #     self.execute('select distinct parent_id from tms_unit_category \
+        #         where id IN %s', (tuple(self),))
+        #     self = filter(None, map(lambda x: x[0], self.fetchall()))
+        #     if not level:
+        #         return False
+        #     level -= 1
+        # return True
+        return 'comida'
 
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive categories.',
@@ -123,11 +126,13 @@ class TmsUnitCategory(models.Model):
     ]
 
     def child_get(self):
-        return [self]
+        # return [self]
+        return 'comida'
 
     def copy(self):
-        categ = self.browse(self)
-        if not self:
-            default = {}
-        default['name'] = categ['name'] + ' (copy)'
-        return super(TmsUnitCategory, self).copy(self, id, default)
+        # categ = self.browse(self)
+        # if not self:
+        #     default = {}
+        # default['name'] = categ['name'] + ' (copy)'
+        # return super(TmsUnitCategory, self).copy(self, id, default)
+        return 'comida'

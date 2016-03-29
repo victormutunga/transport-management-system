@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
-import time
+# import time
 
 from openerp import fields, models
-from openerp.tools.translate import _
+# from openerp.tools.translate import _
 
 
 # Units Kits
@@ -60,76 +60,76 @@ class TmsUnitKit(models.Model):
     active = fields.Boolean('Active', default=(lambda *a: True))
 
     def _check_expiration(self):
-        for record in self.browse(self):
-            date_start = record.date_start
-            date_end = record.date_end
+        # for record in self.browse(self):
+        #     date_start = record.date_start
+        #     date_end = record.date_end
 
-            sql = (
-                'select name from tms_unit_kit where id <> ' +
-                str(record.id) + ' and unit_id = ' + str(record.unit_id.id) +
-                ' and (date_start between ' + date_start + ' and ' + date_end +
-                ' or date_end between ' + date_start + ' and ' + date_end +
-                ');')
+        #     sql = (
+        #         'select name from tms_unit_kit where id <> ' +
+        #         str(record.id) + ' and unit_id = ' + str(record.unit_id.id) +
+        #         ' and (date_start between ' + date_start + ' and ' + date_end +
+        #         ' or date_end between ' + date_start + ' and ' + date_end +
+        #         ');')
 
-            self.execute(sql)
-            data = filter(None, map(lambda x: x[0], self.fetchall()))
-            if len(data):
-                raise Warning(
-                    _('Validity Error !'),
-                    _('You cannot have overlaping expiration dates for \
-                        unit %s !\n This unit is overlaping Kit << %s >>\
-                        ') % (record.unit_id.name, data[0]))
-            if record.dolly_id.id:
-                sql = (
-                    'select name from tms_unit_kit where id <> ' +
-                    str(record.id) + ' and dolly_id = ' +
-                    str(record.dolly_id.id) + ' and (date_start between ' +
-                    date_start + ' and \'' + date_end +
-                    ' or date_end between ' + date_start + ' and ' +
-                    date_end + '\');')
+        #     self.execute(sql)
+        #     data = filter(None, map(lambda x: x[0], self.fetchall()))
+        #     if len(data):
+        #         raise Warning(
+        #             _('Validity Error !'),
+        #             _('You cannot have overlaping expiration dates for \
+        #                 unit %s !\n This unit is overlaping Kit << %s >>\
+        #                 ') % (record.unit_id.name, data[0]))
+        #     if record.dolly_id.id:
+        #         sql = (
+        #             'select name from tms_unit_kit where id <> ' +
+        #             str(record.id) + ' and dolly_id = ' +
+        #             str(record.dolly_id.id) + ' and (date_start between ' +
+        #             date_start + ' and \'' + date_end +
+        #             ' or date_end between ' + date_start + ' and ' +
+        #             date_end + '\');')
 
-                self.execute(sql)
-                data = filter(None, map(lambda x: x[0], self.fetchall()))
-                if len(data):
-                    raise Warning(
-                        _('Validity Error !'),
-                        _('You cannot have overlaping expiration dates for \
-                        dolly %s !\n This dolly is overlaping Kit << %s >>\
-                        ') % (record.dolly_id.name, data[0]))
-            sql = ('select name from tms_unit_kit where id <> ' +
-                   str(record.id) + ' and (trailer1_id = ' +
-                   str(record.trailer1_id.id) + 'or trailer2_id = ' +
-                   str(record.trailer1_id.id) + ')' +
-                   ' and (date_start between \'' + date_start + '\' and \'' +
-                   date_end + '\'' + ' or date_end between \'' + date_start +
-                   '\' and \'' + date_end + '\');')
-            self.execute(sql)
-            data = filter(None, map(lambda x: x[0], self.fetchall()))
-            if len(data):
-                raise Warning(
-                    _('Validity Error !'),
-                    _('You cannot have overlaping expiration dates for \
-                    trailer %s !\n This trailer is overlaping Kit << %s >>\
-                    ') % (record.trailer1_id.name, data[0]))
-            if record.trailer2_id.id:
-                sql = (
-                    'select name from tms_unit_kit where id <> ' +
-                    str(record.id) + ' and (trailer1_id = ' +
-                    str(record.trailer2_id.id) + 'or trailer2_id = ' +
-                    str(record.trailer2_id.id) + ')' +
-                    ' and (date_start between \'' + date_start + '\' and \'' +
-                    date_end + '\'' + ' or date_end between \'' +
-                    date_start + '\' and \'' + date_end + '\');')
-                self.execute(sql)
-                data = filter(None, map(lambda x: x[0], self.fetchall()))
-                if len(data):
-                    raise Warning(
-                        _('Validity Error !'),
-                        _('You cannot have overlaping expiration dates \
-                        for trailer %s !\n This trailer is overlaping \
-                        Kit << %s >>') % (record.trailer2_id.name, data[0]))
-            return True
-
+        #         self.execute(sql)
+        #         data = filter(None, map(lambda x: x[0], self.fetchall()))
+        #         if len(data):
+        #             raise Warning(
+        #                 _('Validity Error !'),
+        #                 _('You cannot have overlaping expiration dates for \
+        #                 dolly %s !\n This dolly is overlaping Kit << %s >>\
+        #                 ') % (record.dolly_id.name, data[0]))
+        #     sql = ('select name from tms_unit_kit where id <> ' +
+        #            str(record.id) + ' and (trailer1_id = ' +
+        #            str(record.trailer1_id.id) + 'or trailer2_id = ' +
+        #            str(record.trailer1_id.id) + ')' +
+        #            ' and (date_start between \'' + date_start + '\' and \'' +
+        #            date_end + '\'' + ' or date_end between \'' + date_start +
+        #            '\' and \'' + date_end + '\');')
+        #     self.execute(sql)
+        #     data = filter(None, map(lambda x: x[0], self.fetchall()))
+        #     if len(data):
+        #         raise Warning(
+        #             _('Validity Error !'),
+        #             _('You cannot have overlaping expiration dates for \
+        #             trailer %s !\n This trailer is overlaping Kit << %s >>\
+        #             ') % (record.trailer1_id.name, data[0]))
+        #     if record.trailer2_id.id:
+        #         sql = (
+        #             'select name from tms_unit_kit where id <> ' +
+        #             str(record.id) + ' and (trailer1_id = ' +
+        #             str(record.trailer2_id.id) + 'or trailer2_id = ' +
+        #             str(record.trailer2_id.id) + ')' +
+        #             ' and (date_start between \'' + date_start + '\' and \'' +
+        #             date_end + '\'' + ' or date_end between \'' +
+        #             date_start + '\' and \'' + date_end + '\');')
+        #         self.execute(sql)
+        #         data = filter(None, map(lambda x: x[0], self.fetchall()))
+        #         if len(data):
+        #             raise Warning(
+        #                 _('Validity Error !'),
+        #                 _('You cannot have overlaping expiration dates \
+        #                 for trailer %s !\n This trailer is overlaping \
+        #                 Kit << %s >>') % (record.trailer2_id.name, data[0]))
+        #     return True
+        return 'comida'
     _constraints = [
         (_check_expiration,
             'The expiration is overlaping an existing Kit for this unit!',
@@ -143,18 +143,21 @@ class TmsUnitKit(models.Model):
     _order = "name desc, date_start desc"
 
     def on_change_tms_unit_id(self, tms_unit_id):
-        res = {'value': {'date_start': time.strftime('%Y-%m-%d %H:%M')}}
-        if not (tms_unit_id):
-            return res
-        self.execute("select date_end from tms_unit_kit where id=%s order by  \
-            date_end desc limit 1", tms_unit_id)
-        date_start = self.fetchall()
-        if not date_start:
-            return res
-        else:
-            return {'value': {'date_start': date_start[0]}}
+        # res = {'value': {'date_start': time.strftime('%Y-%m-%d %H:%M')}}
+        # if not (tms_unit_id):
+        #     return res
+        # self.execute("select date_end from tms_unit_kit where
+        # id=%s order by  \
+        #   date_end desc limit 1", tms_unit_id)
+        # date_start = self.fetchall()
+        # if not date_start:
+        #     return res
+        # else:
+        #     return {'value': {'date_start': date_start[0]}}
+        return 'comida'
 
     def on_change_active(self, active):
-        if active:
-            return {}
-        return {'value': {'date_end': time.strftime('%d/%m/%Y %H:%M:%S')}}
+        # if active:
+        #     return {}
+        # return {'value': {'date_end': time.strftime('%d/%m/%Y %H:%M:%S')}}
+        return 'comida'

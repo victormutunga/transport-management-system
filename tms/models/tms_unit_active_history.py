@@ -75,71 +75,77 @@ class TmsUnitActiveHistory(models.Model):
     date_cancelled = fields.Datetime('Date Cancelled', readonly=True)
 
     def on_change_state_cause_id(self, state_cause_id):
-        return {'value': {
-            'name': self.pool.get(
-                'tms.unit.category').browse([state_cause_id])[0].name}}
+        # return {'value': {
+        #     'name': self.pool.get(
+        #         'tms.unit.category').browse([state_cause_id])[0].name}}
+        return 'comida'
 
     def on_change_unit_id(self, unit_id):
-        val = {}
-        if not unit_id:
-            return val
-        for rec in self.pool.get('fleet.vehicle').browse([unit_id]):
-            val = {'value': {
-                'prev_state': 'active' if rec.active else 'inactive',
-                'new_state': 'inactive' if rec.active else 'active'}}
-        return val
+        # val = {}
+        # if not unit_id:
+        #     return val
+        # for rec in self.pool.get('fleet.vehicle').browse([unit_id]):
+        #     val = {'value': {
+        #         'prev_state': 'active' if rec.active else 'inactive',
+        #         'new_state': 'inactive' if rec.active else 'active'}}
+        # return val
+        return 'comida'
 
     def create(self, vals):
-        values = vals
-        if 'unit_id' in vals:
-            res = self.search(
-                [('unit_id', '=', vals['unit_id']),
-                 ('state', '=', 'draft')], context=None)
-            if res and res[0]:
-                raise Warning(
-                    _('Warning!'),
-                    _('You can not create a new record for this unit because \
-                    theres is already a record for this unit in Draft State.'))
-            unit_obj = self.pool.get('fleet.vehicle')
-            for rec in unit_obj.browse([vals['unit_id']]):
-                vals.update({
-                    'prev_state': 'active' if rec.active else 'inactive',
-                    'new_state': 'inactive' if rec.active else 'active'}
-                )
-        # #print vals
-        return super(TmsUnitActiveHistory, self).create(values)
+        # values = vals
+        # if 'unit_id' in vals:
+        #     res = self.search(
+        #         [('unit_id', '=', vals['unit_id']),
+        #          ('state', '=', 'draft')], context=None)
+        #     if res and res[0]:
+        #         raise Warning(
+        #             _('Warning!'),
+        #           _('You can not create a new record for this unit because \
+        #           theres is already a record for this unit in Draft State.'))
+        #     unit_obj = self.pool.get('fleet.vehicle')
+        #     for rec in unit_obj.browse([vals['unit_id']]):
+        #         vals.update({
+        #             'prev_state': 'active' if rec.active else 'inactive',
+        #             'new_state': 'inactive' if rec.active else 'active'}
+        #         )
+        # # #print vals
+        # return super(TmsUnitActiveHistory, self).create(values)
+        return 'comida'
 
     def unlink(self):
-        for rec in self.browse(self):
-            if rec.state == 'confirmed':
-                raise Warning(
-                    _('Warning!'),
-                    _('You can not delete a record if is already Confirmed!!! \
-                        Click Cancel button to continue.'))
-        super(TmsUnitActiveHistory, self).unlink(self)
-        return True
+        # for rec in self.browse(self):
+        #     if rec.state == 'confirmed':
+        #         raise Warning(
+        #             _('Warning!'),
+        #          _('You can not delete a record if is already Confirmed!!! \
+        #                 Click Cancel button to continue.'))
+        # super(TmsUnitActiveHistory, self).unlink(self)
+        # return True
+        return 'comida'
 
     def action_cancel(self):
-        for rec in self.browse(self):
-            if rec.state == 'confirmed':
-                raise Warning(
-                    _('Warning!'),
-                    _('You can not cancel a record if is already Confirmed!!'))
-        self.write({
-            'state': 'cancel',
-            'cancelled_by': self,
-            'date_cancelled': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-        return True
+        # for rec in self.browse(self):
+        #     if rec.state == 'confirmed':
+        #         raise Warning(
+        #             _('Warning!'),
+        #          _('You can not cancel a record if is already Confirmed!!'))
+        # self.write({
+        #     'state': 'cancel',
+        #     'cancelled_by': self,
+        #     'date_cancelled': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        # return True
+        return 'comida'
 
     def action_confirm(self):
-        for rec in self.browse(self):
-            # #print rec.new_state == 'active'
-            self.pool.get('fleet.vehicle').write(
-                [rec.unit_id.id], {
-                    'active': (rec.new_state == 'active')})
-        self.write({
-            'state': 'confirmed',
-            'confirmed_by': self,
-            'date_confirmed':
-            time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-        return True
+        # for rec in self.browse(self):
+        #     # #print rec.new_state == 'active'
+        #     self.pool.get('fleet.vehicle').write(
+        #         [rec.unit_id.id], {
+        #             'active': (rec.new_state == 'active')})
+        # self.write({
+        #     'state': 'confirmed',
+        #     'confirmed_by': self,
+        #     'date_confirmed':
+        #     time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        # return True
+        return 'comida'
