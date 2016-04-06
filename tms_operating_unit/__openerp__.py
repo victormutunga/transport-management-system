@@ -11,7 +11,7 @@
     "author": "Jarsa Sistemas, S.A. de C.V., Odoo Community Association (OCA)",
     "license": "AGPL-3",
     "application": False,
-    "installable": True,
+    "installable": False,
     "depends": [
         "operating_unit",
     ],
