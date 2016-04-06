@@ -671,7 +671,8 @@ class TmsWaybill(models.Model):
     def create(self, cr, uid, vals, context=None):
         # res = super(TmsWaybill, self).create(cr, uid, vals, context=context)
         # self.get_freight_from_factors(cr, uid, [res], context=context)
-        # self.pool.get('tms.waybill.taxes').compute(cr, uid, waybill_ids=[res])
+        # self.pool.get('tms.waybill.taxes').compute(cr, uid,
+        # waybill_ids=[res])
         return 'comida'
 
     def onchange_sequence_id(self, sequence_id):
@@ -704,7 +705,7 @@ class TmsWaybill(models.Model):
         # for travel in self.pool.get('tms.travel').browse([travel_id]):
         #     return {'value': {
         #         'waybill_type':
-        #             'outsourced' if (travel.unit_id.supplier_unit) else 'own',
+        #          'outsourced' if (travel.unit_id.supplier_unit) else 'own',
         #         'unit_id': travel.unit_id.id,
         #         'trailer1_id': travel.trailer1_id.id,
         #         'dolly_id': travel.dolly_id.id,
@@ -868,7 +869,7 @@ class TmsWaybill(models.Model):
         #             continue
         #         tms_prod_income_account = (
         #             waybill_line.product_id.tms_property_account_income.id if
-        #             waybill_line.product_id.tms_property_account_income.id else
+        #        waybill_line.product_id.tms_property_account_income.id else
         #             (waybill_line.product_id.categ_id.
         #              tms_property_account_income_categ.id)
         #             if (waybill_line.product_id.categ_id.

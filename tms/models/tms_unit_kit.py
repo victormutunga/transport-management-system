@@ -67,7 +67,7 @@ class TmsUnitKit(models.Model):
         #     sql = (
         #         'select name from tms_unit_kit where id <> ' +
         #         str(record.id) + ' and unit_id = ' + str(record.unit_id.id) +
-        #         ' and (date_start between ' + date_start + ' and ' + date_end +
+        #    ' and (date_start between ' + date_start + ' and ' + date_end +
         #         ' or date_end between ' + date_start + ' and ' + date_end +
         #         ');')
 
@@ -117,7 +117,7 @@ class TmsUnitKit(models.Model):
         #             str(record.id) + ' and (trailer1_id = ' +
         #             str(record.trailer2_id.id) + 'or trailer2_id = ' +
         #             str(record.trailer2_id.id) + ')' +
-        #             ' and (date_start between \'' + date_start + '\' and \'' +
+        #     ' and (date_start between \'' + date_start + '\' and \'' +
         #             date_end + '\'' + ' or date_end between \'' +
         #             date_start + '\' and \'' + date_end + '\');')
         #         self.execute(sql)
