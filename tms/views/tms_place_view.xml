@@ -54,10 +54,10 @@ TMS.PLACE
 
 <!-- Menu for tms.place -->
     <menuitem name="Places" sequence="1"
-              parent="tms.menu_tms_settings"
+              parent="menu_tms_config_routes"
               id="menu_tms_config_route_place_form" 
               action="open_view_tms_place_form"/>
-              <!-- parent="menu_tms_config_routes" -->
+              
 
     </data>
 </openerp>
