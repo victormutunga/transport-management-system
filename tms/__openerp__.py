@@ -29,6 +29,7 @@
     "depends": ["hr", "account_voucher", "purchase", "sale", "fleet"],
     "summary": "Management System for Carriers, Trucking and other companies",
     "data": [
+        'security/ir.model.access.csv'
         'views/tms_view.xml',
         # 'views/account_journal_view.xml',
         # 'views/fleet_vehicle_odometer_view.xml',
