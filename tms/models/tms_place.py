@@ -20,9 +20,7 @@
 ##############################################################################
 
 import urllib as my_urllib
-
-from openerp import fields, models
-
+from openerp import fields, models, api
 import simplejson as json
 
 
@@ -31,6 +29,7 @@ class TmsPlace(models.Model):
     _name = 'tms.place'
     _description = 'Cities / Places'
 
+    @api.multi
     def _get_place_and_state(self):
         res = {}
         for record in self.browse(self):
@@ -38,14 +37,13 @@ class TmsPlace(models.Model):
             res[record.id] = xname
         return res
 
-    # company_id = fields.Many2one('res.company', 'Company', required=False)
     name = fields.Char('Place', size=64, required=True, select=True)
     complete_name = fields.Char(
         compute=_get_place_and_state, method=True, size=100,
         string='Complete Name', store=True)
     state_id = fields.Many2one(
         'res.country.state',
-        string='State Name',
+        'State Name',
         required=True)
     country_id = fields.Many2one(
         'res.country',
@@ -57,11 +55,9 @@ class TmsPlace(models.Model):
     longitude = fields.Float(
         'Longitude', required=False, digits=(20, 10),
         help='GPS Longitude')
-    route_ids = fields.Many2many(
-        'tms.route', 'tms_route_places_rel', 'place_id',
-        'route_id', 'Routes with this Place')
-
-    _rec_name = 'complete_name'
+    # route_ids = fields.Many2many(
+    #     'tms.route', 'tms_route_places_rel', 'place_id',
+    #     'route_id', 'Routes with this Place')
 
     def button_get_coords(self):
         for rec in self.browse(self):
@@ -71,19 +67,11 @@ class TmsPlace(models.Model):
                 'http://maps.googleapis.com/maps/api/geocode/json?address=' +
                 address.encode('utf-8') + '&sensor=false')
             result = json.load(my_urllib.urlopen(google_url))
-            # print google_url
-            # print result
             if result['status'] == 'OK':
-                # print 'latitude: ', result['results'][0]['geometry']
-                # ['location']['lat']
-                # print 'longitude: ', result['results'][0]['geometry']
-                # ['location']['lng']
                 self.write({'latitude': result['results'][0]['geometry']
                            ['location']['lat'],
                            'longitude': result['results'][0]['geometry']
                             ['location']['lng']})
-            # else:
-                # print result['status']
         return True
 
     def button_open_google(self):
