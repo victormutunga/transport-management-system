@@ -23,7 +23,7 @@ TMS.EXPENSE.LINE
             <field name="tax_amount" sum="Tax Amount"/>
             <field name="price_total" sum="Price Total"/>
             <field name="sequence" />
-            <field name="operation_id" />
+            <!-- <field name="operation_id" /> -->
             <field name="is_invoice" />
         </tree>
     </field>
@@ -36,7 +36,7 @@ TMS.EXPENSE.LINE
         <field name="arch" type="xml">
             <form string="Expense Lines">
                 <field name="travel_id" domain="[('id','in', tuple([x.id for x in paren.travel_ids]),)]" /> 
-                <field name="operation_id" domain="[('state','not in', ('draft', 'cancel'))]" />
+                <!-- <field name="operation_id" domain="[('state','not in', ('draft', 'cancel'))]" /> -->
                 <field name="control" invisible="1" />
                 <field name="line_type" required="1" attrs="{'readonly':[('control','!=',False)]}"/>
                 <newline />

@@ -19,11 +19,12 @@
 #
 ##############################################################################
 
-
-from openerp import models, fields
-from openerp.tools.translate import _
-import simplejson as json
 import urllib as my_urllib
+
+from openerp import fields, models
+from openerp.tools.translate import _
+
+import simplejson as json
 
 
 # Routes
@@ -32,7 +33,7 @@ class TmsRoute(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = 'Routes'
 
-    company_id = fields.Many2one('res.company', 'Company', required=False)
+    # company_id = fields.Many2one('res.company', 'Company', required=False)
     name = fields.Char('Route Name', size=64, required=True, select=True)
     departure_id = fields.Many2one('tms.place', 'Departure', required=True)
     arrival_id = fields.Many2one('tms.place', 'Arrival', required=True)
@@ -48,11 +49,17 @@ class TmsRoute(models.Model):
         'tms.route.fuelefficiency',
         'tms_route_id', 'Fuel Efficiency by Motor type')
     fuel_efficiency_drive_unit = fields.Float(
-        'Fuel Efficiency Drive Unit', required=False, digits=(14, 4)),
+        'Fuel Efficiency Drive Unit',
+        required=False,
+        digits=(14, 4))
     fuel_efficiency_1trailer = fields.Float(
-        'Fuel Efficiency One Trailer', required=False, digits=(14, 4)),
+        'Fuel Efficiency One Trailer',
+        required=False,
+        digits=(14, 4))
     fuel_efficiency_2trailer = fields.Float(
-        'Fuel Efficiency Two Trailer', required=False, digits=(14, 4)),
+        'Fuel Efficiency Two Trailer',
+        required=False,
+        digits=(14, 4))
     notes = fields.Text('Notes')
     active = fields.Boolean('Active', default=True)
     expense_driver_factor = fields.One2many(

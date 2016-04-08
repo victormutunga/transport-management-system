@@ -25,7 +25,7 @@ from openerp import fields, models
 import openerp.addons.decimal_precision as dp
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
-from openerp.tools.translate import _
+# from openerp.tools.translate import _
 
 
 class TmsWaybill(models.Model):
@@ -35,224 +35,228 @@ class TmsWaybill(models.Model):
 
     def _amount_all(self, field_name):
         # print "_amount_all"
-        cur_obj = self.pool.get('res.currency')
-        res = {}
-        for waybill in self.browse(self):
-            res[waybill.id] = {
-                'amount_freight': 0.0,
-                'amount_move': 0.0,
-                'amount_highway_tolls': 0.0,
-                'amount_insurance': 0.0,
-                'amount_other': 0.0,
-                'amount_subtotal': 0.0,
-                'amount_tax': 0.0,
-                'amount_total': 0.0,
-            }
-            cur = waybill.currency_id
-            x_freight = 0.0
-            x_move = 0.0
-            x_highway = 0.0
-            x_insurance = 0.0
-            x_other = 0.0
-            x_subtotal = 0.0
-            x_tax = 0.0
-            x_total = 0.0
-            for line in waybill.waybill_line:
-                    if line.product_id.tms_category == 'freight':
-                        x_freight += line.price_subtotal
-                    else:
-                        x_freight += 0.0
-                    if line.product_id.tms_category == 'move':
-                        x_move += line.price_subtotal
-                    else:
-                        x_move += 0.0
-                    if line.product_id.tms_category == 'highway_tolls':
-                        x_highway += line.price_subtotal
-                    else:
-                        x_highway += 0.0
-                    if line.product_id.tms_category == 'insurance':
-                        x_insurance += line.price_subtotal
-                    else:
-                        x_insurance += 0.0
-                    if line.product_id.tms_category == 'other':
-                        x_other += line.price_subtotal
-                    else:
-                        x_other += 0.0
-                    x_subtotal += line.price_subtotal
-                    x_tax += line.tax_amount
-                    x_total += line.price_total
+        # cur_obj = self.pool.get('res.currency')
+        # res = {}
+        # for waybill in self.browse(self):
+        #     res[waybill.id] = {
+        #         'amount_freight': 0.0,
+        #         'amount_move': 0.0,
+        #         'amount_highway_tolls': 0.0,
+        #         'amount_insurance': 0.0,
+        #         'amount_other': 0.0,
+        #         'amount_subtotal': 0.0,
+        #         'amount_tax': 0.0,
+        #         'amount_total': 0.0,
+        #     }
+        #     cur = waybill.currency_id
+        #     x_freight = 0.0
+        #     x_move = 0.0
+        #     x_highway = 0.0
+        #     x_insurance = 0.0
+        #     x_other = 0.0
+        #     x_subtotal = 0.0
+        #     x_tax = 0.0
+        #     x_total = 0.0
+        #     for line in waybill.waybill_line:
+        #             if line.product_id.tms_category == 'freight':
+        #                 x_freight += line.price_subtotal
+        #             else:
+        #                 x_freight += 0.0
+        #             if line.product_id.tms_category == 'move':
+        #                 x_move += line.price_subtotal
+        #             else:
+        #                 x_move += 0.0
+        #             if line.product_id.tms_category == 'highway_tolls':
+        #                 x_highway += line.price_subtotal
+        #             else:
+        #                 x_highway += 0.0
+        #             if line.product_id.tms_category == 'insurance':
+        #                 x_insurance += line.price_subtotal
+        #             else:
+        #                 x_insurance += 0.0
+        #             if line.product_id.tms_category == 'other':
+        #                 x_other += line.price_subtotal
+        #             else:
+        #                 x_other += 0.0
+        #             x_subtotal += line.price_subtotal
+        #             x_tax += line.tax_amount
+        #             x_total += line.price_total
 
-            res[waybill.id] = {
-                'amount_freight': cur_obj.round(cur, x_freight),
-                'amount_move': cur_obj.round(cur, x_move),
-                'amount_highway_tolls': cur_obj.round(cur, x_highway),
-                'amount_insurance': cur_obj.round(cur, x_insurance),
-                'amount_other': cur_obj.round(cur, x_other),
-                'amount_untaxed': cur_obj.round(cur, x_subtotal),
-                'amount_tax': cur_obj.round(cur, x_tax),
-                'amount_total': cur_obj.round(cur, x_total),
-            }
-        return res
+        #     res[waybill.id] = {
+        #         'amount_freight': cur_obj.round(cur, x_freight),
+        #         'amount_move': cur_obj.round(cur, x_move),
+        #         'amount_highway_tolls': cur_obj.round(cur, x_highway),
+        #         'amount_insurance': cur_obj.round(cur, x_insurance),
+        #         'amount_other': cur_obj.round(cur, x_other),
+        #         'amount_untaxed': cur_obj.round(cur, x_subtotal),
+        #         'amount_tax': cur_obj.round(cur, x_tax),
+        #         'amount_total': cur_obj.round(cur, x_total),
+        #     }
+        return 'comida'
 
     def _invoiced(self, field_name):
-        res = {}
-        for rec in self.browse(self):
-            # print "rec.invoice_id.id: ", rec.invoice_id.id
-            # print "rec.invoice_id.state: ", rec.invoice_id.state
-            invoiced = (bool(rec.invoice_id and rec.invoice_id.id and
-                        rec.invoice_id.state != 'cancel' or False))
-            paid = bool(
-                rec.invoice_id and rec.invoice_id.state == 'paid' or False)
-            res[rec.id] = {
-                'invoiced': invoiced,
-                'invoice_paid': paid,
-                'invoice_name': (
-                    rec.invoice_id and rec.invoice_id.state != 'cancel' and
-                    rec.invoice_id.reference or ''),
-            }
-        return res
+        # res = {}
+        # for rec in self.browse(self):
+        #     # print "rec.invoice_id.id: ", rec.invoice_id.id
+        #     # print "rec.invoice_id.state: ", rec.invoice_id.state
+        #     invoiced = (bool(rec.invoice_id and rec.invoice_id.id and
+        #                 rec.invoice_id.state != 'cancel' or False))
+        #     paid = bool(
+        #         rec.invoice_id and rec.invoice_id.state == 'paid' or False)
+        #     res[rec.id] = {
+        #         'invoiced': invoiced,
+        #         'invoice_paid': paid,
+        #         'invoice_name': (
+        #             rec.invoice_id and rec.invoice_id.state != 'cancel' and
+        #             rec.invoice_id.reference or ''),
+        #     }
+        return 'comida'
 
     def _supplier_invoiced(self, field_name):
-        res = {}
-        for record in self.browse(self):
-            xinvoiced = (
-                bool(record.supplier_invoice_id and
-                     record.supplier_invoice_id.id and
-                     record.supplier_invoice_id.state != 'cancel' or False))
-            xpaid = bool(record.invoice_id and
-                         record.invoice_id.state == 'paid')
-            res[record.id] = {
-                'supplier_invoiced': xinvoiced,
-                'supplier_invoice_paid': xpaid,
-                'supplier_invoice_name': (
-                    record.supplier_invoice_id and
-                    record.supplier_invoice_id.state != 'cancel' and
-                    (record.supplier_invoice_id.supplier_invoice_number or
-                        record.supplier_invoice_id.reference) or False)
-            }
-        return res
+        # res = {}
+        # for record in self.browse(self):
+        #     xinvoiced = (
+        #         bool(record.supplier_invoice_id and
+        #              record.supplier_invoice_id.id and
+        #              record.supplier_invoice_id.state != 'cancel' or False))
+        #     xpaid = bool(record.invoice_id and
+        #                  record.invoice_id.state == 'paid')
+        #     res[record.id] = {
+        #         'supplier_invoiced': xinvoiced,
+        #         'supplier_invoice_paid': xpaid,
+        #         'supplier_invoice_name': (
+        #             record.supplier_invoice_id and
+        #             record.supplier_invoice_id.state != 'cancel' and
+        #             (record.supplier_invoice_id.supplier_invoice_number or
+        #                 record.supplier_invoice_id.reference) or False)
+        #     }
+        return 'comida'
 
     def _shipped_product(self, field_name):
-        res = {}
+        # res = {}
 
-        context_wo_lang = self.copy()
-        context_wo_lang.pop('lang', None)
-        for waybill in self.browse(context=context_wo_lang):
-            volume = weight = qty = 0.0
-            for record in waybill.waybill_shipped_product:
-                qty += record.product_uom_qty
-                # print "Waybill - record.product_uom.category_id.name",
-                # record.product_uom.category_id.name
-                if record.product_uom.category_id.name == 'Volume':
-                    volume += record.product_uom_qty
-                else:
-                    volume += 0.0
-                if record.product_uom.category_id.name == 'Weight':
-                    weight += record.product_uom_qty
-                else:
-                    weight += 0.0
-                res[waybill.id] = {
-                    'product_qty': qty,
-                    'product_volume': volume,
-                    'product_weight': weight,
-                    'product_uom_type': (record.product_uom.category_id.name),
-                }
-        return res
+        # context_wo_lang = self.copy()
+        # context_wo_lang.pop('lang', None)
+        # for waybill in self.browse(context=context_wo_lang):
+        #     volume = weight = qty = 0.0
+        #     for record in waybill.waybill_shipped_product:
+        #         qty += record.product_uom_qty
+        #         # print "Waybill - record.product_uom.category_id.name",
+        #         # record.product_uom.category_id.name
+        #         if record.product_uom.category_id.name == 'Volume':
+        #             volume += record.product_uom_qty
+        #         else:
+        #             volume += 0.0
+        #         if record.product_uom.category_id.name == 'Weight':
+        #             weight += record.product_uom_qty
+        #         else:
+        #             weight += 0.0
+        #         res[waybill.id] = {
+        #             'product_qty': qty,
+        #             'product_volume': volume,
+        #             'product_weight': weight,
+        #            'product_uom_type': (record.product_uom.category_id.name),
+        #         }
+        return 'comida'
 
     def _get_route_distance(self, field_name, arg):
-        res = {}
-        distance = 1.0
-        for waybill in self.browse(self):
-            distance = waybill.route_id.distance
-            res[waybill.id] = distance
-        return res
+        # res = {}
+        # distance = 1.0
+        # for waybill in self.browse(self):
+        #     distance = waybill.route_id.distance
+        #     res[waybill.id] = distance
+        return 'comida'
 
     def _get_supplier_amount(self, field_name):
-        res = {}
-        for waybill in self.browse(self):
-            result = 0.0
-            if waybill.waybill_type == 'outsourced':
-                factor_special_obj = self.pool.get('tms.factor.special')
-                factor_special_ids = factor_special_obj.search(
-                    [('type', '=', 'supplier'), ('active', '=', True)])
-                if len(factor_special_ids):
-                    exec factor_special_obj.browse(
-                        factor_special_ids)[0].python_code
-                    # print result
-                else:
-                    factor_obj = self.pool.get('tms.factor')
-                    result = factor_obj.calculate(
-                        'waybill', [waybill.id], 'supplier', False)
-            res[waybill.id] = result
-        return res
+        # res = {}
+        # for waybill in self.browse(self):
+        #     result = 0.0
+        #     if waybill.waybill_type == 'outsourced':
+        #         factor_special_obj = self.pool.get('tms.factor.special')
+        #         factor_special_ids = factor_special_obj.search(
+        #             [('type', '=', 'supplier'), ('active', '=', True)])
+        #         if len(factor_special_ids):
+        #             exec factor_special_obj.browse(
+        #                 factor_special_ids)[0].python_code
+        #             # print result
+        #         else:
+        #             factor_obj = self.pool.get('tms.factor')
+        #             result = factor_obj.calculate(
+        #                 'waybill', [waybill.id], 'supplier', False)
+        #     res[waybill.id] = result
+        return 'comida'
 
     def _get_newer_travel_id(self, field_name):
-        res = {}
-        travel_id = False
-        for waybill in self.browse(self):
-            for travel in waybill.travel_ids:
-                travel_id = travel.id
-            res[waybill.id] = travel_id
-        return res
+        # res = {}
+        # travel_id = False
+        # for waybill in self.browse(self):
+        #     for travel in waybill.travel_ids:
+        #         travel_id = travel.id
+        #     res[waybill.id] = travel_id
+        return 'comida'
 
     def _get_waybill_type(self, field_name):
         # print "Entrando aqui..."
-        res = {}
-        for waybill in self.browse(self):
-            waybill_type = 'self'
-            for travel in waybill.travel_ids:
-                waybill_type = ('outsourced' if travel.unit_id.supplier_unit
-                                else 'self')
-            res[waybill.id] = waybill_type
-        return res
+        # res = {}
+        # for waybill in self.browse(self):
+        #     waybill_type = 'self'
+        #     for travel in waybill.travel_ids:
+        #         waybill_type = ('outsourced' if travel.unit_id.supplier_unit
+        #                         else 'self')
+        #     res[waybill.id] = waybill_type
+        return 'comida'
 
     def _get_order(self):
-        result = {}
-        for line in self.pool.get('tms.waybill.line').browse(self):
-            result[line.waybill_id.id] = True
-        return result.keys()
+        # result = {}
+        # for line in self.pool.get('tms.waybill.line').browse(self):
+        #     result[line.waybill_id.id] = True
+        return 'comida'
 
     def _get_invoice(self):
-        result = {}
-        for invoice in self.pool.get('account.invoice').browse(self):
-            for waybill in invoice.waybill_ids:
-                result[waybill.id] = True
-        return result.keys()
+        # result = {}
+        # for invoice in self.pool.get('account.invoice').browse(self):
+        #     for waybill in invoice.waybill_ids:
+        #         result[waybill.id] = True
+        return 'comida'
 
     def _get_supplier_invoice(self):
-        result = {}
-        for invoice in self.pool.get('account.invoice').browse(self):
-            for waybill in invoice.waybill_ids:
-                result[waybill.id] = True
-        return result.keys()
+        # result = {}
+        # for invoice in self.pool.get('account.invoice').browse(self):
+        #     for waybill in invoice.waybill_ids:
+        #         result[waybill.id] = True
+        return 'comida'
 
     waybill_customer_factor = fields.One2many(
-        'tms.factor', 'waybill_id', 'Waybill Customer Charge Factors',
+        'tms.factor', 'waybill_id',
+        string='Waybill Customer Charge Factors',
         domain=[('category', '=', 'customer')],
         readonly=False, states={'confirmed': [('readonly', True)],
                                 'closed': [('readonly', True)]})
     waybill_supplier_factor = fields.One2many(
-        'tms.factor', 'waybill_id', 'Waybill Supplier Payment Factors',
+        'tms.factor', 'waybill_id',
+        string='Waybill Supplier Payment Factors',
         domain=[('category', '=', 'supplier')],
         readonly=False, states={'cancel': [('readonly', True)],
                                 'closed': [('readonly', True)]})
     expense_driver_factor = fields.One2many(
-        'tms.factor', 'waybill_id', 'Travel Driver Payment Factors',
+        'tms.factor', 'waybill_id',
+        string='Travel Driver Payment Factors',
         domain=[('category', '=', 'driver')], readonly=False,
         states={'cancel': [('readonly', True)],
                 'closed': [('readonly', True)]})
     tax_line = fields.One2many(
-        'tms.waybill.taxes', 'waybill_id', 'Tax Lines', readonly=True,
+        'tms.waybill.taxes', 'waybill_id',
+        string='Tax Lines', readonly=True,
         states={'draft': [('readonly', False)]})
     name = fields.Char('Name', size=64, readonly=False, select=True)
-    shop_id = fields.Many2one(
-        'sale.shop', 'Shop', required=True, readonly=False,
-        states={'confirmed': [('readonly', True)]})
-    operation_id = fields.Many2one(
-        'tms.operation', 'Operation', ondelete='restrict', required=False,
-        readonly=False, states={'cancel': [('readonly', True)],
-                                'done': [('readonly', True)],
-                                'closed': [('readonly', True)]})
+    # shop_id = fields.Many2one(
+    #     'sale.shop', 'Shop', required=True, readonly=False,
+    #     states={'confirmed': [('readonly', True)]})
+    # operation_id = fields.Many2one(
+    #     'tms.operation', 'Operation', ondelete='restrict', required=False,
+    #     readonly=False, states={'cancel': [('readonly', True)],
+    #                             'done': [('readonly', True)],
+    #                             'closed': [('readonly', True)]})
     waybill_category = fields.Many2one(
         'tms.waybill.category', 'Category', ondelete='restrict',
         required=False, readonly=False,
@@ -263,44 +267,61 @@ class TmsWaybill(models.Model):
         'ir.sequence', 'Sequence', required=True, ondelete='restrict',
         readonly=False, states={'confirmed': [('readonly', True)]})
     travel_ids = fields.Many2many(
-        'tms.travel', 'tms_waybill_travel_rel', 'waybill_id', 'travel_id',
-        'Travels', readonly=False, states={'confirmed': [('readonly', True)]})
+        'tms.travel',
+        string='Travels',
+        states={'confirmed': [('readonly', True)]})
     travel_id = fields.Many2one(
-        compute=_get_newer_travel_id, method=True, relation='tms.travel',
+        'tms.travel',
+        compute='_get_newer_travel_id',
         string='Actual Travel', readonly=True, store=True, ondelete='cascade')
     supplier_id = fields.Many2one(
-        'unit_id', 'supplier_id', type='many2one', relation='res.partner',
+        'res.partner',
+        related='unit_id.supplier_id',
         string='Freight Supplier', store=True, readonly=True)
     supplier_amount = fields.Float(
         compute=_get_supplier_amount, string='Supplier Freight Amount',
         method=True, digits_compute=dp.get_precision('Sale Price'),
         help="Freight Amount from Supplier.", multi=False, store=True)
     unit_id = fields.Many2one(
-        'travel_id', 'unit_id', relation='fleet.vehicle',
+        'fleet.vehicle',
+        related='travel_id.unit_id',
         string='Unit', store=True, readonly=True)
     trailer1_id = fields.Many2one(
-        'travel_id', 'trailer1_id', relation='fleet.vehicle',
+        'fleet.vehicle',
+        related='travel_id.trailer1_id',
         string='Trailer 1', store=True, readonly=True)
     dolly_id = fields.Many2one(
-        'travel_id', 'dolly_id', relation='fleet.vehicle', string='Dolly',
+        'fleet.vehicle',
+        relate='travel_id.dolly_id',
+        string='Dolly',
         store=True, readonly=True)
     trailer2_id = fields.Many2one(
-        'travel_id', 'trailer2_id', relation='fleet.vehicle',
+        'fleet.vehicle',
+        related='travel_id.trailer2_id',
         string='Trailer 2', store=True, readonly=True)
     employee_id = fields.Many2one(
-        'travel_id', 'employee_id', relation='hr.employee', string='Driver',
+        'hr.employee',
+        related='travel_id.employee_id',
+        string='Driver',
         store=True, readonly=True)
     employee2_id = fields.Many2one(
-        'travel_id', 'employee2_id', relation='hr.employee',
+        'hr.employee',
+        related='travel_id.employee2_id',
         string='Driver Helper', store=True, readonly=True)
     route_id = fields.Many2one(
-        'travel_id', 'route_id', relation='tms.route', string='Route',
+        'tms.route',
+        related='travel_id.route_id',
+        string='Route',
         store=True, readonly=True)
     departure_id = fields.Many2one(
-        'route_id', 'departure_id', relation='tms.place', string='Departure',
+        'tms.place',
+        related='route_id.departure_id',
+        string='Departure',
         store=True, readonly=True)
     arrival_id = fields.Many2one(
-        'route_id', 'arrival_id', relation='tms.place', string='Arrival',
+        'tms.place',
+        related='route_id.arrival_id',
+        string='Arrival',
         store=True, readonly=True)
     origin = fields.Char(
         'Source Document', size=64, help="Reference of the document that \
@@ -431,10 +452,12 @@ class TmsWaybill(models.Model):
     supplier_invoiced_date = fields.Datetime(
         'Suppl. Inv. Date', readonly=True, select=True)
     waybill_line = fields.One2many(
-        'tms.waybill.line', 'waybill_id', 'Waybill Lines', readonly=False,
+        'tms.waybill.line', 'waybill_id',
+        string='Waybill Lines', readonly=False,
         states={'confirmed': [('readonly', True)]})
     waybill_shipped_product = fields.One2many(
-        'tms.waybill.shipped_product', 'waybill_id', 'Shipped Products',
+        'tms.waybill.shipped_product', 'waybill_id',
+        string='Shipped Products',
         readonly=False, states={'confirmed': [('readonly', True)]})
     product_qty = fields.Float(
         compute=_shipped_product, method=True, string='Sum Qty',
@@ -449,7 +472,8 @@ class TmsWaybill(models.Model):
         compute=_shipped_product, method=True, string='Product UoM Type',
         size=64, store=True, multi='product_qty')
     waybill_extradata = fields.One2many(
-        'tms.waybill.extradata', 'waybill_id', 'Extra Data Fields',
+        'tms.waybill.extradata', 'waybill_id',
+        string='Extra Data Fields',
         readonly=False, states={'confirmed': [('readonly', True)]})
     amount_freight = fields.Float(
         compute=_amount_all, method=True,
@@ -499,16 +523,16 @@ class TmsWaybill(models.Model):
     date_confirmed = fields.Datetime('Date Confirmed', readonly=True)
     drafted_by = fields.Many2one('res.users', 'Drafted by', readonly=True)
     date_drafted = fields.Datetime('Date Drafted', readonly=True)
-    notes = fields.text('Notes', readonly=False)
+    notes = fields.Text('Notes', readonly=False)
     payment_term = fields.Many2one(
         'account.payment.term', 'Payment Term', readonly=False,
         states={'confirmed': [('readonly', True)]})
     fiscal_position = fields.Many2one(
         'account.fiscal.position', 'Fiscal Position', readonly=False,
         states={'confirmed': [('readonly', True)]})
-    company_id = fields.Many2one(
-        'shop_id', 'company_id', relation='res.company', string='Company',
-        store=True, readonly=True)
+    # company_id = fields.Many2one(
+    #     'shop_id', 'company_id', relation='res.company', string='Company',
+    #     store=True, readonly=True)
     date_start = fields.Datetime(
         'Load Date Sched', required=False, help="Date Start time for Load",
         default=(lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)))
@@ -588,342 +612,351 @@ class TmsWaybill(models.Model):
     _order = 'name desc'
 
     def get_freight_from_factors(self):
-        prod_obj = self.pool.get('product.product')
-        factor = self.pool.get('tms.factor')
-        line_obj = self.pool.get('tms.waybill.line')
-        fpos_obj = self.pool.get('account.fiscal.position')
-        for waybill in self.browse(self):
-            prod_id = prod_obj.search(
-                [('tms_category', '=', 'freight'),
-                 ('tms_default_freight' if waybill.waybill_type == 'self'
-                    else 'tms_default_supplier_freight', ' =', 1),
-                 ('active', '=', 1)], limit=1)
-            if not prod_id:
-                raise Warning(
-                    _('Missing configuration !'),
-                    _('There is no product defined as Default Freight !!!'))
-            product = prod_obj.browse(prod_id, context=None)
+        # prod_obj = self.pool.get('product.product')
+        # factor = self.pool.get('tms.factor')
+        # line_obj = self.pool.get('tms.waybill.line')
+        # fpos_obj = self.pool.get('account.fiscal.position')
+        # for waybill in self.browse(self):
+        #     prod_id = prod_obj.search(
+        #         [('tms_category', '=', 'freight'),
+        #          ('tms_default_freight' if waybill.waybill_type == 'self'
+        #             else 'tms_default_supplier_freight', ' =', 1),
+        #          ('active', '=', 1)], limit=1)
+        #     if not prod_id:
+        #         raise Warning(
+        #             _('Missing configuration !'),
+        #             _('There is no product defined as Default Freight !!!'))
+        #     product = prod_obj.browse(prod_id, context=None)
 
-            for line in waybill.waybill_line:
-                if line.control:
-                    line_obj.unlink([line.id])
-            result = factor.calculate('waybill', 'client', False)
-            # print result
-            fpos = waybill.partner_id.property_account_position.id or False
-            # print "fpos: ", fpos
-            fpos = fpos and fpos_obj.browse(fpos) or False
-            # print "fpos: ", fpos
-            # print "product[0].taxes_id: ", product[0].taxes_id
-            # print "fpos_obj.map_tax: ", (6, 0, [_x for _x in
-            # fpos_obj.map_tax(cr, uid, fpos, product[0].taxes_id)]),
+        #     for line in waybill.waybill_line:
+        #         if line.control:
+        #             line_obj.unlink([line.id])
+        #     result = factor.calculate('waybill', 'client', False)
+        #     # print result
+        #     fpos = waybill.partner_id.property_account_position.id or False
+        #     # print "fpos: ", fpos
+        #     fpos = fpos and fpos_obj.browse(fpos) or False
+        #     # print "fpos: ", fpos
+        #     # print "product[0].taxes_id: ", product[0].taxes_id
+        #     # print "fpos_obj.map_tax: ", (6, 0, [_x for _x in
+        #     # fpos_obj.map_tax(cr, uid, fpos, product[0].taxes_id)]),
 
-            xline = {
-                'waybill_id': waybill.id,
-                'line_type': 'product',
-                'name': product[0].name,
-                'sequence': 1,
-                'product_id': product[0].id,
-                'product_uom': product[0].uom_id.id,
-                'product_uom_qty': 1,
-                'price_unit': result,
-                'discount': 0.0,
-                'control': True,
-                'tax_id': [(6, 0, [_w for _w in fpos_obj.map_tax(
-                    fpos, product[0].taxes_id)])],
-            }
-            # print xline
-            line_obj.create(xline)
-        return True
+        #     xline = {
+        #         'waybill_id': waybill.id,
+        #         'line_type': 'product',
+        #         'name': product[0].name,
+        #         'sequence': 1,
+        #         'product_id': product[0].id,
+        #         'product_uom': product[0].uom_id.id,
+        #         'product_uom_qty': 1,
+        #         'price_unit': result,
+        #         'discount': 0.0,
+        #         'control': True,
+        #         'tax_id': [(6, 0, [_w for _w in fpos_obj.map_tax(
+        #             fpos, product[0].taxes_id)])],
+        #     }
+        #     # print xline
+        #     line_obj.create(xline)
+        return 'comida'
 
     def write(self, vals):
-        super(TmsWaybill, self).write(self)
-        if 'state' in vals and vals['state'] not in (
-                'confirmed', 'cancel') or self.browse(self)[0].state in (
-                    'draft', 'approved'):
-            self.get_freight_from_factors(self)
-        self.pool.get('tms.waybill.taxes').compute(self)
-        return True
+        # super(TmsWaybill, self).write(self)
+        # if 'state' in vals and vals['state'] not in (
+        #         'confirmed', 'cancel') or self.browse(self)[0].state in (
+        #             'draft', 'approved'):
+        #     self.get_freight_from_factors(self)
+        # self.pool.get('tms.waybill.taxes').compute(self)
+        return 'comida'
 
     def create(self, cr, uid, vals, context=None):
-        res = super(TmsWaybill, self).create(cr, uid, vals, context=context)
-        self.get_freight_from_factors(cr, uid, [res], context=context)
-        self.pool.get('tms.waybill.taxes').compute(cr, uid, waybill_ids=[res])
-        return res
+        # res = super(TmsWaybill, self).create(cr, uid, vals, context=context)
+        # self.get_freight_from_factors(cr, uid, [res], context=context)
+        # self.pool.get('tms.waybill.taxes').compute(cr, uid,
+        # waybill_ids=[res])
+        return 'comida'
 
     def onchange_sequence_id(self, sequence_id):
-        if not sequence_id:
-            return {'value': {'billing_policy': 'manual', }}
-        result = self.pool.get('ir.sequence').browse(
-            [sequence_id])[0].tms_waybill_automatic
-        return {'value': {
-            'billing_policy': 'automatic' if result else 'manual', }}
+        # if not sequence_id:
+        #     return {'value': {'billing_policy': 'manual', }}
+        # result = self.pool.get('ir.sequence').browse(
+        #     [sequence_id])[0].tms_waybill_automatic
+        # return {'value': {
+        #     'billing_policy': 'automatic' if result else 'manual', }}
+        return 'comida'
 
     def onchange_travel_ids(self, travel_ids):
-        if not travel_ids or not len(travel_ids[0][2]):
-            return {'value': {
-                'waybill_type': 'own',
-                'unit_id': False,
-                'trailer1_id': False,
-                'dolly_id': False,
-                'trailer2_id': False,
-                'employee_id': False,
-                'route_id': False,
-                'departure_id': False,
-                'arrival_id': False,
-                'travel_id': False,
-            }}
-        travel_id = False
-        for rec in travel_ids:
-            travel_id = rec[2][len(rec[2]) - 1] or False
+        # if not travel_ids or not len(travel_ids[0][2]):
+        #     return {'value': {
+        #         'waybill_type': 'own',
+        #         'unit_id': False,
+        #         'trailer1_id': False,
+        #         'dolly_id': False,
+        #         'trailer2_id': False,
+        #         'employee_id': False,
+        #         'route_id': False,
+        #         'departure_id': False,
+        #         'arrival_id': False,
+        #         'travel_id': False,
+        #     }}
+        # travel_id = False
+        # for rec in travel_ids:
+        #     travel_id = rec[2][len(rec[2]) - 1] or False
 
-        for travel in self.pool.get('tms.travel').browse([travel_id]):
-            return {'value': {
-                'waybill_type':
-                    'outsourced' if (travel.unit_id.supplier_unit) else 'own',
-                'unit_id': travel.unit_id.id,
-                'trailer1_id': travel.trailer1_id.id,
-                'dolly_id': travel.dolly_id.id,
-                'trailer2_id': travel.trailer2_id.id,
-                'employee_id': travel.employee_id.id,
-                'route_id': travel.route_id.id,
-                'departure_id': travel.route_id.departure_id.id,
-                'arrival_id': travel.route_id.arrival_id.id,
-                'travel_id': travel_id,
-                'operation_id': travel.operation_id.id,
-            }}
-        return {'value': {'travel_id': travel_id}}
+        # for travel in self.pool.get('tms.travel').browse([travel_id]):
+        #     return {'value': {
+        #         'waybill_type':
+        #          'outsourced' if (travel.unit_id.supplier_unit) else 'own',
+        #         'unit_id': travel.unit_id.id,
+        #         'trailer1_id': travel.trailer1_id.id,
+        #         'dolly_id': travel.dolly_id.id,
+        #         'trailer2_id': travel.trailer2_id.id,
+        #         'employee_id': travel.employee_id.id,
+        #         'route_id': travel.route_id.id,
+        #         'departure_id': travel.route_id.departure_id.id,
+        #         'arrival_id': travel.route_id.arrival_id.id,
+        #         'travel_id': travel_id,
+        #         'operation_id': travel.operation_id.id,
+        #     }}
+        # return {'value': {'travel_id': travel_id}}
+        return 'comida'
 
     def onchange_partner_id(self, partner_id):
-        if not partner_id:
-            return {'value': {'partner_invoice_id': False,
-                              'partner_order_id': False,
-                              'payment_term': False,
-                              'user_id': False}
-                    }
-        addr = self.pool.get('res.partner').address_get(
-            [partner_id], ['invoice', 'contact', 'default', 'delivery'])
-        part = self.pool.get('res.partner').browse(partner_id)
-        payment_term = (part.property_payment_term and
-                        part.property_payment_term.id or False)
-        dedicated_salesman = part.user_id and part.user_id.id or self
-        val = {
-            'partner_invoice_id':
-                addr['invoice'] if addr['invoice'] else addr['default'],
-            'partner_order_id':
-                addr['contact'] if addr['contact'] else addr['default'],
-            'payment_term': payment_term,
-            'user_id': dedicated_salesman,
-        }
-        return {'value': val}
+        # if not partner_id:
+        #     return {'value': {'partner_invoice_id': False,
+        #                       'partner_order_id': False,
+        #                       'payment_term': False,
+        #                       'user_id': False}
+        #             }
+        # addr = self.pool.get('res.partner').address_get(
+        #     [partner_id], ['invoice', 'contact', 'default', 'delivery'])
+        # part = self.pool.get('res.partner').browse(partner_id)
+        # payment_term = (part.property_payment_term and
+        #                 part.property_payment_term.id or False)
+        # dedicated_salesman = part.user_id and part.user_id.id or self
+        # val = {
+        #     'partner_invoice_id':
+        #         addr['invoice'] if addr['invoice'] else addr['default'],
+        #     'partner_order_id':
+        #         addr['contact'] if addr['contact'] else addr['default'],
+        #     'payment_term': payment_term,
+        #     'user_id': dedicated_salesman,
+        # }
+        # return {'value': val}
+        return 'comida'
 
     def copy(self, cr, uid, id, default=None, context=None):
-        default = default or {}
-        default.update({
-            'name': False,
-            'state': 'draft',
-            'invoice_id': False,
-            'cancelled_by': False,
-            'date_cancelled': False,
-            'approved_by': False,
-            'date_approved': False,
-            'confirmed_by': False,
-            'date_confirmed': False,
-            'drafted_by': False,
-            'date_drafted': False,
-            'replaced_waybill_id': False,
-            'move_id': False,
-            'user_id': uid,
-        })
+        # default = default or {}
+        # default.update({
+        #     'name': False,
+        #     'state': 'draft',
+        #     'invoice_id': False,
+        #     'cancelled_by': False,
+        #     'date_cancelled': False,
+        #     'approved_by': False,
+        #     'date_approved': False,
+        #     'confirmed_by': False,
+        #     'date_confirmed': False,
+        #     'drafted_by': False,
+        #     'date_drafted': False,
+        #     'replaced_waybill_id': False,
+        #     'move_id': False,
+        #     'user_id': uid,
+        # })
 
-        return super(TmsWaybill, self).copy(cr, uid, id, default, context)
+        # return super(TmsWaybill, self).copy(cr, uid, id, default, context)
+        return 'comida'
 
     def action_cancel_draft(self, *args):
-        if not len(self):
-            return False
+        # if not len(self):
+        #     return False
 
-        for waybill in self.browse(self):
-            if (waybill.travel_id.id) and waybill.travel_id.state in (
-                    'cancel'):
-                raise Warning(
-                    _('Could not set to draft this Waybill !'),
-                    _('Travel is Cancelled !!!'))
-            else:
-                self.write({
-                    'state': 'draft',
-                    'drafted_by': self,
-                    'date_drafted':
-                    time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-        return True
+        # for waybill in self.browse(self):
+        #     if (waybill.travel_id.id) and waybill.travel_id.state in (
+        #             'cancel'):
+        #         raise Warning(
+        #             _('Could not set to draft this Waybill !'),
+        #             _('Travel is Cancelled !!!'))
+        #     else:
+        #         self.write({
+        #             'state': 'draft',
+        #             'drafted_by': self,
+        #             'date_drafted':
+        #             time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        # return True
+        return 'comida'
 
     def action_approve(self):
         # print "action_approve"
-        for waybill in self.browse(self):
-            if waybill.state in ('draft'):
-                if not waybill.sequence_id.id:
-                    raise Warning(
-                        'Could not Approve Waybill !',
-                        'You have not selected a valid Waybill Sequence')
-                elif not waybill.name:
-                    seq_id = waybill.sequence_id.id
-                    seq_number = self.pool.get('ir.sequence').get_id(seq_id)
-                else:
-                    seq_number = waybill.name
+        # for waybill in self.browse(self):
+        #     if waybill.state in ('draft'):
+        #         if not waybill.sequence_id.id:
+        #             raise Warning(
+        #                 'Could not Approve Waybill !',
+        #                 'You have not selected a valid Waybill Sequence')
+        #         elif not waybill.name:
+        #             seq_id = waybill.sequence_id.id
+        #             seq_number = self.pool.get('ir.sequence').get_id(seq_id)
+        #         else:
+        #             seq_number = waybill.name
 
-                self.write({
-                    'name': seq_number,
-                    'state': 'approved',
-                    'approved_by': self,
-                    'date_approved':
-                    time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-        return True
+        #         self.write({
+        #             'name': seq_number,
+        #             'state': 'approved',
+        #             'approved_by': self,
+        #             'date_approved':
+        #             time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        # return True
+        return 'comida'
 
     def action_confirm(self):
         # print "action_confirm"
         # *******************
-        move_obj = self.pool.get('account.move')
-        period_obj = self.pool.get('account.period')
-        account_jrnl_obj = self.pool.get('account.journal')
-        cur_obj = self.pool.get('res.currency')
-        for waybill in self.browse(self):
-            company_currency = self.pool['res.company'].browse(
-                waybill.company_id.id).currency_id.id
-            if waybill.amount_untaxed <= 0.0:
-                raise Warning(
-                    _('Could not confirm Waybill !'),
-                    _('Total Amount must be greater than zero.'))
-            elif not waybill.travel_id.id:
-                raise Warning(
-                    _('Could not confirm Waybill !'),
-                    _('Waybill must be assigned to a Travel before \
-                        confirming.'))
-            elif waybill.billing_policy == 'automatic':
-                # print "Entrando para generar la factura en automatico..."
-                wb_invoice = self.pool.get('tms.waybill.invoice')
-                wb_invoice.makeWaybillInvoices(self)
+        # move_obj = self.pool.get('account.move')
+        # period_obj = self.pool.get('account.period')
+        # account_jrnl_obj = self.pool.get('account.journal')
+        # cur_obj = self.pool.get('res.currency')
+        # for waybill in self.browse(self):
+        #     company_currency = self.pool['res.company'].browse(
+        #         waybill.company_id.id).currency_id.id
+        #     if waybill.amount_untaxed <= 0.0:
+        #         raise Warning(
+        #             _('Could not confirm Waybill !'),
+        #             _('Total Amount must be greater than zero.'))
+        #     elif not waybill.travel_id.id:
+        #         raise Warning(
+        #             _('Could not confirm Waybill !'),
+        #             _('Waybill must be assigned to a Travel before \
+        #                 confirming.'))
+        #     elif waybill.billing_policy == 'automatic':
+        #         # print "Entrando para generar la factura en automatico..."
+        #         wb_invoice = self.pool.get('tms.waybill.invoice')
+        #         wb_invoice.makeWaybillInvoices(self)
 
-            period_id = period_obj.search(
-                [('date_start', '<=', waybill.date_order),
-                 ('date_stop', '>=', waybill.date_order),
-                 ('state', '=', 'draft')], context=None)
+        #     period_id = period_obj.search(
+        #         [('date_start', '<=', waybill.date_order),
+        #          ('date_stop', '>=', waybill.date_order),
+        #          ('state', '=', 'draft')], context=None)
 
-            if not period_id:
-                raise Warning(
-                    _('Warning !'),
-                    _('There is no valid account period for this date %s. \
-                        Period does not exists or is already closed\
-                        ') % (waybill.date_order,))
-            journal_id = account_jrnl_obj.search(
-                [('type', '=', 'general'),
-                 ('tms_waybill_journal', '=', 1)], context=None)
-            if not journal_id:
-                raise Warning(
-                    'Error !',
-                    'You have not defined Waybill Journal...')
-            journal_id = journal_id and journal_id[0]
-            move_lines = []
+        #     if not period_id:
+        #         raise Warning(
+        #             _('Warning !'),
+        #             _('There is no valid account period for this date %s. \
+        #                 Period does not exists or is already closed\
+        #                 ') % (waybill.date_order,))
+        #     journal_id = account_jrnl_obj.search(
+        #         [('type', '=', 'general'),
+        #          ('tms_waybill_journal', '=', 1)], context=None)
+        #     if not journal_id:
+        #         raise Warning(
+        #             'Error !',
+        #             'You have not defined Waybill Journal...')
+        #     journal_id = journal_id and journal_id[0]
+        #     move_lines = []
 
-            precision = self.pool.get('decimal.precision').precision_get(
-                'Account')
-            notes = _(
-                "Waybill: %s\nTravel: %s\nDriver: (ID %s) %s\nVehicle: %s\
-                ") % (
-                waybill.name, waybill.travel_id.name,
-                waybill.travel_id.employee_id.id,
-                waybill.travel_id.employee_id.name,
-                waybill.travel_id.unit_id.name)
-            # #print "notes: ", notes
+        #     precision = self.pool.get('decimal.precision').precision_get(
+        #         'Account')
+        #     notes = _(
+        #         "Waybill: %s\nTravel: %s\nDriver: (ID %s) %s\nVehicle: %s\
+        #         ") % (
+        #         waybill.name, waybill.travel_id.name,
+        #         waybill.travel_id.employee_id.id,
+        #         waybill.travel_id.employee_id.name,
+        #         waybill.travel_id.unit_id.name)
+        #     # #print "notes: ", notes
 
-            for waybill_line in waybill.waybill_line:
-                if not waybill_line.line_type == "product":
-                    continue
-                tms_prod_income_account = (
-                    waybill_line.product_id.tms_property_account_income.id if
-                    waybill_line.product_id.tms_property_account_income.id else
-                    (waybill_line.product_id.categ_id.
-                     tms_property_account_income_categ.id)
-                    if (waybill_line.product_id.categ_id.
-                        tms_property_account_income_categ.id)
-                    else False)
-                prod_income_account = ((waybill_line.product_id.
-                                        property_account_income.id)
-                                       if (waybill_line.product_id.
-                                           property_account_income.id) else
-                                       (waybill_line.product_id.categ_id.
-                                        property_account_income_categ.id) if
-                                       (waybill_line.product_id.categ_id.
-                                        property_account_income_categ.id)
-                                       else False)
+        #     for waybill_line in waybill.waybill_line:
+        #         if not waybill_line.line_type == "product":
+        #             continue
+        #         tms_prod_income_account = (
+        #             waybill_line.product_id.tms_property_account_income.id if
+        #        waybill_line.product_id.tms_property_account_income.id else
+        #             (waybill_line.product_id.categ_id.
+        #              tms_property_account_income_categ.id)
+        #             if (waybill_line.product_id.categ_id.
+        #                 tms_property_account_income_categ.id)
+        #             else False)
+        #         prod_income_account = ((waybill_line.product_id.
+        #                                 property_account_income.id)
+        #                                if (waybill_line.product_id.
+        #                                    property_account_income.id) else
+        #                                (waybill_line.product_id.categ_id.
+        #                                 property_account_income_categ.id) if
+        #                                (waybill_line.product_id.categ_id.
+        #                                 property_account_income_categ.id)
+        #                                else False)
 
-                if not (tms_prod_income_account & prod_income_account):
-                    raise Warning(
-                        'Error !',
-                        _('You have not defined Income Account for product %s\
-                            ') % (waybill_line.product_id.name))
-                xsubtotal = cur_obj.compute(
-                    waybill.currency_id.id, company_currency,
-                    waybill_line.price_subtotal,
-                    context={'date': waybill.date_order})
-                move_line = (0, 0, {
-                    'name': _('Waybill: %s - Product: %s') % (
-                        waybill.name, waybill_line.name),
-                    'account_id': tms_prod_income_account,
-                    'debit': 0.0,
-                    'credit': round(xsubtotal, precision),
-                    'journal_id': journal_id,
-                    'period_id': period_id[0],
-                    'product_id': waybill_line.product_id.id,
-                    'sale_shop_id': waybill.travel_id.shop_id.id,
-                    'vehicle_id': waybill.travel_id.unit_id.id,
-                    'employee_id': waybill.travel_id.employee_id.id,
-                    'currency_id': (
-                        waybill.currency_id.id != company_currency and
-                        waybill.currency_id.id or False),
-                    'amount_currency': (
-                        waybill.currency_id.id != company_currency and
-                        (waybill_line.price_subtotal * -1.0) or False),
-                })
-                move_lines.append(move_line)
-                move_line = (0, 0, {
-                    'name': _('Waybill: %s - Product: %s') % (
-                        waybill.name, waybill_line.name),
-                    'account_id': prod_income_account,
-                    'debit': round(xsubtotal, precision),
-                    'credit': 0.0,
-                    'journal_id': journal_id,
-                    'period_id': period_id[0],
-                    'sale_shop_id': waybill.travel_id.shop_id.id,
-                    'vehicle_id': waybill.travel_id.unit_id.id,
-                    'employee_id': waybill.travel_id.employee_id.id,
-                    'currency_id': (
-                        waybill.currency_id.id != company_currency and
-                        waybill.currency_id.id or False),
-                    'amount_currency': (
-                        waybill.currency_id.id != company_currency and
-                        waybill_line.price_subtotal or False),
-                })
-                move_lines.append(move_line)
+        #         if not (tms_prod_income_account & prod_income_account):
+        #             raise Warning(
+        #                 'Error !',
+        #             _('You have not defined Income Account for product %s\
+        #                     ') % (waybill_line.product_id.name))
+        #         xsubtotal = cur_obj.compute(
+        #             waybill.currency_id.id, company_currency,
+        #             waybill_line.price_subtotal,
+        #             context={'date': waybill.date_order})
+        #         move_line = (0, 0, {
+        #             'name': _('Waybill: %s - Product: %s') % (
+        #                 waybill.name, waybill_line.name),
+        #             'account_id': tms_prod_income_account,
+        #             'debit': 0.0,
+        #             'credit': round(xsubtotal, precision),
+        #             'journal_id': journal_id,
+        #             'period_id': period_id[0],
+        #             'product_id': waybill_line.product_id.id,
+        #             'sale_shop_id': waybill.travel_id.shop_id.id,
+        #             'vehicle_id': waybill.travel_id.unit_id.id,
+        #             'employee_id': waybill.travel_id.employee_id.id,
+        #             'currency_id': (
+        #                 waybill.currency_id.id != company_currency and
+        #                 waybill.currency_id.id or False),
+        #             'amount_currency': (
+        #                 waybill.currency_id.id != company_currency and
+        #                 (waybill_line.price_subtotal * -1.0) or False),
+        #         })
+        #         move_lines.append(move_line)
+        #         move_line = (0, 0, {
+        #             'name': _('Waybill: %s - Product: %s') % (
+        #                 waybill.name, waybill_line.name),
+        #             'account_id': prod_income_account,
+        #             'debit': round(xsubtotal, precision),
+        #             'credit': 0.0,
+        #             'journal_id': journal_id,
+        #             'period_id': period_id[0],
+        #             'sale_shop_id': waybill.travel_id.shop_id.id,
+        #             'vehicle_id': waybill.travel_id.unit_id.id,
+        #             'employee_id': waybill.travel_id.employee_id.id,
+        #             'currency_id': (
+        #                 waybill.currency_id.id != company_currency and
+        #                 waybill.currency_id.id or False),
+        #             'amount_currency': (
+        #                 waybill.currency_id.id != company_currency and
+        #                 waybill_line.price_subtotal or False),
+        #         })
+        #         move_lines.append(move_line)
 
-            move = {
-                'ref': _('Waybill: %s') % (waybill.name),
-                'journal_id': journal_id,
-                'narration': notes,
-                'line_id': [x for x in move_lines],
-                'date': waybill.date_order,
-                'period_id': period_id[0],
-            }
-            move_id = move_obj.create(move)
-            if move_id:
-                move_obj.button_validate([move_id])
-            self.write({
-                'move_id': move_id,
-                'state': 'confirmed',
-                'confirmed_by': self,
-                'date_confirmed':
-                time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-        return True
+        #     move = {
+        #         'ref': _('Waybill: %s') % (waybill.name),
+        #         'journal_id': journal_id,
+        #         'narration': notes,
+        #         'line_id': [x for x in move_lines],
+        #         'date': waybill.date_order,
+        #         'period_id': period_id[0],
+        #     }
+        #     move_id = move_obj.create(move)
+        #     if move_id:
+        #         move_obj.button_validate([move_id])
+        #     self.write({
+        #         'move_id': move_id,
+        #         'state': 'confirmed',
+        #         'confirmed_by': self,
+        #         'date_confirmed':
+        #         time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        # return True
+        return 'comida'
 
     def button_dummy(self, cr, uid, ids, context=None):
-        return True
+        # return True
+        return 'comida'
 
 
 #    def copy(self, cr, uid, id, default=None, context=None):

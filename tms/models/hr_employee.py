@@ -1,26 +1,9 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding: utf-8 -*-
+# © <2016> <Jarsa Sistemas, S.A. de C.V.>
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 
-from openerp import models, fields
+from openerp import fields, models
 
 
 class HrEmployee(models.Model):
@@ -79,9 +62,9 @@ class HrEmployee(models.Model):
     tms_supplier_id = fields.Many2one(
         'res.partner', 'Supplier',
         domain=[('supplier', '=', 1)])
-    tms_global_salary = fields.Float(
-        compute='job_id.tms_global_salary',
-        digits=(18, 6), string='Salary', readonly=True)
+    # tms_global_salary = fields.Float(
+    #     compute='job_id.tms_global_salary',
+    #     digits=(18, 6), string='Salary', readonly=True)
     tms_alimony = fields.Float('Alimony', digits=(18, 6))
     tms_alimony_prod_id = fields.Many2one(
         'product.product', 'Alimony Product',
@@ -109,6 +92,6 @@ class HrEmployee(models.Model):
         'product.product', 'Salary Tax Product',
         domain=[('tms_category', '=', 'salary_retention')])
     tms_global_salary = fields.Float(
-        'Global Salary', digits=(18, 6)),
-    shop_id = fields.Many2one('sale.shop', 'Shop')
+        'Global Salary', digits=(18, 6))
+    # shop_id = fields.Many2one('sale.shop', 'Shop')
     # , domain=[('company_id', '=', user.company_id.id)]),

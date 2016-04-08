@@ -19,9 +19,7 @@
 #
 ##############################################################################
 
-from openerp import models, fields
-
-# Additionat field to set Account Journal for Advances and Travel Expenses
+from openerp import fields, models
 
 
 class AccountJournal(models.Model):

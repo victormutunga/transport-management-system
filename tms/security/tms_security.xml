@@ -186,39 +186,138 @@
     
     
 <!-- Menus access -->
-    <record model="ir.ui.menu" id="menu_tms"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_advance_form"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_config"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_config_event_action_form"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_config_event_category_form"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_config_fleet_vehicle_odometer_device_form"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_config_product"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_config_product_product"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_config_product_product_category"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_config_route_form"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_config_route_place_form"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_config_route_tollstation_form"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_config_routes"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_config_unit"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_config_unit_active_history_form"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_config_unit_category_form"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_config_unit_form"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_config_unit_kit_form"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_config_unit_red_tape_form"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_config_waybill"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_config_waybill_category_form"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_event_form"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_events"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_expense"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_factor"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_factor_special_form"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_fuelvoucher_form"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_operation_form"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_product_by_category_stock_form"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_reporting"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_travel_form"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_travels"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
-    <record model="ir.ui.menu" id="menu_tms_waybill"><field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/></record>
+    <record model="ir.ui.menu" id="menu_tms">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_advance_form">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_config">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_config_event_action_form">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_config_event_category_form">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_config_fleet_vehicle_odometer_device_form">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_config_product">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_config_product_product">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_config_product_product_category">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_config_route_form">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_config_route_place_form">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_config_route_tollstation_form">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_config_routes">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_config_unit">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_config_unit_active_history_form">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_config_unit_category_form">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_config_unit_form">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_config_unit_kit_form">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_config_unit_red_tape_form">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_config_waybill">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_config_waybill_category_form">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_event_form">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_events">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_expense">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_factor">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_factor_special_form">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_fuelvoucher_form">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_operation_form">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_product_by_category_stock_form">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_reporting">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_travel_form">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_travels">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
+    <record model="ir.ui.menu" id="menu_tms_waybill">
+        <field name='name'>menu_tms</field>
+        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+    </record>
 
 
 

@@ -19,10 +19,11 @@
 #
 ##############################################################################
 
-
-from openerp import models, fields
-import simplejson as json
 import urllib as my_urllib
+
+from openerp import fields, models
+
+import simplejson as json
 
 
 # Cities / Places
@@ -37,15 +38,19 @@ class TmsPlace(models.Model):
             res[record.id] = xname
         return res
 
-    company_id = fields.Many2one('res.company', 'Company', required=False)
+    # company_id = fields.Many2one('res.company', 'Company', required=False)
     name = fields.Char('Place', size=64, required=True, select=True)
     complete_name = fields.Char(
         compute=_get_place_and_state, method=True, size=100,
         string='Complete Name', store=True)
     state_id = fields.Many2one(
-        'res.country.state', 'State Name', required=True)
+        'res.country.state',
+        string='State Name',
+        required=True)
     country_id = fields.Many2one(
-        'state_id', 'country_id', relation='res.country')
+        'res.country',
+        related='state_id.country_id',
+        string='Country')
     latitude = fields.Float(
         'Latitude', required=False, digits=(20, 10),
         help='GPS Latitude')

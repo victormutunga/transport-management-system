@@ -19,13 +19,13 @@
 #
 ##############################################################################
 
-
-from openerp import models, fields, api
-from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-import openerp.addons.decimal_precision as dp
 import time
+
+from openerp import api, fields, models
+import openerp.addons.decimal_precision as dp
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from openerp.tools.translate import _
 
 
 # Travel - Money advance payments for Travel expenses
@@ -79,12 +79,12 @@ class TmsAdvance(models.Model):
                 [('move_id', 'in', move.keys())])
         return advance_ids
 
-    operation_id = fields.Many2one(
-        'tms.operation', 'Operation', ondelete='restrict', required=False,
-        readonly=False,
-        states={'cancel': [('readonly', True)],
-                'confirmed': [('readonly', True)],
-                'closed': [('readonly', True)]})
+    # operation_id = fields.Many2one(
+    #     'tms.operation', 'Operation', ondelete='restrict', required=False,
+    #     readonly=False,
+    #     states={'cancel': [('readonly', True)],
+    #             'confirmed': [('readonly', True)],
+    #             'closed': [('readonly', True)]})
     name = fields.Char('Anticipo', size=64, required=False)
     state = fields.Selection(
         [('draft', 'Draft'), ('approved', 'Approved'),
@@ -116,7 +116,7 @@ class TmsAdvance(models.Model):
         states={'cancel': [('readonly', True)],
                 'confirmed': [('readonly', True)],
                 'closed': [('readonly', True)]}, required=True)
-    shop_id = fields.Many2one('sale.shop', string='Shop')
+    # shop_id = fields.Many2one('sale.shop', string='Shop')
     product_id = fields.Many2one(
         'product.product', 'Product',
         domain=[('purchase_ok', '=', 1),
@@ -178,8 +178,9 @@ class TmsAdvance(models.Model):
         is only for Travel Expense Records with balance < 0.0")
     paid = fields.Boolean(
         compute=_paid, method=True, string='Paid', multi=False,
-        store={'account.move.reconcile': (
-            _get_move_line_from_reconcile, None, 50)})
+        store=True)
+    # {'account.move.reconcile': (
+    #     _get_move_line_from_reconcile, None, 50)})
     currency_id = fields.Many2one(
         'res.currency', 'Currency', required=True,
         states={'cancel': [('readonly', True)],

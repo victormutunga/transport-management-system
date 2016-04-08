@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import models, fields
+from openerp import fields, models
 from openerp.tools.translate import _
 
 

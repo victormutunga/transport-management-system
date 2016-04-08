@@ -32,7 +32,7 @@
               <field name="waybill_type" invisible="1"/>
               <field name="waybill_category" invisible="1"/>
 	          <field name="product_uom_type" invisible="1"/>
-              <field name="operation_id" invisible="1"/>
+              <!-- <field name="operation_id" invisible="1"/> -->
               <field name="state"/>
 	          <button name="action_approve" states="draft" string="Approve" type="object" icon="gtk-go-forward" groups="tms.group_waybill_approve"/>
 	          <button name="action_confirm" states="approved" string="Confirm" type="object" icon="gtk-goto-last" groups="tms.group_waybill_confirm"/>
@@ -65,7 +65,7 @@
                         <field name="sequence_id" on_change="onchange_sequence_id(sequence_id)" required="1" 
                                 context="{'default_tms_waybill_sequence': 1,'default_shop_id': shop_id}"
                                 domain="[('shop_id','=',shop_id)]" />
-                        <field name="operation_id" />
+                        <!-- <field name="operation_id" /> -->
                         <field name="waybill_category" domain="['|',('shop_id','=',shop_id),('shop_id','=',False)]" />
                         <separator string="·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·" colspan="4" style="text-align: center;"/>
                         <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True), ('is_company', '=', True)]"  colspan="4"/>
@@ -351,7 +351,7 @@
 	      <field name="departure_id" />
 	      <field name="arrival_id" />
 	      <field name="product_uom_type" />
-          <field name="operation_id" />
+          <!-- <field name="operation_id" /> -->
           
           <separator/>
           <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','draft')]"/>
@@ -382,7 +382,7 @@
             <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
             <filter string='Shop' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'shop_id'}" />	    
             <filter string='Supplier' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'supplier_id'}" />	    
-            <filter string='Operation' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'operation_id'}" />
+            <!-- <filter string='Operation' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'operation_id'}" /> -->
             <filter string='Period' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'date_order'}" />
 
           </group>

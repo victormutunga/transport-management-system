@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="operating_unit_tms_form">
+            <field name="name">operating_unit_tms.form</field>
+            <field name="model">operating.unit</field>
+            <field name="inherit_id" ref="operating_unit.view_operating_unit_form"/>
+            <field name="arch" type="xml">
+                <field name="company_id" position="after">
+                    <group string="TMS">
+                        <field name="tms_travel_seq"/>
+                        <field name="tms_advance_seq"/>
+                        <field name="tms_travel_expenses_seq"/>
+                        <field name="tms_fuel_sequence_ids"/>
+                    </group>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>

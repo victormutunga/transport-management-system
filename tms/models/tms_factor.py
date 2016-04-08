@@ -19,14 +19,14 @@
 #
 ##############################################################################
 
-from openerp import models, fields
+from openerp import fields, models
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 
 
 # Extra data fields for Waybills & Agreement
 # Factors
-class tms_factor(models.Model):
+class TmsFactor(models.Model):
     _name = "tms.factor"
     _description = "Factors to calculate Payment (Driver/Supplier) & Client \
                         charge"

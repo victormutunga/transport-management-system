@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <record id="tms_travel_sequence" model="ir.sequence">
+        <field name="name">Travel Sequence</field>
+        <field name="implementation">no_gap</field>
+        <field name="prefix">T</field>
+        <field name="padding">4</field>
+        <field name="number_increment">1</field>
+        <field name="number_next_actual">1</field>
+    </record>
+    <record id="tms_advance_sequence" model="ir.sequence">
+        <field name="name">Advance Sequence</field>
+        <field name="implementation">no_gap</field>
+        <field name="prefix">A</field>
+        <field name="padding">4</field>
+        <field name="number_increment">1</field>
+        <field name="number_next_actual">1</field>
+    </record>
+    <record id="tms_travel_expenses_sequence" model="ir.sequence">
+        <field name="name">Travel Expenses Sequence</field>
+        <field name="implementation">no_gap</field>
+        <field name="prefix">E</field>
+        <field name="padding">4</field>
+        <field name="number_increment">1</field>
+        <field name="number_next_actual">1</field>
+    </record>
+    <record id="tms_fuel_sequence" model="ir.sequence">
+        <field name="name">Fuel Sequence</field>
+        <field name="implementation">no_gap</field>
+        <field name="prefix">F</field>
+        <field name="padding">4</field>
+        <field name="number_increment">1</field>
+        <field name="number_next_actual">1</field>
+    </record>
+    <record id="operating_unit.main_operating_unit" model="operating.unit">
+        <field name="tms_travel_seq" ref="tms_travel_sequence"/>
+        <field name="tms_advance_seq" ref="tms_advance_sequence"/>
+        <field name="tms_travel_expenses_seq" ref="tms_travel_expenses_sequence"/>
+        <field name="tms_fuel_sequence_ids" ref="tms_fuel_sequence"/>
+    </record>
+</openerp>

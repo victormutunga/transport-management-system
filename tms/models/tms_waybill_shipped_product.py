@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import models, fields
+from openerp import fields, models
 
 # Class for Waybill Shipped Products
 
@@ -50,17 +50,25 @@ class TmsWaybillShippedProduct(models.Model):
         default=1)
     notes = fields.Text('Notes')
     waybill_partner_id = fields.Many2one(
-        'waybill_id', 'partner_id', relation='res.partner', store=True,
+        'res.partner',
+        related='waybill_id.partner_id',
+        store=True,
         string='Customer')
     salesman_id = fields.Many2one(
-        'waybill_id', 'user_id', relation='res.users', store=True,
+        'res.users',
+        related='waybill_id.user_id',
+        store=True,
         string='Salesman')
-    shop_id = fields.Many2one(
-        'waybill_id', 'shop_id', relation='sale.shop', string='Shop',
-        store=True, readonly=True)
-    company_id = fields.Many2one(
-        'waybill_id', 'company_id', relation='res.company', string='Company',
-        store=True, readonly=True)
+    # shop_id = fields.Many2one(
+    #     'sale.shop',
+    #     related='waybill_id.shop_id.id',
+    #     string='Shop',
+    #     store=True, readonly=True)
+    # company_id = fields.Many2one(
+    #     'res.company',
+    #     related='waybill_id.company_id.id',
+    #     string='Company',
+    #     store=True, readonly=True)
     sequence = fields.Integer(
         'Sequence', help="Gives the sequence order when displaying a list of \
         sales order lines.", default=10)
@@ -68,13 +76,13 @@ class TmsWaybillShippedProduct(models.Model):
     _order = 'sequence, id desc'
 
     def on_change_product_id(self, product_id):
-        res = {}
-        if not product_id:
-            return {}
-        prod_obj = self.pool.get('product.product')
-        for product in prod_obj.browse([product_id], context=None):
-            res = {'value': {'product_uom': product.uom_id.id,
-                             'name': product.name}}
-        return res
+        # res = {}
+        # if not product_id:
+        #     return {}
+        # prod_obj = self.pool.get('product.product')
+        # for product in prod_obj.browse([product_id], context=None):
+        #     res = {'value': {'product_uom': product.uom_id.id,
+        #                      'name': product.name}}
+        return 'comida'
 
 TmsWaybillShippedProduct()
