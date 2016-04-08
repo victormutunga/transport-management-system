@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="tms_place_01" model="tms.place">
+        	<field name="name">San Antonio</field>
+        	<field name="state_id" ref="base.state_us_44"></field>
+        </record>
+        <record id="tms_place_02" model="tms.place">
+        	<field name="name">El Paso</field>
+        	<field name="state_id" ref="base.state_us_44"></field>
+        </record>
+        <record id="tms_place_03" model="tms.place">
+        	<field name="name">Houston</field>
+        	<field name="state_id" ref="base.state_us_44"></field>
+        </record>
+    </data>
+</odoo>

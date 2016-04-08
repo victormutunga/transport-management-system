@@ -29,6 +29,8 @@
     "depends": ["hr", "account_voucher", "purchase", "sale", "fleet"],
     "summary": "Management System for Carriers, Trucking and other companies",
     "data": [
+        'security/ir.model.access.csv',
+        'views/tms_view.xml',
         # 'views/account_journal_view.xml',
         # 'views/fleet_vehicle_odometer_view.xml',
         # 'views/fleet_vehicle_view.xml',
@@ -40,12 +42,14 @@
         # 'views/tms_expense_line_view.xml',
         # 'views/tms_expense_view.xml',
         # 'views/tms_factor_view.xml',
-        # 'views/tms_place_view.xml',
+        'views/tms_place_view.xml',
         # 'views/tms_route_view.xml',
         # 'views/tms_travel_view.xml',
         # 'views/tms_unit_kit_view.xml',
-        # 'views/tms_view.xml',
         # 'views/tms_waybill_view.xml',
+    ],
+    "demo": [
+        'demo/tms_place.xml'
     ],
     "application": True,
     "installable": True

@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from openerp import fields, models
-import openerp.addons.decimal_precision as dp
+from openerp import api, fields, models
+# import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 
 
@@ -31,23 +31,11 @@ class TmsFactor(models.Model):
     _description = "Factors to calculate Payment (Driver/Supplier) & Client \
                         charge"
 
-    def _get_total(self, field_name, arg):
-        res = {}
-        for factor in self.browse(self):
-            if factor.factor_type != 'special':
-                res[factor.id] = (factor.factor * factor.variable_amount +
-                                  (factor.fixed_amount
-                                   if factor.mixed else 0.0))
-            else:
-                res[factor.id] = 0.0
-                # Pendiente generar cálculo especial
-        return res
-
     name = fields.Char('Name', size=64, required=True)
     category = fields.Selection([
         ('driver', 'Driver'),
         ('customer', 'Customer'),
-        ('supplier', 'Supplier'), ], 'Type', required=True)
+        ('supplier', 'Supplier')], 'Type', required=True)
     factor_type = fields.Selection([
         ('distance', 'Distance Route (Km/Mi)'),
         ('distance_real', 'Distance Real (Km/Mi)'),
@@ -55,8 +43,7 @@ class TmsFactor(models.Model):
         ('travel', 'Travel'),
         ('qty', 'Quantity'),
         ('volume', 'Volume'),
-        ('percent', 'Income Percent'),
-        ('special', 'Special'), ], 'Factor Type', required=True, help="""
+        ('percent', 'Income Percent')], 'Factor Type', required=True, help="""
 For next options you have to type Ranges or Fixed Amount
  - Distance Route (Km/mi)
  - Distance Real (Km/Mi)
@@ -67,8 +54,6 @@ For next option you only have to type Fixed Amount:
  - Travel
 For next option you only have to type Factor like 10.5 for 10.50%:
  - Income Percent
-For next option you only have to type Special Python Code:
- - Special
                         """)
     framework = fields.Selection([
                                 ('Any', 'Any'),
@@ -81,43 +66,15 @@ For next option you only have to type Special Python Code:
     factor = fields.Float('Factor', digits=(16, 4))
     fixed_amount = fields.Float('Fixed Amount', digits=(16, 4))
     mixed = fields.Boolean('Mixed', default=False)
-    factor_special_id = fields.Many2one('tms.factor.special', 'Special')
-    variable_amount = fields.Float('Variable', digits=(16, 4), default=0.0)
-    total_amount = fields.Float(
-        compute=_get_total, method=True,
-        digits_compute=dp.get_precision('Sale Price'), string='Total',
-        store=True)
-#   waybill_ids = fields.Many2many('tms.waybill', 'tms_factor_waybill_rel',
-#               'factor_id', 'waybill_id', 'Waybills with this factor'),
-#   expense_ids = fields.Many2many('tms.expense', 'tms_factor_expense_rel',
-#               'factor_id', 'expense_id', 'Expenses with this factor'),
-#   route_ids = fields.Many2many('tms.route',   'tms_factor_route_rel',
-#               'factor_id', 'route_id',   'Routes with this factor'),
-#   travel_ids = fields.Many2many('tms.travel',  'tms_factor_travel_rel',
-#               'factor_id', 'travel_id',  'Travels with this factor'),
-    waybill_id = fields.Many2one(
-        'tms.waybill', 'Waybill', required=False, ondelete='cascade')
-# , select=True, readonly=True),
-    expense_id = fields.Many2one(
-        'tms.expense', 'Expense', required=False, ondelete='cascade')
-# , select=True, readonly=True),
-    route_id = fields.Many2one(
-        'tms.route', 'Route', required=False, ondelete='cascade')
-# , select=True, readonly=True),
-    travel_id = fields.Many2one(
-        'tms.travel', 'Travel', required=False, ondelete='cascade')
-# , select=True, readonly=True),
-#   'agreement_id': fields.many2one('tms.negotiation', 'Negotiation',
-# required=False, ondelete='cascade'),# select=True, readonly=True),
     sequence = fields.Integer(
         'Sequence', help="Gives the sequence calculation for these factors.",
         default=10)
     notes = fields.Text('Notes')
-    control = fields.Boolean('Control')
     driver_helper = fields.Boolean('For Driver Helper')
 
     _order = "sequence"
 
+    @api.multi
     def on_change_factor_type(self, factor_type):
         if not factor_type:
             return {'value': {'name': False}}
@@ -129,7 +86,6 @@ For next option you only have to type Special Python Code:
             'qty': _('Quantity'),
             'volume': _('Volume'),
             'percent': _('Income Percent'),
-            'special': _('Special'),
         }
         return {'value': {'name': values[factor_type]}}
 
@@ -185,14 +141,10 @@ For next option you only have to type Special Python Code:
                         x = float(waybill.amount_freight) / 100.0
                     elif factor.factor_type == 'travel':
                         x = 0.0
-                    elif factor.factor_type == 'special':
-                        exec factor.factor_special_id.python_code
                     result += (
                         ((factor.fixed_amount if (
                             factor.mixed or
-                            factor.factor_type == 'travel') else 0.0) +
-                         (factor.factor * x
-                            if factor.factor_type != 'special' else x))
+                            factor.factor_type == 'travel') else 0.0))
                         if (((x >= factor.range_start and
                               x <= factor.range_end) or
                             (factor.range_start ==
@@ -245,13 +197,9 @@ For next option you only have to type Special Python Code:
                             x = float(volume)
                         elif factor.factor_type == 'travel':
                             x = 0.0
-                        elif factor.factor_type == 'special':
-                            exec factor.factor_special_id.python_code
                         res2 += (((factor.fixed_amount if
                                    (factor.mixed or
-                                    factor.factor_type == 'travel') else 0.0) +
-                                  (factor.factor * x if
-                                   factor.factor_type != 'special' else x))
+                                    factor.factor_type == 'travel') else 0.0))
                                  if (((x >= factor.range_start and
                                        x <= factor.range_end) or
                                      (factor.range_start ==
@@ -260,17 +208,3 @@ For next option you only have to type Special Python Code:
                                      driver_helper) else 0.0)
                 result += res1 + res2
         return result
-
-    def _check_only_one(self, cr, uid, ids, context=None):
-        for rec in self.browse(cr, uid, ids):
-            cr.execute("select count(id) from tms_factor_special where \
-                type='%s' and active;" % (rec.type))
-        count = filter(None, map(lambda x: x[0], cr.fetchall()))
-        if count and count[0] > 1:
-            return False
-        return True
-
-    _constraints = [
-        (_check_only_one, _('Error ! You can not have two active Factor with \
-            the same Type'), ['type']),
-    ]

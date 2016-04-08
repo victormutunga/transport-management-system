@@ -14,7 +14,7 @@ TMS.FACTOR
           <field name="priority">2</field>
           <field name="arch" type="xml">
 	        <tree string="Billing Factors">
-	          <field name="category" invisible="1" /> 
+	          <field name="category" /> 
 	          <field name="name" />
 	          <field name="factor_type" />
 	          <field name="factor" />
@@ -35,9 +35,7 @@ TMS.FACTOR
           <field name="arch" type="xml">
 	        <form string="Factors" >
               <group colspan="4" col="4">
-	            <!--					<field name="waybill_id" invisible="1" />
-		            <field name="travel_id" /> -->
-	            <field name="category" invisible="1" />
+	            <field name="category" />
 	            <field name="factor_type" on_change="on_change_factor_type(factor_type)"/>
 	            <field name="name" />
 	            <field name="framework" attrs="{'invisible'	:[('factor_type','not in',('distance','distance_real'))]}"/>
@@ -55,8 +53,6 @@ TMS.FACTOR
 	            <newline/>
 	            <field name="fixed_amount" required="1"/>
 	            <newline />
-	            <field name="factor_special_id"  colspan="4"
-		               attrs="{'invisible':[('factor_type','!=','special')],'required':[('factor_type','=','special')]}"/>
 	            <field name="sequence" />
 	            <field name="driver_helper" />
 	            <field name="notes" colspan="4" />
@@ -64,5 +60,15 @@ TMS.FACTOR
 	        </form>
 	      </field>
 	    </record>
+	    <record model="ir.actions.act_window" id="open_view_tms_factor_form">
+        <field name="name">TMS Factor</field>
+        <field name="res_model">tms.factor</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+	        <menuitem name="Factor" 
+              parent="tms.menu_tms_settings"
+              id="menu_tms_config_route_place_form" 
+              action="open_view_tms_factor_form"/>
     </data>
 </openerp>
