@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 import urllib as my_urllib
-from openerp import fields, models, api
+from openerp import api, fields, models
 import simplejson as json
 
 
@@ -16,7 +16,7 @@ class TmsPlace(models.Model):
     complete_name = fields.Char(compute='_compute_complete_name')
     state_id = fields.Many2one(
         'res.country.state',
-        'State Name',
+        string='State Name',
         required=True)
     country_id = fields.Many2one(
         'res.country',

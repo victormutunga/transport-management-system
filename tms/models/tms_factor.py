@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import fields, models, api
+from openerp import api, fields, models
 # import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 
