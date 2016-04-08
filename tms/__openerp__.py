@@ -48,6 +48,9 @@
         # 'views/tms_unit_kit_view.xml',
         # 'views/tms_waybill_view.xml',
     ],
+    "demo": [
+        'demo/tms_place.xml'
+    ],
     "application": True,
     "installable": True
 }
