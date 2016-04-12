@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 # from . import account_journal
-# from . import fleet_vehicle
+from . import fleet_vehicle
 # from . import fleet_vehicle_odometer
 from . import hr_employee
 # from . import product_category
