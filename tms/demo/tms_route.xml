@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="tms_route_01" model="tms.route">
+            <field name="name">[Company] El Paso - San Antonio</field>
+            <field name="departure_id" ref="tms.tms_place_02"/>
+            <field name='arrival_id' ref="tms.tms_place_01"/>
+        </record>
+        <record id="tms_route_02" model="tms.route">
+            <field name="name">[Company] El Paso - Houston</field>
+            <field name="departure_id" ref="tms.tms_place_02"/>
+            <field name='arrival_id' ref="tms.tms_place_03"/>
+        </record>
+    </data>
+</odoo>

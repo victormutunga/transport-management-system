@@ -3,15 +3,21 @@
     <data>
         <record id="tms_place_01" model="tms.place">
         	<field name="name">San Antonio</field>
-        	<field name="state_id" ref="base.state_us_44"></field>
+        	<field name="state_id" ref="base.state_us_44"/>
+            <field name='latitude'>29.8832749000</field>
+            <field name='longitude'>-97.9413941000</field>
         </record>
         <record id="tms_place_02" model="tms.place">
         	<field name="name">El Paso</field>
-        	<field name="state_id" ref="base.state_us_44"></field>
+        	<field name="state_id" ref="base.state_us_44"/>
+            <field name='latitude'>31.7618778000</field>
+            <field name='longitude'>-106.4850217000</field>
         </record>
         <record id="tms_place_03" model="tms.place">
         	<field name="name">Houston</field>
-        	<field name="state_id" ref="base.state_us_44"></field>
+        	<field name="state_id" ref="base.state_us_44"/>
+            <field name='latitude'>29.7604267000</field>
+            <field name='longitude'>-95.3698028000</field>
         </record>
     </data>
 </odoo>

@@ -28,13 +28,14 @@
         # 'views/tms_expense_view.xml',
         'views/tms_factor_view.xml',
         'views/tms_place_view.xml',
-        # 'views/tms_route_view.xml',
+        'views/tms_route_view.xml',
         # 'views/tms_travel_view.xml',
         # 'views/tms_unit_kit_view.xml',
         # 'views/tms_waybill_view.xml',
     ],
     "demo": [
         'demo/tms_place.xml',
+        'demo/tms_route.xml',
     ],
     "application": True,
     "installable": True

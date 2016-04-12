@@ -19,10 +19,11 @@
 #
 ##############################################################################
 
-import urllib as my_urllib
-
-from openerp import fields, models
+from openerp import api, fields, models
+from openerp.exceptions import UserError
 from openerp.tools.translate import _
+
+import requests
 
 import simplejson as json
 
@@ -33,121 +34,62 @@ class TmsRoute(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = 'Routes'
 
-    # company_id = fields.Many2one('res.company', 'Company', required=False)
     name = fields.Char('Route Name', size=64, required=True, select=True)
     departure_id = fields.Many2one('tms.place', 'Departure', required=True)
     arrival_id = fields.Many2one('tms.place', 'Arrival', required=True)
     distance = fields.Float(
-        'Distance (mi./kms)', required=True, digits=(14, 4),
+        'Distance (mi./kms)', digits=(14, 4),
         help='Route distance (mi./kms)')
-    places_ids = fields.One2many(
-        'tms.route.place', 'route_id', 'Intermediate places in Route')
     travel_time = fields.Float(
-        'Travel Time (hrs)', required=True, digits=(14, 4),
+        'Travel Time (hrs)', digits=(14, 4),
         help='Route travel time (hours)')
-    route_fuelefficiency_ids = fields.One2many(
-        'tms.route.fuelefficiency',
-        'tms_route_id', 'Fuel Efficiency by Motor type')
-    fuel_efficiency_drive_unit = fields.Float(
-        'Fuel Efficiency Drive Unit',
-        required=False,
-        digits=(14, 4))
-    fuel_efficiency_1trailer = fields.Float(
-        'Fuel Efficiency One Trailer',
-        required=False,
-        digits=(14, 4))
-    fuel_efficiency_2trailer = fields.Float(
-        'Fuel Efficiency Two Trailer',
-        required=False,
-        digits=(14, 4))
     notes = fields.Text('Notes')
     active = fields.Boolean('Active', default=True)
-    expense_driver_factor = fields.One2many(
-        'tms.factor', 'route_id', 'Travel Driver Payment Factors',
-        domain=[('category', '=', 'driver')], readonly=False)
-    tms_route_tollstation_ids = fields.Many2many(
-        'tms.route.tollstation', 'tms_route_tollstation_route_rel',
-        'tollstation_id', 'route_id', 'Toll Station in this Route')
 
-    def _check_distance(self, cr, uid, ids, context=None):
-        return (self.browse(cr, uid, ids, context=context)[0].distance > 0)
+    @api.multi
+    def get_route_info(self):
+        for rec in self:
+            departure = {
+                'latitude': rec.departure_id.latitude,
+                'longitude': rec.departure_id.longitude
+            }
+            arrival = {
+                'latitude': rec.arrival_id.latitude,
+                'longitude': rec.arrival_id.longitude
+            }
+            if not departure['latitude'] and not departure['longitude']:
+                raise UserError(_("The departure don't have coordinates."))
+            if not arrival['latitude'] and not arrival['longitude']:
+                raise UserError(_("The arrival don't have coordinates."))
+            url = 'http://maps.googleapis.com/maps/api/distancematrix/json'
+            origins = (str(departure['latitude']) + ',' +
+                       str(departure['longitude']))
+            destinations = (str(arrival['latitude']) + ',' +
+                            str(arrival['longitude']))
+            params = {
+                'origins': origins,
+                'destinations': destinations,
+                'mode': 'driving',
+                'language': self.env.lang,
+                'sensor': 'false',
+            }
+            result = json.loads(requests.get(url, params=params).content)
+            distance = duration = 0.0
+            if result['status'] == 'OK':
+                res = result['rows'][0]['elements'][0]
+                distance = res['distance']['value'] / 1000.0
+                duration = res['duration']['value'] / 3600.0
+            self.distance = distance
+            self.travel_time = duration
 
-    _constraints = [
-        (_check_distance, 'You can not save New Route without Distance!',
-         ['distance']),
-    ]
-
-    def button_get_route_info(self):
-        for rec in self.browse(self):
-            if (rec.departure_id.latitude and rec.departure_id.longitude and
-                    rec.arrival_id.latitude and rec.arrival_id.longitude):
-                destinations = ""
-                origins = (str(rec.departure_id.latitude) + ',' +
-                           str(rec.departure_id.longitude))
-                places = [str(x.place_id.latitude) + ',' +
-                          str(x.place_id.longitude) for x in rec.places_ids
-                          if x.place_id.latitude and x.place_id.longitude]
-                # print "places: ", places
-                for place in places:
-                    origins += "|" + place
-                    destinations += place + "|"
-                destinations += (str(rec.arrival_id.latitude) + ',' +
-                                 str(rec.arrival_id.longitude))
-                # print "origins: ", origins
-                # print "destinations: ", destinations
-                google_url = (
-                    'http://maps.googleapis.com/maps/api/distancematrix/\
-                    json?origins=' + origins + '&destinations=' +
-                    destinations + '&mode=driving' + '&language=' +
-                    self['lang'][:2] + '&sensor=false')
-                result = json.load(my_urllib.urlopen(google_url))
-                if result['status'] == 'OK':
-                    distance = duration = 0.0
-                    if len(rec.places_ids):
-                        i = 0
-                        for row in result['rows']:
-                            # print row
-                            distance += (
-                                row['elements'][i]['distance']
-                                   ['value'] / 1000.0)
-                            duration += (
-                                row['elements'][i]['duration']
-                                   ['value'] / 3600.0)
-                            i += 1
-                    else:
-                        distance = (
-                            result['rows'][0]['elements'][0]
-                                  ['distance']['value'] / 1000.0)
-                        duration = (
-                            result['rows'][0]['elements'][0]
-                                  ['duration']['value'] / 3600.0)
-                    # print "distance: ", distance
-                    # print "duration: ", duration
-
-                    self.write({
-                        'distance': distance, 'travel_time': duration})
-                # else:
-                    # print result['status']
-            else:
-                raise Warning(
-                    _('Error !'),
-                    _('You cannot get route info because one of the places \
-                        has no coordinates.'))
-
-        return True
-
-    def button_open_google(self):
-        for route in self.browse(self):
+    @api.multi
+    def open_in_google(self):
+        for route in self:
             points = (
                 str(route.departure_id.latitude) + ',' +
-                str(route.departure_id.longitude) +
-                (',' if len(route.places_ids) else '') +
-                ','.join([str(x.place_id.latitude) + ',' +
-                         str(x.place_id.longitude) for x in route.places_ids
-                         if x.place_id.latitude and x.place_id.longitude]) +
-                ',' + str(route.arrival_id.latitude) + ',' +
+                str(route.departure_id.longitude) + ',' +
+                str(route.arrival_id.latitude) + ',' +
                 str(route.arrival_id.longitude))
-            # print points
             url = "/tms/static/src/googlemaps/get_route.html?" + points
         return {'type': 'ir.actions.act_url',
                 'url': url,

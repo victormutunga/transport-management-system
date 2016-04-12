@@ -12,7 +12,7 @@ from . import hr_employee
 # from . import tms_expense_line
 from . import tms_factor
 from . import tms_place
-# from . import tms_route
+from . import tms_route
 # from . import tms_travel
 # from . import tms_unit_kit
 # from . import tms_waybill
