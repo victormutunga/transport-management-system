@@ -32,28 +32,28 @@ addons:
 
 env:
   global:
-  - VERSION="9.0" TESTS="0" LINT_CHECK="0" #TRANSIFEX="0"
-  #- TRANSIFEX_USER='transbot@odoo-community.org'
+  - VERSION="9.0" TESTS="0" LINT_CHECK="0" TRANSIFEX="0"
+  - TRANSIFEX_USER='info@jarsa.com.mx'
   # This line contains the encrypted transifex password
   # To encrypt transifex password, install travis ruby utils with:
   #   $ gem install travis --user-install
   # and use:
   #   $ travis encrypt TRANSIFEX_PASSWORD=your-password -r owner/project
   # Secure list for current OCA projects is in https://github.com/OCA/maintainer-quality-tools/issues/194
-  #- secure: PjP88tPSwimBv4tsgn3UcQAD1heK/wcuSaSfhi2xUt/jSrOaTmWzjaW2gH/eKM1ilxPXwlPGyAIShJ2JJdBiA97hQufOeiqxdkWDctnNVVEDx2Tk0BiG3PPYyhXPgUZ+FNOnjZFF3pNWvzXTQaB0Nvz8plqp93Ov/DEyhrCxHDs=
+  - secure: "E1qsLW+OQz7YTcWjMxfdiJ6vOXFCAclkim7o8kpI0GXox7aYTMqfxgSVhhde0n/YuOhfENsr1L49I87meKsKmM8ez5Wefsy3s03hVlerRlab8yx/2/cV9JLU1Ijw4vDi8IyzPbkp8cQM/6D/hCbcbsBbhgsJjGrhvuIdNqbqwFM2C6UaTALbDzA9cBmb5SMEbCdtIQy9qA0ePUXo+AVY/cWnHf+o6P1NovIfrnIUuIy6fLdfj5LTR2kWGn4ha13B37a3hTe+CCk8NmCtr9aCCzoMcIeDObmBEPky3blviSQWElR4tYBO9MXEcUTDMbQ4OQSrLBg33GBO0jnoqmyPJJC/IPjSY5FfhKTakTQU3Cjd+UXyY42Al/MFmUx9WDvNr58B7mpU8hHznQrjrXPzOhRAltzoJ6ST2j56npslbGjtnHj49i9i8KzWnEfl/gJQuXUknwsJEIt43gxwI9yHW/VINqD1XMvJZB2dfNX5l5l2f1VnpGswARzMA8escc7XoXZN1Hy0NIl59CApNufRBvziVjSZjj3sLe0cx3L02Lhe4ilM8n3V2J7943eYde5b+Q8UVE/YwVLaoPmVE+xZsJIJjC1gM+uV7Sf7ABU7O6LKwKGGOwTBxSl533tFDArW0WLd5wGJWfFIy1bOSHQ9TD0cyGsn0xHxHVpamqJLy1E="
   # Use the following lines if you need to manually change the transifex project slug or/and the transifex organization.
   # The default project slug is owner-repo_name-version (with dash in the version string).
   # The default organization is the owner of the repo.
   # The default fill up resources (TM) is True.
   # The default team is 23907. https://www.transifex.com/organization/oca/team/23907/
-  # - TRANSIFEX_PROJECT_SLUG=
-  # - TRANSIFEX_ORGANIZATION=
+  - TRANSIFEX_PROJECT_SLUG='Jarsa-transport-management-system-9-0'
+  - TRANSIFEX_ORGANIZATION='jarsa'
   # - TRANSIFEX_FILL_UP_RESOURCES=
-  # - TRANSIFEX_TEAM=
+  - TRANSIFEX_TEAM='62171'
 
   matrix:
   - LINT_CHECK="1"
-  #- TRANSIFEX="1"
+  - TRANSIFEX="1"
   - TESTS="1" ODOO_REPO="odoo/odoo"
   - TESTS="1" ODOO_REPO="OCA/OCB"
 # either use the two lines above or the two below. Don't change the default if
