@@ -22,9 +22,7 @@ TMS.FACTOR
 	          <field name="range_end" />
 	          <field name="fixed_amount" />
 	          <field name="mixed"   />
-	          <field name="framework" />
 	          <field name="sequence" />
-            <field name="driver_helper" />
 	        </tree>
           </field>
         </record>
@@ -38,7 +36,6 @@ TMS.FACTOR
 	            <field name="category" />
 	            <field name="factor_type" on_change="on_change_factor_type(factor_type)"/>
 	            <field name="name" />
-	            <field name="framework" attrs="{'invisible'	:[('factor_type','not in',('distance','distance_real'))]}"/>
 	            <field name="factor" 
 		               attrs="{'invisible'	:[('factor_type','in',('special','travel'))],
 			                  'required'	:[('factor_type','in',('distance','weight','qty','volume','percent'))]}" />
@@ -54,7 +51,6 @@ TMS.FACTOR
 	            <field name="fixed_amount" required="1"/>
 	            <newline />
 	            <field name="sequence" />
-	            <field name="driver_helper" />
 	            <field name="notes" colspan="4" />
               </group>
 	        </form>
