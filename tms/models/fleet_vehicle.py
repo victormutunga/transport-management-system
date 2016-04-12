@@ -13,7 +13,7 @@ class FleetVehicle(models.Model):
     _description = "All motor/trailer units"
 
     name = fields.Char(string='Unit Name', size=64)
-    year_model = fields.Char(string='Year Model', size=64, required=True)
+    year_model = fields.Char(string='Year Model', size=64)
     unit_type_id = fields.Many2one(
         'tms.unit.category', 'Unit Type',
         domain="[('type','=','unit_type')]")
