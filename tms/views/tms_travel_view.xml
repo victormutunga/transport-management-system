@@ -1,5 +1,6 @@
-<openerp>
-<data>
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
 
 <!-- 
 ##############################
@@ -359,12 +360,5 @@ TMS.travel
               parent="menu_tms_travels" 
               id="menu_tms_travel_form" 
               action="open_view_tms_travel_form"/>
-
-
-
-
-
-
-
-</data>
-</openerp>
+    </data>
+</odoo>

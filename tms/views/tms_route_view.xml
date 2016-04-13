@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
+<odoo>
     <data>
         
 <!-- 
@@ -90,4 +90,4 @@ TMS.ROUTE
               action="open_view_tms_route_form"/>
 
     </data>
-</openerp>
+</odoo>

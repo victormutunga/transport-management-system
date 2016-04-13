@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
 <!-- 
 ##############################
@@ -67,4 +67,4 @@ TMS.FACTOR
               id="menu_tms_config_route_place_form" 
               action="open_view_tms_factor_form"/>
     </data>
-</openerp>
+</odoo>

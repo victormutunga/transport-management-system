@@ -8,8 +8,8 @@
     "version": "1.0",
     "category": "Vertical",
     'complexity': "normal",
-    "author": "HESATEC",
-    "website": "http://www.hesatecnica.com",
+    "author": "Argil Consulting, Jarsa Sistemas",
+    "website": "http://www.argil.mx,https://www.jarsa.com.mx",
     "depends": ["hr", "account_voucher", "purchase", "sale", "fleet"],
     "summary": "Management System for Carriers, Trucking and other companies",
     "data": [

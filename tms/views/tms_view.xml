@@ -1,5 +1,6 @@
-<openerp>
-<data>
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
         <menuitem name="Freights"
             id="menu_tms"
             icon="fa-truck"
@@ -39,7 +40,5 @@
         <menuitem action="fleet.fleet_vehicle_model_act" parent="menu_tms_settings_unit" id="tms_fleet_vehicle_model_menu" sequence="10"/>
         <menuitem action="fleet.fleet_vehicle_model_brand_act" parent="menu_tms_settings_unit" id="tms_fleet_vehicle_model_brand_menu" sequence="11"/>
         <menuitem action="fleet.fleet_vehicle_state_act" parent="menu_tms_settings_unit" id="tms_fleet_vehicle_state_menu" groups="fleet.group_fleet_manager" sequence="12"/>
-</data>
-</openerp>
-
-
+    </data>
+</odoo>

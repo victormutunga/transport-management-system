@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
+<odoo>
     <data>
             <!--  Make Payment-->
     <record id="tms_view_advance_payment" model="ir.ui.view">
@@ -25,4 +25,4 @@
          key2="client_action_multi"    
         id="action_view_advance_payment"/>  
     </data>
-</openerp>
+</odoo>

@@ -1,6 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-<data>
-
+    <data>
         <record model="ir.ui.view" id="view_employee_form_tms">
             <field name="model">hr.employee</field>
             <field name="priority">50</field>
@@ -39,6 +39,5 @@
         <menuitem id="menu_tms_open_view_employee_list" name="Drivers"
                   parent="tms.menu_tms_settings"
                   action="tms_open_view_employee_list"  sequence="3" />
-</data>
+    </data>
 </odoo>
-
