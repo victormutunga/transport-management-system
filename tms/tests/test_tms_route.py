@@ -23,9 +23,9 @@ class TestTmsRoute(TransactionCase):
         This test check that method get route info works.
         '''
         self.route.get_route_info()
-        self.assertEqual(self.route.travel_time, float('8.1206'),
-                         'Travel time is not correct')
-        self.assertAlmostEqual(self.route.distance, float('946.8810'),
+        self.assertAlmostEqual(self.route.travel_time, 8.1175,
+                               msg='Travel time is not correct')
+        self.assertAlmostEqual(self.route.distance, 946.8810,
                                msg='Distance is not correct')
 
     def test_20_tms_route_get_route_info_no_coords_arrival(self):
@@ -53,3 +53,12 @@ class TestTmsRoute(TransactionCase):
         This test check that method open in google works.
         '''
         self.route.open_in_google()
+
+    def test_50_tms_route_get_route_info_force_error(self):
+        '''
+        This test check that UserError get route info works.
+        '''
+        with self.assertRaisesRegexp(
+                UserError,
+                "Google Maps is not available."):
+            self.route.get_route_info(error=True)

@@ -5,13 +5,13 @@
 
 {
     "name": "Freight Management",
-    "version": "1.0",
-    "category": "Vertical",
-    'complexity': "normal",
+    "version": "9.0.0.1.0",
+    "category": "Transport",
     "author": "Argil Consulting, Jarsa Sistemas",
-    "website": "http://www.argil.mx,https://www.jarsa.com.mx",
+    "website": "http://www.argil.mx, https://www.jarsa.com.mx",
     "depends": ["hr", "account_voucher", "purchase", "sale", "fleet"],
     "summary": "Management System for Carriers, Trucking and other companies",
+    "license": "AGPL-3",
     "data": [
         'security/ir.model.access.csv',
         'views/tms_view.xml',

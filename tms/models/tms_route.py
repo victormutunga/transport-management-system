@@ -32,7 +32,7 @@ class TmsRoute(models.Model):
     active = fields.Boolean('Active', default=True)
 
     @api.multi
-    def get_route_info(self):
+    def get_route_info(self, error=False):
         for rec in self:
             departure = {
                 'latitude': rec.departure_id.latitude,
@@ -46,7 +46,10 @@ class TmsRoute(models.Model):
                 raise UserError(_("The departure don't have coordinates."))
             if not arrival['latitude'] and not arrival['longitude']:
                 raise UserError(_("The arrival don't have coordinates."))
-            url = 'http://maps.googleapis.com/maps/api/distancematrix/json'
+            if error:
+                url = ''
+            else:
+                url = 'http://maps.googleapis.com/maps/api/distancematrix/json'
             origins = (str(departure['latitude']) + ',' +
                        str(departure['longitude']))
             destinations = (str(arrival['latitude']) + ',' +
@@ -58,14 +61,17 @@ class TmsRoute(models.Model):
                 'language': self.env.lang,
                 'sensor': 'false',
             }
-            result = json.loads(requests.get(url, params=params).content)
-            distance = duration = 0.0
-            if result['status'] == 'OK':
-                res = result['rows'][0]['elements'][0]
-                distance = res['distance']['value'] / 1000.0
-                duration = res['duration']['value'] / 3600.0
-            self.distance = distance
-            self.travel_time = duration
+            try:
+                result = json.loads(requests.get(url, params=params).content)
+                distance = duration = 0.0
+                if result['status'] == 'OK':
+                    res = result['rows'][0]['elements'][0]
+                    distance = res['distance']['value'] / 1000.0
+                    duration = res['duration']['value'] / 3600.0
+                self.distance = distance
+                self.travel_time = duration
+            except:
+                raise UserError(_("Google Maps is not available."))
 
     @api.multi
     def open_in_google(self):

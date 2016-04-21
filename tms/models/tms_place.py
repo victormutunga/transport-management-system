@@ -6,6 +6,8 @@
 import urllib as my_urllib
 
 from openerp import api, fields, models
+from openerp.exceptions import UserError
+from openerp.tools.translate import _
 
 import simplejson as json
 
@@ -32,18 +34,24 @@ class TmsPlace(models.Model):
         help='GPS Longitude')
 
     @api.multi
-    def get_coordinates(self):
+    def get_coordinates(self, error=False):
         for rec in self:
             address = (rec.name + "," + rec.state_id.name + "," +
                        rec.country_id.name)
-            google_url = (
-                'http://maps.googleapis.com/maps/api/geocode/json?address=' +
-                address.encode('utf-8') + '&sensor=false')
-            result = json.load(my_urllib.urlopen(google_url))
-            if result['status'] == 'OK':
-                location = result['results'][0]['geometry']['location']
-                self.latitude = location['lat']
-                self.longitude = location['lng']
+            if error:
+                google_url = ''
+            else:
+                google_url = (
+                    'http://maps.googleapis.com/maps/api/geocode/json?' +
+                    'address=' + address.encode('utf-8') + '&sensor=false')
+            try:
+                result = json.load(my_urllib.urlopen(google_url))
+                if result['status'] == 'OK':
+                    location = result['results'][0]['geometry']['location']
+                    self.latitude = location['lat']
+                    self.longitude = location['lng']
+            except:
+                raise UserError(_("Google Maps is not available."))
 
     @api.multi
     def open_in_google(self):
