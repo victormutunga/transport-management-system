@@ -20,5 +20,5 @@ from . import tms_route
 # from . import tms_unit_kit
 # from . import tms_waybill
 # from . import tms_waybill_line
-# from . import tms_waybill_shipped_product
+from . import tms_waybill_shipped_product_line
 # from . import tms_waybill_taxes
