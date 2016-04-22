@@ -1,3 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_tms_place,access_tms_place,model_tms_place,,1,1,1,1
+access_tms_rout,access_tms_route,model_tms_route,,1,1,1,1
 access_tms_factor,access_tms_factor,model_tms_factor,,1,1,1,1
+access_tms_transportable,access_tms_transportable,model_tms_transportable,,1,1,1,1

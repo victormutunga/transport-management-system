@@ -19,18 +19,17 @@
 #
 ##############################################################################
 
-from openerp import fields, models, api
+from openerp import api, fields, models
 
 
 class TmsWaybillShippedProductLine(models.Model):
-    _name = 'tms.waybill.shipped.product.line'
-    _description = 'Waybill Shipped Product'
-    _inherit = 'product.product'
+    _name = 'tms.shipped.product'
+    _description = 'Shipped Product'
 
     waybill_id = fields.Many2one(
         'tms.waybill', 'waybill', ondelete='cascade',
         select=True, readonly=True)
-    # name = fields.Char('Description', size=256, required=True, select=True)
+    name = fields.Char('Description', size=256, required=True, select=True)
     product_id = fields.Many2one(
         'product.product', 'Product',
         domain=[
