@@ -1,70 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-<!-- 
-##############################
-TMS.FACTOR
-##############################
- -->
-
         <record id="view_tms_factor_tree" model="ir.ui.view">
-          <field name="name">tms.factor.tree</field>
-          <field name="model">tms.factor</field>
-        
-          <field name="priority">2</field>
-          <field name="arch" type="xml">
-	        <tree string="Billing Factors">
-	          <field name="category" /> 
-	          <field name="name" />
-	          <field name="factor_type" />
-	          <field name="factor" />
-	          <field name="range_start"  />
-	          <field name="range_end" />
-	          <field name="fixed_amount" />
-	          <field name="mixed"   />
-	          <field name="sequence" />
-	        </tree>
-          </field>
+            <field name="name">tms.factor.tree</field>
+            <field name="model">tms.factor</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <tree string="Billing Factors">
+                    <field name="category"/>
+                    <field name="name"/>
+                    <field name="factor_type"/>
+                    <field name="factor"/>
+                    <field name="range_start"/>
+                    <field name="range_end"/>
+                    <field name="fixed_amount"/>
+                    <field name="mixed"/>
+                    <field name="sequence"/>
+                </tree>
+            </field>
         </record>
-	
         <record id="view_tms_factor_form" model="ir.ui.view">
-          <field name="name">tms.factor.form</field>
-          <field name="model">tms.factor</field>
-          <field name="arch" type="xml">
-	        <form string="Factors" >
-              <group colspan="4" col="4">
-	            <field name="category" />
-	            <field name="factor_type" on_change="on_change_factor_type(factor_type)"/>
-	            <field name="name" />
-	            <field name="factor" 
-		               attrs="{'invisible'	:[('factor_type','in',('special','travel'))],
-			                  'required'	:[('factor_type','in',('distance','weight','qty','volume','percent'))]}" />
-	            <newline />
-	            <field name="range_start" 
-		               attrs="{'invisible'	:[('factor_type','in',('special','travel','percent'))],
-			                  'required'	:[('factor_type','in',('distance','weight','qty','volume'))]}"/>
-	            <field name="range_end" 
-		               attrs="{'invisible'	:[('factor_type','in',('special','travel','percent'))],
-			                  'required'	:[('factor_type','in',('distance','weight','qty','volume'))]}"/>
-	            <field name="mixed"	attrs="{'invisible'	:[('factor_type','=','travel')]}" />
-	            <newline/>
-	            <field name="fixed_amount" required="1"/>
-	            <newline />
-	            <field name="sequence" />
-	            <field name="notes" colspan="4" />
-              </group>
-	        </form>
-	      </field>
-	    </record>
-	    <record model="ir.actions.act_window" id="open_view_tms_factor_form">
-        <field name="name">TMS Factor</field>
-        <field name="res_model">tms.factor</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-    </record>
-	        <menuitem name="Factor" 
-              parent="tms.menu_tms_settings"
-              id="menu_tms_config_route_place_form" 
-              action="open_view_tms_factor_form"/>
+            <field name="name">tms.factor.form</field>
+            <field name="model">tms.factor</field>
+            <field name="arch" type="xml">
+                <form string="Factors">
+                    <group col="4" colspan="4">
+                        <field name="category"/>
+                        <field name="factor_type" on_change="on_change_factor_type(factor_type)"/>
+                        <field name="name"/>
+                        <field attrs="{'invisible' :[('factor_type','in',('special','travel'))],'required': [('factor_type','in',('distance','weight','qty','volume','percent'))]}" name="factor"/>
+                        <newline/>
+                        <field attrs="{'invisible' :[('factor_type','in',('special','travel','percent'))],                      'required' :[('factor_type','in',('distance','weight','qty','volume'))]}" name="range_start"/>
+                        <field attrs="{'invisible' :[('factor_type','in',('special','travel','percent'))],                      'required' :[('factor_type','in',('distance','weight','qty','volume'))]}" name="range_end"/>
+                        <field attrs="{'invisible' :[('factor_type','=','travel')]}" name="mixed"/>
+                        <newline/>
+                        <field name="fixed_amount" required="1"/>
+                        <newline/>
+                        <field name="sequence"/>
+                        <field colspan="4" name="notes"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="open_view_tms_factor_form" model="ir.actions.act_window">
+            <field name="name">TMS Factor</field>
+            <field name="res_model">tms.factor</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
     </data>
 </odoo>

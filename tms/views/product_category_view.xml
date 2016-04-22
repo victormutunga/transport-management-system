@@ -8,14 +8,11 @@
             <field name="arch" type="xml">
                 <data>
                     <field name="property_account_income_categ_id" position="after">
-                        <field name="tms_property_account_income_categ"                            
-                           domain="[('type','=','other'), ('tms_vehicle_mandatory', '=', 1)]"/>
+                        <field domain="[('type','=','other'), ('tms_vehicle_mandatory', '=', 1)]" name="tms_property_account_income_categ"/>
                     </field>
                     <field name="property_account_expense_categ_id" position="after">
-                        <field name="tms_property_account_expense_categ"                            
-                           domain="[('type','=','other'), ('tms_vehicle_mandatory', '=', 1)]"/>
+                        <field domain="[('type','=','other'), ('tms_vehicle_mandatory', '=', 1)]" name="tms_property_account_expense_categ"/>
                     </field>
-
                 </data>
             </field>
         </record>

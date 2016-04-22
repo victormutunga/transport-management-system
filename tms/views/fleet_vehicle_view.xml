@@ -1,65 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-
         <!-- Search View -->
-        <record model="ir.ui.view" id="fleet_vehicle_search_inherit_tms">
+        <record id="fleet_vehicle_search_inherit_tms" model="ir.ui.view">
             <field name="name">fleet.vehicle.tms.search</field>
             <field name="model">fleet.vehicle</field>
             <field name="inherit_id" ref="fleet.fleet_vehicle_search"/>
             <field name="arch" type="xml">
                 <search string="All vehicles">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('license_plate','ilike',self)]" string="Vehicle"/>
+                    <field filter_domain="['|', ('name','ilike',self), ('license_plate','ilike',self)]" name="name" string="Vehicle"/>
                     <field name="year_model"/>
                     <field name="serial_number"/>
                     <field name="registration"/>
                     <group expand="1" string="Group By">
-                        <filter name="groupby_year_model" context="{'group_by' : 'year_model'}" string="Year Model"/>
-                        <filter name="groupby_registration" context="{'group_by' : 'registration'}" string="Registration"/>
-                         <filter name="groupby_fleet_type" context="{'group_by' : 'fleet_type'}" string="Fleet Type"/>
+                        <filter context="{'group_by' : 'year_model'}" name="groupby_year_model" string="Year Model"/>
+                        <filter context="{'group_by' : 'registration'}" name="groupby_registration" string="Registration"/>
+                        <filter context="{'group_by' : 'fleet_type'}" name="groupby_fleet_type" string="Fleet Type"/>
                     </group>
-               </search>
+                </search>
             </field>
         </record>
-
         <!-- Inherit Vehicle Form -->
         <record id="fleet_vehicle_form_inherit_tms" model="ir.ui.view">
             <field name="name">fleet.vehicle.tms.form</field>
             <field name="model">fleet.vehicle</field>
             <field name="inherit_id" ref="fleet.fleet_vehicle_form"/>
-            <field name="arch" type="xml"> 
+            <field name="arch" type="xml">
                 <field name="driver_id" position="before">
-                    <field name="fleet_type" />
+                    <field name="fleet_type"/>
                 </field>
                 <field name="vin_sn" position="after">
-                    <field name="serial_number" />
-                    <field name="registration" />
+                    <field name="serial_number"/>
+                    <field name="registration"/>
                 </field>
                 <field name="car_value" position="after">
-                    <field name="year_model" />
-                    <field name="active" />
+                    <field name="year_model"/>
+                    <field name="active"/>
                 </field>
                 <xpath expr="//sheet/group[2]" position="after">
                     <group>
                         <group string="Notes">
-                            <field nolabel="1" name="notes" />
+                            <field name="notes" nolabel="1"/>
                         </group>
                     </group>
                 </xpath>
             </field>
         </record>
-
         <!-- Tree View -->
-        <record model="ir.ui.view" id="fleet_vehicle_tree_inherit_tms">
+        <record id="fleet_vehicle_tree_inherit_tms" model="ir.ui.view">
             <field name="name">fleet.vehicle.tms.tree</field>
             <field name="model">fleet.vehicle</field>
             <field name="inherit_id" ref="fleet.fleet_vehicle_tree"/>
             <field name="arch" type="xml">
                 <tree string="Vehicle">
-                    <field name="year_model" />
-                    <field name="serial_number" />
-                    <field name="registration" />
-                    <field name="fleet_type" />
+                    <field name="year_model"/>
+                    <field name="serial_number"/>
+                    <field name="registration"/>
+                    <field name="fleet_type"/>
                 </tree>
             </field>
         </record>

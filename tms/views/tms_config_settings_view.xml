@@ -5,78 +5,76 @@
             <field name="name">tms settings</field>
             <field name="model">tms.config.settings</field>
             <field name="arch" type="xml">
-                <form string="tms config settings" class="oe_form_configuration">
+                <form class="oe_form_configuration" string="tms config settings">
                     <header>
-                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
-                    </header>
-                    <group string="TMS" id="tms">
+                        <button class="oe_highlight" name="execute" string="Apply" type="object"/>or
+                        
+                        <button class="oe_link" name="cancel" string="Cancel" type="object"/></header>
+                    <group id="tms" string="TMS">
                         <label for="id" string="Agreements"/>
                         <div>
-                            <field name="module_tms_agreement" class="oe_inline"/>
+                            <field class="oe_inline" name="module_tms_agreement"/>
                             <label for="module_tms_agreement"/>
                         </div>
                         <label for="id" string="Business Inteligence"/>
                         <div>
-                            <field name="module_tms_analysis" class="oe_inline"/>
+                            <field class="oe_inline" name="module_tms_analysis"/>
                             <label for="module_tms_analysis"/>
                         </div>
                         <label for="id" string="Driver License"/>
                         <div>
-                            <field name="module_tms_driver_license" class="oe_inline"/>
+                            <field class="oe_inline" name="module_tms_driver_license"/>
                             <label for="module_tms_driver_license"/>
                         </div>
                         <label for="id" string="Maintenance"/>
                         <div>
-                            <field name="module_tms_maintenance" class="oe_inline"/>
+                            <field class="oe_inline" name="module_tms_maintenance"/>
                             <label for="module_tms_maintenance"/>
                         </div>
                         <label for="id" string="Vehicle Insurance"/>
                         <div>
-                            <field name="module_tms_vehicle_insurance" class="oe_inline"/>
+                            <field class="oe_inline" name="module_tms_vehicle_insurance"/>
                             <label for="module_tms_vehicle_insurance"/>
                         </div>
                         <label for="id" string="Events"/>
                         <div>
-                            <field name="module_tms_event" class="oe_inline"/>
+                            <field class="oe_inline" name="module_tms_event"/>
                             <label for="module_tms_event"/>
                         </div>
                         <label for="id" string="Operating Units"/>
                         <div>
-                            <field name="module_tms_operating_unit" class="oe_inline"/>
+                            <field class="oe_inline" name="module_tms_operating_unit"/>
                             <label for="module_tms_operating_unit"/>
                         </div>
                         <label for="id" string="Driver Loan"/>
                         <div>
-                            <field name="module_tms_driver_loan" class="oe_inline"/>
+                            <field class="oe_inline" name="module_tms_driver_loan"/>
                             <label for="module_tms_driver_loan"/>
                         </div>
                         <label for="id" string="Internal Fuel"/>
                         <div>
-                            <field name="module_tms_internal_fuel" class="oe_inline"/>
+                            <field class="oe_inline" name="module_tms_internal_fuel"/>
                             <label for="module_tms_internal_fuel"/>
                         </div>
                         <label for="id" string="Operations"/>
                         <div>
-                            <field name="module_tms_operations" class="oe_inline"/>
+                            <field class="oe_inline" name="module_tms_operations"/>
                             <label for="module_tms_operations"/>
                         </div>
                         <label for="id" string="Second Driver"/>
                         <div>
-                            <field name="module_tms_second_driver" class="oe_inline"/>
+                            <field class="oe_inline" name="module_tms_second_driver"/>
                             <label for="module_tms_second_driver"/>
                         </div>
                         <label for="id" string="Toll stations"/>
                         <div>
-                            <field name="module_tms_toll_stations" class="oe_inline"/>
+                            <field class="oe_inline" name="module_tms_toll_stations"/>
                             <label for="module_tms_toll_stations"/>
                         </div>
                     </group>
                 </form>
             </field>
         </record>
-
         <record id="action_tms_config" model="ir.actions.act_window">
             <field name="name">Tms Config Settings</field>
             <field name="type">ir.actions.act_window</field>
@@ -84,7 +82,6 @@
             <field name="view_mode">form</field>
             <field name="target">inline</field>
         </record>
-        <menuitem id="menu_tms_config" name="Settings" parent="tms.menu_tms_settings"
-            sequence="1" action="action_tms_config"/>
+        <menuitem action="action_tms_config" id="menu_tms_config" name="Settings" parent="tms.menu_tms_settings" sequence="1"/>
     </data>
 </odoo>

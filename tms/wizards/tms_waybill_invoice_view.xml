@@ -2,33 +2,22 @@
 <odoo>
     <data>
         <!--  Make the invoice-->
-
-    <record id="view_waybill_invoice" model="ir.ui.view">
-      <field name="name">Create Invoice from Waybills</field>
-      <field name="model">tms.waybill.invoice</field>
-      <field name="arch" type="xml">
-        <form string="Create Customer Invoice" version="7.0">
-            <separator colspan="4" string="Create Customer Invoice from selected Waybills ?" />
-            <group col="4" colspan="4">
-                <field name="group_line_product" />
-            </group>
-            <footer>
-                <button name="makeWaybillInvoices" string="Confirm" type="object" icon="gtk-ok" groups="tms.group_waybill_confirm"/>
-                or
-                <button special="cancel" string="Cancel" class="oe_link"/>
-            </footer>
-        </form>
-      </field>
-    </record>
-    
-    <act_window name="Create Customer Invoice"          
-        res_model="tms.waybill.invoice"
-        src_model="tms.waybill"
-        view_mode="form"
-        target="new"
-        key2="client_action_multi"    
-        id="action_view_waybill_invoice"/>  
-
-
+        <record id="view_waybill_invoice" model="ir.ui.view">
+            <field name="name">Create Invoice from Waybills</field>
+            <field name="model">tms.waybill.invoice</field>
+            <field name="arch" type="xml">
+                <form string="Create Customer Invoice" version="7.0">
+                    <separator colspan="4" string="Create Customer Invoice from selected Waybills ?"/>
+                    <group col="4" colspan="4">
+                        <field name="group_line_product"/>
+                    </group>
+                    <footer>
+                        <button groups="tms.group_waybill_confirm" icon="gtk-ok" name="makeWaybillInvoices" string="Confirm" type="object"/>or
+                
+                        <button class="oe_link" special="cancel" string="Cancel"/></footer>
+                </form>
+            </field>
+        </record>
+        <act_window id="action_view_waybill_invoice" key2="client_action_multi" name="Create Customer Invoice" res_model="tms.waybill.invoice" src_model="tms.waybill" target="new" view_mode="form"/>
     </data>
 </odoo>

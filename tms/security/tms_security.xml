@@ -1,325 +1,304 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<data noupdate="0">
-
-        <record model="ir.module.category" id="tms.module_category_tms_management">
+    <data noupdate="0">
+        <record id="tms.module_category_tms_management" model="ir.module.category">
             <field name="name">TMS</field>
             <field name="description">Helps you manage Transport Services (Freights).</field>
             <field name="sequence">2</field>
         </record>
-
-<!-- TMS.WAYBILL -->
-    <record id="tms.group_waybill_approve" model="res.groups">
-        <field name="name">Can Approve Waybills</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Approve Waybills.</field>
-    </record>
-    <record id="tms.group_waybill_confirm" model="res.groups">
-        <field name="name">Can Confirm Waybills</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Confirm Waybills.</field>
-    </record>
-    <record id="tms.group_waybill_cancel" model="res.groups">
-        <field name="name">Can Cancel Waybills</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Cancel Waybills.</field>
-    </record>
-    <record id="tms.group_waybill_setdraft" model="res.groups">
-        <field name="name">Can Set to Draft Waybills</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Set to Draft Waybills.</field>
-    </record>
-
-<!-- TMS.TRAVEL -->
-    <record id="tms.group_travel_dispatch" model="res.groups">
-        <field name="name">Can Dispatch Travels</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Dispatch Travels.</field>
-    </record>
-    <record id="tms.group_travel_end" model="res.groups">
-        <field name="name">Can Confirm Travels</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Confirm Travels.</field>
-    </record>
-    <record id="tms.group_travel_cancel" model="res.groups">
-        <field name="name">Can Cancel Travels</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Cancel Travels.</field>
-    </record>
-    <record id="tms.group_travel_setdraft" model="res.groups">
-        <field name="name">Can Set to Draft Travels</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Set to Draft Travels.</field>
-    </record>
-
-<!-- TMS.ADVANCE -->
-    <record id="tms.group_advance_approve" model="res.groups">
-        <field name="name">Can Approve Money Advances for Driver</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Approve Money Advances for Driver.</field>
-    </record>
-    <record id="tms.group_advance_confirm" model="res.groups">
-        <field name="name">Can Confirm Money Advances for Driver</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Confirm Money Advances for Driver.</field>
-    </record>
-    <record id="tms.group_advance_cancel" model="res.groups">
-        <field name="name">Can Cancel Money Advances for Driver</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Cancel Money Advances for Driver.</field>
-    </record>
-    <record id="tms.group_advance_setdraft" model="res.groups">
-        <field name="name">Can Set to Draft Money Advances for Driver</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Set to Draft Money Advances for Driver.</field>
-    </record>
-
-<!-- TMS.FUEL VOUCHER -->
-    <record id="tms.group_fuelvoucher_approve" model="res.groups">
-        <field name="name">Can Approve Travel Fuel Vouchers</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Approve Travel Fuel Vouchers.</field>
-    </record>
-    <record id="tms.group_fuelvoucher_confirm" model="res.groups">
-        <field name="name">Can Confirm Travel Fuel Vouchers</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Confirm Travel Fuel Vouchers.</field>
-    </record>
-    <record id="tms.group_fuelvoucher_cancel" model="res.groups">
-        <field name="name">Can Cancel Travel Fuel Vouchers</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Cancel Travel Fuel Vouchers.</field>
-    </record>
-    <record id="tms.group_fuelvoucher_setdraft" model="res.groups">
-        <field name="name">Can Set to Draft Travel Fuel Vouchers</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Set to Draft Travel Fuel Vouchers.</field>
-    </record>
-
-<!-- TMS.EXPENSE -->
-    <record id="tms.group_expense_approve" model="res.groups">
-        <field name="name">Can Approve Travel Expense Records</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Approve Travel Expense Records.</field>
-    </record>
-    <record id="tms.group_expense_confirm" model="res.groups">
-        <field name="name">Can Confirm Travel Expense Records</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Confirm Travel Expense Records.</field>
-    </record>
-    <record id="tms.group_expense_cancel" model="res.groups">
-        <field name="name">Can Cancel Travel Expense Records</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Cancel Travel Expense Records.</field>
-    </record>
-    <record id="tms.group_expense_setdraft" model="res.groups">
-        <field name="name">Can Set to Draft Travel Expense Records</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Set to Draft Travel Expense Records.</field>
-    </record>
-
-<!-- TMS.EXPENSE.LOAN -->
-    <record id="tms.group_expense_loan_approve" model="res.groups">
-        <field name="name">Can Approve Driver Loans</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Approve Drivers Loans Records.</field>
-    </record>
-    <record id="tms.group_expense_loan_confirm" model="res.groups">
-        <field name="name">Can Confirm Drivers Loans</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Confirm Drivers Loans Records.</field>
-    </record>
-    <record id="tms.group_expense_loan_cancel" model="res.groups">
-        <field name="name">Can Cancel Drivers Loans</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Cancel Drivers Loans Records.</field>
-    </record>
-    <record id="tms.group_expense_loan_close" model="res.groups">
-        <field name="name">Can Close Drivers Loans</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Set to Draft Drivers Loans Records.</field>
-    </record>
-
-<!-- TMS.OPERATION -->
-    <record id="tms.group_operation_process" model="res.groups">
-        <field name="name">Can set Operation to Process</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to set Operation to Process.</field>
-    </record>
-    <record id="tms.group_operation_done" model="res.groups">
-        <field name="name">Can set Operation to Done</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to set Operation to Done.</field>
-    </record>
-    <record id="tms.group_operation_cancel" model="res.groups">
-        <field name="name">Can Cancel Operations</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Cancel Operations.</field>
-    </record>
-    <record id="tms.group_operation_setdraft" model="res.groups">
-        <field name="name">Can Set to Draft Operations</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="comment">The user will be able to Set to Draft Operations.</field>
-    </record>
-    
-    
-    
-    
-    <record id="tms.group_tms_manager" model="res.groups">
-        <field name="name">TMS Manager</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="users" eval="[(4, ref('base.user_root'))]"/>
-        <field name="implied_ids" eval=   "[(4, ref('tms.group_waybill_approve')),(4, ref('tms.group_waybill_confirm')),(4, ref('tms.group_waybill_cancel')),(4, ref('tms.group_waybill_setdraft')),(4, ref('tms.group_advance_approve')),(4, ref('tms.group_advance_confirm')),(4, ref('tms.group_advance_cancel')),(4, ref('tms.group_advance_setdraft')),(4, ref('tms.group_fuelvoucher_approve')),(4, ref('tms.group_fuelvoucher_confirm')),(4, ref('tms.group_fuelvoucher_cancel')),(4, ref('tms.group_fuelvoucher_setdraft')),(4, ref('tms.group_expense_approve')),(4, ref('tms.group_expense_confirm')),(4, ref('tms.group_expense_cancel')),(4, ref('tms.group_expense_setdraft')),(4, ref('tms.group_travel_dispatch')),(4, ref('tms.group_travel_end')),(4, ref('tms.group_travel_cancel')),(4, ref('tms.group_travel_setdraft')),(4, ref('tms.group_operation_process')),(4, ref('tms.group_operation_done')),(4, ref('tms.group_operation_cancel')),(4, ref('tms.group_operation_setdraft'))]"/>
-        
-        <field name="comment">This is TMS Manager.</field>
-    </record>
-
-    <record id="tms.group_tms_user" model="res.groups">
-        <field name="name">TMS User</field>
-        <field name="category_id" ref="tms.module_category_tms_management"/>
-        <field name="users" eval="[(4, ref('base.user_root'))]"/>
-        <field name="implied_ids" eval=   "[(4, ref('tms.group_waybill_approve')),(4, ref('tms.group_waybill_cancel')),(4, ref('tms.group_advance_approve')),(4, ref('tms.group_advance_cancel')),(4, ref('tms.group_fuelvoucher_approve')),(4, ref('tms.group_fuelvoucher_cancel')),(4, ref('tms.group_expense_approve')),(4, ref('tms.group_expense_cancel')),(4, ref('tms.group_travel_dispatch')),(4, ref('tms.group_travel_end')),(4, ref('tms.group_operation_process')),(4, ref('tms.group_operation_done')),(4, ref('tms.group_operation_cancel'))]"/>
-        
-        <field name="comment">This is TMS User.</field>
-    </record>
-
-    
-    
-<!-- Menus access -->
-    <record model="ir.ui.menu" id="menu_tms">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_advance_form">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_config">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_config_event_action_form">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_config_event_category_form">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_config_fleet_vehicle_odometer_device_form">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_config_product">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_config_product_product">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_config_product_product_category">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_config_route_form">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_config_route_place_form">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_config_route_tollstation_form">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_config_routes">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_config_unit">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_config_unit_active_history_form">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_config_unit_category_form">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_config_unit_form">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_config_unit_kit_form">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_config_unit_red_tape_form">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_config_waybill">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_config_waybill_category_form">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_event_form">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_events">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_expense">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_factor">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_factor_special_form">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_fuelvoucher_form">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_operation_form">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_product_by_category_stock_form">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_reporting">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_travel_form">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_travels">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-    <record model="ir.ui.menu" id="menu_tms_waybill">
-        <field name='name'>menu_tms</field>
-        <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
-    </record>
-
-
-
-</data>
+        <!-- TMS.WAYBILL -->
+        <record id="tms.group_waybill_approve" model="res.groups">
+            <field name="name">Can Approve Waybills</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Approve Waybills.</field>
+        </record>
+        <record id="tms.group_waybill_confirm" model="res.groups">
+            <field name="name">Can Confirm Waybills</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Confirm Waybills.</field>
+        </record>
+        <record id="tms.group_waybill_cancel" model="res.groups">
+            <field name="name">Can Cancel Waybills</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Cancel Waybills.</field>
+        </record>
+        <record id="tms.group_waybill_setdraft" model="res.groups">
+            <field name="name">Can Set to Draft Waybills</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Set to Draft Waybills.</field>
+        </record>
+        <!-- TMS.TRAVEL -->
+        <record id="tms.group_travel_dispatch" model="res.groups">
+            <field name="name">Can Dispatch Travels</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Dispatch Travels.</field>
+        </record>
+        <record id="tms.group_travel_end" model="res.groups">
+            <field name="name">Can Confirm Travels</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Confirm Travels.</field>
+        </record>
+        <record id="tms.group_travel_cancel" model="res.groups">
+            <field name="name">Can Cancel Travels</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Cancel Travels.</field>
+        </record>
+        <record id="tms.group_travel_setdraft" model="res.groups">
+            <field name="name">Can Set to Draft Travels</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Set to Draft Travels.</field>
+        </record>
+        <!-- TMS.ADVANCE -->
+        <record id="tms.group_advance_approve" model="res.groups">
+            <field name="name">Can Approve Money Advances for Driver</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Approve Money Advances for Driver.</field>
+        </record>
+        <record id="tms.group_advance_confirm" model="res.groups">
+            <field name="name">Can Confirm Money Advances for Driver</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Confirm Money Advances for Driver.</field>
+        </record>
+        <record id="tms.group_advance_cancel" model="res.groups">
+            <field name="name">Can Cancel Money Advances for Driver</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Cancel Money Advances for Driver.</field>
+        </record>
+        <record id="tms.group_advance_setdraft" model="res.groups">
+            <field name="name">Can Set to Draft Money Advances for Driver</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Set to Draft Money Advances for Driver.</field>
+        </record>
+        <!-- TMS.FUEL VOUCHER -->
+        <record id="tms.group_fuelvoucher_approve" model="res.groups">
+            <field name="name">Can Approve Travel Fuel Vouchers</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Approve Travel Fuel Vouchers.</field>
+        </record>
+        <record id="tms.group_fuelvoucher_confirm" model="res.groups">
+            <field name="name">Can Confirm Travel Fuel Vouchers</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Confirm Travel Fuel Vouchers.</field>
+        </record>
+        <record id="tms.group_fuelvoucher_cancel" model="res.groups">
+            <field name="name">Can Cancel Travel Fuel Vouchers</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Cancel Travel Fuel Vouchers.</field>
+        </record>
+        <record id="tms.group_fuelvoucher_setdraft" model="res.groups">
+            <field name="name">Can Set to Draft Travel Fuel Vouchers</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Set to Draft Travel Fuel Vouchers.</field>
+        </record>
+        <!-- TMS.EXPENSE -->
+        <record id="tms.group_expense_approve" model="res.groups">
+            <field name="name">Can Approve Travel Expense Records</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Approve Travel Expense Records.</field>
+        </record>
+        <record id="tms.group_expense_confirm" model="res.groups">
+            <field name="name">Can Confirm Travel Expense Records</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Confirm Travel Expense Records.</field>
+        </record>
+        <record id="tms.group_expense_cancel" model="res.groups">
+            <field name="name">Can Cancel Travel Expense Records</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Cancel Travel Expense Records.</field>
+        </record>
+        <record id="tms.group_expense_setdraft" model="res.groups">
+            <field name="name">Can Set to Draft Travel Expense Records</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Set to Draft Travel Expense Records.</field>
+        </record>
+        <!-- TMS.EXPENSE.LOAN -->
+        <record id="tms.group_expense_loan_approve" model="res.groups">
+            <field name="name">Can Approve Driver Loans</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Approve Drivers Loans Records.</field>
+        </record>
+        <record id="tms.group_expense_loan_confirm" model="res.groups">
+            <field name="name">Can Confirm Drivers Loans</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Confirm Drivers Loans Records.</field>
+        </record>
+        <record id="tms.group_expense_loan_cancel" model="res.groups">
+            <field name="name">Can Cancel Drivers Loans</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Cancel Drivers Loans Records.</field>
+        </record>
+        <record id="tms.group_expense_loan_close" model="res.groups">
+            <field name="name">Can Close Drivers Loans</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Set to Draft Drivers Loans Records.</field>
+        </record>
+        <!-- TMS.OPERATION -->
+        <record id="tms.group_operation_process" model="res.groups">
+            <field name="name">Can set Operation to Process</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to set Operation to Process.</field>
+        </record>
+        <record id="tms.group_operation_done" model="res.groups">
+            <field name="name">Can set Operation to Done</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to set Operation to Done.</field>
+        </record>
+        <record id="tms.group_operation_cancel" model="res.groups">
+            <field name="name">Can Cancel Operations</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Cancel Operations.</field>
+        </record>
+        <record id="tms.group_operation_setdraft" model="res.groups">
+            <field name="name">Can Set to Draft Operations</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field name="comment">The user will be able to Set to Draft Operations.</field>
+        </record>
+        <record id="tms.group_tms_manager" model="res.groups">
+            <field name="name">TMS Manager</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field eval="[(4, ref('base.user_root'))]" name="users"/>
+            <field eval="[(4, ref('tms.group_waybill_approve')),(4, ref('tms.group_waybill_confirm')),(4, ref('tms.group_waybill_cancel')),(4, ref('tms.group_waybill_setdraft')),(4, ref('tms.group_advance_approve')),(4, ref('tms.group_advance_confirm')),(4, ref('tms.group_advance_cancel')),(4, ref('tms.group_advance_setdraft')),(4, ref('tms.group_fuelvoucher_approve')),(4, ref('tms.group_fuelvoucher_confirm')),(4, ref('tms.group_fuelvoucher_cancel')),(4, ref('tms.group_fuelvoucher_setdraft')),(4, ref('tms.group_expense_approve')),(4, ref('tms.group_expense_confirm')),(4, ref('tms.group_expense_cancel')),(4, ref('tms.group_expense_setdraft')),(4, ref('tms.group_travel_dispatch')),(4, ref('tms.group_travel_end')),(4, ref('tms.group_travel_cancel')),(4, ref('tms.group_travel_setdraft')),(4, ref('tms.group_operation_process')),(4, ref('tms.group_operation_done')),(4, ref('tms.group_operation_cancel')),(4, ref('tms.group_operation_setdraft'))]" name="implied_ids"/>
+            <field name="comment">This is TMS Manager.</field>
+        </record>
+        <record id="tms.group_tms_user" model="res.groups">
+            <field name="name">TMS User</field>
+            <field name="category_id" ref="tms.module_category_tms_management"/>
+            <field eval="[(4, ref('base.user_root'))]" name="users"/>
+            <field eval="[(4, ref('tms.group_waybill_approve')),(4, ref('tms.group_waybill_cancel')),(4, ref('tms.group_advance_approve')),(4, ref('tms.group_advance_cancel')),(4, ref('tms.group_fuelvoucher_approve')),(4, ref('tms.group_fuelvoucher_cancel')),(4, ref('tms.group_expense_approve')),(4, ref('tms.group_expense_cancel')),(4, ref('tms.group_travel_dispatch')),(4, ref('tms.group_travel_end')),(4, ref('tms.group_operation_process')),(4, ref('tms.group_operation_done')),(4, ref('tms.group_operation_cancel'))]" name="implied_ids"/>
+            <field name="comment">This is TMS User.</field>
+        </record>
+        <!-- Menus access -->
+        <record id="menu_tms" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_advance_form" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_config" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_config_event_action_form" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_config_event_category_form" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_config_fleet_vehicle_odometer_device_form" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_config_product" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_config_product_product" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_config_product_product_category" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_config_route_form" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_config_route_place_form" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_config_route_tollstation_form" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_config_routes" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_config_unit" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_config_unit_active_history_form" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_config_unit_category_form" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_config_unit_form" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_config_unit_kit_form" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_config_unit_red_tape_form" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_config_waybill" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_config_waybill_category_form" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_event_form" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_events" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_expense" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_factor" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_factor_special_form" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_fuelvoucher_form" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_operation_form" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_product_by_category_stock_form" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_reporting" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_travel_form" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_travels" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+        <record id="menu_tms_waybill" model="ir.ui.menu">
+            <field name="name">menu_tms</field>
+            <field eval="[(4, ref('tms.group_tms_manager')),(4, ref('tms.group_tms_user'))]" name="groups_id"/>
+        </record>
+    </data>
 </odoo>

@@ -2,34 +2,28 @@
 <odoo>
     <data>
         <!--  tms.expense.cancel wizard-->
-
-    <record id="view_expense_cancel" model="ir.ui.view">
-    <field name="name">Create copy from Waybill on Cancell</field>
-    <field name="model">tms.expense.cancel</field>
-    <field name="arch" type="xml">
-    <form string="Cancel" version="7.0">  
-        <separator colspan="4" string="Cancel this Expense Record ?" />
-        <footer>
-            <button name="action_cancel" string="Confirm Cancellation" colspan="1" type="object" icon="gtk-ok" groups="tms.group_expense_cancel"/>
-            or
-            <button special="cancel" string="Cancel" class="oe_link"/>
-        </footer>
-    </form>
-    </field>
-    </record>
-
-    <!-- <button name="%(action_expense_cancel)d" states="draft,approved,confirmed" string="Cancel" type="action" groups="tms.group_expense_cancel"/> -->
-
-
-    <record id="action_expense_cancel" model="ir.actions.act_window">
-        <field name="name">Cancel Expense Record</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">tms.expense.cancel</field>
-        <field name="src_model">tms.expense</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">form</field>
-        <field name="target">new</field>
-   </record>
-
+        <record id="view_expense_cancel" model="ir.ui.view">
+            <field name="name">Create copy from Waybill on Cancell</field>
+            <field name="model">tms.expense.cancel</field>
+            <field name="arch" type="xml">
+                <form string="Cancel" version="7.0">
+                    <separator colspan="4" string="Cancel this Expense Record ?"/>
+                    <footer>
+                        <button colspan="1" groups="tms.group_expense_cancel" icon="gtk-ok" name="action_cancel" string="Confirm Cancellation" type="object"/>or
+            
+                        <button class="oe_link" special="cancel" string="Cancel"/></footer>
+                </form>
+            </field>
+        </record>
+        <!-- <button name="%(action_expense_cancel)d" states="draft,approved,confirmed" string="Cancel" type="action" groups="tms.group_expense_cancel"/>-->
+        <record id="action_expense_cancel" model="ir.actions.act_window">
+            <field name="name">Cancel Expense Record</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">tms.expense.cancel</field>
+            <field name="src_model">tms.expense</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
     </data>
 </odoo>

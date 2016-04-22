@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <record model="ir.ui.view" id="view_employee_form_tms">
+        <record id="view_employee_form_tms" model="ir.ui.view">
             <field name="model">hr.employee</field>
             <field name="priority">50</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
@@ -9,11 +9,11 @@
                 <notebook position="inside">
                     <page string="TMS">
                         <group>
-						    <field name="tms_category" />
-						    <field name="tms_advance_account_id" attrs="{'required':[('tms_category','=','driver')], 'invisible':[('tms_category','!=','driver')] }"/>
-                            <field name="tms_expense_negative_balance_account_id" attrs="{'required':[('tms_category','=','driver')], 'invisible':[('tms_category','!=','driver')] }"/>
+                            <field name="tms_category"/>
+                            <field attrs="{'required':[('tms_category','=','driver')], 'invisible':[('tms_category','!=','driver')] }" name="tms_advance_account_id"/>
+                            <field attrs="{'required':[('tms_category','=','driver')], 'invisible':[('tms_category','!=','driver')] }" name="tms_expense_negative_balance_account_id"/>
                         </group>
-					</page>
+                    </page>
                 </notebook>
             </field>
         </record>
@@ -22,22 +22,19 @@
             <field name="res_model">hr.employee</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="domain">[('tms_category','=','driver')]</field>            
+            <field name="domain">[('tms_category','=','driver')]</field>
             <field name="context">{}</field>
-            <field name="view_id" eval="False"/>
+            <field eval="False" name="view_id"/>
             <field name="search_view_id" ref="hr.view_employee_filter"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a new driver.
-              </p><p>
-                With just a quick glance on the OpenERP driver screen, you
+                <p class="oe_view_nocontent_create">Click to add a new driver.
+              </p>
+                <p>With just a quick glance on the OpenERP driver screen, you
                 can easily find all the information you need for each person;
                 contact data, job position, availability, etc.
               </p>
             </field>
         </record>
-        <menuitem id="menu_tms_open_view_employee_list" name="Drivers"
-                  parent="tms.menu_tms_settings"
-                  action="tms_open_view_employee_list"  sequence="3" />
+        <menuitem action="tms_open_view_employee_list" id="menu_tms_open_view_employee_list" name="Drivers" parent="tms.menu_tms_settings_drivers" sequence="3"/>
     </data>
 </odoo>

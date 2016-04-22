@@ -1,64 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        
-<!-- 
-##############################
-TMS.UNIT.KIT
-##############################
--->
-<!-- SEARCH View for tms.unit.kit (Vehicle Kits) --> 
+        <!-- SEARCH View for tms.unit.kit (Vehicle Kits) -->
         <record id="view_tms_unit_kit_search" model="ir.ui.view">
             <field name="name">tms.unit.kit.search</field>
             <field name="model">tms.unit.kit</field>
             <field name="arch" type="xml">
                 <search string="Units Kits">
-                   <field name="name"/>
-                   <field name="active" />
-                   <field name="unit_id" />
-                   <field name="trailer1_id" />
-                   <field name="dolly_id" />
-                   <field name="trailer2_id" />
-           <newline />
-                   <field name="employee_id" />
-                   <field name="date_start" />
-                   <field name="date_end" />
-                   <newline/>
-                   <group  expand='0' string='Group by...'> <!--groups="base.group_extended" -->
-                       <filter string='Unit' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'unit_id'}" />
-                       <filter string='Unit Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'unit_type'}" />
-                       <separator orientation="vertical"/>                                                                
-                       <filter string='Driver' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'employee_id'}" />
-                   </group>
+                    <field name="name"/>
+                    <field name="active"/>
+                    <field name="unit_id"/>
+                    <field name="trailer1_id"/>
+                    <field name="dolly_id"/>
+                    <field name="trailer2_id"/>
+                    <newline/>
+                    <field name="employee_id"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <newline/>
+                    <group expand="0" string="Group by...">
+                        <!--groups="base.group_extended" -->
+                        <filter context="{'group_by' : 'unit_id'}" domain="[]" icon="terp-stock_symbol-selection" string="Unit"/>
+                        <filter context="{'group_by' : 'unit_type'}" domain="[]" icon="terp-stock_symbol-selection" string="Unit Type"/>
+                        <separator orientation="vertical"/>
+                        <filter context="{'group_by' : 'employee_id'}" domain="[]" icon="terp-stock_symbol-selection" string="Driver"/>
+                    </group>
                 </search>
             </field>
         </record>
-
-<!-- TREE View for tms.unit.kit (Transportation Units Kits) --> 
-    <record model="ir.ui.view" id="view_tms_unit_kit_tree">
-        <field name="name">tms.unit.kit.tree</field>
-        <field name="model">tms.unit.kit</field>
-        <field name="arch" type="xml">
-            <tree string="Units Kits">
-            <field name="name"/>            
-            <field name="unit_id" />
-            <field name="unit_type" />
-            <field name="trailer1_id" />
-            <field name="trailer1_type" />
-            <field name="dolly_id" />
-            <field name="dolly_type" />
-            <field name="trailer2_id" />
-            <field name="trailer2_type" />
-            <field name="employee_id" />
-            <field name="date_start" />
-            <field name="date_end" />
-            <field name="active" />
-            </tree>
-        </field>
-    </record>
-
-<!-- FORM View for tms.unit.kit (Transportation Units Kits) -->
-
+        <!-- TREE View for tms.unit.kit (Transportation Units Kits) -->
+        <record id="view_tms_unit_kit_tree" model="ir.ui.view">
+            <field name="name">tms.unit.kit.tree</field>
+            <field name="model">tms.unit.kit</field>
+            <field name="arch" type="xml">
+                <tree string="Units Kits">
+                    <field name="name"/>
+                    <field name="unit_id"/>
+                    <field name="unit_type"/>
+                    <field name="trailer1_id"/>
+                    <field name="trailer1_type"/>
+                    <field name="dolly_id"/>
+                    <field name="dolly_type"/>
+                    <field name="trailer2_id"/>
+                    <field name="trailer2_type"/>
+                    <field name="employee_id"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        <!-- FORM View for tms.unit.kit (Transportation Units Kits) -->
         <record id="view_tms_unit_kit_form" model="ir.ui.view">
             <field name="name">tms.unit.kit.form</field>
             <field name="model">tms.unit.kit</field>
@@ -67,49 +59,42 @@ TMS.UNIT.KIT
                     <sheet>
                         <h1>
                             <label string="Kit Name"/>
-                            <field name="name" class="oe_inline"/>
+                            <field class="oe_inline" name="name"/>
                         </h1>
                         <group col="4" colspan="4">
-                            <separator string="Kit Framework" colspan="4"/> 
-                            <field name="unit_id" domain="[('fleet_type', '=', 'tractor')]"/>
+                            <separator colspan="4" string="Kit Framework"/>
+                            <field domain="[('fleet_type', '=', 'tractor')]" name="unit_id"/>
                             <field name="unit_type" readonly="1"/>
-                            <field name="trailer1_id" domain="[('id','!=',trailer2_id), ('fleet_type','=','trailer')]" attrs="{'required':['|', ('dolly_id','!=',False),('trailer2_id','!=',False)]}"/>
-                            <field name="trailer1_type" readonly="1" />
-                            <field name="dolly_id"  domain="[('fleet_type','=','dolly')]" attrs="{'required':[('trailer2_id','!=',False)]}"/>
-                            <field name="dolly_type" readonly="1" />
-                            <field name="trailer2_id" domain="[('id','!=',trailer1_id), ('fleet_type','=','trailer')]" attrs="{'required':[('dolly_id','!=',False)]}"/>
-                            <field name="trailer2_type" readonly="1" />
-                            <field name="employee_id" colspan="2"/>
-                            <newline />
-                            <separator string="Validity" colspan="4"/>
-                            <field name="date_start" />
+                            <field attrs="{'required':['|', ('dolly_id','!=',False),('trailer2_id','!=',False)]}" domain="[('id','!=',trailer2_id), ('fleet_type','=','trailer')]" name="trailer1_id"/>
+                            <field name="trailer1_type" readonly="1"/>
+                            <field attrs="{'required':[('trailer2_id','!=',False)]}" domain="[('fleet_type','=','dolly')]" name="dolly_id"/>
+                            <field name="dolly_type" readonly="1"/>
+                            <field attrs="{'required':[('dolly_id','!=',False)]}" domain="[('id','!=',trailer1_id), ('fleet_type','=','trailer')]" name="trailer2_id"/>
+                            <field name="trailer2_type" readonly="1"/>
+                            <field colspan="2" name="employee_id"/>
+                            <newline/>
+                            <separator colspan="4" string="Validity"/>
+                            <field name="date_start"/>
                             <field name="date_end"/>
                             <field name="active" on_change="on_change_active(active)"/>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="message_ids" widget="mail_thread" placeholder="Share a message..."/>
+                        <field name="message_ids" placeholder="Share a message..." widget="mail_thread"/>
                     </div>
                 </form>
             </field>
         </record>
-
-<!-- Action for tms.unit (Transportation Units Kits) -->
-    <record model="ir.actions.act_window" id="open_view_tms_unit_kit_form">
-        <field name="name">TMS Units Kits</field>
-        <field name="res_model">tms.unit.kit</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="context">{'search_default_active': ''}</field>
-    </record>
-
-<!-- Menu for tms.unit (Transportation Units Kits) -->
-    <menuitem name="Units Kits" 
-              parent="menu_tms_config_unit" 
-              id="menu_tms_config_unit_kit_form" 
-              action="open_view_tms_unit_kit_form"
-        sequence="22"/>
-
+        <!-- Action for tms.unit (Transportation Units Kits) -->
+        <record id="open_view_tms_unit_kit_form" model="ir.actions.act_window">
+            <field name="name">TMS Units Kits</field>
+            <field name="res_model">tms.unit.kit</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_active': ''}</field>
+        </record>
+        <!-- Menu for tms.unit (Transportation Units Kits) -->
+        <menuitem action="open_view_tms_unit_kit_form" id="menu_tms_config_unit_kit_form" name="Units Kits" parent="menu_tms_config_unit" sequence="22"/>
     </data>
 </odoo>

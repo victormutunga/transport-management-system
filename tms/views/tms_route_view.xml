@@ -1,93 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        
-<!-- 
-##############################
-TMS.ROUTE
-##############################
--->
-
-<!-- SEARCH View for tms.route  --> 
+        <!-- SEARCH View for tms.route  -->
         <record id="view_tms_route_search" model="ir.ui.view">
-          <field name="name">tms.route.search</field>
-          <field name="model">tms.route</field>
-          <field name="arch" type="xml">
-            <search string="Routes">
-              <field name="name"/>
-              <field name="departure_id"/>
-              <field name="arrival_id"/>
-              <field name="active" />
-              <newline/>
-              <group  expand='0' string='Group by...'>
-                <filter string='Departure' domain="[]" context="{'group_by' : 'departure_id'}" />
-                <separator orientation="vertical"/>                                                             
-                <filter string='Arrival' domain="[]" context="{'group_by' : 'arrival_id'}" />
-                <separator orientation="vertical"/>                                                           </group>
-            </search>
-          </field>
+            <field name="name">tms.route.search</field>
+            <field name="model">tms.route</field>
+            <field name="arch" type="xml">
+                <search string="Routes">
+                    <field name="name"/>
+                    <field name="departure_id"/>
+                    <field name="arrival_id"/>
+                    <field name="active"/>
+                    <newline/>
+                    <group expand="0" string="Group by...">
+                        <filter context="{'group_by' : 'departure_id'}" domain="[]" string="Departure"/>
+                        <separator orientation="vertical"/>
+                        <filter context="{'group_by' : 'arrival_id'}" domain="[]" string="Arrival"/>
+                        <separator orientation="vertical"/>
+                    </group>
+                </search>
+            </field>
         </record>
-
-<!-- TREE View for tms.route --> 
-  <record model="ir.ui.view" id="view_tms_route_tree">
-          <field name="name">tms.route.tree</field>
-          <field name="model">tms.route</field>
-    <field name="arch" type="xml">
-            <tree string="Routes">
-              <field name="name" />
-        <field name="departure_id" />
-              <field name="arrival_id" />
-        <field name="distance"/>
-              <field name="travel_time" widget="float_time"/>
-      </tree>
-    </field>
-  </record>
-
-<!-- FORM View for tms.route -->
+        <!-- TREE View for tms.route -->
+        <record id="view_tms_route_tree" model="ir.ui.view">
+            <field name="name">tms.route.tree</field>
+            <field name="model">tms.route</field>
+            <field name="arch" type="xml">
+                <tree string="Routes">
+                    <field name="name"/>
+                    <field name="departure_id"/>
+                    <field name="arrival_id"/>
+                    <field name="distance"/>
+                    <field name="travel_time" widget="float_time"/>
+                </tree>
+            </field>
+        </record>
+        <!-- FORM View for tms.route -->
         <record id="view_tms_route_form" model="ir.ui.view">
-          <field name="name">tms.route.form</field>
-          <field name="model">tms.route</field>
-          <field name="arch" type="xml">
-            <form string="Routes" version="9.0">
-              <header>
-                <button name="get_route_info" string="Get Route Info from Google" type="object"/>
-                <button name="open_in_google" string="View in Google Maps" type="object"/>
-              </header>
-              <sheet>
-    <group col="4" colspan="4">
-                  <h1>
-                    <field name="name" colspan="4"/>
-                  </h1>
-    </group>
-    <group col="4" colspan="4">
-                  <field name="departure_id" />
-                  <field name="arrival_id" />
-                  <field name="distance" />
-                  <field name="travel_time" widget="float_time"/>
-                  <field name="active" />
-                </group>
-              </sheet>
-              <div class="oe_chatter">
-                <field name="message_follower_ids" widget="mail_followers"/>
-                <field name="message_ids" widget="mail_thread" placeholder="Share a message..."/>
-              </div>
-            </form>
-          </field>
+            <field name="name">tms.route.form</field>
+            <field name="model">tms.route</field>
+            <field name="arch" type="xml">
+                <form string="Routes" version="9.0">
+                    <header>
+                        <button name="get_route_info" string="Get Route Info from Google" type="object"/>
+                        <button name="open_in_google" string="View in Google Maps" type="object"/>
+                    </header>
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <h1>
+                                <field colspan="4" name="name"/>
+                            </h1>
+                        </group>
+                        <group col="4" colspan="4">
+                            <field name="departure_id"/>
+                            <field name="arrival_id"/>
+                            <field name="distance"/>
+                            <field name="travel_time" widget="float_time"/>
+                            <field name="active"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" placeholder="Share a message..." widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
         </record>
-
-<!-- Action for tms.route -->
-    <record model="ir.actions.act_window" id="open_view_tms_route_form">
-        <field name="name">TMS Routes</field>
-        <field name="res_model">tms.route</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-    </record>
-
-<!-- Menu for tms.route -->
-    <menuitem name="Routes" sequence="10"
-              parent="tms.menu_tms_settings" 
-              id="menu_tms_config_route_form" 
-              action="open_view_tms_route_form"/>
-
+        <!-- Action for tms.route -->
+        <record id="open_view_tms_route_form" model="ir.actions.act_window">
+            <field name="name">TMS Routes</field>
+            <field name="res_model">tms.route</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <!-- Menu for tms.route -->
+        <menuitem action="open_view_tms_route_form" id="menu_tms_settings_route_form" name="Routes" parent="tms.menu_tms_settings_routes" sequence="10"/>
     </data>
 </odoo>
