@@ -21,7 +21,7 @@
         'views/hr_employee_view.xml',
         'views/fleet_vehicle_view.xml',
         # 'views/product_category_view.xml',
-        # 'views/product_product_view.xml',
+        'views/product_product_view.xml',
         # 'views/tms_advance_view.xml',
         'views/tms_config_settings_view.xml',
         # 'views/tms_expense_line_view.xml',
@@ -33,6 +33,7 @@
         # 'views/tms_travel_view.xml',
         # 'views/tms_unit_kit_view.xml',
         # 'views/tms_waybill_view.xml',
+        'data/product_product_data.xml'
     ],
     "demo": [
         'demo/tms_place.xml',

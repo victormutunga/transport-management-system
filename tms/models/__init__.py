@@ -8,7 +8,7 @@ from . import fleet_vehicle
 # from . import fleet_vehicle_odometer
 from . import hr_employee
 # from . import product_category
-# from . import product_product
+from . import product_product
 # from . import tms_advance
 from . import tms_config_settings
 # from . import tms_expense

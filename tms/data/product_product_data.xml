@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<odoo>
+		<data>
+			<record model='product.product' id="product_freight">
+				<field name='name'>Freight</field>
+				<field name='tms_category'>freight</field>
+				<field name='type'>service</field>
+				<field name='purchase_ok' eval="False"/>
+				<field name='sale_ok' eval="True"/>
+			</record>
+			<record model='product.product' id="product_move">
+				<field name='name'>Move</field>
+				<field name='tms_category'>move</field>
+				<field name='type'>service</field>
+				<field name='purchase_ok' eval="False"/>
+				<field name='sale_ok' eval="True"/>
+			</record>
+			<record model='product.product' id="product_insurance">
+				<field name='name'>Insurance</field>
+				<field name='tms_category'>insurance</field>
+				<field name='type'>service</field>
+				<field name='purchase_ok' eval="False"/>
+				<field name='sale_ok' eval="True"/>
+			</record>
+			<record model='product.product' id="product_highway_tolls">
+				<field name='name'>Highway Tolls</field>
+				<field name='tms_category'>highway_tolls</field>
+				<field name='type'>service</field>
+				<field name='purchase_ok' eval="False"/>
+				<field name='sale_ok' eval="True"/>
+			</record>
+			<record model='product.product' id="product_other">
+				<field name='name'>Other</field>
+				<field name='tms_category'>other</field>
+				<field name='type'>service</field>
+				<field name='purchase_ok' eval="False"/>
+				<field name='sale_ok' eval="True"/>
+			</record> 
+			<record model='product.product' id="product_real_expense">
+				<field name='name'>Real Expense</field>
+				<field name='tms_category'>real_expense</field>
+				<field name='type'>service</field>
+				<field name='purchase_ok' eval="True"/>
+				<field name='sale_ok' eval="False"/>
+			</record>
+			<record model='product.product' id="product_fuel">
+				<field name='name'>Fuel</field>
+				<field name='tms_category'>fuel</field>
+				<field name='type'>product</field>
+				<field name='purchase_ok' eval="True"/>
+				<field name='sale_ok' eval="False"/>
+			</record>
+		</data>
+	</odoo>       
