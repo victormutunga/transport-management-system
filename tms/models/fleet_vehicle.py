@@ -14,9 +14,9 @@ class FleetVehicle(models.Model):
 
     name = fields.Char(string='Unit Name', size=64)
     year_model = fields.Char(string='Year Model', size=64)
-    unit_type_id = fields.Many2one(
-        'tms.unit.category', 'Unit Type',
-        domain="[('type','=','unit_type')]")
+    # unit_type_id = fields.Many2one(
+    #     'tms.unit.category', 'Unit Type',
+    #     domain="[('type','=','unit_type')]")
     serial_number = fields.Char(string='Serial Number', size=64)
     registration = fields.Char(string='Registration', size=64)
     fleet_type = fields.Selection(

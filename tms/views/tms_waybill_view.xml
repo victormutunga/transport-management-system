@@ -7,31 +7,11 @@
             <field name="priority">2</field>
             <field name="arch" type="xml">
                 <tree colors="gray:state=='cancel';red:state=='draft';green:state=='approved';" string="Waybills">
-                    <field name="name"/>
                     <field name="date_order"/>
-                    <field name="travel_id"/>
-                    <field name="client_order_ref"/>
                     <field name="partner_id"/>
-                    <field name="product_qty"/>
-                    <!--sum="Product Quantity"/>-->
                     <field name="amount_untaxed" sum="Amount Untaxed"/>
                     <field name="amount_tax"/>
-                    <!--sum="Taxes"/>-->
                     <field name="amount_total"/>
-                    <!--sum="Total "/>-->
-                    <field name="supplier_amount"/>
-                    <!--sum="Amount Supplier"/>-->
-                    <field invisible="1" name="invoice_id"/>
-                    <field invisible="1" name="invoice_name"/>
-                    <field invisible="1" name="supplier_id"/>
-                    <field invisible="1" name="user_id"/>
-                    <field invisible="1" name="shop_id"/>
-                    <field invisible="1" name="employee_id"/>
-                    <field invisible="1" name="waybill_type"/>
-                    <field invisible="1" name="waybill_category"/>
-                    <field invisible="1" name="product_uom_type"/>
-                    <!-- <field name="operation_id" invisible="1"/>-->
-                    <field name="state"/>
                     <button groups="tms.group_waybill_approve" icon="gtk-go-forward" name="action_approve" states="draft" string="Approve" type="object"/>
                     <button groups="tms.group_waybill_confirm" icon="gtk-goto-last" name="action_confirm" states="approved" string="Confirm" type="object"/>
                 </tree>
@@ -43,117 +23,30 @@
             <field name="arch" type="xml">
                 <form string="Waybill" version="7.0">
                     <header>
-                        <button groups="tms.group_waybill_cancel" name="%(action_waybill_cancel)d" states="draft,approved,confirmed" string="Cancel" type="action"/>
-                        <button groups="tms.group_waybill_setdraft" icon="gtk-convert" name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
-                        <button class="oe_highlight" groups="tms.group_waybill_approve" icon="gtk-go-forward" name="action_approve" states="draft" string="Approve" type="object"/>
-                        <button class="oe_highlight" groups="tms.group_waybill_confirm" icon="gtk-goto-last" name="action_confirm" states="approved" string="Confirm" type="object"/>
-                        <field name="state" statusbar_visible="draft,approved,confirmed" widget="statusbar"/>
+                        <button icon="fa-times" name="action_cancel" states="draft,approved,confirmed" string="Cancel" type="object"/>
+                        <button icon="fa-reply" name="" states="cancel" string="Set to Draft" type="object"/>
+                        <button class="oe_highlight" icon="fa-thumbs-up" name="action_approve" states="draft" string="Approve" type="object"/>
+                        <button class="oe_highlight" icon="fa-check-square-o" name="action_confirm" states="approved" string="Confirm" type="object"/>
+                        <button icon="fa-print" name="" string="Print Fuel Voucher" type="action"/>
+                        <field name="state" statusbar_visible="draft,approved,confirmed,closed,cancel" widget="statusbar"/>
                     </header>
                     <sheet>
                         <h1>
                             <label string="Waybill"/>
-                            <field class="oe_inline" name="name" readonly="1"/>
                         </h1>
-                        <field invisible="1" name="company_id" readonly="1"/>
                         <group col="4">
-                            <field name="shop_id"/>
                             <field name="date_order"/>
                             <field name="currency_id"/>
-                            <field context="{'default_tms_waybill_sequence': 1,'default_shop_id': shop_id}" domain="[('shop_id','=',shop_id)]" name="sequence_id" on_change="onchange_sequence_id(sequence_id)" required="1"/>
-                            <!-- <field name="operation_id" />-->
-                            <field domain="['|',('shop_id','=',shop_id),('shop_id','=',False)]" name="waybill_category"/>
-                            <separator colspan="4" string="·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·" style="text-align: center;"/>
-                            <field colspan="4" domain="[('customer','=',True), ('is_company', '=', True)]" name="partner_id" on_change="onchange_partner_id(partner_id)"/>
+                            <separator colspan="4" string="·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·" style="text-align: center;"/>
+                            <field colspan="4" domain="[('customer','=',True), ('is_company', '=', True)]" name="partner_id"/>
                             <field context="{'search_default_customer':1, 'show_address': 1}" domain="[('parent_id','=',partner_id)]" name="partner_order_id" options="{&quot;always_reload&quot;: True}"/>
-                            <field context="{'search_default_customer':1, 'show_address': 1}" domain="[('parent_id','=',partner_id)]" name="partner_invoice_id" options="{&quot;always_reload&quot;: True}"/>
-                            <field context="{'search_default_customer':1, 'show_address': 1}" name="departure_address_id" options="{&quot;always_reload&quot;: True}"/>
-                            <field context="{'search_default_customer':1, 'show_address': 1}" name="arrival_address_id" options="{&quot;always_reload&quot;: True}"/>
                             <field name="upload_point"/>
                             <field name="download_point"/>
                         </group>
                         <notebook colspan="4">
                             <page string="Lines">
-                                <group>
-                                    <separator coslpan="4" string="Travels"/>
-                                    <field colspan="4" name="travel_ids" nolabel="1" on_change="onchange_travel_ids(travel_ids)"/>
-                                    <!--widget="many2many_tags" placeholder="Travels where this Waybill has been..."/>-->
-                                    <field colspan="2" name="travel_id" readonly="1"/>
-                                    <field colspan="4" invisible="1" name="route_id"/>
-                                    <field colspan="4" invisible="1" name="employee_id"/>
-                                    <field invisible="1" name="departure_id"/>
-                                    <field invisible="1" name="arrival_id"/>
-                                    <field invisible="1" name="unit_id"/>
-                                    <field invisible="1" name="trailer1_id"/>
-                                    <field invisible="1" name="dolly_id"/>
-                                    <field invisible="1" name="trailer2_id"/>
-                                    <separator colspan="4" string="Waybill Factor Client"/>
-                                    <field colspan="4" context="{'default_waybill_id': active_id,'default_category':'customer'}" domain="[('category','=','customer')]" name="waybill_customer_factor" nolabel="1"/>
-                                    <separator colspan="4" string="Shipped Product"/>
-                                    <field colspan="8" name="waybill_shipped_product" nolabel="1">
-                                        <!--context="{'default_waybill_id': active_id}" colspan="4" nolabel="1">-->
-                                        <tree editable="bottom" string="Shipped Product">
-                                            <field invisible="1" name="name"/>
-                                            <field context="{'default_purchase_ok':0, 'default_sale_ok':0,'default_tms_category': 'transportable','default_type': 'service', 'default_procure_method':'make_to_stock', 'default_supply_method': 'buy'}" domain="[('tms_category','=','transportable')]" name="product_id" on_change="on_change_product_id(product_id)"/>
-                                            <field name="product_uom"/>
-                                            <field name="product_uom_qty" sum="Quantity"/>
-                                            <field name="notes"/>
-                                            <field name="sequence" string="Seq"/>
-                                        </tree>
-                                    </field>
-                                    <separator colspan="4" string="Waybill Lines"/>
-                                    <field colspan="4" name="waybill_line" nolabel="1">
-                                        <tree string="Waybill Lines">
-                                            <field name="name"/>
-                                            <field name="product_id"/>
-                                            <field name="product_uom"/>
-                                            <field name="product_uom_qty"/>
-                                            <field name="price_unit"/>
-                                            <field name="price_amount" sum="Price"/>
-                                            <field name="price_discount" sum="Discount"/>
-                                            <field name="price_subtotal" sum="Subtotal"/>
-                                            <field name="tax_amount" sum="Tax"/>
-                                            <field name="price_total" sum="Total"/>
-                                            <field name="sequence" string="Seq"/>
-                                        </tree>
-                                        <form string="Waybill Lines">
-                                            <group col="4" colspan="4">
-                                                <field name="line_type"/>
-                                                <newline/>
-                                                <field attrs="{'invisible':[('line_type','!=','product')],'required':[('line_type','=','product')]}" context="{'default_tms_category': 'freight','default_type': 'service', 'default_procure_method':'make_to_stock', 'default_supply_method': 'buy'}" domain="[('tms_category','in',('freight', 'move','insurance','highway_tolls', 'other'))]" name="product_id" on_change="on_change_product_id(product_id, parent.partner_id)"/>
-                                                <field attrs="{'invisible':[('line_type','!=','product')],'required':[('line_type','=','product')]}" name="product_uom"/>
-                                                <field attrs="{'invisible':[('line_type','!=','product')],'required':[('line_type','=','product')]}" name="product_uom_qty" on_change="on_change_amount(product_uom_qty, price_unit, discount, product_id, parent.partner_id)"/>
-                                                <newline/>
-                                                <field attrs="{'invisible':[('line_type','!=','product')],'required':[('line_type','=','product')]}" name="price_unit" on_change="on_change_amount(product_uom_qty, price_unit, discount, product_id, parent.partner_id)"/>
-                                                <newline/>
-                                                <field attrs="{'invisible':[('line_type','!=','product')]}" name="price_amount" readonly="1" sum="Price Amount"/>
-                                                <newline/>
-                                                <field attrs="{'invisible':[('line_type','!=','product')],'required':[('line_type','=','product')]}" name="discount" on_change="on_change_amount(product_uom_qty, price_unit, discount, product_id, parent.partner_id)"/>
-                                                <newline/>
-                                                <field attrs="{'invisible':[('line_type','!=','product')]}" name="price_discount" readonly="1"/>
-                                                <newline/>
-                                                <field attrs="{'invisible':[('line_type','!=','product')]}" name="price_subtotal" readonly="1"/>
-                                                <newline/>
-                                                <field attrs="{'invisible':[('line_type','!=','product')]}" name="tax_amount" readonly="1"/>
-                                                <newline/>
-                                                <field attrs="{'invisible':[('line_type','!=','product')]}" name="price_total" readonly="1"/>
-                                                <newline/>
-                                                <field colspan="4" name="name"/>
-                                                <field name="sequence"/>
-                                                <field name="tax_id" placeholder="Taxes" widget="many2many_tags"/>
-                                            </group>
-                                        </form>
-                                    </field>
+<!--                                 <group>
                                     <group col="4" colspan="4">
-                                        <group colspan="2">
-                                            <field name="tax_line" nolabel="1">
-                                                <tree>
-                                                    <field name="name"/>
-                                                    <field name="tax_id"/>
-                                                    <field name="base"/>
-                                                    <field name="tax_amount" sum="Impuestos"/>
-                                                </tree>
-                                            </field>
-                                        </group>
                                         <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
                                             <field name="amount_freight" options="{'currency_field': 'currency_id'}" widget="monetary"/>
                                             <field name="amount_move" options="{'currency_field': 'currency_id'}" widget="monetary"/>
@@ -167,123 +60,42 @@
                                             <field name="amount_tax" options="{'currency_field': 'currency_id'}" widget="monetary"/>
                                             <div class="oe_subtotal_footer_separator oe_inline">
                                                 <label for="amount_total"/>
-                                                <button class="oe_edit_only oe_link" name="button_dummy" states="draft" string="(update)" type="object"/>
                                             </div>
                                             <field class="oe_subtotal_footer_separator" name="amount_total" nolabel="1" options="{'currency_field': 'currency_id'}" widget="monetary"/>
                                         </group>
                                     </group>
-                                </group>
-                            </page>
-                            <page string="Extra Fields">
-                                <group col="4" colspan="4">
-                                    <field name="waybill_type"/>
-                                    <field name="client_order_ref"/>
-                                    <field name="origin"/>
-                                    <field name="amount_declared"/>
-                                    <field name="billing_policy"/>
-                                    <newline/>
-                                    <field colspan="4" context="{'default_waybill_id': active_id, 'default_mandatory': 1}" name="waybill_extradata" nolabel="1">
-                                        <tree string="Extra Fields">
-                                            <field name="mandatory"/>
-                                            <field name="type_extra"/>
-                                            <field name="name"/>
-                                            <field name="value_extra"/>
-                                            <field name="sequence"/>
-                                        </tree>
-                                        <form string="Extra Fields">
-                                            <field colspan="4" name="name" required="1"/>
-                                            <field name="type_extra"/>
-                                            <newline/>
-                                            <field invisible="1" name="mandatory"/>
-                                            <field invisible="1" name="value_extra"/>
-                                            <field attrs="{'invisible':[('type_extra','!=','char')],'required':[('type_extra','=','char'),('mandatory','=',1)]}" colspan="4" name="value_char" on_change="on_change_value(type_extra, value_char)"/>
-                                            <field attrs="{'invisible':[('type_extra','!=','text')],'required':[('type_extra','=','text'),('mandatory','=',1)]}" colspan="4" name="value_text" on_change="on_change_value(type_extra, value_text)"/>
-                                            <field attrs="{'invisible':[('type_extra','!=','integer')],'required':[('type_extra','=','integer'),('mandatory','=',1)]}" colspan="4" name="value_integer" on_change="on_change_value(type_extra, value_integer)"/>
-                                            <field attrs="{'invisible':[('type_extra','!=','float')],'required':[('type_extra','=','float'),('mandatory','=',1)]}" colspan="4" name="value_float" on_change="on_change_value(type_extra, value_float)"/>
-                                            <field attrs="{'invisible':[('type_extra','!=','date')],'required':[('type_extra','=','date'),('mandatory','=',1)]}" colspan="4" name="value_date" on_change="on_change_value(type_extra, value_date)"/>
-                                            <field attrs="{'invisible':[('type_extra','!=','datetime')],'required':[('type_extra','=','datetime'),('mandatory','=',1)]}" colspan="4" name="value_datetime" on_change="on_change_value(type_extra, value_datetime)"/>
-                                            <field name="sequence"/>
-                                        </form>
-                                    </field>
-                                </group>
-                            </page>
-                            <page attrs="{'invisible':[('waybill_type','!=','outsourced')]}" string="Factor Supplier">
-                                <separator colspan="4" string="Waybill Supplier Factors"/>
-                                <field attrs="{'readonly':[('supplier_invoiced','=',1)]}" colspan="4" context="{'default_waybill_id': active_id,'default_category':'supplier'}" domain="[('category','=','supplier')]" name="waybill_supplier_factor" nolabel="1"/>
-                                <field name="supplier_amount"/>
-                            </page>
-                            <page string="Factor Driver">
-                                <separator colspan="4" string="Driver Salary Factors"/>
-                                <field colspan="4" context="{'default_waybill_id': active_id,'default_category':'driver'}" domain="[('category','=','driver')]" name="expense_driver_factor" nolabel="1"/>
+                                </group> -->
                             </page>
                             <page string="Times">
-                                <group col="4" colspan="4">
-                                    <group colspan="2">
-                                        <separator string="Scheduled"/>
-                                        <newline/>
-                                        <field name="date_start"/>
-                                        <field name="date_up_start_sched"/>
-                                        <field name="date_up_end_sched"/>
-                                        <field name="date_up_docs_sched"/>
-                                        <field name="date_appoint_down_sched"/>
-                                        <field name="date_down_start_sched"/>
-                                        <field name="date_down_end_sched"/>
-                                        <field name="date_down_docs_sched"/>
-                                        <field name="date_end"/>
-                                    </group>
-                                    <group colspan="2">
-                                        <separator string="Real"/>
-                                        <newline/>
-                                        <field name="date_start_real"/>
-                                        <field name="date_up_start_real"/>
-                                        <field name="date_up_end_real"/>
-                                        <field name="date_up_docs_real"/>
-                                        <field name="date_appoint_down_real"/>
-                                        <field name="date_down_start_real"/>
-                                        <field name="date_down_end_real"/>
-                                        <field name="date_down_docs_real"/>
-                                        <field name="date_end_real"/>
-                                    </group>
+                            <group colspan="4" col="4">
+                                <group colspan="2">
+                                    <separator string="Scheduled" />
+                                    <newline/>
+                                    <field name="date_start" />
+                                    <field name="date_up_start_sched" />
+                                    <field name="date_up_end_sched" />
+                                    <field name="date_up_docs_sched" />
+                                    <field name="date_appoint_down_sched" />
+                                    <field name="date_down_start_sched" />
+                                    <field name="date_down_end_sched" />
+                                    <field name="date_down_docs_sched" />
+                                    <field name="date_end" />
                                 </group>
-                            </page>
-                            <page string="Notes">
-                                <field colspan="4" name="notes" nolabel="1" placeholder="Notes..."/>
-                            </page>
-                            <page string="Log">
-                                <group col="4" colspan="4">
-                                    <group colspan="2">
-                                        <separator colspan="2" string="Client Invoice Data"/>
-                                        <field name="invoiced"/>
-                                        <field name="invoice_id" readonly="1"/>
-                                        <field name="invoice_name" readonly="1"/>
-                                        <field name="invoice_paid" readonly="1"/>
-                                        <newline/>
-                                        <separator colspan="2" string="Log"/>
-                                        <field name="create_uid" readonly="1"/>
-                                        <field name="approved_by" readonly="1"/>
-                                        <field name="confirmed_by" readonly="1"/>
-                                        <field name="cancelled_by" readonly="1"/>
-                                        <field name="drafted_by" readonly="1"/>
-                                        <field name="supplier_invoiced_by" readonly="1"/>
-                                    </group>
-                                    <group colspan="2">
-                                        <separator colspan="2" string="Supplier Invoice Data"/>
-                                        <field name="supplier_invoiced"/>
-                                        <field name="supplier_invoice_id" readonly="1"/>
-                                        <field name="supplier_invoice_name" readonly="1"/>
-                                        <field name="supplier_invoice_paid" readonly="1"/>
-                                        <newline/>
-                                        <separator colspan="2" string="···"/>
-                                        <field name="create_date" readonly="1"/>
-                                        <field name="date_approved" readonly="1"/>
-                                        <field name="date_confirmed" readonly="1"/>
-                                        <field name="date_cancelled" readonly="1"/>
-                                        <field name="date_drafted" readonly="1"/>
-                                        <field name="supplier_invoiced_date" readonly="1"/>
-                                    </group>
-                                    <field name="move_id"/>
+                                <group colspan="2">
+                                    <separator string="Real" />
+                                    <newline/>
+                                    <field name="date_start_real" />
+                                    <field name="date_up_start_real" />
+                                    <field name="date_up_end_real" />
+                                    <field name="date_up_docs_real" />
+                                    <field name="date_appoint_down_real" />
+                                    <field name="date_down_start_real" />
+                                    <field name="date_down_end_real" />
+                                    <field name="date_down_docs_real" />
+                                    <field name="date_end_real" />
                                 </group>
-                            </page>
+                            </group>
+                        </page>
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">
@@ -299,47 +111,19 @@
             <field name="arch" type="xml">
                 <search string="Search Waybills">
                     <field name="partner_id"/>
-                    <field name="travel_id"/>
-                    <field name="supplier_id"/>
                     <field name="date_order" string="Waybill date"/>
-                    <field name="name" select="1"/>
-                    <field name="client_order_ref"/>
-                    <field name="user_id" select="1"/>
-                    <field name="route_id"/>
-                    <field name="departure_id"/>
-                    <field name="arrival_id"/>
-                    <field name="product_uom_type"/>
-                    <!-- <field name="operation_id" />-->
                     <separator/>
-                    <filter domain="[('state','=','draft')]" icon="terp-gtk-media-pause" string="Pending"/>
-                    <filter domain="[('state','=','approved')]" icon="terp-gtk-jump-to-ltr" string="Approved"/>
-                    <filter domain="[('state','=','confirmed')]" icon="terp-check" string="Confirmed"/>
-                    <separator/>
-                    <filter domain="[('travel_id','=',False)]" icon="terp-dialog-close" string="Without Travel"/>
                     <filter domain="[('invoice_id','!=', False)]" icon="terp-stock_symbol-selection" string="Invoiced"/>
                     <filter domain="[('invoice_id','=', False)]" icon="terp-dialog-close" string="Not Invoiced"/>
-                    <filter domain="[('state','!=','cancel')]" icon="terp-stock_symbol-selection" name="not_cancelled" string="Not Cancelled"/>
-                    <filter domain="[('waybill_type','=', 'outsourced')]" icon="terp-dialog-close" string="Outsourced"/>
-                    <filter domain="[('waybill_type','=', 'outsourced'),('supplier_invoiced', '=', False)]" icon="terp-dialog-close" string="Outsourced and Not Invoiced"/>
                     <filter domain="[('date_order','&gt;=', time.strftime('%%Y-%%m-01'))]" icon="terp-check" name="this_month" string="From this month"/>
                     <newline/>
-                    <filter domain="[('user_id','=',uid)]" help="My Waybills" icon="terp-personal"/>
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter context="{'group_by':'partner_id'}" domain="[]" icon="terp-personal" string="Customer"/>
-                        <filter context="{'group_by':'employee_id'}" domain="[]" icon="terp-personal" string="Driver"/>
-                        <filter context="{'group_by':'waybill_type'}" domain="[]" icon="terp-personal" string="Waybill Type"/>
-                        <filter context="{'group_by':'waybill_category'}" domain="[]" icon="terp-personal" string="Waybill Category"/>
                         <separator orientation="vertical"/>
                         <filter context="{'group_by':'state'}" domain="[]" icon="terp-stock_effects-object-colorize" string="State"/>
-                        <filter context="{'group_by':'product_uom_type'}" domain="[]" icon="terp-stock_effects-object-colorize" string="Product UoM Type"/>
                         <separator orientation="vertical"/>
                         <filter context="{'group_by':'date_order'}" domain="[]" icon="terp-go-month" string="Order Date"/>
-                        <filter context="{'group_by' : 'invoice_name'}" domain="[]" icon="terp-stock_symbol-selection" string="Invoice"/>
-                        <filter context="{'group_by':'user_id'}" domain="[]" icon="terp-personal" string="Salesman"/>
-                        <filter context="{'group_by' : 'shop_id'}" domain="[]" icon="terp-stock_symbol-selection" string="Shop"/>
-                        <filter context="{'group_by' : 'supplier_id'}" domain="[]" icon="terp-stock_symbol-selection" string="Supplier"/>
-                        <!-- <filter string='Operation' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'operation_id'}" />-->
                         <filter context="{'group_by' : 'date_order'}" domain="[]" icon="terp-stock_symbol-selection" string="Period"/>
                     </group>
                 </search>
@@ -349,7 +133,7 @@
             <field name="name">tms.waybill.calendar</field>
             <field name="model">tms.waybill</field>
             <field name="arch" type="xml">
-                <calendar color="state" date_start="date_order" string="Waybills">
+                <calendar  date_start="date_order" string="Waybills">
                     <field name="partner_id"/>
                     <field name="amount_untaxed"/>
                 </calendar>
@@ -372,7 +156,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="search_view_id" ref="view_tms_waybill_filter"/>
-            <field name="context">{&quot;search_default_user_id&quot;:uid, 'search_default_this_month': 1}</field>
             <field name="help">Waybills</field>
         </record>
         <menuitem action="action_tms_waybill_form" id="menu_tms_waybill" parent="menu_tms_travels" sequence="2"/>

@@ -32,64 +32,63 @@ class TmsWaybillTaxes(models.Model):
 
     _order = "tax_amount desc"
 
-    def compute(self, waybill_ids):
-        # for id in waybill_ids:
-        #     self.execute(
-        #         "DELETE FROM tms_waybill_taxes WHERE waybill_id=%s", (id,))
-        # tax_obj = self.pool.get('account.tax')
-        # cur_obj = self.pool.get('res.currency')
-        # # wb_taxes_obj = self.pool.get('tms.waybill.taxes')
-        # for waybill in self.pool.get('tms.waybill').browse(waybill_ids):
-        #     tax_grouped = {}
-        #     cur = waybill.currency_id
-        #     company_currency = self.pool['res.company'].browse(
-        #         waybill.company_id.id).currency_id.id
-        #     for line in waybill.waybill_line:
-        #         for tax in tax_obj.compute_all(
-        #                 line.tax_id, line.price_unit, line.product_uom_qty,
-        #                 line.product_id, waybill.partner_id)['taxes']:
-        #             val = {}
-        #             val['waybill_id'] = waybill.id
-        #             val['name'] = tax['name']
-        #             val['tax_id'] = tax['id']
-        #             val['amount'] = tax['amount']
-        #             val['base'] = cur_obj.round(
-        #                 cur, tax['price_unit'] * line['product_uom_qty'])
-        #             val['base_amount'] = cur_obj.compute(
-        #                 waybill.currency_id.id, company_currency,
-        #                 val['base'] * tax['base_sign'],
-        #                 context={'date': waybill.date_order or time.strftime(
-        #                     '%Y-%m-%d')}, round=False)
-        #             val['tax_amount'] = cur_obj.compute(
-        #                 waybill.currency_id.id, company_currency,
-        #                 val['amount'] * tax['tax_sign'],
-        #                 context={'date': waybill.date_order or time.strftime(
-        #                     '%Y-%m-%d')}, round=False)
-        #             val['account_id'] = tax['account_collected_id'] or False
-        #             val['account_analytic_id'] = tax[
-        #                 'account_analytic_collected_id']
-        #             key = (val['tax_id'], val['name'], val['account_id'],
-        #                    val['account_analytic_id'])
-        #             if key not in tax_grouped:
-        #                 tax_grouped[key] = val
-        #             else:
-        #                 tax_grouped[key]['amount'] += val['amount']
-        #                 tax_grouped[key]['base'] += val['base']
-        #                 tax_grouped[key]['base_amount'] += val['base_amount']
-        #                 tax_grouped[key]['tax_amount'] += val['tax_amount']
+    # def compute(self, waybill_ids):
+    #     for id in waybill_ids:
+    #         self.execute(
+    #             "DELETE FROM tms_waybill_taxes WHERE waybill_id=%s", (id,))
+    #     tax_obj = self.pool.get('account.tax')
+    #     cur_obj = self.pool.get('res.currency')
+    #     # wb_taxes_obj = self.pool.get('tms.waybill.taxes')
+    #     for waybill in self.pool.get('tms.waybill').browse(waybill_ids):
+    #         tax_grouped = {}
+    #         cur = waybill.currency_id
+    #         company_currency = self.pool['res.company'].browse(
+    #             waybill.company_id.id).currency_id.id
+    #         for line in waybill.waybill_line:
+    #             for tax in tax_obj.compute_all(
+    #                     line.tax_id, line.price_unit, line.product_uom_qty,
+    #                     line.product_id, waybill.partner_id)['taxes']:
+    #                 val = {}
+    #                 val['waybill_id'] = waybill.id
+    #                 val['name'] = tax['name']
+    #                 val['tax_id'] = tax['id']
+    #                 val['amount'] = tax['amount']
+    #                 val['base'] = cur_obj.round(
+    #                     cur, tax['price_unit'] * line['product_uom_qty'])
+    #                 val['base_amount'] = cur_obj.compute(
+    #                     waybill.currency_id.id, company_currency,
+    #                     val['base'] * tax['base_sign'],
+    #                     context={'date': waybill.date_order or time.strftime(
+    #                         '%Y-%m-%d')}, round=False)
+    #                 val['tax_amount'] = cur_obj.compute(
+    #                     waybill.currency_id.id, company_currency,
+    #                     val['amount'] * tax['tax_sign'],
+    #                     context={'date': waybill.date_order or time.strftime(
+    #                         '%Y-%m-%d')}, round=False)
+    #                 val['account_id'] = tax['account_collected_id'] or False
+    #                 val['account_analytic_id'] = tax[
+    #                     'account_analytic_collected_id']
+    #                 key = (val['tax_id'], val['name'], val['account_id'],
+    #                        val['account_analytic_id'])
+    #                 if key not in tax_grouped:
+    #                     tax_grouped[key] = val
+    #                 else:
+    #                     tax_grouped[key]['amount'] += val['amount']
+    #                     tax_grouped[key]['base'] += val['base']
+    #                     tax_grouped[key]['base_amount'] += val['base_amount']
+    #                     tax_grouped[key]['tax_amount'] += val['tax_amount']
 
-        #     for t in tax_grouped.values():
-        #         # vals = {'waybill_id': waybill.id,
-        #         #         'name': t['name'],
-        #         #         'tax_id': t['tax_id'],
-        #         #         'account_id': t['account_id'],
-        #         #         'account_analytic_id': t['account_analytic_id'],
-        #         #         'tax_amount': t['amount'],
-        #         #         'base': t['base'],
-        #         #         }
-        #         # res = wb_taxes_obj.create(cr, uid, vals)
-        #         t['base'] = cur_obj.round(cur, t['base'])
-        #         t['amount'] = cur_obj.round(cur, t['amount'])
-        #         t['base_amount'] = cur_obj.round(cur, t['base_amount'])
-        #         t['tax_amount'] = cur_obj.round(cur, t['tax_amount'])
-        return 'comida'
+    #         for t in tax_grouped.values():
+    #             # vals = {'waybill_id': waybill.id,
+    #             #         'name': t['name'],
+    #             #         'tax_id': t['tax_id'],
+    #             #         'account_id': t['account_id'],
+    #             #         'account_analytic_id': t['account_analytic_id'],
+    #             #         'tax_amount': t['amount'],
+    #             #         'base': t['base'],
+    #             #         }
+    #             # res = wb_taxes_obj.create(cr, uid, vals)
+    #             t['base'] = cur_obj.round(cur, t['base'])
+    #             t['amount'] = cur_obj.round(cur, t['amount'])
+    #             t['base_amount'] = cur_obj.round(cur, t['base_amount'])
+    #             t['tax_amount'] = cur_obj.round(cur, t['tax_amount'])
