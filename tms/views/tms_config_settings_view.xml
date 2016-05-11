@@ -16,7 +16,7 @@
                             <field class="oe_inline" name="module_tms_agreement"/>
                             <label for="module_tms_agreement"/>
                         </div>
-                        <label for="id" string="Business Inteligence"/>
+                        <label for="id" string="Business Inteligence"/> 
                         <div>
                             <field class="oe_inline" name="module_tms_analysis"/>
                             <label for="module_tms_analysis"/>

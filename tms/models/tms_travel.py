@@ -317,15 +317,13 @@ class TmsTravel(models.Model):
     user_id = fields.Many2one(
         'res.users', 'Salesman', select=True, readonly=False,
         states={'cancel': [('readonly', True)],
-                'closed': [('readonly', True)]},
-        default=(lambda obj, cr, uid, context: uid))
+                'closed': [('readonly', True)]})
     parameter_distance = fields.Integer(
         'Distance Parameter',
         help="1 = Travel, 2 = Travel Expense, 3 = Manual, 4 = Tyre",
-        default=(lambda s, cr, uid, c: int(
-            s.pool.get('ir.config_parameter').get_param(
-                cr, uid,
-                'tms_property_update_vehicle_distance', context=c)[0])))
+        default=(lambda self: int(
+            self.env['ir.config_parameter'].get_param(
+                'tms_property_update_vehicle_distance')[0])))
     expense_ids = fields.Many2many(
         'tms.expense', string='Expense Record')
     expense_ids2 = fields.Many2many(

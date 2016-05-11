@@ -7,19 +7,19 @@
             <field name="priority">2</field>
             <field name="arch" type="xml">
                 <tree colors="blue:line_type=='salary';gray:line_type=='madeup_expense';red:price_total&lt;0;" string="Expense Lines">
-                    <field name="travel_id"/>
+                    <!-- <field name="travel_id"/> -->
                     <field name="line_type"/>
                     <field name="name"/>
                     <field name="product_id"/>
                     <field name="product_uom"/>
                     <field name="product_uom_qty"/>
                     <field name="price_unit"/>
-                    <field name="price_subtotal" sum="Price Subtotal"/>
-                    <field name="tax_amount" sum="Tax Amount"/>
-                    <field name="price_total" sum="Price Total"/>
+                    <!-- <field name="price_subtotal" sum="Price Subtotal"/> -->
+                    <!-- <field name="tax_amount" sum="Tax Amount"/> -->
+                    <!-- <field name="price_total" sum="Price Total"/> -->
                     <field name="sequence"/>
                     <!-- <field name="operation_id" />-->
-                    <field name="is_invoice"/>
+                    <field name="is_invoice"/> 
                 </tree>
             </field>
         </record>
@@ -28,7 +28,7 @@
             <field name="model">tms.expense.line</field>
             <field name="arch" type="xml">
                 <form string="Expense Lines">
-                    <field domain="[('id','in', tuple([x.id for x in paren.travel_ids]),)]" name="travel_id"/>
+                    <!-- <field domain="[('id','in', tuple([x.id for x in paren.travel_ids]),)]" name="travel_id"/> -->
                     <!-- <field name="operation_id" domain="[('state','not in', ('draft', 'cancel'))]" />-->
                     <field invisible="1" name="control"/>
                     <field attrs="{'readonly':[('control','!=',False)]}" name="line_type" required="1"/>
@@ -40,13 +40,13 @@
                     <field invisible="1" name="price_unit"/>
                     <field name="price_unit_control" readonly="1"/>
                     <newline/>
-                    <field name="price_subtotal" readonly="1"/>
+                    <!-- <field name="price_subtotal" readonly="1"/> -->
                     <newline/>
-                    <field name="tax_amount" readonly="1"/>
+                    <!-- <field name="tax_amount" readonly="1"/> -->
                     <newline/>
-                    <field attrs="{'readonly':[('control','!=',False)]}" name="price_total" on_change="on_change_price_total(product_id, product_uom_qty, price_total, special_tax_amount)" required="1"/>
+                    <!-- <field attrs="{'readonly':[('control','!=',False)]}" name="price_total" on_change="on_change_price_total(product_id, product_uom_qty, price_total, special_tax_amount)" required="1"/> -->
                     <newline/>
-                    <field attrs="{'invisible':['|',('is_invoice','=',0),('line_type','!=','fuel')],                                                         'required':[('is_invoice','=',True)]}" name="special_tax_amount" on_change="on_change_price_total(product_id, product_uom_qty, price_total, special_tax_amount)"/>
+                    <field attrs="{'invisible':['|',('is_invoice','=',0),('line_type','!=','fuel')],                                                         'required':[('is_invoice','=',True)]}" name="special_tax_amount" />
                     <newline/>
                     <field attrs="{'readonly':[('control','!=',False)]}" colspan="4" name="name"/>
                     <field attrs="{'invisible':[('line_type','not in',('fuel','real_expense'))]}" colspan="4" name="is_invoice"/>

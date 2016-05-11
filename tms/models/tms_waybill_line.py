@@ -13,34 +13,27 @@ class TmsWaybillLine(models.Model):
     _name = 'tms.waybill.line'
     _description = 'Waybill Line'
 
-#     def _amount_line(self, field_name, args):
-#         tax_obj = self.pool.get('account.tax')
-#         cur_obj = self.pool.get('res.currency')
-#         res = {}
-#         for line in self.browse(self):
-#             price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-#             taxes = tax_obj.compute_all(
-#                 line.tax_id, price, line.product_uom_qty,
-#                 line.product_id, line.waybill_id.partner_id)
-#             cur = line.waybill_id.currency_id
-#             amount_with_taxes = cur_obj.round(cur, taxes['total_included'])
-#             amount_tax = cur_obj.round(
-#                 cur, taxes['total_included']) - cur_obj.round(
-#                 cur, taxes['total'])
-#             price_subtotal = line.price_unit * line.product_uom_qty
-#             price_discount = price_subtotal * (line.discount or 0.0) / 100.0
-#             res[line.id] = {
-#                 'price_total': amount_with_taxes,
-#                 'price_amount': price_subtotal,
-#                 'price_discount': price_discount,
-#                 'price_subtotal': (price_subtotal - price_discount),
-#                 'tax_amount': amount_tax,
-#             }
-#         return 'comida'
+    def _amount_line(self, field_name, args):
+        tax_obj = self.env['account.tax']
+        cur_obj = self.env['res.currency']
+        for line in self.search(self):
+            price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+            taxes = tax_obj.compute_all(
+                line.tax_id, price, line.product_uom_qty,
+                line.product_id, line.waybill_id.partner_id)
+            cur = line.waybill_id.currency_id
+            amount_with_taxes = cur_obj.round(cur, taxes['total_included'])
+            amount_tax = cur_obj.round(
+                cur, taxes['total_included']) - cur_obj.round(
+                cur, taxes['total'])
+            price_subtotal = line.price_unit * line.product_uom_qty
+            price_discount = price_subtotal * (line.discount or 0.0) / 100.0
+            self.price_total = amount_with_taxes
+            self.price_amount = price_subtotal
+            self.price_discount = price_discount
+            self.price_subtotal = (price_subtotal - price_discount)
+            self.tax_amount = amount_tax,
 
-#   agreement_id = fields.Many2one(
-#       'tms.agreement', 'Agreement', required=False, ondelete='cascade',
-#       select=True, readonly=True)
     waybill_id = fields.Many2one(
         'tms.waybill', 'Waybill', required=False, ondelete='cascade',
         select=True, readonly=True)
@@ -61,26 +54,26 @@ class TmsWaybillLine(models.Model):
     price_unit = fields.Float(
         'Unit Price', required=True,
         digits_compute=dp.get_precision('Sale Price'), default=0.0)
-    # price_subtotal = fields.Float(
-    #     compute=_amount_line, method=True, string='Subtotal',
-    #     digits_compute=dp.get_precision('Sale Price'), store=True,
-    #     multi='price_subtotal')
-    # price_amount = fields.Float(
-    #     compute=_amount_line, method=True, string='Price Amount',
-    #     digits_compute=dp.get_precision('Sale Price'), store=True,
-    #     multi='price_subtotal')
-    # price_discount = fields.Float(
-    #     compute=_amount_line, method=True, string='Discount',
-    #     digits_compute=dp.get_precision('Sale Price'), store=True,
-    #     multi='price_subtotal')
-    # price_total = fields.Float(
-    #     compute=_amount_line, method=True, string='Total Amount',
-    #     digits_compute=dp.get_precision('Sale Price'), store=True,
-    #     multi='price_subtotal')
-    # tax_amount = fields.Float(
-    #     compute=_amount_line, method=True, string='Tax Amount',
-    #     digits_compute=dp.get_precision('Sale Price'), store=True,
-    #     multi='price_subtotal')
+    price_subtotal = fields.Float(
+        compute=_amount_line, method=True, string='Subtotal',
+        digits_compute=dp.get_precision('Sale Price'), store=True,
+        multi='price_subtotal')
+    price_amount = fields.Float(
+        compute=_amount_line, method=True, string='Price Amount',
+        digits_compute=dp.get_precision('Sale Price'), store=True,
+        multi='price_subtotal')
+    price_discount = fields.Float(
+        compute=_amount_line, method=True, string='Discount',
+        digits_compute=dp.get_precision('Sale Price'), store=True,
+        multi='price_subtotal')
+    price_total = fields.Float(
+        compute=_amount_line, method=True, string='Total Amount',
+        digits_compute=dp.get_precision('Sale Price'), store=True,
+        multi='price_subtotal')
+    tax_amount = fields.Float(
+        compute=_amount_line, method=True, string='Tax Amount',
+        digits_compute=dp.get_precision('Sale Price'), store=True,
+        multi='price_subtotal')
     tax_id = fields.Many2many(
         'account.tax', 'waybill_tax', 'waybill_line_id', 'tax_id', 'Taxes')
     product_uom_qty = fields.Float(
@@ -95,11 +88,6 @@ class TmsWaybillLine(models.Model):
         related='waybill_id.partner_id',
         store=True,
         string='Customer')
-    # salesman_id = fields.Many2one(
-    #     'res.users',
-    #     related='waybill_id.user_id',
-    #     store=True,
-    #     string='Salesman')
     control = fields.Boolean('Control')
 
     _order = 'sequence, id desc'

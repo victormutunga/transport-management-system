@@ -163,8 +163,7 @@ class TmsAdvance(models.Model):
         states={'cancel': [('readonly', True)],
                 'confirmed': [('readonly', True)],
                 'closed': [('readonly', True)]},
-        default=(lambda self, cr, uid, c: self.pool.get('res.users').browse(
-            cr, uid, uid, c).company_id.currency_id.id))
+        default=lambda self: self.env['res.users'].company_id.currency_id.id)
     auto_expense = fields.Boolean(
         'Auto Expense',
         help="Check this if you want this product and amount to be \

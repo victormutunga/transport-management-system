@@ -24,7 +24,7 @@
         <!-- TREE View for tms.route -->
         <record id="view_tms_route_tree" model="ir.ui.view">
             <field name="name">tms.route.tree</field>
-            <field name="model">tms.route</field>
+            <field name="model">tms.route</field> 
             <field name="arch" type="xml">
                 <tree string="Routes">
                     <field name="name"/>

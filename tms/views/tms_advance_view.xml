@@ -23,9 +23,9 @@
                     <filter domain="[('driver_helper','=', 1)]" icon="terp-check" string="For Driver Helper"/>
                     <newline/>
                     <field name="date"/>
-                    <field name="name"/>
-                    <field name="travel_id"/>
-                    <field name="unit_id"/>
+                    <field name="name"/> 
+                    <!-- <field name="travel_id"/> -->
+                    <!-- <field name="unit_id"/> -->
                     <field name="employee_id"/>
                     <field name="product_id"/>
                     <!-- <field name="operation_id"/>-->
@@ -53,16 +53,16 @@
                 <tree colors="gray:state=='cancel';red:state=='draft';green:state=='approved';blue:state=='confirmed';" string="TMS Advances">
                     <field name="name"/>
                     <field name="date"/>
-                    <field name="travel_id"/>
-                    <field name="unit_id"/>
+                    <!-- <field name="travel_id"/> -->
+                    <!-- <field name="unit_id"/> -->
                     <field name="employee_id"/>
                     <field name="product_id"/>
                     <field name="product_uom_qty"/>
-                    <field name="subtotal" sum="SubTotal"/>
-                    <field name="tax_amount" sum="Tax Amount"/>
+                    <!-- <field name="subtotal" sum="SubTotal"/> -->
+                    <!-- <field name="tax_amount" sum="Tax Amount"/> -->
                     <field name="total" sum="Total"/>
                     <field name="auto_expense"/>
-                    <field name="paid"/>
+                    <!-- <field name="paid"/> -->
                     <!-- <field name="operation_id" invisible="1"/>-->
                     <field name="state"/>
                     <button groups="tms.group_advance_approve" icon="gtk-go-forward" name="action_approve" states="draft" string="Approve" type="object"/>
@@ -89,25 +89,25 @@
                             <field class="oe_inline" name="name" readonly="1"/>
                         </h1>
                         <group col="4" colspan="4">
-                            <field invisible="1" name="employee1_id"/>
-                            <field invisible="1" name="employee2_id"/>
+                           <!--  <field invisible="1" name="employee1_id"/>
+                            <field invisible="1" name="employee2_id"/> -->
                             <!-- <field name="shop_id" />-->
                             <field name="date"/>
-                            <field domain="[('state','!=','cancel'),('state','!=','closed'), ('supplier_unit', '=', False)]" name="travel_id" on_change="on_change_travel_id(travel_id)"/>
+                            <!-- <field domain="[('state','!=','cancel'),('state','!=','closed'), ('supplier_unit', '=', False)]" name="travel_id" /> -->
                             <!-- <field name="operation_id" domain="[('state','=','process')]" />-->
-                            <field name="unit_id" readonly="1"/>
-                            <field domain="[('id','in',(employee1_id, employee2_id))]" name="employee_id" on_change="on_change_driver(employee_id,employee1_id, employee2_id)"/>
+                            <!-- <field name="unit_id" readonly="1"/> -->
+                            <field name="employee_id" />
                             <separator colspan="2" string=" "/>
-                            <field attrs="{'invisible':['|', ('employee2_id','=',False),('travel_id', '=', False)]}" name="driver_helper" on_change="on_change_driver_helper(driver_helper, employee1_id, employee2_id)"/>
+                            <field  name="driver_helper" />
                             <group col="2" colspan="2">
-                                <field context="{'default_tms_category': 'real_expense', 'default_type': 'service', 'default_procure_method':'make_to_stock', 'default_supply_method': 'buy'}" name="product_id" on_change="on_change_product_id(product_id)"/>
-                                <field class="oe_text_right" name="product_uom_qty" on_change="on_change_price_total(product_id, product_uom_qty, total)"/>
+                                <field context="{'default_tms_category': 'real_expense', 'default_type': 'service', 'default_procure_method':'make_to_stock', 'default_supply_method': 'buy'}" name="product_id" />
+                                <field class="oe_text_right" name="product_uom_qty" />
                                 <field invisible="1" name="product_uom"/>
                                 <field class="oe_text_right" name="price_unit_control" widget="monetary"/>
                                 <field invisible="1" name="price_unit"/>
-                                <field class="oe_text_right" name="subtotal" options="{'currency_field': 'currency_id'}" readonly="1" widget="monetary"/>
-                                <field class="oe_text_right" name="tax_amount" options="{'currency_field': 'currency_id'}" readonly="1" widget="monetary"/>
-                                <field class="oe_text_right" name="total" on_change="on_change_price_total(product_id, product_uom_qty, total)" options="{'currency_field': 'currency_id'}" widget="monetary"/>
+                                <!-- <field class="oe_text_right" name="subtotal" options="{'currency_field': 'currency_id'}" readonly="1" widget="monetary"/> -->
+                                <!-- <field class="oe_text_right" name="tax_amount" options="{'currency_field': 'currency_id'}" readonly="1" widget="monetary"/> -->
+                                <field class="oe_text_right" name="total" options="{'currency_field': 'currency_id'}" widget="monetary"/>
                                 <field name="currency_id"/>
                                 <field name="auto_expense"/>
                             </group>
@@ -133,7 +133,7 @@
                                     <field name="drafted_by" readonly="1"/>
                                     <field name="date_drafted" readonly="1"/>
                                     <field name="move_id"/>
-                                    <field name="paid"/>
+                                    <!-- <field name="paid"/> -->
                                     <field name="expense_id"/>
                                 </group>
                             </page>

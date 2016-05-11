@@ -15,7 +15,7 @@
                         </group>
                     </page>
                 </notebook>
-            </field>
+            </field> 
         </record>
         <record id="tms_open_view_employee_list" model="ir.actions.act_window">
             <field name="name">Drivers</field>

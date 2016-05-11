@@ -19,7 +19,7 @@
                     </group>
                 </search>
             </field>
-        </record>
+        </record> 
         <!-- Inherit Vehicle Form -->
         <record id="fleet_vehicle_form_inherit_tms" model="ir.ui.view">
             <field name="name">fleet.vehicle.tms.form</field>

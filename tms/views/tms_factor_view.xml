@@ -20,7 +20,7 @@
             </field>
         </record>
         <record id="view_tms_factor_form" model="ir.ui.view">
-            <field name="name">tms.factor.form</field>
+            <field name="name">tms.factor.form</field> 
             <field name="model">tms.factor</field>
             <field name="arch" type="xml">
                 <form string="Factors">

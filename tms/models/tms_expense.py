@@ -248,8 +248,7 @@ class TmsExpense(models.Model):
     currency_id = fields.Many2one(
         'res.currency', 'Currency', required=True, readonly=True,
         states={'draft': [('readonly', False)]},
-        default=(lambda self, cr, uid, c: self.pool.get('res.users').browse(
-            cr, uid, uid, c).company_id.currency_id.id))
+        default=lambda self: self.env['res.users'].company_id.currency_id.id)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('approved', 'Approved'),
@@ -406,10 +405,9 @@ class TmsExpense(models.Model):
     parameter_distance = fields.Integer(
         'Distance Parameter',
         help="1 = Travel, 2 = Travel Expense, 3 = Manual, 4 = Tyre",
-        default=(lambda s, cr, uid, c:
-                 int(s.pool.get('ir.config_parameter').get_param(
-                     cr, uid, 'tms_property_update_vehicle_distance',
-                     context=c)[0])))
+        default=(lambda self: int(
+            self.env['ir.config_parameter'].get_param(
+                'tms_property_update_vehicle_distance')[0])))
     driver_helper = fields.Boolean(
         'For Driver Helper',
         help="Check this if you want to make record for Driver Helper.",

@@ -5,7 +5,7 @@
 
 import time
 
-from openerp import fields, models
+from openerp import api, fields, models
 import openerp.addons.decimal_precision as dp
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
@@ -17,65 +17,52 @@ class TmsWaybill(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = 'Waybills'
 
-    # def _amount_all(self, field_name):
-    #     print "_amount_all"
-    #     cur_obj = self.pool.get('res.currency')
-    #     res = {}
-    #     for waybill in self.browse(self):
-    #         res[waybill.id] = {
-    #             'amount_freight': 0.0,
-    #             'amount_move': 0.0,
-    #             'amount_highway_tolls': 0.0,
-    #             'amount_insurance': 0.0,
-    #             'amount_other': 0.0,
-    #             'amount_subtotal': 0.0,
-    #             'amount_tax': 0.0,
-    #             'amount_total': 0.0,
-    #         }
-    #         cur = waybill.currency_id
-    #         x_freight = 0.0
-    #         x_move = 0.0
-    #         x_highway = 0.0
-    #         x_insurance = 0.0
-    #         x_other = 0.0
-    #         x_subtotal = 0.0
-    #         x_tax = 0.0
-    #         x_total = 0.0
-    #         for line in waybill.waybill_line:
-    #                 if line.product_id.tms_category == 'freight':
-    #                     x_freight += line.price_subtotal
-    #                 else:
-    #                     x_freight += 0.0
-    #                 if line.product_id.tms_category == 'move':
-    #                     x_move += line.price_subtotal
-    #                 else:
-    #                     x_move += 0.0
-    #                 if line.product_id.tms_category == 'highway_tolls':
-    #                     x_highway += line.price_subtotal
-    #                 else:
-    #                     x_highway += 0.0
-    #                 if line.product_id.tms_category == 'insurance':
-    #                     x_insurance += line.price_subtotal
-    #                 else:
-    #                     x_insurance += 0.0
-    #                 if line.product_id.tms_category == 'other':
-    #                     x_other += line.price_subtotal
-    #                 else:
-    #                     x_other += 0.0
-    #                 x_subtotal += line.price_subtotal
-    #                 x_tax += line.tax_amount
-    #                 x_total += line.price_total
+    @api.multi
+    def _amount_all(self):
+        cur_obj = self.env['res.currency']
+        for waybill in self.search(self):
+            cur = waybill.currency_id
+            x_freight = 0.0
+            x_move = 0.0
+            x_highway = 0.0
+            x_insurance = 0.0
+            x_other = 0.0
+            x_subtotal = 0.0
+            x_tax = 0.0
+            x_total = 0.0
+            for line in waybill.waybill_line:
+                    if line.product_id.tms_category == 'freight':
+                        x_freight += line.price_subtotal
+                    else:
+                        x_freight += 0.0
+                    if line.product_id.tms_category == 'move':
+                        x_move += line.price_subtotal
+                    else:
+                        x_move += 0.0
+                    if line.product_id.tms_category == 'highway_tolls':
+                        x_highway += line.price_subtotal
+                    else:
+                        x_highway += 0.0
+                    if line.product_id.tms_category == 'insurance':
+                        x_insurance += line.price_subtotal
+                    else:
+                        x_insurance += 0.0
+                    if line.product_id.tms_category == 'other':
+                        x_other += line.price_subtotal
+                    else:
+                        x_other += 0.0
+                    x_subtotal += line.price_subtotal
+                    x_tax += line.tax_amount
+                    x_total += line.price_total
 
-    #         res[waybill.id] = {
-    #             'amount_freight': cur_obj.round(cur, x_freight),
-    #             'amount_move': cur_obj.round(cur, x_move),
-    #             'amount_highway_tolls': cur_obj.round(cur, x_highway),
-    #             'amount_insurance': cur_obj.round(cur, x_insurance),
-    #             'amount_other': cur_obj.round(cur, x_other),
-    #             'amount_untaxed': cur_obj.round(cur, x_subtotal),
-    #             'amount_tax': cur_obj.round(cur, x_tax),
-    #             'amount_total': cur_obj.round(cur, x_total),
-    #         }
+            self.amount_freight = cur_obj.round(cur, x_freight)
+            self.amount_move = cur_obj.round(cur, x_move)
+            self.amount_highway_tolls = cur_obj.round(cur, x_highway)
+            self.amount_insurance = cur_obj.round(cur, x_insurance),
+            self.amount_other = cur_obj.round(cur, x_other)
+            self.amount_untaxed = cur_obj.round(cur, x_subtotal)
+            self.amount_tax = cur_obj.round(cur, x_tax)
+            self.amount_total = cur_obj.round(cur, x_total)
 
     # def _invoiced(self, field_name):
     #     res = {}
@@ -411,10 +398,10 @@ class TmsWaybill(models.Model):
     #     'res.users', 'Suppl. Invoiced by', readonly=True)
     # supplier_invoiced_date = fields.Datetime(
     #     'Suppl. Inv. Date', readonly=True, select=True)
-    # waybill_line = fields.One2many(
-    #     'tms.waybill.line', 'waybill_id',
-    #     string='Waybill Lines', readonly=False,
-    #     states={'confirmed': [('readonly', True)]})
+    waybill_line = fields.One2many(
+        'tms.waybill.line', 'waybill_id',
+        string='Waybill Lines', readonly=False,
+        states={'confirmed': [('readonly', True)]})
     # waybill_shipped_product = fields.One2many(
     #     'tms.waybill.shipped_product', 'waybill_id',
     #     string='Shipped Products',
@@ -435,38 +422,38 @@ class TmsWaybill(models.Model):
     #     'tms.waybill.extradata', 'waybill_id',
     #     string='Extra Data Fields',
     #     readonly=False, states={'confirmed': [('readonly', True)]})
-    # amount_freight = fields.Float(
-    #     compute=_amount_all, method=True,
-    #     digits_compute=dp.get_precision('Sale Price'),
-    #     string='Freight', store=False, multi=True)
-    # amount_move = fields.Float(
-    #     compute=_amount_all, method=True,
-    #     digits_compute=dp.get_precision('Sale Price'),
-    #     string='Moves', store=False, multi=True)
-    # amount_highway_tolls = fields.Float(
-    #     compute=_amount_all, method=True,
-    #     digits_compute=dp.get_precision('Sale Price'),
-    #     string='Highway Tolls', store=False, multi=True)
-    # amount_insurance = fields.Float(
-    #     compute=_amount_all, method=True,
-    #     digits_compute=dp.get_precision('Sale Price'),
-    #     string='Insurance', store=False, multi=True)
-    # amount_other = fields.Float(
-    #     compute=_amount_all, method=True,
-    #     digits_compute=dp.get_precision('Sale Price'),
-    #     string='Other', store=False, multi=True)
-    # amount_untaxed = fields.Float(
-    #     compute=_amount_all, method=True,
-    #     digits_compute=dp.get_precision('Sale Price'),
-    #     string='SubTotal', store=False, multi=True)
-    # amount_tax = fields.Float(
-    #     compute=_amount_all, method=True,
-    #     digits_compute=dp.get_precision('Sale Price'),
-    #     string='Taxes', store=False, multi=True)
-    # amount_total = fields.Float(
-    #     compute=_amount_all, method=True,
-    #     digits_compute=dp.get_precision('Sale Price'),
-    #     string='Total', store=False, multi=True)
+    amount_freight = fields.Float(
+        compute=_amount_all, method=True,
+        digits_compute=dp.get_precision('Sale Price'),
+        string='Freight', store=False, multi=True)
+    amount_move = fields.Float(
+        compute=_amount_all, method=True,
+        digits_compute=dp.get_precision('Sale Price'),
+        string='Moves', store=False, multi=True)
+    amount_highway_tolls = fields.Float(
+        compute=_amount_all, method=True,
+        digits_compute=dp.get_precision('Sale Price'),
+        string='Highway Tolls', store=False, multi=True)
+    amount_insurance = fields.Float(
+        compute=_amount_all, method=True,
+        digits_compute=dp.get_precision('Sale Price'),
+        string='Insurance', store=False, multi=True)
+    amount_other = fields.Float(
+        compute=_amount_all, method=True,
+        digits_compute=dp.get_precision('Sale Price'),
+        string='Other', store=False, multi=True)
+    amount_untaxed = fields.Float(
+        compute=_amount_all, method=True,
+        digits_compute=dp.get_precision('Sale Price'),
+        string='SubTotal', store=False, multi=True)
+    amount_tax = fields.Float(
+        compute=_amount_all, method=True,
+        digits_compute=dp.get_precision('Sale Price'),
+        string='Taxes', store=False, multi=True)
+    amount_total = fields.Float(
+        compute=_amount_all, method=True,
+        digits_compute=dp.get_precision('Sale Price'),
+        string='Total', store=False, multi=True)
     # distance_route = fields.Float(
     #     compute=_get_route_distance, string='Distance from route',
     #     method=True, digits=(18, 6), help="Route Distance.", multi=False)
@@ -543,7 +530,6 @@ class TmsWaybill(models.Model):
 #           ('travel','Charge by Travel'),
 #           ('volume', 'Charge by Volume'),
 #           ], 'Charge Type',required=True,),
-    payment_factor = fields.Float('Factor', digits=(16, 4), required=True)
     amount_declared = fields.Float(
         'Amount Declared', digits_compute=dp.get_precision('Sale Price'),
         help=" Load value amount declared for insurance purposes...")

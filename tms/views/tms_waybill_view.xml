@@ -27,7 +27,7 @@
               <field name="state"/>
               <button name="action_approve" states="draft" string="Approve" type="object" icon="gtk-go-forward" groups="tms.group_waybill_approve"/>
               <button name="action_confirm" states="approved" string="Confirm" type="object" icon="gtk-goto-last" groups="tms.group_waybill_confirm"/>
-            </tree> 
+            </tree>  
           </field>
         </record>
     
@@ -50,7 +50,7 @@
                     </h1>
                     <group col="4">
                         <field name="date_order"/>
-                        <field name="currency_id" />
+                        <field name="currency_id" groups="base.group_multi_currency" />
                         <separator string="·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·" colspan="4" style="text-align: center;"/>
                         <field name="partner_id" domain="[('customer','=',True), ('is_company', '=', True)]"  colspan="4"/>
                         
@@ -75,27 +75,13 @@
                                 <field name="dolly_id" invisible="1"/>
                                 <field name="trailer2_id" invisible="1"/>
                                 
-                               <!--  <separator string="Waybill Factor Client" colspan="4"/>
+                                <!-- <separator string="Waybill Factor Client" colspan="4"/>
                                 <field name="waybill_customer_factor" 
                                         context="{'default_waybill_id': active_id,'default_category':'customer'}" 
                                         domain="[('category','=','customer')]"
-                                        colspan="4" nolabel="1" /> -->
-                                                            
-                                <!-- <separator string="Shipped Product" colspan="4"/>
-                                <field name="waybill_shipped_product" nolabel="1" colspan="8"> 
-                                <tree string="Shipped Product" editable="bottom">
-                                <field name="name" invisible="1" />
-                                <field name="product_id" 
-                                        on_change="on_change_product_id(product_id)"
-                                        domain="[('tms_category','=','transportable')]"
-                                        context="{'default_purchase_ok':0, 'default_sale_ok':0,'default_tms_category': 'transportable','default_type': 'service', 'default_procure_method':'make_to_stock', 'default_supply_method': 'buy'}"/>
-                                <field name="product_uom" />
-                                <field name="product_uom_qty" sum="Quantity"/>
-                                <field name="notes" />
-                                </tree>
-                                </field>              -->        
+                                        colspan="4" nolabel="1" /> -->   
 
-                               <!--  <separator string="Waybill Lines" colspan="4"/>
+                                <separator string="Waybill Lines" colspan="4"/>
                                 <field name="waybill_line" colspan="4" nolabel="1"> 
                                     <tree string="Waybill Lines">
                                         <field name="name" />
@@ -141,7 +127,7 @@
                                             <field name="tax_id" widget="many2many_tags" placeholder="Taxes"/>
                                         </group>
                                     </form>
-                                </field> -->
+                                </field>
                                 <group colspan="4" col="4">
                                 <group colspan="2">
                                     <field name="tax_line" nolabel="1">
@@ -153,7 +139,7 @@
                                         </tree>
                                     </field>
                                 </group>
-                                <!-- <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
                                     <field name="amount_freight" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                                     <field name="amount_move" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                                     <field name="amount_highway_tolls" widget='monetary' options="{'currency_field': 'currency_id'}"/>
@@ -170,7 +156,7 @@
                                                 states="draft" string="(update)" type="object" class="oe_edit_only oe_link"/>
                                     </div>
                                     <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                                </group> -->
+                                </group>
                                 </group>
                             </group>
                         </page>

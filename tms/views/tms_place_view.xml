@@ -18,7 +18,7 @@
         <record id="view_tms_place_form" model="ir.ui.view">
             <field name="name">tms.place.form</field>
             <field name="model">tms.place</field>
-            <field name="arch" type="xml">
+            <field name="arch" type="xml"> 
                 <form string="Places" version="9.0">
                     <header>
                         <button name="get_coordinates" string="Get Coords from Google" type="object"/>

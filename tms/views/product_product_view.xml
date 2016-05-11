@@ -26,7 +26,7 @@
             <field name="arch" type="xml">
                 <field name="uom_id" position="after">
                     <field groups="base.group_no_one" name="tms_category"/>
-                </field>
+                </field> 
             </field>
         </record>
         <record id="tms_product_normal_action" model="ir.actions.act_window">
