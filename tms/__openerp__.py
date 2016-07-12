@@ -20,6 +20,7 @@
         # 'views/fleet_vehicle_view.xml',
         'views/hr_employee_view.xml',
         'views/fleet_vehicle_view.xml',
+        'views/fleet_vehicle_log_fuel_view.xml',
         # 'views/product_category_view.xml',
         'views/product_product_view.xml',
         # 'views/tms_advance_view.xml',

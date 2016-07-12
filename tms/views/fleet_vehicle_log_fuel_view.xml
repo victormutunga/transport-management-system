@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="fleet.fleet_vehicle_log_fuel_form" model="ir.ui.view">
+            <field name="name">fleet.vehicle.log.fuel.form</field>
+            <field name="model">fleet.vehicle.log.fuel</field>
+            <field name="arch" type="xml">
+                <form string="Fuel Logs">
+                    <header>
+                        <button icon="fa-times" name="action_cancel" states="draft,approved,confirmed" string="Cancel" type="object"/>
+                        <button icon="fa-reply" name="" states="cancel" string="Set to Draft" type="object"/>
+                        <button class="oe_highlight" icon="fa-thumbs-up" name="action_approve" states="draft" string="Approve" type="object"/>
+                        <button class="oe_highlight" icon="fa-check-square-o" name="action_confirm" states="approved" string="Confirm" type="object"/>
+                        <button icon="fa-print" name="" string="Print Fuel Voucher" type="action"/>
+                        <field name="state" statusbar_visible="draft,approved,confirmed,closed,cancel" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group string="Supplier Details">
+                                <field name="date"/>
+                                <field name="inv_ref"/>
+                                <field name="vendor_id" context="{'default_supplier': True}" />
+                            </group>
+                            <group string="Vehicle Details">
+                                <field name="vehicle_id"/>
+                                <field name="product_id" context="{'default_tms_category': 'driver'}"/>
+                                <field name="employee_id" context="{'default_tms_category': 'driver'}"/>
+                                <field name="odometer"/>
+                                <field name="odometer_unit"/>
+                            </group>
+                            <group string="Refueling Details">
+                                <field name="liter"/>
+                                <field name="price_per_liter"/>
+                                <field name="subtotal"/>
+                                <field name="tax_amount"/>
+                                <field name="amount"/>
+                            </group>
+                        </group>
+                        <field name="notes" placeholder="Write here any other information"/>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" placeholder="Share a message..." widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record id="fleet_vehicle_log_fuel_tree" model="ir.ui.view">
+            <field name="name">tms.fleet.vehicle.log.fuel.tree</field>
+            <field name="model">fleet.vehicle.log.fuel</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_log_fuel_tree"/>
+            <field name="arch" type="xml">
+                <field name="amount" position="replace">
+                    <field name="subtotal"/>
+                    <field name="amount"/>
+                </field>
+            </field>
+        </record>
+        <record id="fleet_vehicle_log_fuel_search" model="ir.ui.view">
+            <field name="name">tms.fleet.vehicle.log.fuel.search</field>
+            <field name="model">fleet.vehicle.log.fuel</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_log_fuel_search"/>
+            <field name="arch" type="xml">
+                <search string="Vehicles Fuel Logs">
+                    <field name="vehicle_id"/>
+                    <field name="date"/>
+                    <field name="purchaser_id"/>
+                    <field name="liter"/>
+                    <field name="tax_amount"/>
+                    <field name="amount"/>
+                    <group expand="0" string="Group By">
+                        <filter context="{'group_by' : 'vehicle_id'}" name="groupby_vehicle" string="Vehicle"/>
+                        <filter context="{'group_by' : 'liter'}" name="groupby_liter" string="Liter"/>
+                        <filter context="{'group_by' : 'date'}" name="groupby_date" string="Date"/>
+                        <filter context="{'group_by' : 'amount'}" name="groupby_total" string="Total"/>
+                    </group>
+                    <filter string="Unread messages"
+                        name="message_unread"
+                        domain="[('message_unread', '=', True)]"
+                        help="Unread messages"/>
+                </search>
+            </field>
+        </record>
+        <menuitem
+            action="fleet.fleet_vehicle_log_fuel_act"
+            id="fuel_vehicle_log_menu" 
+            name="Fuel Voucher"
+            parent="tms.menu_tms_travels"
+            sequence="30"/>
+    </data>
+</openerp>
