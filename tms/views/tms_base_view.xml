@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model='ir.ui.view' id='tms_base_form'>
+            <field name='name'>TMS Base Form View</field>
+            <field name='model'>tms.base</field>
+            <field name='arch' type='xml'>
+                <form>
+                    <sheet>
+                        <group>
+                            <field name='name'/>
+                        </group>
+                        <group col='2'>
+                            <field name='advance_journal_id'/>
+                            <field name='fuelvoucher_journal_id'/>
+                            <field name='expense_journal_id'/>
+                        </group>
+                        <group>
+                            <field name='supplier_journal_id'/>
+                            <field name='waybill_journal_id'/>
+                            <field name='account_fuel_id'/>
+                            <field name='account_fleight_id'/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model='ir.ui.view' id='tms_base_tree'>
+            <field name='name'>TMS Base Tree View</field>
+            <field name='model'>tms.base</field>
+            <field name='arch' type='xml'>
+                <tree string='TMS Base'>
+                    <field name='name'/>
+                </tree>
+            </field>
+        </record>
+        <record id='action_tms_base' model='ir.actions.act_window'>
+            <field name='name'>TMS Base Action</field>
+            <field name='res_model'>tms.base</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+        </record>
+        <menuitem 
+            id="tms_base_menu"
+            name="Base"
+            parent="tms.menu_tms_settings"
+            action="action_tms_base"
+            sequence="99"/>
+    </data>
+</odoo>

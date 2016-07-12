@@ -15,6 +15,7 @@
     "data": [
         'security/ir.model.access.csv',
         'views/tms_view.xml',
+        'views/tms_base_view.xml',
         # 'views/account_journal_view.xml',
         # 'views/fleet_vehicle_odometer_view.xml',
         # 'views/fleet_vehicle_view.xml',
@@ -34,7 +35,7 @@
         # 'views/tms_travel_view.xml',
         # 'views/tms_unit_kit_view.xml',
         'views/tms_waybill_view.xml',
-        'data/product_product_data.xml'
+        'data/product_product_data.xml',
     ],
     "demo": [
         'demo/tms_place.xml',
