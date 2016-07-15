@@ -4,5 +4,8 @@ access_tms_rout,access_tms_route,model_tms_route,,1,1,1,1
 access_tms_factor,access_tms_factor,model_tms_factor,,1,1,1,1
 access_tms_transportable,access_tms_transportable,model_tms_transportable,,1,1,1,1
 access_tms_expense_line,access_tms_expense_line,model_tms_expense_line,,1,1,1,1
+access_tms_waybill,access_tms_waybill,model_tms_waybill,,1,1,1,1
 access_tms_waybill_line,access_tms_waybill_line,model_tms_waybill_line,,1,1,1,1
 access_tms_waybill_taxes,access_tms_waybill_taxes,model_tms_waybill_taxes,,1,1,1,1
+access_tms_base,access_tms_base,model_tms_base,,1,0,0,0
+access_tms_shipped_product,access_tms_shipped_product,model_tms_shipped_product,,1,0,0,0

@@ -35,7 +35,7 @@ class TmsWaybillLine(models.Model):
             self.tax_amount = amount_tax,
 
     waybill_id = fields.Many2one(
-        'tms.waybill', 'Waybill', required=False, ondelete='cascade',
+        'tms.waybill', string='waybill', ondelete='cascade',
         select=True, readonly=True)
     line_type = fields.Selection([
         ('product', 'Product'),
@@ -43,8 +43,8 @@ class TmsWaybillLine(models.Model):
     name = fields.Char('Description', size=256, required=True)
     sequence = fields.Integer(
         'Sequence',
-        help="Gives the sequence order when displaying a list of sales \
-        order lines.", default=10)
+        help="Gives the sequence order when displaying a list of "
+        "sales order lines.", default=10)
     product_id = fields.Many2one(
         'product.product', 'Product',
         domain=[('sale_ok', '=', True),

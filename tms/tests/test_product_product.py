@@ -73,8 +73,7 @@ class TestProductProduct(TransactionCase):
         '''
         with self.assertRaisesRegexp(
             ValidationError,
-                'Error! Real Expense is not defined \
-                                correctly...'):
+                'Error! Real Expense is not defined correctly...'):
             self.create_product(
                 'Product', 'real_expense', 'product', True, False)
 

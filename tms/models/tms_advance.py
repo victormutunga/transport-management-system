@@ -151,8 +151,8 @@ class TmsAdvance(models.Model):
     move_id = fields.Many2one(
         'account.move', 'Journal Entry', readonly=True, select=1,
         ondelete='restrict',
-        help="Link to the automatically generated Journal Items.\nThis move \
-        is only for Travel Expense Records with balance < 0.0")
+        help="Link to the automatically generated Journal Items.\nThis move "
+        "is only for Travel Expense Records with balance < 0.0")
     # paid = fields.Boolean(
     #     compute=_paid, method=True, string='Paid', multi=False,
     #     store=True)
@@ -166,15 +166,15 @@ class TmsAdvance(models.Model):
         default=lambda self: self.env['res.users'].company_id.currency_id.id)
     auto_expense = fields.Boolean(
         'Auto Expense',
-        help="Check this if you want this product and amount to be \
-        automatically created when Travel Expense Record is created.",
+        help="Check this if you want this product and amount to be "
+        "automatically created when Travel Expense Record is created.",
         states={'cancel': [('readonly', True)],
                 'confirmed': [('readonly', True)],
                 'closed': [('readonly', True)]})
     driver_helper = fields.Boolean(
         'For Driver Helper',
-        help="Check this if you want to give this advance to \
-        Driver Helper.",
+        help="Check this if you want to give this advance to "
+        "Driver Helper.",
         states={'cancel': [('readonly', True)],
                 'approved': [('readonly', True)],
                 'confirmed': [('readonly', True)],

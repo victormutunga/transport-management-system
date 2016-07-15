@@ -62,8 +62,8 @@ class TmsExpenseLine(models.Model):
     name = fields.Char('Description', size=256, required=True)
     sequence = fields.Integer(
         'Sequence',
-        help="Gives the sequence order when displaying a list of \
-        sales order lines.", order=1, default=10)
+        help="Gives the sequence order when displaying a list of "
+        "sales order lines.", order=1, default=10)
     product_id = fields.Many2one(
         'product.product', 'Product',
         domain=[('tms_category', 'in',
@@ -113,11 +113,11 @@ class TmsExpenseLine(models.Model):
     # (like Fuel from Fuel Voucher, Toll Stations payed without cash
     # (credit card, voucher, etc)
     automatic = fields.Boolean(
-        'Automatic', help="Check this if you want to create Advances and/or \
-        Fuel Vouchers for this line automatically")
+        'Automatic', help="Check this if you want to create Advances and/or "
+        "Fuel Vouchers for this line automatically")
     credit = fields.Boolean(
-        'Credit', help="Check this if you want to create Fuel Vouchers for \
-        this line")
+        'Credit', help="Check this if you want to create Fuel Vouchers for "
+        "this line")
     fuel_supplier_id = fields.Many2one(
         'res.partner', 'Fuel Supplier',
         domain=[('tms_category', '=', 'fuel')], required=False)

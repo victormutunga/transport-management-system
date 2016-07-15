@@ -14,9 +14,8 @@ class HrEmployee(models.Model):
 
     tms_category = fields.Selection(
         [('driver', 'Driver')], 'TMS Category',
-        help='Used to define if this person will be used as \
-            a Driver (Freights related) or Mechanic (Maintenance \
-            related)', required=False)
+        help='Used to define if this person will be used as a Driver '
+        '(Freights related) or Mechanic (Maintenance related)', required=False)
     tms_advance_account_id = fields.Many2one(
         'account.account', 'Advance Account')
     tms_expense_negative_balance_account_id = fields.Many2one(

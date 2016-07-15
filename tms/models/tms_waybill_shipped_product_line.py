@@ -22,12 +22,12 @@
 from openerp import api, fields, models
 
 
-class TmsWaybillShippedProductLine(models.Model):
+class TmsWaybillShippedProduct(models.Model):
     _name = 'tms.shipped.product'
     _description = 'Shipped Product'
 
     waybill_id = fields.Many2one(
-        'tms.waybill', 'waybill', ondelete='cascade',
+        'tms.waybill', string='waybill', ondelete='cascade',
         select=True, readonly=True)
     name = fields.Char('Description', size=256, required=True, select=True)
     product_id = fields.Many2one(

@@ -38,13 +38,13 @@ class ProductProduct(models.Model):
 """, default='no_tms_product')
     tms_property_account_income = fields.Many2one(
         'account.account', 'Breakdown Income Account',
-        help='Use this to define breakdown income account per vehicle for \
-        Freights, Moves, Insurance, etc.',
+        help='Use this to define breakdown income account per vehicle for '
+        'Freights, Moves, Insurance, etc.',
         required=False)
     tms_property_account_expense = fields.Many2one(
         'account.account', 'Breakdown Expense Account',
-        help='Use this to define breakdown expense account per vehicle for \
-        Fuel, Travel Expenses, etc.',
+        help='Use this to define breakdown expense account per vehicle for '
+        'Fuel, Travel Expenses, etc.',
         required=False)
 
     @api.onchange('tms_category')
@@ -77,8 +77,8 @@ class ProductProduct(models.Model):
                     rec.type != 'service' or
                     rec.purchase_ok is False or rec.sale_ok is True):
                         raise ValidationError(
-                            _('Error! Real Expense is not defined \
-                                correctly...'))
+                            _('Error! Real Expense is not defined '
+                                'correctly...'))
             elif (rec.tms_category == 'fuel' and
                   rec.type != 'product' or
                   rec.purchase_ok is False or

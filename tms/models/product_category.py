@@ -13,10 +13,10 @@ class ProductCategory(models.Model):
     tms_property_account_income_categ = fields.Many2one(
         'account.account',
         string="Breakdown Income Account",
-        help="Use this to define breakdown income account per \
-        vehicle for Freights, Moves, Insurance, etc.")
+        help="Use this to define breakdown income account per "
+        "vehicle for Freights, Moves, Insurance, etc.")
     tms_property_account_expense_categ = fields.Many2one(
         'account.account',
         string="Breakdown Expense Account",
-        help="Use this to define breakdown expense account per \
-        vehicle for Fuel, Travel Expenses, etc.")
+        help="Use this to define breakdown expense account per "
+        "vehicle for Fuel, Travel Expenses, etc.")

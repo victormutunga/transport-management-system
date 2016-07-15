@@ -9,10 +9,13 @@ from openerp.tools.translate import _
 
 class TmsFactor(models.Model):
     _name = "tms.factor"
-    _description = "Factors to calculate Payment (Driver/Supplier) & Client \
-                        charge"
+    _description = "Factors to calculate Payment (Driver/Supplier) "
+    "& Client charge"
 
     name = fields.Char('Name', size=64, required=True)
+    waybill_id = fields.Many2one(
+        'tms.waybill', string='waybill', ondelete='cascade',
+        select=True, readonly=True)
     category = fields.Selection([
         ('driver', 'Driver'),
         ('customer', 'Customer'),
