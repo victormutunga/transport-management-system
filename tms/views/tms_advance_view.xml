@@ -23,12 +23,9 @@
                     <filter domain="[('driver_helper','=', 1)]" icon="terp-check" string="For Driver Helper"/>
                     <newline/>
                     <field name="date"/>
-                    <field name="name"/> 
-                    <!-- <field name="travel_id"/> -->
-                    <!-- <field name="unit_id"/> -->
+                    <field name="name"/>
                     <field name="employee_id"/>
                     <field name="product_id"/>
-                    <!-- <field name="operation_id"/>-->
                     <newline/>
                     <group expand="0" string="Group by...">
                         <filter context="{'group_by' : 'travel_id'}" domain="[]" icon="terp-gdu-smart-failing" string="Travel"/>
@@ -39,7 +36,6 @@
                         <filter context="{'group_by' : 'date'}" domain="[]" icon="terp-stock_symbol-selection" string="Period"/>
                         <separator orientation="vertical"/>
                         <filter context="{'group_by' : 'product_id'}" domain="[]" icon="terp-stock_symbol-selection" string="Product"/>
-                        <!-- <filter string='Operation' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'operation_id'}" />-->
                         <filter context="{'group_by' : 'driver_helper'}" domain="[]" icon="terp-stock_symbol-selection" string="For Driver Helper"/>
                     </group>
                 </search>
@@ -53,17 +49,16 @@
                 <tree colors="gray:state=='cancel';red:state=='draft';green:state=='approved';blue:state=='confirmed';" string="TMS Advances">
                     <field name="name"/>
                     <field name="date"/>
-                    <!-- <field name="travel_id"/> -->
-                    <!-- <field name="unit_id"/> -->
+                    <field name="travel_id"/> 
+                    <field name="unit_id"/>
                     <field name="employee_id"/>
                     <field name="product_id"/>
                     <field name="product_uom_qty"/>
-                    <!-- <field name="subtotal" sum="SubTotal"/> -->
-                    <!-- <field name="tax_amount" sum="Tax Amount"/> -->
+                    <field name="subtotal" sum="SubTotal"/>
+                    <field name="tax_amount" sum="Tax Amount"/>
                     <field name="total" sum="Total"/>
                     <field name="auto_expense"/>
-                    <!-- <field name="paid"/> -->
-                    <!-- <field name="operation_id" invisible="1"/>-->
+                    <field name="paid"/>
                     <field name="state"/>
                     <button groups="tms.group_advance_approve" icon="gtk-go-forward" name="action_approve" states="draft" string="Approve" type="object"/>
                     <button groups="tms.group_advance_confirm" icon="gtk-goto-last" name="action_confirm" states="approved" string="Confirm" type="object"/>
@@ -75,7 +70,7 @@
             <field name="name">tms.advance.form</field>
             <field name="model">tms.advance</field>
             <field name="arch" type="xml">
-                <form string="TMS Advances" version="7.0">
+                <form string="TMS Advances" version="9.0">
                     <header>
                         <button groups="tms.group_advance_setdraft" icon="gtk-convert" name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
                         <button groups="tms.group_advance_cancel" name="action_cancel" states="draft,approved,confirmed" string="Cancel" type="object"/>
@@ -89,28 +84,26 @@
                             <field class="oe_inline" name="name" readonly="1"/>
                         </h1>
                         <group col="4" colspan="4">
-                           <!--  <field invisible="1" name="employee1_id"/>
-                            <field invisible="1" name="employee2_id"/> -->
-                            <!-- <field name="shop_id" />-->
-                            <field name="date"/>
-                            <!-- <field domain="[('state','!=','cancel'),('state','!=','closed'), ('supplier_unit', '=', False)]" name="travel_id" /> -->
-                            <!-- <field name="operation_id" domain="[('state','=','process')]" />-->
-                            <!-- <field name="unit_id" readonly="1"/> -->
+                            <field invisible="1" name="employee1_id"/>
+                            <field invisible="1" name="employee2_id"/>
+                            <field name="date" colspan="2"/>
+                            <field domain="[('state','!=','cancel'),('state','!=','closed')]" name="travel_id" />
+                            <field name="unit_id" readonly="1" coslpan="2"/>
                             <field name="employee_id" />
-                            <separator colspan="2" string=" "/>
-                            <field  name="driver_helper" />
-                            <group col="2" colspan="2">
-                                <field context="{'default_tms_category': 'real_expense', 'default_type': 'service', 'default_procure_method':'make_to_stock', 'default_supply_method': 'buy'}" name="product_id" />
-                                <field class="oe_text_right" name="product_uom_qty" />
-                                <field invisible="1" name="product_uom"/>
-                                <field class="oe_text_right" name="price_unit_control" widget="monetary"/>
-                                <field invisible="1" name="price_unit"/>
-                                <!-- <field class="oe_text_right" name="subtotal" options="{'currency_field': 'currency_id'}" readonly="1" widget="monetary"/> -->
-                                <!-- <field class="oe_text_right" name="tax_amount" options="{'currency_field': 'currency_id'}" readonly="1" widget="monetary"/> -->
-                                <field class="oe_text_right" name="total" options="{'currency_field': 'currency_id'}" widget="monetary"/>
-                                <field name="currency_id"/>
-                                <field name="auto_expense"/>
-                            </group>
+                            <field  name="driver_helper"/>
+                            <separator string="·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·" colspan="4" style="text-align: center;"/>
+                            <field context="{'default_tms_category': 'real_expense', 'default_type': 'service', 'default_procure_method':'make_to_stock', 'default_supply_method': 'buy'}" name="product_id" coslpan="2"/>
+                            <field name="currency_id"/>
+                            <field name="auto_expense" /> 
+                        </group>
+                        <group class="oe_subtotal_footer" >
+                            <field class="oe_text_right" name="product_uom_qty"/>
+                            <field invisible="1" name="product_uom"/>
+                            <field class="oe_text_right" name="price_unit_control" widget="monetary"/>
+                            <field invisible="1" name="price_unit"/>
+                             <field class="oe_text_right" name="subtotal" options="{'currency_field': 'currency_id'}" readonly="1" widget="monetary"/>
+                             <field class="oe_text_right" name="tax_amount" options="{'currency_field': 'currency_id'}" readonly="1" widget="monetary"/>
+                            <field class="oe_text_right" name="total" options="{'currency_field': 'currency_id'}" widget="monetary"/>  
                         </group>
                         <notebook colspan="4">
                             <page string="Notes">
@@ -133,7 +126,7 @@
                                     <field name="drafted_by" readonly="1"/>
                                     <field name="date_drafted" readonly="1"/>
                                     <field name="move_id"/>
-                                    <!-- <field name="paid"/> -->
+                                    <field name="paid"/>
                                     <field name="expense_id"/>
                                 </group>
                             </page>

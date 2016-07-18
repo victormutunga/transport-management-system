@@ -24,7 +24,7 @@
         'views/fleet_vehicle_log_fuel_view.xml',
         # 'views/product_category_view.xml',
         'views/product_product_view.xml',
-        # 'views/tms_advance_view.xml',
+        'views/tms_advance_view.xml',
         'views/tms_config_settings_view.xml',
         # 'views/tms_expense_line_view.xml',
         # 'views/tms_expense_view.xml',
