@@ -9,3 +9,4 @@ access_tms_waybill_line,access_tms_waybill_line,model_tms_waybill_line,,1,1,1,1
 access_tms_waybill_taxes,access_tms_waybill_taxes,model_tms_waybill_taxes,,1,1,1,1
 access_tms_base,access_tms_base,model_tms_base,,1,0,0,0
 access_tms_shipped_product,access_tms_shipped_product,model_tms_shipped_product,,1,0,0,0
+access_tms_event,access_tms_event,model_tms_event,,1,0,0,0

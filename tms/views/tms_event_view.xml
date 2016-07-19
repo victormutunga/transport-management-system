@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- SEARCH View for tms.event -->
+        <record id="view_tms_event_search" model="ir.ui.view">
+            <field name="name">tms.event.search</field>
+            <field name="model">tms.event</field>
+            <field name="arch" type="xml">
+                <search string="TMS Events">
+                    <field name="name"/>
+                    <field name="date"/>
+                </search>
+            </field>
+        </record>
+        <!-- TREE View for tms.event-->
+        <record id="view_tms_event_tree" model="ir.ui.view">
+            <field name="name">tms.event.tree</field>
+            <field name="model">tms.event</field>
+            <field name="arch" type="xml">
+                <tree string="TMS Events">
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="position_real"/>
+                    <field name="position_pi"/>
+                    <field name="message"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        <!-- FORM View for tms.event-->
+        <record id="view_tms_event_form" model="ir.ui.view">
+            <field name="name">tms.event.form</field>
+            <field name="model">tms.event</field>
+            <field name="arch" type="xml">
+                <form string="TMS Events">
+                    <header>
+                        <button name="" states="draft,confirmed" string="Cancel" type="object"/>
+                        <button icon="gtk-convert" name="" states="cancel" string="Set to Draft" type="object"/>
+                        <button class="oe_highlight" icon="gtk-ok" name="" states="draft" string="Confirm" type="object"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group col="2" string="Extra Information">
+                                <group colspan="4">
+                                    <!-- <field name="travel_id"/> -->
+                                    <field name="origin"/>
+                                </group>
+                            </group>
+                            <group col="2" string="GPS">
+                                <group>
+                                    <field name="latitude"/>
+                                    <field name="longitude"/>
+                                    <field name="position_real"/>
+                                    <field name="position_pi"/>
+                                </group>
+                            </group>
+                            <group string="Notes">
+                                <group colspan="4">
+                                    <field name="notes" nolabel="1"/>
+                                </group>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- Action for tms.event-->
+        <record id="action_view_tms_event_form" model="ir.actions.act_window">
+            <field name="name">TMS Events</field>
+            <field name="res_model">tms.event</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <!-- Menu for tms.event -->
+        <menuitem action="action_view_tms_event_form" id="menu_tms_event" name="Events" parent="menu_tms_travels"/>
+    </data>
+</odoo>
