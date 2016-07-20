@@ -33,7 +33,7 @@
         'views/tms_route_view.xml',
         'views/tms_transportable_view.xml',
         # 'views/tms_travel_view.xml',
-        # 'views/tms_unit_kit_view.xml',
+        'views/tms_unit_kit_view.xml',
         'views/tms_waybill_view.xml',
         'data/product_product_data.xml',
     ],

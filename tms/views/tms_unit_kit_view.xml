@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <!-- SEARCH View for tms.unit.kit (Vehicle Kits) -->
         <record id="view_tms_unit_kit_search" model="ir.ui.view">
             <field name="name">tms.unit.kit.search</field>
             <field name="model">tms.unit.kit</field>
@@ -10,25 +9,22 @@
                     <field name="name"/>
                     <field name="active"/>
                     <field name="unit_id"/>
-                    <!-- <field name="trailer1_id"/> -->
-                    <!-- <field name="dolly_id"/> -->
-                    <!-- <field name="trailer2_id"/> -->
+                    <field name="trailer1_id"/>
+                    <field name="dolly_id"/>
+                    <field name="trailer2_id"/>
                     <newline/>
                     <field name="employee_id"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
                     <newline/>
                     <group expand="0" string="Group by...">
-                        <!--groups="base.group_extended" -->
                         <filter context="{'group_by' : 'unit_id'}" domain="[]" icon="terp-stock_symbol-selection" string="Unit"/>
-                        <filter context="{'group_by' : 'unit_type'}" domain="[]" icon="terp-stock_symbol-selection" string="Unit Type"/>
                         <separator orientation="vertical"/>
                         <filter context="{'group_by' : 'employee_id'}" domain="[]" icon="terp-stock_symbol-selection" string="Driver"/>
                     </group> 
                 </search>
             </field>
         </record>
-        <!-- TREE View for tms.unit.kit (Transportation Units Kits) -->
         <record id="view_tms_unit_kit_tree" model="ir.ui.view">
             <field name="name">tms.unit.kit.tree</field>
             <field name="model">tms.unit.kit</field>
@@ -36,13 +32,9 @@
                 <tree string="Units Kits">
                     <field name="name"/>
                     <field name="unit_id"/>
-                    <!-- <field name="unit_type"/> -->
-                    <!-- <field name="trailer1_id"/> -->
-                    <!-- <field name="trailer1_type"/> -->
-                    <!-- <field name="dolly_id"/> -->
-                    <!-- <field name="dolly_type"/> -->
-                    <!-- <field name="trailer2_id"/> -->
-                    <!-- <field name="trailer2_type"/> -->
+                    <field name="trailer1_id"/> 
+                    <field name="dolly_id"/> 
+                    <field name="trailer2_id"/>  
                     <field name="employee_id"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
@@ -50,12 +42,11 @@
                 </tree>
             </field>
         </record>
-        <!-- FORM View for tms.unit.kit (Transportation Units Kits) -->
         <record id="view_tms_unit_kit_form" model="ir.ui.view">
             <field name="name">tms.unit.kit.form</field>
             <field name="model">tms.unit.kit</field>
             <field name="arch" type="xml">
-                <form string="Units Kits" version="7.0">
+                <form string="Units Kits" version="9.0">
                     <sheet>
                         <h1>
                             <label string="Kit Name"/>
@@ -63,14 +54,9 @@
                         </h1>
                         <group col="4" colspan="4">
                             <separator colspan="4" string="Kit Framework"/>
-                            <field domain="[('fleet_type', '=', 'tractor')]" name="unit_id"/>
-                            <!-- <field name="unit_type" readonly="1"/> -->
-                            <!-- <field attrs="{'required':['|', ('dolly_id','!=',False),('trailer2_id','!=',False)]}" domain="[('id','!=',trailer2_id), ('fleet_type','=','trailer')]" name="trailer1_id"/> -->
-                            <!-- <field name="trailer1_type" readonly="1"/> -->
-                            <!-- <field attrs="{'required':[('trailer2_id','!=',False)]}" domain="[('fleet_type','=','dolly')]" name="dolly_id"/> -->
-                            <!-- <field name="dolly_type" readonly="1"/> -->
-                            <!-- <field attrs="{'required':[('dolly_id','!=',False)]}" domain="[('id','!=',trailer1_id), ('fleet_type','=','trailer')]" name="trailer2_id"/> -->
-                            <!-- <field name="trailer2_type" readonly="1"/> -->
+                            <field attrs="{'required':['|', ('dolly_id','!=',False),('trailer2_id','!=',False)]}" domain="[('id','!=',trailer2_id), ('fleet_type','=','trailer')]" name="trailer1_id"/>
+                            <field attrs="{'required':[('trailer2_id','!=',False)]}" domain="[('fleet_type','=','dolly')]" name="dolly_id"/>
+                            <field attrs="{'required':[('dolly_id','!=',False)]}" domain="[('id','!=',trailer1_id), ('fleet_type','=','trailer')]" name="trailer2_id"/>
                             <field colspan="2" name="employee_id"/>
                             <newline/>
                             <separator colspan="4" string="Validity"/>
@@ -86,7 +72,6 @@
                 </form>
             </field>
         </record>
-        <!-- Action for tms.unit (Transportation Units Kits) -->
         <record id="open_view_tms_unit_kit_form" model="ir.actions.act_window">
             <field name="name">TMS Units Kits</field>
             <field name="res_model">tms.unit.kit</field>
@@ -94,7 +79,6 @@
             <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_active': ''}</field>
         </record>
-        <!-- Menu for tms.unit (Transportation Units Kits) -->
         <menuitem action="open_view_tms_unit_kit_form" id="menu_tms_config_unit_kit_form" name="Units Kits" parent="menu_tms_settings_unit" sequence="22"/>
     </data>
 </odoo>
