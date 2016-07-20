@@ -19,8 +19,6 @@
                     <filter domain="[('state','!=','cancel')]" icon="terp-stock_symbol-selection" name="not_cancelled" string="Not Cancelled"/>
                     <filter domain="[('state','!=','closed')]" icon="terp-stock_symbol-selection" name="not_closed" string="Not Closed"/>
                     <filter domain="[('date','&gt;=', time.strftime('%%Y-%%m-01'))]" icon="terp-check" name="this_month" string="From this month"/>
-                    <filter domain="[('driver_helper','=', 0)]" icon="terp-check" string="For Driver"/>
-                    <filter domain="[('driver_helper','=', 1)]" icon="terp-check" string="For Driver Helper"/>
                     <newline/>
                     <field name="date"/>
                     <field name="name"/>
@@ -36,7 +34,6 @@
                         <filter context="{'group_by' : 'date'}" domain="[]" icon="terp-stock_symbol-selection" string="Period"/>
                         <separator orientation="vertical"/>
                         <filter context="{'group_by' : 'product_id'}" domain="[]" icon="terp-stock_symbol-selection" string="Product"/>
-                        <filter context="{'group_by' : 'driver_helper'}" domain="[]" icon="terp-stock_symbol-selection" string="For Driver Helper"/>
                     </group>
                 </search>
             </field>
@@ -84,13 +81,11 @@
                             <field class="oe_inline" name="name" readonly="1"/>
                         </h1>
                         <group col="4" colspan="4">
-                            <field invisible="1" name="employee1_id"/>
-                            <field invisible="1" name="employee2_id"/>
+                            <field name="base_id"/>
                             <field name="date" colspan="2"/>
                             <field domain="[('state','!=','cancel'),('state','!=','closed')]" name="travel_id" />
                             <field name="unit_id" readonly="1" coslpan="2"/>
                             <field name="employee_id" />
-                            <field  name="driver_helper"/>
                             <separator string="·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·" colspan="4" style="text-align: center;"/>
                             <field context="{'default_tms_category': 'real_expense', 'default_type': 'service', 'default_procure_method':'make_to_stock', 'default_supply_method': 'buy'}" name="product_id" coslpan="2"/>
                             <field name="currency_id"/>
@@ -98,13 +93,13 @@
                         </group>
                         <group class="oe_subtotal_footer" >
                             <field class="oe_text_right" name="product_uom_qty"/>
-                            <field invisible="1" name="product_uom"/>
+                            <field invisible="1" name="product_uom_id"/>
                             <field class="oe_text_right" name="price_unit_control" widget="monetary"/>
                             <field invisible="1" name="price_unit"/>
                              <field class="oe_text_right" name="subtotal" options="{'currency_field': 'currency_id'}" readonly="1" widget="monetary"/>
                              <field class="oe_text_right" name="tax_amount" options="{'currency_field': 'currency_id'}" readonly="1" widget="monetary"/>
                             <field class="oe_text_right" name="total" options="{'currency_field': 'currency_id'}" widget="monetary"/>  
-                        </group>
+                        </group><group>
                         <notebook colspan="4">
                             <page string="Notes">
                                 <group>
@@ -113,24 +108,22 @@
                             </page>
                             <page string="Log Info">
                                 <group col="4" colspan="4">
-                                    <field name="create_uid" readonly="1"/>
-                                    <field name="create_date" readonly="1"/>
-                                    <field name="approved_by" readonly="1"/>
-                                    <field name="date_approved" readonly="1"/>
-                                    <field name="confirmed_by" readonly="1"/>
-                                    <field name="date_confirmed" readonly="1"/>
-                                    <field name="closed_by" readonly="1"/>
-                                    <field name="date_closed" readonly="1"/>
-                                    <field name="cancelled_by" readonly="1"/>
-                                    <field name="date_cancelled" readonly="1"/>
-                                    <field name="drafted_by" readonly="1"/>
-                                    <field name="date_drafted" readonly="1"/>
                                     <field name="move_id"/>
                                     <field name="paid"/>
                                     <field name="expense_id"/>
                                 </group>
                             </page>
-                        </notebook>
+
+                        <group class="oe_subtotal_footer" >
+                            <field class="oe_text_right" name="product_uom_qty"/>
+                            <field invisible="1" name="product_uom_id"/>
+                            <field class="oe_text_right" name="price_unit_control" widget="monetary"/>
+                            <field invisible="1" name="price_unit"/>
+                            <field class="oe_text_right" name="subtotal" options="{'currency_field': 'currency_id'}" readonly="1" widget="monetary"/>
+                             <field class="oe_text_right" name="tax_amount" options="{'currency_field': 'currency_id'}" readonly="1" widget="monetary"/>
+                            <field class="oe_text_right" name="total" options="{'currency_field': 'currency_id'}" widget="monetary"/>  
+                        </group>
+                        </notebook></group>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>

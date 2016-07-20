@@ -4,28 +4,29 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 
-import time
 from openerp import fields, models
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
 class TmsWaybill(models.Model):
     _name = 'tms.waybill'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = 'Waybills'
+    _order = 'name desc'
 
-    waybill_customer_factor = fields.One2many(
+    base_id = fields.Many2one(
+        'tms.base', string='Base'
+    )
+    waybill_customer_factor_id = fields.One2many(
         'tms.factor', 'waybill_id',
         string='Waybill Customer Charge Factors',
         states={'confirmed': [('readonly', True)],
                 'closed': [('readonly', True)]})
-    waybill_supplier_factor = fields.One2many(
+    waybill_supplier_factor_id = fields.One2many(
         'tms.factor', 'waybill_id',
         string='Waybill Supplier Payment Factors',
         states={'cancel': [('readonly', True)],
                 'closed': [('readonly', True)]})
-    expense_driver_factor = fields.One2many(
+    expense_driver_factor_id = fields.One2many(
         'tms.factor', 'waybill_id',
         string='Travel Driver Payment Factors',
         states={'cancel': [('readonly', True)],
@@ -34,9 +35,10 @@ class TmsWaybill(models.Model):
         'tms.waybill.taxes', 'waybill_id',
         string='Tax Lines', readonly=True,
         states={'draft': [('readonly', False)]})
-    name = fields.Char('Name', size=64, select=True)
-    waybill_category = fields.Many2one(
-        'tms.waybill.category', 'Category', ondelete='restrict',
+    name = fields.Char()
+    waybill_category_id = fields.Many2one(
+        'tms.waybill.category', 'Category',
+        ondelete='restrict',
         states={'cancel': [('readonly', True)],
                 'done': [('readonly', True)],
                 'closed': [('readonly', True)]})
@@ -44,46 +46,9 @@ class TmsWaybill(models.Model):
         'tms.travel',
         string='Travels',
         states={'confirmed': [('readonly', True)]})
-    travel_id = fields.Many2one(
-        'tms.travel',
-        # compute='_get_newer_travel_id',
-        string='Actual Travel', readonly=True, ondelete='cascade')
-    unit_id = fields.Many2one(
-        'fleet.vehicle',
-        # related='travel_id.unit_id',
-        string='Unit', readonly=True)
-    supplier_id = fields.Many2one(
-        'res.partner',
-        # related='unit_id.supplier_id',
-        string='Freight Supplier', readonly=True)
-    supplier_amount = fields.Float(
-        # compute=_get_supplier_amount,
-        string='Supplier Freight Amount',
-        help="Freight Amount from Supplier.")
-    trailer1_id = fields.Many2one(
-        'fleet.vehicle',
-        related='travel_id.trailer1_id',
-        string='Trailer 1', readonly=True)
-    dolly_id = fields.Many2one(
-        'fleet.vehicle',
-        related='travel_id.dolly_id',
-        string='Dolly',
-        readonly=True)
-    trailer2_id = fields.Many2one(
-        'fleet.vehicle',
-        related='travel_id.trailer2_id',
-        string='Trailer 2', readonly=True)
-    employee_id = fields.Many2one(
-        'hr.employee',
-        related='travel_id.employee_id',
-        string='Driver', readonly=True)
-    employee2_id = fields.Many2one(
-        'hr.employee',
-        related='travel_id.employee2_id',
-        string='Driver Helper', readonly=True)
     route_id = fields.Many2one(
         'tms.route',
-        related='travel_id.route_id',
+        related='travel_ids.route_id',
         string='Route',
         readonly=True)
     departure_id = fields.Many2one(
@@ -97,36 +62,35 @@ class TmsWaybill(models.Model):
         string='Arrival',
         readonly=True)
     origin = fields.Char(
-        'Source Document', size=64,
+        'Source Document',
         help="Reference of the document that generated this Waybill request.",
         states={'confirmed': [('readonly', True)]})
     client_order_ref = fields.Char(
-        'Customer Reference', size=64,
+        'Customer Reference',
         states={'confirmed': [('readonly', True)]})
     state = fields.Selection([
         ('draft', 'Pending'),
         ('approved', 'Approved'),
         ('confirmed', 'Confirmed'),
         ('cancel', 'Cancelled')], 'State', readonly=True,
-        help="Gives the state of the Waybill. \n", select=True,
-        default=(lambda *a: 'draft'))
+        help="Gives the state of the Waybill. \n",
+        default='draft')
     date_order = fields.Date(
-        'Date', required=True, select=True,
+        'Date', required=True,
         states={'confirmed': [('readonly', True)]},
-        default=(lambda *a: time.strftime(DEFAULT_SERVER_DATE_FORMAT)))
+        default=fields.Date.today)
     user_id = fields.Many2one(
-        'res.users', 'Salesman', select=True,
+        'res.users', 'Salesman',
         states={'confirmed': [('readonly', True)]},
         default=(lambda self: self))
     partner_id = fields.Many2one(
         'res.partner',
         'Customer', required=True, change_default=True,
-        select=True,
         states={'confirmed': [('readonly', True)]})
     currency_id = fields.Many2one(
         'res.currency', 'Currency', required=True,
         states={'confirmed': [('readonly', True)]},
-        default=lambda self: self.env['res.users'].company_id.currency_id.id)
+        default=lambda self: self.env.user.company_id.currency_id)
     partner_invoice_id = fields.Many2one(
         'res.partner', 'Invoice Address', required=True,
         help="Invoice address for current Waybill.",
@@ -158,10 +122,10 @@ class TmsWaybill(models.Model):
         default=(lambda self: self.env['res.partner'].address_get(
             self['partner_id'])))
     upload_point = fields.Char(
-        'Upload Point', size=128,
+        'Upload Point',
         states={'confirmed': [('readonly', True)]})
     download_point = fields.Char(
-        'Download Point', size=128,
+        'Download Point',
         states={'confirmed': [('readonly', True)]})
     shipped = fields.Boolean(
         'Delivered', readonly=True,
@@ -195,20 +159,16 @@ class TmsWaybill(models.Model):
         states={'confirmed': [('readonly', True)]})
     product_qty = fields.Float(
         # compute=_shipped_product,
-        string='Sum Qty',
-        multi='product_qty')
+        string='Sum Qty')
     product_volume = fields.Float(
         # compute=_shipped_product,
-        string='Sum Volume',
-        multi='product_qty')
+        string='Sum Volume')
     product_weight = fields.Float(
         # compute=_shipped_product,
-        string='Sum Weight',
-        multi='product_qty')
+        string='Sum Weight')
     product_uom_type = fields.Char(
         # compute=_shipped_product,
-        string='Product UoM Type',
-        size=64, multi='product_qty')
+        string='Product UoM Type')
     amount_freight = fields.Float(
         # compute=_amount_all,
         string='Freight')
@@ -236,11 +196,11 @@ class TmsWaybill(models.Model):
     distance_route = fields.Float(
         # compute=_get_route_distance,
         string='Distance from route',
-        help="Route Distance.", multi=False)
+        help="Route Distance.")
     distance_real = fields.Float(
         'Distance Real',
         help="Route obtained by electronic reading")
-    notes = fields.Text('Notes', readonly=False)
+    notes = fields.Text()
     payment_term = fields.Many2one(
         'account.payment.term', 'Payment Term',
         states={'confirmed': [('readonly', True)]})
@@ -249,7 +209,7 @@ class TmsWaybill(models.Model):
         states={'confirmed': [('readonly', True)]})
     time_for_uploading_std = fields.Float(
         'Std Time for loading (Hrs)',
-        required=True, readonly=False)
+        required=True)
     time_from_uploading_to_docs_sched = fields.Float(
         'Std Time fromLoad to Document Release (Hrs)',
         required=True)
@@ -266,42 +226,40 @@ class TmsWaybill(models.Model):
         required=True, readonly=False)
     date_start = fields.Datetime(
         'Load Date Sched', help="Date Start time for Load",
-        default=(lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)))
+        default=fields.Datetime.now)
     date_up_start_sched = fields.Datetime(
         'UpLd Start Sched',
-        default=(lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)))
+        default=fields.Datetime.now)
     date_up_end_sched = fields.Datetime(
         'UpLd End Sched',
-        default=(lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)))
+        default=fields.Datetime.now)
     date_up_docs_sched = fields.Datetime(
         'UpLd Docs Sched',
-        default=(lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)))
+        default=fields.Datetime.now)
     date_appoint_down_sched = fields.Datetime(
         'Download Date Sched',
-        default=(lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)))
+        default=fields.Datetime.now)
     date_down_start_sched = fields.Datetime(
         'Download Start Sched',
-        default=(lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)))
+        default=fields.Datetime.now)
     date_down_end_sched = fields.Datetime(
         'Download End Sched',
-        default=(lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)))
+        default=fields.Datetime.now)
     date_down_docs_sched = fields.Datetime(
         'Download Docs Sched',
-        default=(lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)))
+        default=fields.Datetime.now)
     date_end = fields.Datetime(
         'Travel End Sched', help="Date End time for Load",
-        default=(lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)))
-    date_start_real = fields.Datetime('Load Date Real', required=False)
-    date_up_start_real = fields.Datetime('UpLoad Start Real', required=False)
-    date_up_end_real = fields.Datetime('UpLoad End Real', required=False)
-    date_up_docs_real = fields.Datetime('Load Docs Real', required=False)
-    date_appoint_down_real = fields.Datetime(
-        'Download Date Real', required=False)
-    date_down_start_real = fields.Datetime(
-        'Download Start Real', required=False)
-    date_down_end_real = fields.Datetime('Download End Real', required=False)
-    date_down_docs_real = fields.Datetime('Download Docs Real', required=False)
-    date_end_real = fields.Datetime('Travel End Real', required=False)
+        default=fields.Datetime.now)
+    date_start_real = fields.Datetime('Load Date Real')
+    date_up_start_real = fields.Datetime('UpLoad Start Real')
+    date_up_end_real = fields.Datetime('UpLoad End Real')
+    date_up_docs_real = fields.Datetime('Load Docs Real')
+    date_appoint_down_real = fields.Datetime('Download Date Real')
+    date_down_start_real = fields.Datetime('Download Start Real')
+    date_down_end_real = fields.Datetime('Download End Real')
+    date_down_docs_real = fields.Datetime('Download Docs Real')
+    date_end_real = fields.Datetime('Travel End Real')
     amount_declared = fields.Float(
         'Amount Declared',
         help=" Load value amount declared for insurance purposes...")
@@ -313,5 +271,3 @@ class TmsWaybill(models.Model):
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'Waybill must be unique !'),
     ]
-
-    _order = 'name desc'

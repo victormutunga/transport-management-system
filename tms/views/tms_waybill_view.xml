@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
         <record id="view_tms_waybill_tree" model="ir.ui.view">
           <field name="name">tms.waybill.tree</field>
           <field name="model">tms.waybill</field>
@@ -10,18 +9,14 @@
             <tree string="Waybills" colors="gray:state=='cancel';red:state=='draft';green:state=='approved';">
               <field name="name"/>
               <field name="date_order"/>
-              <field name="travel_id" />
               <field name="client_order_ref"/>
               <field name="partner_id"/>              
               <field name="product_qty" /> 
               <field name="amount_untaxed" sum="Amount Untaxed"/> 
               <field name="amount_tax" /> 
               <field name="amount_total" /> 
-              <field name="supplier_amount" /> 
               <field name="invoice_id" invisible="1"/>
-              <field name="supplier_id" invisible="1"/> 
               <field name="user_id" invisible="1"/>
-              <field name="employee_id" invisible="1"/>
               <field name="product_uom_type" invisible="1"/> 
               <field name="state"/>
               <button name="action_approve" states="draft" string="Approve" type="object" icon="gtk-go-forward" groups="tms.group_waybill_approve"/>
@@ -49,6 +44,7 @@
                     </h1>
                     <group col="4">
                         <field name="date_order"/>
+                        <field name='base_id'/>
                         <field name="currency_id" groups="base.group_multi_currency" />
                         <separator string="·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·" colspan="4" style="text-align: center;"/>
                         <field name="partner_id" domain="[('customer','=',True), ('is_company', '=', True)]"  colspan="4"/>
@@ -60,19 +56,13 @@
                     </group>
                     
                     <notebook colspan="4">
-                    	<page string="Lines">
+                        <page string="Lines">
                             <group>
                                 <separator string="Travels" coslpan="4"/>
-                                <field name="travel_ids" colspan="4" nolabel="1" />             
-                                <field name="travel_id" readonly="1" colspan="2"/>      
+                                <field name="travel_ids" colspan="4" nolabel="1" />        
                                 <field name="route_id" colspan="4" invisible="1"/>
-                                <field name="employee_id" colspan="4" invisible="1"/>
                                 <field name="departure_id" invisible="1"/>
-                                <field name="arrival_id" invisible="1"/>        
-                                <field name="unit_id" invisible="1"/>
-                                <field name="trailer1_id" invisible="1"/>
-                                <field name="dolly_id" invisible="1"/>
-                                <field name="trailer2_id" invisible="1"/>
+                                <field name="arrival_id" invisible="1"/>   
                                 <separator string="Waybill Lines" colspan="4"/>
                                 <field name="waybill_line" colspan="4" nolabel="1"> 
                                     <tree string="Waybill Lines">
@@ -154,15 +144,14 @@
 
                         <page string="Factor Supplier">
                             <separator string="Waybill Supplier Factors" colspan="4"/>
-                            <field name="waybill_supplier_factor" 
+                            <field name="waybill_supplier_factor_id" 
                                     context="{'default_waybill_id': active_id,'default_category':'supplier'}" 
                                     domain="[('category','=','supplier')]"
                                     colspan="4" nolabel="1" />
-                            <field name="supplier_amount" />
                         </page> 
                         <page string="Factor Driver">
                             <separator string="Driver Salary Factors" colspan="4"/>
-                            <field name="expense_driver_factor" 
+                            <field name="expense_driver_factor_id" 
                                     context="{'default_waybill_id': active_id,'default_category':'driver'}" 
                                     domain="[('category','=','driver')]"
                                     colspan="4" nolabel="1" />
@@ -237,8 +226,6 @@
       <field name="arch" type="xml">
         <search string="Search Waybills">
           <field name="partner_id" />
-          <field name="travel_id" />
-          <field name="supplier_id" /> 
           <field name="date_order" string="Waybill date" />
           <field name="name" select="1"/>
           <field name="client_order_ref"/>
@@ -252,7 +239,6 @@
           <filter icon="terp-gtk-jump-to-ltr" string="Approved" domain="[('state','=','approved')]"/>
           <filter icon="terp-check" string="Confirmed" domain="[('state','=','confirmed')]"/>
           <separator/>
-          <filter icon="terp-dialog-close" string="Without Travel" domain="[('travel_id','=',False)]"/>
           <filter string="Invoiced" icon="terp-stock_symbol-selection" domain="[('invoice_id','!=', False)]"/>
           <filter string="Not Invoiced" icon="terp-dialog-close" domain="[('invoice_id','=', False)]"/>
           <filter string="Not Cancelled" icon="terp-stock_symbol-selection" domain="[('state','!=','cancel')]" name="not_cancelled"/>
@@ -262,7 +248,6 @@
           <newline />
           <group expand="0" string="Group By..." >
             <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
-            <filter string="Driver" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
             <filter string="Waybill Category" icon="terp-personal" domain="[]"/>
             <separator orientation="vertical"/>
             <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
@@ -270,8 +255,7 @@
             <separator orientation="vertical"/>
             <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
             <filter string='Invoice' icon="terp-stock_symbol-selection" domain="[]"  /> 
-            <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>   
-            <filter string='Supplier' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'supplier_id'}" />       
+            <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>         
             <filter string='Period' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'date_order'}" />
 
           </group>
