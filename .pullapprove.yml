@@ -10,11 +10,3 @@ reviewers:
         required: 1
         members:
             - alan196
-    -
-        name: developers
-        required: 1
-        members:
-            - alan196
-            - xluiisx
-            - SaraiOsorio
-            - danielrocha94
