@@ -13,6 +13,7 @@ class TmsFactor(models.Model):
     "& Client charge"
 
     name = fields.Char('Name', size=64, required=True)
+    travel_id = fields.Many2one('tms.travel', string='Travel')
     waybill_id = fields.Many2one(
         'tms.waybill', string='waybill', ondelete='cascade',
         select=True, readonly=True)

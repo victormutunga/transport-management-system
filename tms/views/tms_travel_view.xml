@@ -34,9 +34,6 @@
                         <field name="date_start"/>
                         <field name="date_end"/>
                         <newline/>
-                        <!-- <field name="company_id"/>
-                        <field name="shop_id"/> -->
-                        <!-- <field name="tms_waybill_ids" string="Data from waybill" />-->
                     </group>
                     <newline/>
                     <group expand="0" string="Group by...">
@@ -44,7 +41,6 @@
                         <filter context="{'group_by' : 'employee_id'}" domain="[]" icon="terp-personal" string="Driver 1"/>
                         <filter context="{'group_by' : 'partner_id'}" domain="[]" icon="terp-go-home" string="Customer"/>
                         <filter context="{'group_by' : 'arrival_address_id'}" domain="[]" icon="terp-go-home" string="Destination"/>
-                        <!--<filter string='Driver 2' icon="terp-personal" domain="[]" context="{'group_by' : 'employee2_id'}" />-->
                         <separator orientation="vertical"/>
                         <filter context="{'group_by' : 'departure_id'}" domain="[]" icon="terp-gtk-go-back-rtl" string="Departure"/>
                         <filter context="{'group_by' : 'arrival_id'}" domain="[]" icon="terp-gtk-jump-to-ltr" string="Arrival"/>
@@ -74,8 +70,6 @@
                     <field name="trailer2_id"/>
                     <!-- <field invisible="1" name="framework"/> -->
                     <field name="employee_id"/>
-                    <field name="employee2_id"/>
-                    <!-- <field name="waybill_income" sum="Ingresos"/> -->
                     <field name="route_id"/>
                     <field invisible="1" name="departure_id"/>
                     <field invisible="1" name="arrival_id"/>
@@ -97,7 +91,6 @@
             <field name="arch" type="xml">
                 <graph string="Travels" type="bar">
                     <field name="unit_id"/>
-                    <!-- <field name="waybill_income" operator="+"/> -->
                 </graph>
             </field>
         </record>
@@ -115,76 +108,30 @@
                         <field name="state" statusbar_visible="draft,progress,done,closed" widget="statusbar"/>
                     </header>
                     <sheet>
-                        <h1>
-                            <label string="Travel"/>
-                            <field class="oe_inline" name="name" readonly="1"/>
-                        </h1>
-                        <group col="4" colspan="4">
-                           <!--  <group col="2" colspan="2">
-                                <field name="unit_id" />
-                                <field attrs="{'required':['|', ('dolly_id','!=',False),('trailer2_id','!=',False)]}" context="{'default_fleet_type': 'trailer'}" domain="[('id','!=',trailer2_id), ('fleet_type','=','trailer')]" name="trailer1_id" required="1"/>
-                                <field attrs="{'required':[('trailer2_id','!=',False)]}" context="{'default_fleet_type': 'dolly'}" domain="[('fleet_type','=','dolly')]" name="dolly_id"/>
-                                <field attrs="{'required':[('dolly_id','!=',False)]}" context="{'default_fleet_type': 'trailer'}" domain="[('id','!=',trailer1_id), ('fleet_type','=','trailer')]" name="trailer2_id"/>
-                            </group> -->
-                            <group col="2" colspan="2">
-                                <!-- <field name="shop_id"/> -->
+                        <group>
+                            <group string="Travel">
+                                    <field name="kit_id" />
+                                    <field name="unit_id" />
+                                    <field attrs="{'required':['|', ('dolly_id','!=',False),('trailer2_id','!=',False)]}" context="{'default_fleet_type': 'trailer'}" domain="[('id','!=',trailer2_id), ('fleet_type','=','trailer')]" name="trailer1_id" required="1"/>
+                                    <field attrs="{'required':[('trailer2_id','!=',False)]}" context="{'default_fleet_type': 'dolly'}" domain="[('fleet_type','=','dolly')]" name="dolly_id"/>
+                                    <field attrs="{'required':[('dolly_id','!=',False)]}" context="{'default_fleet_type': 'trailer'}" domain="[('id','!=',trailer1_id), ('fleet_type','=','trailer')]" name="trailer2_id"/>
+                            </group>
+                            <group string="Information">  
+                                <field name="employee_id"/>
+                                <field name="route_id" />
                                 <field name="date"/>
-                                <field name="kit_id" />
-                                <!-- <field name="operation_id" domain="[('state','=','process')]"/>-->
-                            </group>
-                            <!-- <group col="2" colspan="2">
-                                <field attrs="{'invisible':[('supplier_unit','!=',True)]}" name="supplier_unit"/>
-                                <field attrs="{'invisible':[('supplier_unit','!=',True)]}" name="supplier_id" string="Outsourced with"/>
-                                <field context="{'default_tms_category': 'driver'}" domain="[('tms_supplier_id','=',supplier_id)]" name="employee_id"/>
-                                <field context="{'default_tms_category': 'driver'}" domain="[('tms_supplier_id','=',supplier_id),('id','!=', employee_id)]" name="employee2_id"/>
-                                <field attrs="{'invisible':[('supplier_id','!=',False)]}" name="framework"/>
-                                <field attrs="{'required':[('supplier_id','!=',False)], 'invisible':[('supplier_id','=',False)]}" name="framework_supplier"/>
-                            </group> -->
-                            <group col="2" colspan="4">
-                                <field colspan="4" name="route_id" />
-                            </group>
-                            <group col="2" colspan="2">
-                                <field name="departure_id" readonly="1"/>
                                 <field name="user_id"/>
                             </group>
-                            <group col="2" colspan="2">
-                                <field name="arrival_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <group string="Arrival">
+                                <field name="arrival_id" nolabel="1"/>
+                            </group>
+                            <group string="Departure">
+                                <field name='departure_id' nolabel="1"/>
                             </group>
                         </group>
                         <notebook colspan="4">
-                           <!--  <page attrs="{'invisible':[('supplier_unit','=',True)]}" string="Fuel Vouchers">
-                                <group>
-                                    <field attrs="{'readonly':[('state','in',('cancel','closed'))]}" context="{'default_travel_id': active_id, 'default_operation_id' : operation_id, 'default_employee_id': employee_id, 'default_employee1_id': employee_id,'default_employee2_id': employee2_id,}" name="fuelvoucher_ids" nolabel="1">
-                                        <tree string="TMS Fuel Vouchers">
-                                            <field name="name"/>
-                                            <field name="date"/>
-                                            <field name="employee_id"/>
-                                            <field name="partner_id"/>
-                                            <field name="product_uom_qty" sum="Quatity"/>
-                                            <field name="product_uom"/>
-                                            <field name="price_total" sum="Total"/>
-                                            <field name="state"/>
-                                        </tree>
-                                    </field>
-                                </group>
-                            </page> -->
-                            <!-- <page attrs="{'invisible':[('supplier_unit','=',True)]}" string="Advances">
-                                <group>
-                                    <field attrs="{'readonly':['|',('supplier_unit','=',True),('state','in',('cancel','closed'))]}" context="{'default_travel_id': active_id, 'default_operation_id' : operation_id, 'default_employee_id': employee_id, 'default_employee1_id': employee_id,'default_employee2_id': employee2_id,}" domain="[('state','!=','cancel')]" name="advance_ids" nolabel="1">
-                                        <tree string="TMS Advances">
-                                            <field name="name"/>
-                                            <field name="date"/>
-                                            <field name="employee_id"/>
-                                            <field name="product_id"/>
-                                            <field name="product_uom_qty" /><field name="subtotal" sum="SubTotal" /><field name="tax_amount" sum="Tax Amount"/>
-                                            <field name="total" sum="Total"/>
-                                            <field name="auto_expense"/>
-                                            <field name="paid"/>
-                                            <field name="state"/>
-                                        </tree>
-                                    </field>
-                                </group>
-                            </page> -->
                             <page string="Waybills">
                                 <group>
                                     <field attrs="{'readonly':[('state','in',('cancel','closed'))]}" name="waybill_ids" nolabel="1">
@@ -204,26 +151,8 @@
                                     </field>
                                 </group>
                             </page>
-                            <!-- <page attrs="{'invisible':[('supplier_unit','=',True)]}" string="Factor Driver">
-                                <group>
-                                    <separator colspan="4" string="Driver Salary Factors"/>
-                                    <field attrs="{'readonly':[('state','in',('cancel','closed'))]}" colspan="4" context="{'default_travel_id': active_id,'default_category':'driver'}" name="expense_driver_factor" nolabel="1"/>
-                                </group>
-                            </page> -->
                             <page string="History">
                                 <group>
-                                   <!--  <separator colspan="4" string="Travel history"/>
-                                    <field attrs="{'readonly':[('state','in',('cancel','closed'))]}" context="{'default_travel_id': active_id}" name="event_ids" nolabel="1">
-                                        <tree>
-                                            <field name="date"/>
-                                            <field name="category_id"/>
-                                            <field name="name"/>
-                                            <field name="position_real"/>
-                                            <field name="position_pi"/>
-                                            <field name="message"/>
-                                            <field name="state"/>
-                                        </tree>
-                                    </field> -->
                                     <separator colspan="4" string="Notes"/>
                                     <field name="notes" nolabel="1"/>
                                 </group>
