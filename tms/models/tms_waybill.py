@@ -36,12 +36,6 @@ class TmsWaybill(models.Model):
         string='Tax Lines', readonly=True,
         states={'draft': [('readonly', False)]})
     name = fields.Char()
-    waybill_category_id = fields.Many2one(
-        'tms.waybill.category', 'Category',
-        ondelete='restrict',
-        states={'cancel': [('readonly', True)],
-                'done': [('readonly', True)],
-                'closed': [('readonly', True)]})
     travel_ids = fields.Many2many(
         'tms.travel',
         string='Travels',
@@ -153,8 +147,8 @@ class TmsWaybill(models.Model):
         'tms.waybill.line', 'waybill_id',
         string='Waybill Lines',
         states={'confirmed': [('readonly', True)]})
-    waybill_shipped_product_id = fields.One2many(
-        'tms.shipped.product', 'waybill_id',
+    transportable_ids = fields.One2many(
+        'tms.waybill.transportable.line', 'transportable_id',
         string='Shipped Products',
         states={'confirmed': [('readonly', True)]})
     product_qty = fields.Float(
