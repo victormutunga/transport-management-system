@@ -11,6 +11,7 @@
                     <field invisible="1" name="last_odometer"/>
                     <field name="current_odometer" />
                     <field name="distance" />
+                    <field name="tms_travel_id" />
                 </field>
             </field>
         </record>

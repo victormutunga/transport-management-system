@@ -16,7 +16,7 @@
         'security/ir.model.access.csv',
         'views/tms_view.xml',
         'views/tms_base_view.xml',
-        # 'views/fleet_vehicle_odometer_view.xml',
+        'views/fleet_vehicle_odometer_view.xml',
         # 'views/fleet_vehicle_view.xml',
         'views/hr_employee_view.xml',
         'views/fleet_vehicle_view.xml',
