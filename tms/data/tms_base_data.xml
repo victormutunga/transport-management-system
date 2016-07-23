@@ -4,6 +4,10 @@
         <record model="tms.base" id="tms_base_1">
             <field name="name">Your Company</field>
             <field name="travel_sequence_id" ref="tms.travel_sequence"/>
+            <field name="expense_sequence_id" ref="tms.expense_sequence"/>
+            <field name="waybill_sequence_id" ref="tms.waybill_sequence"/>
+            <field name="advance_sequence_id" ref="tms.advance_sequence"/>
+            <field name="fuel_log_sequence_id" ref="tms.fuel_log_sequence"/>
         </record>
     </data>
 </odoo>

@@ -14,6 +14,14 @@ class TmsBase(models.Model):
     travel_sequence_id = fields.Many2one(
         'ir.sequence',
         string='Travel Sequence')
+    fuel_log_sequence_id = fields.Many2one(
+        'ir.sequence', string='Fuel Log Sequence')
+    advance_sequence_id = fields.Many2one(
+        'ir.sequence', string='Advance Sequence')
+    waybill_sequence_id = fields.Many2one(
+        'ir.sequence', string='Waybill Sequence')
+    expense_sequence_id = fields.Many2one(
+        'ir.sequence', string='Expense Sequence')
     advance_journal_id = fields.Many2one(
         'account.journal',
         string='Advance Journal'

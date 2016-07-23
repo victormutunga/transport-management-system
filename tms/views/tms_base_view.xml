@@ -7,20 +7,28 @@
             <field name='arch' type='xml'>
                 <form>
                     <sheet>
+                        <h1>
+                            <field name='name' placeholder='Base name'/>
+                        </h1>
                         <group>
-                            <field name='name'/>
-                        </group>
-                        <group col='2'>
-                            <field name='travel_sequence_id'/>
-                            <field name='advance_journal_id'/>
-                            <field name='fuelvoucher_journal_id'/>
-                            <field name='expense_journal_id'/>
-                        </group>
-                        <group>
-                            <field name='supplier_journal_id'/>
-                            <field name='waybill_journal_id'/>
-                            <field name='account_fuel_id'/>
-                            <field name='account_fleight_id'/>
+                            <group string='Sequences'>
+                                <field name='travel_sequence_id'/>
+                                <field name='expense_sequence_id'/>
+                                <field name='waybill_sequence_id'/>
+                                <field name='advance_sequence_id'/>
+                                <field name='fuel_log_sequence_id'/>
+                            </group>
+                            <group string="Journals">
+                                <field name='advance_journal_id'/>
+                                <field name='fuelvoucher_journal_id'/>
+                                <field name='expense_journal_id'/>
+                                <field name='supplier_journal_id'/>
+                                <field name='waybill_journal_id'/>
+                            </group>
+                            <group string='Accounts'>
+                                <field name='account_fuel_id'/>
+                                <field name='account_fleight_id'/>
+                            </group>
                         </group>
                     </sheet>
                 </form>
