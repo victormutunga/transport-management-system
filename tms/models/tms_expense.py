@@ -3,28 +3,25 @@
 # © <2016> <Jarsa Sistemas, S.A. de C.V.>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import fields, models
+from openerp import api, fields, models
 
 
 class TmsExpense(models.Model):
     _name = 'tms.expense'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _description = 'TMS Travel Expenses'
+    _description = 'Travel Expenses'
     _order = 'name desc'
 
     name = fields.Char(readonly=True)
+    base_id = fields.Many2one('tms.base', string='Base', required=True)
     employee_id = fields.Many2one(
         'hr.employee', 'Driver', required=True,
-        domain=[('tms_category', '=', 'driver')],
-        states={'draft': [('readonly', False)]})
+        domain=[('tms_category', '=', 'driver')],)
     travel_ids = fields.Many2many(
         'tms.travel',
-        'Travels',
-        states={'confirmed': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        string='Travels')
     currency_id = fields.Many2one(
         'res.currency', 'Currency', required=True, readonly=True,
-        states={'draft': [('readonly', False)]},
         default=lambda self: self.env.user.company_id.currency_id.id)
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -35,13 +32,9 @@ class TmsExpense(models.Model):
         default='draft')
     date = fields.Date(
         'Date', required=True,
-        states={'confirmed': [('readonly', True)],
-                'closed': [('readonly', True)]},
         default=fields.Date.today)
     expense_line = fields.One2many(
-        'tms.expense.line', 'expense_id', 'Expense Lines',
-        states={'confirmed': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        'tms.expense.line', 'expense_id', 'Expense Lines')
     amount_real_expense = fields.Float(
         # compute=_amount_all,
         string='Expenses')
@@ -116,8 +109,7 @@ class TmsExpense(models.Model):
         'Loaded Fuel Efficiency')
     unloaded_fuel_efficiency = fields.Float(
         'Unloaded Fuel Efficiency')
-    notes = fields.Text(
-        'Notes', states={'closed': [('readonly', True)]})
+    notes = fields.Text()
     move_id = fields.Many2one(
         'account.move', 'Journal Entry', readonly=True,
         help="Link to the automatically generated Journal Items.")
@@ -141,6 +133,9 @@ class TmsExpense(models.Model):
         # compute=_get_fuel_diff,
         string='Global Fuel Efficiency Real')
 
-    _sql_constraints = [
-        ('name_uniq', 'unique(name)', 'Expense record must be unique !'),
-    ]
+    @api.model
+    def create(self, values):
+        expense = super(TmsExpense, self).create(values)
+        sequence = expense.base_id.expense_sequence_id
+        expense.name = sequence.next_by_id()
+        return expense
