@@ -54,6 +54,7 @@
                         </h1>
                         <group col="4" colspan="4">
                             <separator colspan="4" string="Kit Framework"/>
+                            <field name="unit_id"/>
                             <field attrs="{'required':['|', ('dolly_id','!=',False),('trailer2_id','!=',False)]}" domain="[('id','!=',trailer2_id), ('fleet_type','=','trailer')]" name="trailer1_id"/>
                             <field attrs="{'required':[('trailer2_id','!=',False)]}" domain="[('fleet_type','=','dolly')]" name="dolly_id"/>
                             <field attrs="{'required':[('dolly_id','!=',False)]}" domain="[('id','!=',trailer1_id), ('fleet_type','=','trailer')]" name="trailer2_id"/>

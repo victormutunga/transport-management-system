@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <!-- Search View -->
         <record id="fleet_vehicle_search_inherit_tms" model="ir.ui.view">
             <field name="name">fleet.vehicle.tms.search</field>
             <field name="model">fleet.vehicle</field>
@@ -20,13 +19,19 @@
                 </search>
             </field>
         </record> 
-        <!-- Inherit Vehicle Form -->
         <record id="fleet_vehicle_form_inherit_tms" model="ir.ui.view">
             <field name="name">fleet.vehicle.tms.form</field>
             <field name="model">fleet.vehicle</field>
             <field name="inherit_id" ref="fleet.fleet_vehicle_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//label[@for='model_id']" name="model_id" position="before">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name" placeholder="e.g. T-1"/>
+                    </h1>
+                </xpath>
                 <field name="driver_id" position="before">
+                    <field name='base_id'/>
                     <field name="fleet_type"/>
                 </field>
                 <field name="vin_sn" position="after">
@@ -46,7 +51,6 @@
                 </xpath>
             </field>
         </record>
-        <!-- Tree View -->
         <record id="fleet_vehicle_tree_inherit_tms" model="ir.ui.view">
             <field name="name">fleet.vehicle.tms.tree</field>
             <field name="model">fleet.vehicle</field>

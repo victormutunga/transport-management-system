@@ -11,6 +11,9 @@ class TmsBase(models.Model):
     _description = 'Base'
 
     name = fields.Char(string='', required=True)
+    travel_sequence_id = fields.Many2one(
+        'ir.sequence',
+        string='Travel Sequence')
     advance_journal_id = fields.Many2one(
         'account.journal',
         string='Advance Journal'
@@ -37,3 +40,5 @@ class TmsBase(models.Model):
     account_fleight_id = fields.Many2one(
         'account.account',
         string='')
+    travel_id = fields.One2many('tms.travel',
+                                'base_id')

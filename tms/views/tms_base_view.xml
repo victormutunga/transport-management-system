@@ -11,6 +11,7 @@
                             <field name='name'/>
                         </group>
                         <group col='2'>
+                            <field name='travel_sequence_id'/>
                             <field name='advance_journal_id'/>
                             <field name='fuelvoucher_journal_id'/>
                             <field name='expense_journal_id'/>

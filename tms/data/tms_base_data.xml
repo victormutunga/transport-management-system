@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="tms.base" id="tms_base_1">
+            <field name="name">Your Company</field>
+            <field name="travel_sequence_id" ref="tms.travel_sequence"/>
+        </record>
+    </data>
+</odoo>

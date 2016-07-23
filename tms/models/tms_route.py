@@ -13,7 +13,6 @@ import requests
 import simplejson as json
 
 
-# Routes
 class TmsRoute(models.Model):
     _name = 'tms.route'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -30,6 +29,9 @@ class TmsRoute(models.Model):
         help='Route travel time (hours)')
     notes = fields.Text('Notes')
     active = fields.Boolean('Active', default=True)
+    driver_factor_ids = fields.One2many(
+        'tms.factor', 'route_id',
+        string="Expense driver factor")
 
     @api.multi
     def get_route_info(self, error=False):

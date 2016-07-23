@@ -3,19 +3,19 @@
 # © <2016> <Jarsa Sistemas, S.A. de C.V.>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import fields, models
+from openerp import _, api, fields, models
+from openerp.exceptions import ValidationError
 
 
-# Trips / travels
 class TmsTravel(models.Model):
     _name = 'tms.travel'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _description = 'Travels'
+    _description = 'Travel'
     _order = "date desc"
 
     waybill_ids = fields.Many2many(
         'tms.waybill', string='Waybills')
-    expense_driver_factor = fields.One2many(
+    driver_factor_ids = fields.One2many(
         'tms.factor', 'travel_id', string='Travel Driver Payment Factors',
         domain=[('category', '=', 'driver')],
         states={'cancel': [('readonly', True)],
@@ -23,7 +23,7 @@ class TmsTravel(models.Model):
     name = fields.Char('Travel Number')
     state = fields.Selection(
         [('draft', 'Pending'), ('progress', 'In Progress'), ('done', 'Done'),
-         ('closed', 'Closed'), ('cancel', 'Cancelled')],
+         ('cancel', 'Cancelled')],
         'State', readonly=True, default='draft')
     route_id = fields.Many2one(
         'tms.route', 'Route', required=True,
@@ -43,112 +43,121 @@ class TmsTravel(models.Model):
         # compute=_route_data,
         string='Fuel Efficiency Expected')
     kit_id = fields.Many2one(
-        'tms.unit.kit', 'Kit',
-        states={'cancel': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        'tms.unit.kit', 'Kit')
     unit_id = fields.Many2one(
         'fleet.vehicle', 'Unit',
         domain=[('fleet_type', '=', 'tractor')],
-        states={'cancel': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        required=True)
     trailer1_id = fields.Many2one(
         'fleet.vehicle', 'Trailer1',
-        domain=[('fleet_type', '=', 'trailer')],
-        states={'cancel': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        domain=[('fleet_type', '=', 'trailer')])
     dolly_id = fields.Many2one(
         'fleet.vehicle', 'Dolly',
-        domain=[('fleet_type', '=', 'dolly')],
-        states={'cancel': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        domain=[('fleet_type', '=', 'dolly')])
     trailer2_id = fields.Many2one(
         'fleet.vehicle', 'Trailer2',
-        domain=[('fleet_type', '=', 'trailer')],
-        states={'cancel': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        domain=[('fleet_type', '=', 'trailer')])
     employee_id = fields.Many2one(
         'hr.employee', 'Driver', required=True,
-        domain=[('tms_category', '=', 'driver')],
-        states={'cancel': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        domain=[('tms_category', '=', 'driver')])
     date = fields.Datetime(
         'Date  registered', required=True,
-        states={'cancel': [('readonly', True)],
-                'closed': [('readonly', True)]},
         default=(fields.Datetime.now))
     date_start = fields.Datetime(
         'Start Sched',
-        states={'cancel': [('readonly', True)],
-                'closed': [('readonly', True)]},
         default=(fields.Datetime.now))
     date_end = fields.Datetime(
         'End Sched',
-        states={'cancel': [('readonly', True)],
-                'closed': [('readonly', True)]},
         default=(fields.Datetime.now))
     date_start_real = fields.Datetime(
-        'Start Real',
-        states={'cancel': [('readonly', True)],
-                'closed': [('readonly', True)]},
-        default=(fields.Datetime.now))
+        'Start Real')
     date_end_real = fields.Datetime(
-        'End Real',
-        states={'cancel': [('readonly', True)],
-                'closed': [('readonly', True)]},
-        default=(fields.Datetime.now))
+        'End Real')
     distance_driver = fields.Float(
-        'Distance traveled by driver (mi./km)',
-        states={'cancel': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        'Distance traveled by driver (mi./km)')
     distance_loaded = fields.Float(
-        'Distance Loaded (mi./km)',
-        states={'cancel': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        'Distance Loaded (mi./km)')
     distance_empty = fields.Float(
-        'Distance Empty (mi./km)',
-        states={'cancel': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        'Distance Empty (mi./km)')
     distance_extraction = fields.Float(
-        'Distance Extraction (mi./km)',
-        states={'cancel': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        'Distance Extraction (mi./km)')
     fuel_efficiency_travel = fields.Float(
-        'Fuel Efficiency Travel',
-        states={'cancel': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        'Fuel Efficiency Travel')
     fuel_efficiency_extraction = fields.Float(
-        'Fuel Efficiency Extraction',
-        states={'cancel': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        'Fuel Efficiency Extraction')
+    base_id = fields.Many2one('tms.base', 'Base', required=True)
     departure_id = fields.Many2one(
         'tms.place',
         related='route_id.departure_id',
         readonly=True)
     fuel_log_ids = fields.One2many(
-        'fleet.vehicle.log.fuel', 'travel_id', string='Fuel Vouchers',
-        states={'cancel': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        'fleet.vehicle.log.fuel', 'travel_id', string='Fuel Vouchers')
     advance_ids = fields.One2many(
-        'tms.advance', 'travel_id', string='Advances',
-        states={'cancel': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        'tms.advance', 'travel_id', string='Advances')
     arrival_id = fields.Many2one(
         'tms.place',
         related='route_id.arrival_id',
         readonly=True)
     notes = fields.Text(
-        'Descripción',
-        states={'cancel': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        'Descripción')
     user_id = fields.Many2one(
-        'res.users', 'Salesman',
-        states={'cancel': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        'res.users', 'Responsable',
+        default=lambda self: self.env.user)
     expense_id = fields.Many2one(
         'tms.expense', 'Expense Record', readonly=True)
     event_ids = fields.One2many('tms.event', 'travel_id', string='Events')
 
-    _sql_constraints = [
-        ('name_uniq', 'unique(name)',
-            'Travel number must be unique !'),
-    ]
+    @api.onchange('kit_id')
+    def _onchange_kit(self):
+        self.unit_id = self.kit_id.unit_id
+        self.trailer2_id = self.kit_id.trailer2_id
+        self.trailer1_id = self.kit_id.trailer1_id
+        self.dolly_id = self.kit_id.dolly_id
+        self.employee_id = self.kit_id.employee_id
+
+    @api.onchange('route_id')
+    def _onchange_route(self):
+        self.driver_factor_ids = self.route_id.driver_factor_ids
+
+    @api.multi
+    def action_draft(self):
+        self.state = "draft"
+
+    @api.multi
+    def action_progress(self):
+        travels = self.search(
+            [('state', '=', 'progress'), '|',
+             ('employee_id', '=', self.employee_id.id),
+             ('unit_id', '=', self.unit_id.id)])
+        if len(travels) >= 1:
+            raise ValidationError(
+                _('The unit or driver are already in use!'))
+        self.state = "progress"
+        self.date_start_real = fields.Datetime.now()
+        self.message_post('Travel Dispatched')
+
+    @api.multi
+    def action_done(self):
+        self.state = "done"
+        self.date_end_real = fields.Datetime.now()
+        self.message_post('Travel Finished')
+
+    @api.multi
+    def action_cancel(self):
+        advances = self.search([
+            '|',
+            ('fuel_log_ids', '!=', 'cancel'),
+            ('advance_ids', '!=', 'cancel')])
+        if len(advances) >= 1:
+            raise ValidationError(
+                _('If you want to cancel this travel, you must cancel the fuel'
+                  ' logs or the advances attached to this travel'))
+        self.state = "cancel"
+        self.message_post('Travel Cancelled')
+
+    @api.model
+    def create(self, values):
+        travel = super(TmsTravel, self).create(values)
+        sequence = travel.base_id.travel_sequence_id
+        travel.name = sequence.next_by_id()
+        return travel
