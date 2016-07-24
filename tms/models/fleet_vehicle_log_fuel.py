@@ -25,32 +25,17 @@ class FleetVehicleLogFuel(models.Model):
         string='Unit Price',
         store=True)
     product_uom_qty = fields.Float(
-        string='Quantity',
-        required=True,
-        states={'cancel': [('readonly', True)],
-                'confirmed': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        string='Quantity')
     product_uom_id = fields.Many2one(
         'product.uom',
-        string='UoM ',
-        required=True)
+        string='UoM ')
     tax_amount = fields.Float(
-        string='Taxes',
-        required=True,
-        states={'cancel': [('readonly', True)],
-                'confirmed': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        string='Taxes')
     special_tax_amount = fields.Float(
         # compute=_amount_calculation,
-        string='IEPS',
-        store=True)
+        string='IEPS')
     price_total = fields.Float(
-        string='Total',
-        required=True,
-        states={
-            'cancel': [('readonly', True)],
-            'confirmed': [('readonly', True)],
-            'closed': [('readonly', True)]})
+        string='Total')
     invoice_id = fields.Many2one(
         'account.invoice',
         'Invoice Record',
@@ -58,22 +43,15 @@ class FleetVehicleLogFuel(models.Model):
         domain=[('state', '!=', 'cancel')],)
     invoice_paid = fields.Boolean(
         # compute=_invoiced,
-        string='Paid',
-        store=True)
+        string='Paid')
     base_id = fields.Many2one(
         'tms.base',
         string='Base',
         required=True)
-    notes = fields.Text(
-        states={'cancel': [('readonly', True)],
-                'confirmed': [('readonly', True)],
-                'closed': [('readonly', True)]})
+    notes = fields.Text()
     currency_id = fields.Many2one(
-        'res.currency', 'Currency',
-        required=True,
-        states={'cancel': [('readonly', True)],
-                'confirmed': [('readonly', True)]}
-        )
+        'res.currency', string='Currency',
+        required=True)
     state = fields.Selection(
         [('draft', 'Draft'),
          ('approved', 'Approved'),
@@ -90,11 +68,7 @@ class FleetVehicleLogFuel(models.Model):
     amount = fields.Float(string="Total", compute="_compute_amount")
     no_travel = fields.Boolean(
         'No Travel', help="Check this if you want to create Fuel Voucher "
-        "with no Travel.",
-        states={'cancel': [('readonly', True)],
-                'approved': [('readonly', True)],
-                'confirmed': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        "with no Travel.")
     vendor_id = fields.Many2one('res.partner', required=True)
 
     @api.multi
@@ -135,3 +109,10 @@ class FleetVehicleLogFuel(models.Model):
     def action_cancel(self):
         for rec in self:
             rec.state = 'draft'
+
+    @api.model
+    def create(self, values):
+        fuel_log = super(FleetVehicleLogFuel, self).create(values)
+        sequence = fuel_log.base_id.fuel_log_sequence_id
+        fuel_log.name = sequence.next_by_id()
+        return fuel_log
