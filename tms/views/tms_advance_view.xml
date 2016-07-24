@@ -1,49 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <!-- SEARCH View for tms.advance  -->
         <record id="view_tms_advance_search" model="ir.ui.view">
             <field name="name">tms.advance.search</field>
             <field name="model">tms.advance</field>
             <field name="arch" type="xml">
-                <search string="TMS Advances">
-                    <filter domain="[('state','=','draft')]" icon="terp-gtk-media-pause" string="Draft"/>
-                    <separator orientation="vertical"/>
-                    <filter domain="[('state','=','approved')]" icon="terp-gtk-jump-to-ltr" string="Approved"/>
-                    <separator orientation="vertical"/>
-                    <filter domain="[('state','=','confirmed')]" icon="terp-gtk-jump-to-ltr" string="Confirmed"/>
-                    <separator orientation="vertical"/>
-                    <filter domain="[('state','=','closed')]" icon="terp-check" string="Closed"/>
-                    <separator orientation="vertical"/>
-                    <filter domain="[('state','=','cancel')]" icon="terp-dialog-close" string="Cancelled"/>
-                    <filter domain="[('state','!=','cancel')]" icon="terp-stock_symbol-selection" name="not_cancelled" string="Not Cancelled"/>
-                    <filter domain="[('state','!=','closed')]" icon="terp-stock_symbol-selection" name="not_closed" string="Not Closed"/>
-                    <filter domain="[('date','&gt;=', time.strftime('%%Y-%%m-01'))]" icon="terp-check" name="this_month" string="From this month"/>
-                    <newline/>
+                <search string="Advances">
+                    <filter domain="[('state','=','draft')]" string="Draft"/>
+                    <filter domain="[('state','=','approved')]" string="Approved"/>
+                    <filter domain="[('state','=','confirmed')]" string="Confirmed"/>
+                    <filter domain="[('state','=','closed')]" string="Closed"/>
+                    <filter domain="[('state','=','cancel')]" string="Cancelled"/>
+                    <filter domain="[('state','!=','cancel')]" string="Not Cancelled"/>
+                    <filter domain="[('state','!=','closed')]" string="Not Closed"/>
+                    <filter domain="[('date','&gt;=', time.strftime('%%Y-%%m-01'))]" string="From this month"/>
                     <field name="date"/>
                     <field name="name"/>
                     <field name="employee_id"/>
                     <field name="product_id"/>
-                    <newline/>
-                    <group expand="0" string="Group by...">
-                        <filter context="{'group_by' : 'travel_id'}" domain="[]" icon="terp-gdu-smart-failing" string="Travel"/>
-                        <filter context="{'group_by' : 'unit_id'}" domain="[]" icon="terp-gdu-smart-failing" string="Unit"/>
-                        <filter context="{'group_by' : 'employee_id'}" domain="[]" icon="terp-personal" string="Driver"/>
-                        <separator orientation="vertical"/>
-                        <filter context="{'group_by' : 'state'}" domain="[]" icon="terp-stock_symbol-selection" string="State"/>
-                        <filter context="{'group_by' : 'date'}" domain="[]" icon="terp-stock_symbol-selection" string="Period"/>
-                        <separator orientation="vertical"/>
-                        <filter context="{'group_by' : 'product_id'}" domain="[]" icon="terp-stock_symbol-selection" string="Product"/>
-                    </group>
+                    <filter context="{'group_by': 'travel_id'}" string="Travel"/>
+                    <filter context="{'group_by': 'unit_id'}" string="Unit"/>
+                    <filter context="{'group_by': 'employee_id'}" string="Driver"/>
+                    <filter context="{'group_by': 'state'}" string="State"/>
+                    <filter context="{'group_by': 'date'}" string="Period"/>
+                    <filter context="{'group_by': 'product_id'}" string="Product"/>
                 </search>
             </field>
         </record>
-        <!-- TREE View for tms.advance  -->
         <record id="view_tms_advance_tree" model="ir.ui.view">
             <field name="name">tms.advance.tree</field>
             <field name="model">tms.advance</field>
             <field name="arch" type="xml">
-                <tree colors="gray:state=='cancel';red:state=='draft';green:state=='approved';blue:state=='confirmed';" string="TMS Advances">
+                <tree colors="gray:state=='cancel';red:state=='draft';green:state=='approved';blue:state=='confirmed';" string="Advances">
                     <field name="name"/>
                     <field name="date"/>
                     <field name="travel_id"/> 
@@ -62,12 +50,11 @@
                 </tree>
             </field>
         </record>
-        <!-- FORM View for tms.advance -->
         <record id="view_tms_advance_form" model="ir.ui.view">
             <field name="name">tms.advance.form</field>
             <field name="model">tms.advance</field>
             <field name="arch" type="xml">
-                <form string="TMS Advances" version="9.0">
+                <form string="Advances">
                     <header>
                         <button groups="tms.group_advance_setdraft" icon="gtk-convert" name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
                         <button groups="tms.group_advance_cancel" name="action_cancel" states="draft,approved,confirmed" string="Cancel" type="object"/>
@@ -77,7 +64,6 @@
                     </header>
                     <sheet>
                         <h1>
-                            <label string="TMS Advance"/>
                             <field class="oe_inline" name="name" readonly="1"/>
                         </h1>
                         <group col="4" colspan="4">
@@ -132,15 +118,13 @@
                 </form>
             </field>
         </record>
-        <!-- Action for tms.advance -->
         <record id="open_view_tms_advance_form" model="ir.actions.act_window">
-            <field name="name">TMS Advances</field>
+            <field name="name">Advances</field>
             <field name="res_model">tms.advance</field>
             <field name="context">{'search_default_this_month': 1}</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <!-- Menu for tms.advance -->
         <menuitem action="open_view_tms_advance_form" id="menu_tms_advance_form" name="Advances" parent="menu_tms_travels" sequence="10"/>
     </data>
 </odoo>

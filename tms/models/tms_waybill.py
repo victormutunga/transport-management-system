@@ -4,7 +4,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 
-from openerp import fields, models
+from openerp import api, fields, models
 
 
 class TmsWaybill(models.Model):
@@ -14,32 +14,23 @@ class TmsWaybill(models.Model):
     _order = 'name desc'
 
     base_id = fields.Many2one(
-        'tms.base', string='Base'
-    )
+        'tms.base', string='Base', required=True)
     waybill_customer_factor_id = fields.One2many(
         'tms.factor', 'waybill_id',
-        string='Waybill Customer Charge Factors',
-        states={'confirmed': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        string='Waybill Customer Charge Factors')
     waybill_supplier_factor_id = fields.One2many(
         'tms.factor', 'waybill_id',
-        string='Waybill Supplier Payment Factors',
-        states={'cancel': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        string='Waybill Supplier Payment Factors')
     expense_driver_factor_id = fields.One2many(
         'tms.factor', 'waybill_id',
-        string='Travel Driver Payment Factors',
-        states={'cancel': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        string='Travel Driver Payment Factors')
     tax_line = fields.One2many(
         'tms.waybill.taxes', 'waybill_id',
-        string='Tax Lines', readonly=True,
-        states={'draft': [('readonly', False)]})
+        string='Tax Lines', readonly=True)
     name = fields.Char()
     travel_ids = fields.Many2many(
         'tms.travel',
-        string='Travels',
-        states={'confirmed': [('readonly', True)]})
+        string='Travels')
     route_id = fields.Many2one(
         'tms.route',
         related='travel_ids.route_id',
@@ -57,11 +48,9 @@ class TmsWaybill(models.Model):
         readonly=True)
     origin = fields.Char(
         'Source Document',
-        help="Reference of the document that generated this Waybill request.",
-        states={'confirmed': [('readonly', True)]})
+        help="Reference of the document that generated this Waybill request.")
     client_order_ref = fields.Char(
-        'Customer Reference',
-        states={'confirmed': [('readonly', True)]})
+        'Customer Reference')
     state = fields.Selection([
         ('draft', 'Pending'),
         ('approved', 'Approved'),
@@ -71,24 +60,19 @@ class TmsWaybill(models.Model):
         default='draft')
     date_order = fields.Date(
         'Date', required=True,
-        states={'confirmed': [('readonly', True)]},
         default=fields.Date.today)
     user_id = fields.Many2one(
         'res.users', 'Salesman',
-        states={'confirmed': [('readonly', True)]},
         default=(lambda self: self))
     partner_id = fields.Many2one(
         'res.partner',
-        'Customer', required=True, change_default=True,
-        states={'confirmed': [('readonly', True)]})
+        'Customer', required=True, change_default=True)
     currency_id = fields.Many2one(
         'res.currency', 'Currency', required=True,
-        states={'confirmed': [('readonly', True)]},
         default=lambda self: self.env.user.company_id.currency_id)
     partner_invoice_id = fields.Many2one(
         'res.partner', 'Invoice Address', required=True,
         help="Invoice address for current Waybill.",
-        states={'confirmed': [('readonly', True)]},
         default=(lambda self: self.env[
             'res.partner'].address_get(
             self['partner_id'])))
@@ -96,31 +80,25 @@ class TmsWaybill(models.Model):
         'res.partner', 'Ordering Contact', required=True,
         help="The name and address of the contact who requested the "
         "order or quotation.",
-        states={'confirmed': [('readonly', True)]},
         default=(lambda self: self.env['res.partner'].address_get(
             self['partner_id'])['contact']))
     account_analytic_id = fields.Many2one(
         'account.analytic.account', 'Analytic Account',
-        help="The analytic account related to a Waybill.",
-        states={'confirmed': [('readonly', True)]})
+        help="The analytic account related to a Waybill.")
     departure_address_id = fields.Many2one(
         'res.partner', 'Departure Address', required=True,
         help="Departure address for current Waybill.",
-        states={'confirmed': [('readonly', True)]},
         default=(lambda self: self.env['res.partner'].address_get(
             self['partner_id'])))
     arrival_address_id = fields.Many2one(
         'res.partner', 'Arrival Address', required=True,
         help="Arrival address for current Waybill.",
-        states={'confirmed': [('readonly', True)]},
         default=(lambda self: self.env['res.partner'].address_get(
             self['partner_id'])))
     upload_point = fields.Char(
-        'Upload Point',
-        states={'confirmed': [('readonly', True)]})
+        'Upload Point')
     download_point = fields.Char(
-        'Download Point',
-        states={'confirmed': [('readonly', True)]})
+        'Download Point')
     shipped = fields.Boolean(
         'Delivered', readonly=True,
         help="It indicates that the Waybill has been delivered. This field "
@@ -145,12 +123,10 @@ class TmsWaybill(models.Model):
         )
     waybill_line = fields.One2many(
         'tms.waybill.line', 'waybill_id',
-        string='Waybill Lines',
-        states={'confirmed': [('readonly', True)]})
+        string='Waybill Lines')
     transportable_ids = fields.One2many(
         'tms.waybill.transportable.line', 'transportable_id',
-        string='Shipped Products',
-        states={'confirmed': [('readonly', True)]})
+        string='Shipped Products')
     product_qty = fields.Float(
         # compute=_shipped_product,
         string='Sum Qty')
@@ -196,28 +172,22 @@ class TmsWaybill(models.Model):
         help="Route obtained by electronic reading")
     notes = fields.Text()
     payment_term = fields.Many2one(
-        'account.payment.term', 'Payment Term',
-        states={'confirmed': [('readonly', True)]})
+        'account.payment.term', 'Payment Term')
     fiscal_position = fields.Many2one(
-        'account.fiscal.position', 'Fiscal Position',
-        states={'confirmed': [('readonly', True)]})
+        'account.fiscal.position', 'Fiscal Position')
     time_for_uploading_std = fields.Float(
-        'Std Time for loading (Hrs)',
-        required=True)
+        'Std Time for loading (Hrs)')
     time_from_uploading_to_docs_sched = fields.Float(
-        'Std Time fromLoad to Document Release (Hrs)',
-        required=True)
+        'Std Time fromLoad to Document Release (Hrs)')
     time_travel_sched = fields.Float(
-        'Std Time for Travel (Hrs)',
-        required=True)
+        'Std Time for Travel (Hrs)')
     time_from_appointment_to_downloading_std = fields.Float(
-        'StdTime from Download Appointment to Downloading (Hrs)',
-        required=True)
+        'StdTime from Download Appointment to Downloading (Hrs)')
     time_for_downloading_sched = fields.Float(
-        'Std Time for downloading(Hrs)', required=True)
+        'Std Time for downloading(Hrs)')
     time_from_downloading_to_docs_sched = fields.Float(
         'Std Time for Download Document Release (Hrs)',
-        required=True, readonly=False)
+        readonly=False)
     date_start = fields.Datetime(
         'Load Date Sched', help="Date Start time for Load",
         default=fields.Datetime.now)
@@ -262,6 +232,9 @@ class TmsWaybill(models.Model):
     move_id = fields.Many2one(
         'account.move', 'Account Move', readonly=True)
 
-    _sql_constraints = [
-        ('name_uniq', 'unique(name)', 'Waybill must be unique !'),
-    ]
+    @api.model
+    def create(self, values):
+        waybill = super(TmsWaybill, self).create(values)
+        sequence = waybill.base_id.waybill_sequence_id
+        waybill.name = sequence.next_by_id()
+        return waybill

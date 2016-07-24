@@ -29,7 +29,7 @@
             <field name="name">tms.expense.form</field>
             <field name="model">tms.expense</field>
             <field name="arch" type="xml">
-                <form string="Travel Expenses" version="9.0">
+                <form string="Travel Expenses">
                     <header>
                         <button class="oe_highlight" groups="tms.group_expense_approve" icon="gtk-go-forward" name="action_approve" states="draft" string="Approve" type="object"/>
                         <button class="oe_highlight" groups="tms.group_expense_confirm" icon="gtk-ok" name="action_confirm" states="approved" string="Confirm" type="object"/>
@@ -37,14 +37,14 @@
                     </header>
                     <sheet>
                         <h1>
-                            <label string="Travel Expense"/>
                             <field class="oe_inline" name="name" readonly="1"/>
                         </h1>
                         <group col="4">
+                            <field name="base_id"/>
                             <field name="date"/>
+                            <field name="employee_id"/>
                             <field name="currency_id"/>
                         </group>
-                        <field invisible="1" name="employee_id"/>
                         <notebook>
                             <page string="Resume">
                                 <group col="4">
@@ -75,7 +75,8 @@
                             </page>
                             <page string="Travels">
                                 <separator colspan="4" string="Travels for Driver"/>
-                                <field  colspan="4" domain="[('employee_id','=', employee_id), ('state','=', 'done'), ('advance_ok_for_expense_rec','=', 1), ('fuelvoucher_ok_for_expense_rec','=', 1), ('waybill_ok_for_expense_rec','=', 1)]" name="travel_ids" nolabel="1" >
+                                <!-- <field  name="travel_ids" colspan="4" domain="[('employee_id','=', employee_id), ('state','=', 'done'), ('advance_ok_for_expense_rec','=', 1), ('fuelvoucher_ok_for_expense_rec','=', 1), ('waybill_ok_for_expense_rec','=', 1)]" nolabel="1" > -->
+                                <field  name="travel_ids" colspan="4" domain="[('employee_id','=', employee_id), ('state','=', 'done')]" nolabel="1" >
                                     <tree string="">
                                         <field invisible="1" name="state"/>
                                         <field name="name"/>
@@ -149,24 +150,18 @@
             <field name="model">tms.expense</field>
             <field name="arch" type="xml">
                 <search string="Search Expenses">
-                    <filter domain="[('state','=','draft')]" icon="terp-gtk-media-pause" string="Draft"/>
-                    <filter domain="[('state','=','approved')]" icon="terp-gtk-jump-to-ltr" string="Approved"/>
-                    <filter domain="[('state','=','confirmed')]" icon="terp-check" string="Confirmed"/>
-                    <filter domain="[('paid','=',0)]" icon="terp-check" string="Not Paid"/>
-                    <filter domain="[('paid','=',1)]" icon="terp-check" string="Paid"/>
-                    <newline/>
+                    <filter domain="[('state','=','draft')]" string="Draft"/>
+                    <filter domain="[('state','=','approved')]" string="Approved"/>
+                    <filter domain="[('state','=','confirmed')]" string="Confirmed"/>
+                    <filter domain="[('paid','=',0)]" string="Not Paid"/>
+                    <filter domain="[('paid','=',1)]" string="Paid"/>
                     <field name="employee_id"/>
                     <field name="date" string="Expense date"/>
                     <field name="name" select="1"/>
-                    <newline/>
-                    <group col="11" colspan="11" expand="0" groups="base.group_extended" string="Group By...">
-                        <filter context="{'group_by':'employee_id'}" domain="[]" icon="terp-personal" string="Driver"/>
-
-                        <separator orientation="vertical"/>
-                        <filter context="{'group_by':'state'}" domain="[]" icon="terp-stock_effects-object-colorize" string="State"/>
-                        <filter context="{'group_by':'date'}" domain="[]" icon="terp-go-month" string="Period"/>
-                        <filter context="{'group_by':'paid'}" domain="[]" icon="terp-go-month" string="Paid"/>
-                    </group>
+                    <filter context="{'group_by':'employee_id'}" string="Driver"/>
+                    <filter context="{'group_by':'state'}" string="State"/>
+                    <filter context="{'group_by':'date'}" string="Period"/>
+                    <filter context="{'group_by':'paid'}" string="Paid"/>
                 </search>
             </field>
         </record>

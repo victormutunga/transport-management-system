@@ -3,10 +3,9 @@
 # © <2016> <Jarsa Sistemas, S.A. de C.V.>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import fields, models
+from openerp import api, fields, models
 
 
-# Travel - Money advance payments for Travel expenses
 class TmsAdvance(models.Model):
     _name = 'tms.advance'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -14,53 +13,38 @@ class TmsAdvance(models.Model):
     _order = "name desc, date desc"
 
     base_id = fields.Many2one(
-        'tms.base', string='Base'
+        'tms.base', string='Base', required=True
     )
-    name = fields.Char('Anticipo')
+    name = fields.Char('Advance Number')
     state = fields.Selection(
-        [('draft', 'Draft'), ('approved', 'Approved'),
-         ('confirmed', 'Confirmed'), ('closed', 'Closed'),
-         ('cancel', 'Cancelled')], 'State', readonly=True,
-        default='draft')
+        [('draft', 'Draft'),
+         ('approved', 'Approved'),
+         ('confirmed', 'Confirmed'),
+         ('closed', 'Closed'),
+         ('cancel', 'Cancelled')],
+        string='State', readonly=True, default='draft')
     date = fields.Date(
         'Date',
-        states={'cancel': [('readonly', True)],
-                'confirmed': [('readonly', True)],
-                'closed': [('readonly', True)]},
         required=True,
         default=fields.Date.today)
     travel_id = fields.Many2one(
         'tms.travel', 'Travel',
-        required=True,
-        states={'cancel': [('readonly', True)],
-                'confirmed': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        required=True)
     unit_id = fields.Many2one(
-        related='travel_id.unit_id', relation='fleet.vehicle',
+        'fleet.vehicle', related='travel_id.unit_id',
         string='Unit', readonly=True)
     employee_id = fields.Many2one(
-        'hr.employee', 'Driver',
-        states={'cancel': [('readonly', True)],
-                'confirmed': [('readonly', True)],
-                'closed': [('readonly', True)]}, required=True)
+        'hr.employee', string='Driver',
+        related='travel_id.employee_id',  readonly=True)
     product_id = fields.Many2one(
         'product.product', 'Product',
         domain=[('purchase_ok', '=', 1),
                 ('tms_category', '=', 'real_expense')],
-        required=True, states={'cancel': [('readonly', True)],
-                               'confirmed': [('readonly', True)],
-                               'closed': [('readonly', True)]})
+        required=True)
     product_uom_qty = fields.Float(
-        'Quantity', required=True,
-        states={'cancel': [('readonly', True)],
-                'confirmed': [('readonly', True)],
-                'closed': [('readonly', True)]},
-        default=1)
+        'Quantity', required=True, default=1.0)
     product_uom_id = fields.Many2one(
-        'product.uom', 'Unit of Measure ', required=True,
-        states={'cancel': [('readonly', True)],
-                'confirmed': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        'product.uom', 'Unit of Measure ')
     price_unit = fields.Float('Price Unit', required=True)
     price_unit_control = fields.Float('Price Unit', readonly=True)
     subtotal = fields.Float(
@@ -70,14 +54,8 @@ class TmsAdvance(models.Model):
         # compute=_amount,
         string='Tax Amount')
     total = fields.Float(
-        'Total', required=True,
-        states={'cancel': [('readonly', True)],
-                'confirmed': [('readonly', True)],
-                'closed': [('readonly', True)]})
-    notes = fields.Text(
-        states={'cancel': [('readonly', True)],
-                'confirmed': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        'Total', required=True)
+    notes = fields.Text()
     move_id = fields.Many2one(
         'account.move', 'Journal Entry', readonly=True,
         help="Link to the automatically generated Journal Items.\nThis move "
@@ -87,22 +65,19 @@ class TmsAdvance(models.Model):
     )
     currency_id = fields.Many2one(
         'res.currency', 'Currency', required=True,
-        states={'cancel': [('readonly', True)],
-                'confirmed': [('readonly', True)],
-                'closed': [('readonly', True)]},
         default=lambda self: self.env.user.company_id.currency_id)
     auto_expense = fields.Boolean(
         help="Check this if you want this product and amount to be "
-        "automatically created when Travel Expense Record is created.",
-        states={'cancel': [('readonly', True)],
-                'confirmed': [('readonly', True)],
-                'closed': [('readonly', True)]})
+        "automatically created when Travel Expense Record is created.")
     expense_id = fields.Many2one(
         'tms.expense', 'Expense Record', readonly=True)
     expense2_id = fields.Many2one(
         'tms.expense', 'Expense Record for Drivef Helper',
         readonly=True)
 
-    _sql_constraints = [
-        ('name_uniq', 'unique(name)', 'Advance number must be unique !'),
-    ]
+    @api.model
+    def create(self, values):
+        advance = super(TmsAdvance, self).create(values)
+        sequence = advance.base_id.advance_sequence_id
+        advance.name = sequence.next_by_id()
+        return advance
