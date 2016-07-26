@@ -12,7 +12,6 @@ class TmsTravel(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = 'Travel'
     _order = "date desc"
-
     waybill_ids = fields.Many2many(
         'tms.waybill', string='Waybills')
     driver_factor_ids = fields.One2many(
@@ -106,6 +105,9 @@ class TmsTravel(models.Model):
     expense_id = fields.Many2one(
         'tms.expense', 'Expense Record', readonly=True)
     event_ids = fields.One2many('tms.event', 'travel_id', string='Events')
+    is_available = fields.Boolean(
+        compute='_is_available',
+        string='Travel available')
 
     @api.onchange('kit_id')
     def _onchange_kit(self):
@@ -161,3 +163,29 @@ class TmsTravel(models.Model):
         sequence = travel.base_id.travel_sequence_id
         travel.name = sequence.next_by_id()
         return travel
+
+    @api.depends()
+    def _is_available(self):
+        models = ['tms.advance', 'fleet.vehicle.log.fuel', 'tms.waybill']
+        advances = len(self.advance_ids)
+        fuel_vehicle = len(self.fuel_log_ids)
+        count = 0
+        for model in models:
+            if model == 'tms.advance' or model == 'fleet.vehicle.log.fuel':
+                object_ok = len(self.env[model].search(
+                    [('state', '=', 'confirmed'),
+                     ('travel_id', '=', self.id)]))
+                if (model == 'tms.advance' and
+                        advances == object_ok or advances == 0):
+                    count += 1
+                elif (model == 'fleet.vehicle.log.fuel' and
+                        fuel_vehicle == object_ok or fuel_vehicle == 0):
+                    count += 1
+            if model == 'tms.waybill':
+                object_ok = len(self.env[model].search(
+                    [('state', '=', 'confirmed'),
+                     ('travel_ids', 'in', self.id)]))
+                if len(self.waybill_ids) == object_ok:
+                    count += 1
+        if count == 3:
+            self.is_available = True

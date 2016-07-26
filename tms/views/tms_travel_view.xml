@@ -116,7 +116,7 @@
                         </group>
                         <notebook colspan="4">
                             <page string="Vehicle log fuel">
-                                <field attrs="{'readonly':[('state','in',('done'))]}" name="fuel_log_ids" nolabel="1">
+                                <field name="fuel_log_ids" nolabel="1">
                                   <tree colors="red:state=='cancel'; green:state=='approved';blue:state=='confirmed';">
                                         <field name='name'/>
                                         <field name='employee_id'/>
@@ -130,11 +130,11 @@
                                 </field>
                             </page>
                             <page string="Advances">
-                                <field attrs="{'readonly':[('state','in',('done'))]}" name="advance_ids"/>
+                                <field name="advance_ids"/>
                             </page>
                             <page string="Waybills">
                                 <group>
-                                    <field attrs="{'readonly':[('state','in',('done'))]}" name="waybill_ids" nolabel="1">
+                                    <field name="waybill_ids" nolabel="1">
                                         <tree colors="red:state=='cancel';green:state=='approved';blue:state=='confirmed';" string="Waybills">
                                             <button groups="tms.group_waybill_approve" icon="gtk-go-forward" name="action_approve" states="draft" string="Approve" type="object"/>
                                             <button groups="tms.group_waybill_confirm" icon="gtk-ok" name="action_confirm" states="approved" string="Confirm" type="object"/>

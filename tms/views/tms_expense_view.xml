@@ -76,7 +76,7 @@
                             <page string="Travels">
                                 <separator colspan="4" string="Travels for Driver"/>
                                 <!-- <field  name="travel_ids" colspan="4" domain="[('employee_id','=', employee_id), ('state','=', 'done'), ('advance_ok_for_expense_rec','=', 1), ('fuelvoucher_ok_for_expense_rec','=', 1), ('waybill_ok_for_expense_rec','=', 1)]" nolabel="1" > -->
-                                <field  name="travel_ids" colspan="4" domain="[('employee_id','=', employee_id), ('state','=', 'done')]" nolabel="1" >
+                                <field  name="travel_ids" colspan="4" domain="[('employee_id','=', employee_id), ('state','=', 'done'), ('is_available','=', True)]" nolabel="1" >
                                     <tree string="">
                                         <field invisible="1" name="state"/>
                                         <field name="name"/>

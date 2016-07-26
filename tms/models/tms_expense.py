@@ -116,8 +116,10 @@ class TmsExpense(models.Model):
     paid = fields.Boolean(
         # compute=_paid
         )
+
     advance_ids = fields.One2many(
         'tms.advance', 'expense_id', string='Advances', readonly=True)
+
     fuel_qty_real = fields.Float(
         'Fuel Qty Real',
         help="Fuel Qty computed based on Distance Real and Global Fuel "
