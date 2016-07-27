@@ -10,6 +10,7 @@ from openerp.tools.translate import _
 
 
 class FleetVehicleLogFuel(models.Model):
+    "Class for Fuel Voucher"
     _name = 'fleet.vehicle.log.fuel'
     _inherit = ['fleet.vehicle.log.fuel', 'mail.thread', 'ir.needaction_mixin']
 
@@ -20,99 +21,142 @@ class FleetVehicleLogFuel(models.Model):
         string='Driver',
         required=True,
         domain=[('tms_category', '=', 'driver')])
-    price_unit = fields.Float(
-        # compute=_amount_calculation,
-        string='Unit Price',
-        store=True)
-    product_uom_qty = fields.Float(
-        string='Quantity')
     product_uom_id = fields.Many2one(
         'product.uom',
-        string='UoM ')
+        string='UoM ',
+        required=True)
+    product_uom_qty = fields.Float(
+        string='Liters', required=True, default=1.0)
     tax_amount = fields.Float(
-        string='Taxes')
-    special_tax_amount = fields.Float(
-        # compute=_amount_calculation,
-        string='IEPS')
+        string='Taxes', required=True)
     price_total = fields.Float(
-        string='Total')
+        string='Total', required=True)
+    special_tax_amount = fields.Float(
+        compute="_compute_special_tax_amount",
+        string='IEPS')
+    price_unit = fields.Float(
+        compute='_compute_price_unit',
+        string='Unit Price')
+    price_subtotal = fields.Float(
+        string="Subtotal",
+        compute='_compute_price_subtotal')
     invoice_id = fields.Many2one(
         'account.invoice',
-        'Invoice Record',
+        'Invoice',
         readonly=True,
         domain=[('state', '!=', 'cancel')],)
     invoice_paid = fields.Boolean(
-        # compute=_invoiced,
-        string='Paid')
+        compute='_invoiced',
+        string='Invoice Paid')
     base_id = fields.Many2one(
         'tms.base',
         string='Base',
         required=True)
-    notes = fields.Text()
     currency_id = fields.Many2one(
         'res.currency', string='Currency',
         required=True)
+    notes = fields.Char(
+        states={'cancel': [('readonly', True)],
+                'confirmed': [('readonly', True)],
+                'closed': [('readonly', True)]})
     state = fields.Selection(
         [('draft', 'Draft'),
          ('approved', 'Approved'),
          ('confirmed', 'Confirmed'),
-         ('closed', 'Closed'),
          ('cancel', 'Cancelled')],
         string='State',
         readonly=True,
         default='draft')
-    tax_amount = fields.Float(string='Taxes')
-    price_subtotal = fields.Float(
-        string="Subtotal",
-        compute='_compute_subtotal')
-    amount = fields.Float(string="Total", compute="_compute_amount")
     no_travel = fields.Boolean(
         'No Travel', help="Check this if you want to create Fuel Voucher "
         "with no Travel.")
     vendor_id = fields.Many2one('res.partner', required=True)
+    internal_fuel = fields.Boolean(domain=[('state', '=', 'draft')])
 
     @api.multi
-    @api.depends('liter', 'price_per_liter')
-    def _compute_subtotal(self):
+    @api.depends('product_uom_qty', 'tax_amount', 'price_total')
+    def _compute_price_subtotal(self):
         for rec in self:
-            rec.price_subtotal = rec.liter * rec.price_per_liter
+            rec.price_subtotal = rec.price_total - rec.tax_amount
 
     @api.multi
-    @api.depends('price_subtotal', 'tax_amount')
-    def _compute_amount(self):
+    @api.depends('product_uom_qty', 'price_total', 'tax_amount')
+    def _compute_price_unit(self):
         for rec in self:
-            rec.amount = rec.price_subtotal + rec.tax_amount
+            rec.price_unit = ((rec.price_total - rec.tax_amount) /
+                              rec.product_uom_qty)
 
     @api.multi
-    def action_approve(self):
+    @api.depends('product_uom_qty', 'tax_amount')
+    def _compute_special_tax_amount(self):
         for rec in self:
-            if rec.liter == 0:
-                raise UserError(
-                    _('Liters must be more than 0.'))
-            elif rec.price_per_liter == 0:
-                raise UserError(
-                    _('You neet to assign price per liter'))
+            rec.special_tax_amount = rec.price_subtotal - ((
+                rec.tax_amount / 16) * 100)
+
+    @api.multi
+    def action_approved(self):
+        "Action for Approve"
+        for rec in self:
             message = _('<b>Fuel Voucher Approved.</b></br><ul>'
-                        '<li><b>Supplier: </b>%s</li>'
-                        '<li><b>Liters: </b>%s</li>'
-                        '<li><b>Price per liter: </b>%s</li>'
-                        '<li><b>Driver: </b>%s</li>'
-                        '<li><b>Unit: </b>%s</li>'
-                        '<li><b>Odometer: </b>%s</li>'
-                        '</ul>') % (rec.vendor_id.name, rec.liter,
-                                    rec.price_per_liter, rec.employee_id.name,
-                                    rec.vehicle_id.name, rec.odometer)
+                        '<li><b>Approved by: </b>%s</li>'
+                        '<li><b>Approved at: </b>%s</li>'
+                        '</ul>') % (self.env.user.name, fields.Datetime.now())
             rec.message_post(body=message)
             rec.state = 'approved'
 
     @api.multi
     def action_cancel(self):
+        "Action for Cancel"
         for rec in self:
-            rec.state = 'draft'
+            message = _('<b>Fuel Voucher Cancelled.</b></br><ul>'
+                        '<li><b>Cancelled by: </b>%s</li>'
+                        '<li><b>Cancelled at: </b>%s</li>'
+                        '</ul>') % (self.env.user.name, fields.Datetime.now())
+            rec.message_post(body=message)
+            rec.state = 'cancel'
 
     @api.model
     def create(self, values):
+        "Sequence Method"
         fuel_log = super(FleetVehicleLogFuel, self).create(values)
         sequence = fuel_log.base_id.fuel_log_sequence_id
         fuel_log.name = sequence.next_by_id()
         return fuel_log
+
+    @api.multi
+    def set_2_draft(self):
+        "Back to Draft"
+        for rec in self:
+            message = _(
+                '<b>Fuel Voucher Draft.</b></br><ul>'
+                '<li><b>Drafted by: </b>%s</li>'
+                '<li><b>Drafted at: </b>%s</li>'
+                '</ul>') % (self.env.user.name, fields.Datetime.now())
+            rec.message_post(body=message)
+            rec.state = 'draft'
+
+    @api.multi
+    def action_confirm(self):
+        "Confirm Action"
+        for rec in self:
+            if rec.internal_fuel is not True:
+                if (rec.product_uom_qty <= 0 or
+                        rec.tax_amount <= 0 or
+                        rec.price_total <= 0):
+                    raise UserError(
+                        _('Liters, Taxes and Total'
+                          ' must be greater than zero.'))
+                message = _(
+                    '<b>Fuel Voucher Confirmed.</b></br><ul>'
+                    '<li><b>Confirmed by: </b>%s</li>'
+                    '<li><b>Confirmed at: </b>%s</li>'
+                    '</ul>') % (self.env.user.name, fields.Datetime.now())
+                rec.message_post(body=message)
+                rec.state = 'confirmed'
+
+    @api.multi
+    def _invoiced(self):
+        "Invoice "
+        for rec in self:
+            rec.invoice_paid = (rec.invoice_id and
+                                rec.invoice_id.state == 'paid')

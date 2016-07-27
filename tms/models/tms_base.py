@@ -15,35 +15,30 @@ class TmsBase(models.Model):
                                 'base_id')
     travel_sequence_id = fields.Many2one(
         'ir.sequence',
-        string='Travel Sequence')
+        string='Travel Sequence', required=True)
     fuel_log_sequence_id = fields.Many2one(
-        'ir.sequence', string='Fuel Log Sequence')
+        'ir.sequence', string='Fuel Log Sequence', required=True)
     advance_sequence_id = fields.Many2one(
-        'ir.sequence', string='Advance Sequence')
+        'ir.sequence', string='Advance Sequence', required=True)
     waybill_sequence_id = fields.Many2one(
-        'ir.sequence', string='Waybill Sequence')
+        'ir.sequence', string='Waybill Sequence', required=True)
     expense_sequence_id = fields.Many2one(
-        'ir.sequence', string='Expense Sequence')
+        'ir.sequence', string='Expense Sequence', required=True)
     advance_journal_id = fields.Many2one(
         'account.journal',
-        string='Advance Journal'
-        )
+        string='Advance Journal')
     fuelvoucher_journal_id = fields.Many2one(
         'account.journal',
-        string='Fuel log Journal'
-        )
+        string='Fuel log Journal')
     expense_journal_id = fields.Many2one(
         'account.journal',
-        string='Expense Journal'
-        )
+        string='Expense Journal')
     supplier_journal_id = fields.Many2one(
         'account.journal',
-        string='Supplier Journal'
-        )
+        string='Supplier Journal')
     waybill_journal_id = fields.Many2one(
         'account.journal',
-        string='Waybill Journal'
-        )
+        string='Waybill Journal')
     account_fuel_id = fields.Many2one(
         'account.account',
         string='Fuel Log Account')
@@ -51,8 +46,8 @@ class TmsBase(models.Model):
         'account.account',
         string='Advance Account')
     account_fleight_id = fields.Many2one(
-        'account.account',
-        string='Waybill Fleight Account')
+        'account.account', string='')
+    travel_id = fields.One2many('tms.travel', 'base_id')
     account_moves_id = fields.Many2one(
         'account.account',
         string='Waybill Moves Account')
