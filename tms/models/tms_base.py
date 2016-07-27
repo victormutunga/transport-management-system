@@ -11,6 +11,8 @@ class TmsBase(models.Model):
     _description = 'Base'
 
     name = fields.Char(string='', required=True)
+    travel_id = fields.One2many('tms.travel',
+                                'base_id')
     travel_sequence_id = fields.Many2one(
         'ir.sequence',
         string='Travel Sequence')
@@ -44,9 +46,43 @@ class TmsBase(models.Model):
         )
     account_fuel_id = fields.Many2one(
         'account.account',
-        string='Fuel log account')
+        string='Fuel Log Account')
+    account_advance_id = fields.Many2one(
+        'account.account',
+        string='Advance Account')
     account_fleight_id = fields.Many2one(
         'account.account',
-        string='')
-    travel_id = fields.One2many('tms.travel',
-                                'base_id')
+        string='Waybill Fleight Account')
+    account_moves_id = fields.Many2one(
+        'account.account',
+        string='Waybill Moves Account')
+    account_highway_tolls_id = fields.Many2one(
+        'account.account',
+        string='Waybill Highway Tolls Account')
+    account_insurance_id = fields.Many2one(
+        'account.account',
+        string='Waybill Insurance Account')
+    account_waybill_other = fields.Many2one(
+        'account.account',
+        string='Waybill Other Account')
+    fuelvoucher_product_id = fields.Many2one(
+        'product.product',
+        string="Fuel log product")
+    advance_product_id = fields.Many2one(
+        'product.product',
+        string='Advance product')
+    waybill_freight_id = fields.Many2one(
+        'product.product',
+        string='Waybill Freight Product')
+    waybill_moves_id = fields.Many2one(
+        'product.product',
+        string='Waybill Moves Product')
+    waybill_highway_tolls_id = fields.Many2one(
+        'product.product',
+        string='Waybill Highway Tolls Product')
+    waybill_insurance_id = fields.Many2one(
+        'product.product',
+        string='Waybill Insurance Product')
+    waybill_other_product_id = fields.Many2one(
+        'product.product',
+        string='Waybill Other Product')

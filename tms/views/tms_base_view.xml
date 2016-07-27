@@ -27,7 +27,21 @@
                             </group>
                             <group string='Accounts'>
                                 <field name='account_fuel_id'/>
+                                <field name='account_advance_id'/>
                                 <field name='account_fleight_id'/>
+                                <field name='account_moves_id'/>
+                                <field name='account_highway_tolls_id'/>
+                                <field name='account_insurance_id'/>
+                                <field name='account_waybill_other'/>
+                            </group>
+                            <group string='Products'>
+                                <field name='fuelvoucher_product_id'/>
+                                <field name='advance_product_id'/>
+                                <field name='waybill_freight_id'/>
+                                <field name='waybill_moves_id'/>
+                                <field name='waybill_highway_tolls_id'/>
+                                <field name='waybill_insurance_id'/>
+                                <field name='waybill_other_product_id'/>
                             </group>
                         </group>
                     </sheet>
