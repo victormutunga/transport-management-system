@@ -81,3 +81,7 @@ class TmsAdvance(models.Model):
         sequence = advance.base_id.advance_sequence_id
         advance.name = sequence.next_by_id()
         return advance
+
+    @api.onchange('travel_id')
+    def _onchange_travel(self):
+        self.base_id = self.travel_id.base_id

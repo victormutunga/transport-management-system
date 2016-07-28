@@ -160,3 +160,9 @@ class FleetVehicleLogFuel(models.Model):
         for rec in self:
             rec.invoice_paid = (rec.invoice_id and
                                 rec.invoice_id.state == 'paid')
+
+    @api.onchange('travel_id')
+    def _onchange_travel(self):
+        self.base_id = self.travel_id.base_id
+        self.vehicle_id = self.travel_id.vehicle_id
+        self.employee_id = self.travel_id.employee_id
