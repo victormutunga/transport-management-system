@@ -3,8 +3,8 @@
 # © <2016> <Jarsa Sistemas, S.A. de C.V.>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import api, fields, models
-from openerp.tools.translate import _
+from openerp import _, api, fields, models
+from openerp.exceptions import ValidationError
 
 
 class TmsFactor(models.Model):
@@ -68,3 +68,33 @@ For next option you only have to type Factor like 10.5 for 10.50%:
             self.name = 'name'
         else:
             self.name = values[self.factor_type]
+
+    @api.multi
+    def get_amount(self, weight=0.0, distance=0.0, distance_real=0.0, qty=0.0,
+                   volume=0.0, income=0.0):
+        factor_type = [x.factor_type for x in self]
+        factor_list = {
+            'weight': weight,
+            'distance': distance,
+            'distance_real': distance_real,
+            'qty': qty,
+            'volume': volume
+        }
+        if len(set(factor_type)) <= 1:
+            for rec in self:
+                if factor_type[0] == 'travel':
+                    return rec.fixed_amount
+                elif factor_type[0] == 'percent':
+                    amount = income * (rec.factor / 100)
+                    if rec.mixed:
+                        return amount + rec.fixed_amount
+                    else:
+                        return amount
+                for key, value in factor_list.items():
+                    if factor_type[0] == key:
+                        if rec.range_start <= value <= rec.range_end:
+                            return rec.factor * value
+            raise ValidationError(_('the amount isnt between of any ranges'))
+        else:
+            raise ValidationError(_('the factors must belongs to the same'
+                                    'category'))
