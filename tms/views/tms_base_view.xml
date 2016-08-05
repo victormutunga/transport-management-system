@@ -42,6 +42,7 @@
                                 <field name='waybill_highway_tolls_id'/>
                                 <field name='waybill_insurance_id'/>
                                 <field name='waybill_other_product_id'/>
+                                <field name="ieps_product_id"/>
                             </group>
                         </group>
                     </sheet>

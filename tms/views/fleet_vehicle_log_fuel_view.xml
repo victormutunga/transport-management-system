@@ -11,6 +11,7 @@
                         <button icon="fa-reply" name="set_2_draft" states="cancel" string="Set to Draft" type="object"/>
                         <button class="oe_highlight" icon="fa-thumbs-up" name="action_approved" states="draft" string="Approve" type="object"/>
                         <button class="oe_highlight" icon="fa-check-square-o" name="action_confirm" states="approved" string="Confirm" type="object"/>
+                        <button class="oe_highlight" icon="fa-check-square-o" name="create_invoice" states="confirmed" string="Create Invoice" type="object"/>
                         <button icon="fa-print" name="" string="Print Fuel Voucher" type="action"/>
                         <field name="state" statusbar_visible="draft,approved,confirmed,cancel" widget="statusbar"/>
                     </header>
@@ -24,6 +25,7 @@
                             <group string="Vehicle Details">
                                 <field name="base_id"/>
                                 <field name="no_travel"/>
+                                <field name="travel_id" attrs="{'invisible':[('no_travel', '=', True)]}"/>
                                 <field name="vehicle_id"/>
                                 <field context="{'default_tms_category': 'driver'}" name="employee_id"/>
                                 <field name="odometer"/>
@@ -47,7 +49,7 @@
                                 <field name="price_total"/>
                             </group>
                             <group string="Invoice Information">
-                                <field name="invoice_id"/>
+                                <field name="invoice_paid"/>
                             </group>
                             <group string="Notes">
                                 <field name="notes" nolabel="1" placeholder="Write here any other information"/>

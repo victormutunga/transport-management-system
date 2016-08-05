@@ -81,3 +81,4 @@ class TmsBase(models.Model):
     waybill_other_product_id = fields.Many2one(
         'product.product',
         string='Waybill Other Product')
+    ieps_product_id = fields.Many2one('product.product', string='IEPS Product')
