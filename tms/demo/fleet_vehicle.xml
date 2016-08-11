@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="tms_fleet_vehicle_01" model="fleet.vehicle">
+            <field name="base_id" ref="tms_base_1"></field>
+            <field name="license_plate">0924</field>
+            <field name="name">Audi/089</field>
+            <field name="odometer_unit">miles</field>
+            <field name="active">True</field>
+            <field name="model_id" ref="fleet.model_a5"></field>
+            <field name="fleet_type">tractor</field>
+        </record>
+        <record id="tms_fleet_vehicle_02" model="fleet.vehicle">
+            <field name="base_id" ref="tms_base_1"></field>
+            <field name="license_plate">8943</field>
+            <field name="name">Audi/049</field>
+            <field name="odometer_unit">miles</field>
+            <field name="active">True</field>
+            <field name="model_id" ref="fleet.model_a5"></field>
+            <field name="fleet_type">tractor</field>
+        </record>
+        <record id="tms_fleet_vehicle_03" model="fleet.vehicle">
+            <field name="base_id" ref="tms_base_1"></field>
+            <field name="license_plate">928374</field>
+            <field name="name">Audi/069</field>
+            <field name="odometer_unit">miles</field>
+            <field name="active">True</field>
+            <field name="model_id" ref="fleet.model_a5"></field>
+            <field name="fleet_type">tractor</field>
+        </record>
+        <record id="tms_fleet_vehicle_04" model="fleet.vehicle">
+            <field name="base_id" ref="tms_base_1"></field>
+            <field name="license_plate">23874</field>
+            <field name="name">Audi/079</field>
+            <field name="odometer_unit">miles</field>
+            <field name="active">True</field>
+            <field name="model_id" ref="fleet.model_a5"></field>
+            <field name="fleet_type">tractor</field>
+        </record>
+        <record id="tms_fleet_vehicle_05" model="fleet.vehicle">
+            <field name="base_id" ref="tms_base_1"></field>
+            <field name="license_plate">8723</field>
+            <field name="name">Audi/019</field>
+            <field name="odometer_unit">miles</field>
+            <field name="active">True</field>
+            <field name="model_id" ref="fleet.model_a5"></field>
+            <field name="fleet_type">tractor</field>
+        </record>
+        <record id="tms_fleet_vehicle_06" model="fleet.vehicle">
+            <field name="base_id" ref="tms_base_1"></field>
+            <field name="license_plate">2389</field>
+            <field name="name">Audi/189</field>
+            <field name="odometer_unit">miles</field>
+            <field name="active">True</field>
+            <field name="model_id" ref="fleet.model_a5"></field>
+            <field name="fleet_type">tractor</field>
+        </record>
+         <record id="tms_fleet_vehicle_07" model="fleet.vehicle">
+            <field name="base_id" ref="tms_base_1"></field>
+            <field name="license_plate">9823</field>
+            <field name="name">Audi/239</field>
+            <field name="odometer_unit">miles</field>
+            <field name="active">True</field>
+            <field name="model_id" ref="fleet.model_a5"></field>
+            <field name="fleet_type">tractor</field>
+        </record>
+        <record id="tms_fleet_vehicle_08" model="fleet.vehicle">
+            <field name="base_id" ref="tms_base_1"></field>
+            <field name="license_plate">29874</field>
+            <field name="name">Audi/543</field>
+            <field name="odometer_unit">miles</field>
+            <field name="active">True</field>
+            <field name="model_id" ref="fleet.model_a5"></field>
+            <field name="fleet_type">tractor</field>
+        </record>
+        <record id="tms_fleet_vehicle_09" model="fleet.vehicle">
+            <field name="base_id" ref="tms_base_1"></field>
+            <field name="license_plate">9823</field>
+            <field name="name">Audi/854</field>
+            <field name="odometer_unit">miles</field>
+            <field name="active">True</field>
+            <field name="model_id" ref="fleet.model_a5"></field>
+            <field name="fleet_type">tractor</field>
+        </record>
+    </data>
+</odoo>

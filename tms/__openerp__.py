@@ -42,6 +42,9 @@
         'demo/tms_place.xml',
         'demo/tms_route.xml',
         'demo/tms_transportable.xml',
+        'demo/fleet_vehicle.xml',
+        'demo/hr_employee.xml',
+        'demo/tms_travel.xml',
     ],
     "application": True,
     "installable": True
