@@ -34,6 +34,6 @@ class FleetVehicle(models.Model):
          ('trailer', 'Trailer'),
          ('dolly', 'Dolly'),
          ('other', 'Other')],
-        'Unit Fleet Type')
+        string='Unit Fleet Type', required=True)
     notes = fields.Text()
     active = fields.Boolean(default=True)
