@@ -76,7 +76,7 @@
         <record id="tms_fleet_vehicle_09" model="fleet.vehicle">
             <field name="base_id" ref="tms.tms_base_1"/>
             <field name="license_plate">9823</field>
-            <field name="name">Audi/854</field>
+            <field name="name">T3</field>
             <field name="odometer_unit">kilometers</field>
             <field name="active" eval="True"/>
             <field name="model_id" ref="fleet.model_a5"></field>
@@ -84,22 +84,37 @@
         </record>
         <record id="fleet.vehicle_1" model="fleet.vehicle">
             <field name="base_id" ref="tms.tms_base_1"/>
+            <field name="license_plate">23891</field>
+            <field name="name">O1</field>
+            <field name="model_id" ref="fleet.model_a5"></field>
             <field name="fleet_type">other</field>
         </record>
         <record id="fleet.vehicle_2" model="fleet.vehicle">
             <field name="base_id" ref="tms.tms_base_1"/>
+            <field name="name">O2</field>
+            <field name="license_plate">23892</field>
+            <field name="model_id" ref="fleet.model_a5"></field>
             <field name="fleet_type">other</field>
         </record>
         <record id="fleet.vehicle_3" model="fleet.vehicle">
             <field name="base_id" ref="tms.tms_base_1"/>
+            <field name="name">O3</field>
+            <field name="license_plate">23893</field>
+            <field name="model_id" ref="fleet.model_a5"></field>
             <field name="fleet_type">other</field>
         </record>
         <record id="fleet.vehicle_4" model="fleet.vehicle">
             <field name="base_id" ref="tms.tms_base_1"/>
+            <field name="name">O4</field>
+            <field name="license_plate">23894</field>
+            <field name="model_id" ref="fleet.model_a5"></field>
             <field name="fleet_type">other</field>
         </record>
         <record id="fleet.vehicle_5" model="fleet.vehicle">
             <field name="base_id" ref="tms.tms_base_1"/>
+            <field name="name">O5</field>
+            <field name="license_plate">23895</field>
+            <field name="model_id" ref="fleet.model_a5"></field>
             <field name="fleet_type">other</field>
         </record>
     </data>
