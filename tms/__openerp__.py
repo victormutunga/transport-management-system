@@ -39,6 +39,7 @@
         'data/tms_base_data.xml',
     ],
     "demo": [
+        'demo/account_account.xml',
         'demo/tms_place.xml',
         'demo/tms_route.xml',
         'demo/tms_transportable.xml',
