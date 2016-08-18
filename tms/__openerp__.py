@@ -15,9 +15,9 @@
     "data": [
         'security/ir.model.access.csv',
         'views/tms_view.xml',
+        'data/account_journal_data.xml',
         'views/tms_base_view.xml',
         'views/fleet_vehicle_odometer_view.xml',
-        # 'views/fleet_vehicle_view.xml',
         'views/hr_employee_view.xml',
         'views/fleet_vehicle_view.xml',
         'views/fleet_vehicle_log_fuel_view.xml',
@@ -46,6 +46,7 @@
         'demo/fleet_vehicle.xml',
         'demo/hr_employee.xml',
         'demo/tms_travel.xml',
+        'demo/tms_base.xml',
     ],
     "application": True,
     "installable": True

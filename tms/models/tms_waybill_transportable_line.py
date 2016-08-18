@@ -16,12 +16,16 @@ class TmsWaybillTransportableLine(models.Model):
     name = fields.Char('Description', required=True)
     transportable_uom_id = fields.Many2one(
         'product.uom', 'Unit of Measure ', required=True)
+    quantity = fields.Float('Quantity (UoM)', requerid=True, default=0.0)
     notes = fields.Char('Notes')
     waybill_id = fields.Many2one(
         'tms.waybill', string='Waybill')
     sequence = fields.Integer(
         'Sequence', help="Gives the sequence order when displaying a list of"
         " sales order lines.", default=10)
+    waybill_id = fields.Many2one(
+        'tms.waybill', 'waybill', required=False, ondelete='cascade',
+        select=True, readonly=True)
 
     @api.onchange('transportable_id')
     def _onchange_transportable_id(self):

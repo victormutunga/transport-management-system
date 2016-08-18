@@ -7,7 +7,7 @@
             <field name="priority">2</field>
             <field name="arch" type="xml">
                 <tree string="Billing Factors">
-                    <field name="category"/>
+                    <field name="category" invisible="1"/>
                     <field name="name"/>
                     <field name="factor_type"/>
                     <field name="factor"/>
@@ -24,21 +24,24 @@
             <field name="model">tms.factor</field>
             <field name="arch" type="xml">
                 <form string="Factors">
-                    <group col="4" colspan="4">
-                        <field name="category"/>
-                        <field name="factor_type"/>
-                        <field name="name"/>
-                        <field attrs="{'invisible' :[('factor_type','in',('special','travel'))],'required': [('factor_type','in',('distance','weight','qty','volume','percent'))]}" name="factor"/>
-                        <newline/>
-                        <field attrs="{'invisible' :[('factor_type','in',('special','travel','percent'))],                      'required' :[('factor_type','in',('distance','weight','qty','volume'))]}" name="range_start"/>
-                        <field attrs="{'invisible' :[('factor_type','in',('special','travel','percent'))],                      'required' :[('factor_type','in',('distance','weight','qty','volume'))]}" name="range_end"/>
-                        <field attrs="{'invisible' :[('factor_type','=','travel')]}" name="mixed"/>
-                        <newline/>
-                        <field name="fixed_amount" required="1"/>
-                        <newline/>
-                        <field name="sequence"/>
-                        <field colspan="4" name="notes"/>
-                    </group>
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <field name="factor_type"/>
+                            <field name="category" invisible="True"/>
+                            <field name="name"/>
+                            <newline/>
+                            <field name="factor" attrs="{'invisible' :[('factor_type','in',('special','travel'))],'required': [('factor_type','in',('distance','weight','qty','volume','percent'))]}"/>
+                            <newline/>
+                            <field name="range_start" attrs="{'invisible': [('factor_type', 'in', ('special', 'travel', 'percent'))], 'required': [('factor_type', 'in', ('distance','weight','qty','volume'))]}"/>
+                            <field name="range_end" attrs="{'invisible': [('factor_type', 'in', ('special', 'travel', 'percent'))], 'required': [('factor_type', 'in', ('distance', 'weight', 'qty', 'volume'))]}"/>
+                            <field name="mixed" attrs="{'invisible' :[('factor_type','=','travel')]}"/>
+                            <newline/>
+                            <field name="fixed_amount" required="1"/>
+                            <newline/>
+                            <field name="sequence"/>
+                            <field colspan="4" name="notes"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>

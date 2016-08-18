@@ -72,7 +72,6 @@ For next option you only have to type Factor like 10.5 for 10.50%:
     @api.multi
     def get_amount(self, weight=0.0, distance=0.0, distance_real=0.0, qty=0.0,
                    volume=0.0, income=0.0):
-        factor_type = [x.factor_type for x in self]
         factor_list = {
             'weight': weight,
             'distance': distance,
@@ -80,21 +79,24 @@ For next option you only have to type Factor like 10.5 for 10.50%:
             'qty': qty,
             'volume': volume
         }
-        if len(set(factor_type)) <= 1:
-            for rec in self:
-                if factor_type[0] == 'travel':
-                    return rec.fixed_amount
-                elif factor_type[0] == 'percent':
-                    amount = income * (rec.factor / 100)
-                    if rec.mixed:
-                        return amount + rec.fixed_amount
-                    else:
-                        return amount
-                for key, value in factor_list.items():
-                    if factor_type[0] == key:
-                        if rec.range_start <= value <= rec.range_end:
-                            return rec.factor * value
-            raise ValidationError(_('the amount isnt between of any ranges'))
-        else:
-            raise ValidationError(_('the factors must belongs to the same'
-                                    'category'))
+        res = 0.0
+        for rec in self:
+            if rec.factor_type == 'travel':
+                res += rec.fixed_amount
+            elif rec.factor_type == 'percent':
+                amount = income * (rec.factor / 100)
+                if rec.mixed:
+                    res += amount + rec.fixed_amount
+                else:
+                    res += amount
+            for key, value in factor_list.items():
+                if rec.factor_type == key:
+                    if rec.range_start <= value <= rec.range_end:
+                        if rec.mixed:
+                            res += (rec.factor * value) + rec.fixed_amount
+                        else:
+                            res += rec.factor * value
+        if res != 0.0:
+            return res
+        raise ValidationError(
+            _('the amount isnt between of any ranges'))

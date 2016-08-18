@@ -43,5 +43,47 @@
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field name="reconcile" eval="False"/>
         </record>
+        <record id="account_waybill_product_fuel_log" model="account.account">
+            <field name="name">Fuel Log</field>
+            <field name="code">10-02-01</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+        </record>
+        <record id="account_waybill_product_advance" model="account.account">
+            <field name="name">Advance</field>
+            <field name="code">10-02-02</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+        </record>
+        <record id="account_waybill_product_freight" model="account.account">
+            <field name="name">Freight</field>
+            <field name="code">10-02-03</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+        </record>
+        <record id="account_waybill_product_move" model="account.account">
+            <field name="name">Move</field>
+            <field name="code">10-02-04</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+        </record>
+        <record id="account_waybill_product_highway_tolls" model="account.account">
+            <field name="name">Highway Tolls</field>
+            <field name="code">10-02-05</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+        </record>
+        <record id="account_waybill_product_insurance" model="account.account">
+            <field name="name">Insurance</field>
+            <field name="code">10-02-06</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+        </record>
+        <record id="account_waybill_product_other" model="account.account">
+            <field name="name">Other</field>
+            <field name="code">10-02-07</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+        </record>
     </data>
 </odoo>
