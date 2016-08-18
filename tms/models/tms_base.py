@@ -47,7 +47,6 @@ class TmsBase(models.Model):
         string='Advance Account')
     account_freight_id = fields.Many2one(
         'account.account', string='Waybill Freight Account')
-    travel_id = fields.One2many('tms.travel', 'base_id')
     account_moves_id = fields.Many2one(
         'account.account',
         string='Waybill Moves Account')

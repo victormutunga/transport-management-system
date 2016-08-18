@@ -3,7 +3,7 @@
 # © <2016> <Jarsa Sistemas, S.A. de C.V.>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import api, fields, models
+from openerp import _, api, exceptions, fields, models
 
 
 class TmsAdvance(models.Model):
@@ -15,73 +15,217 @@ class TmsAdvance(models.Model):
     base_id = fields.Many2one(
         'tms.base', string='Base', required=True
     )
-    name = fields.Char('Advance Number')
+    name = fields.Char(
+        'Advance Number',
+        )
     state = fields.Selection(
         [('draft', 'Draft'),
          ('approved', 'Approved'),
          ('confirmed', 'Confirmed'),
-         ('closed', 'Closed'),
          ('cancel', 'Cancelled')],
-        string='State', readonly=True, default='draft')
+        'State',
+        readonly=True,
+        default='draft')
+
     date = fields.Date(
         'Date',
         required=True,
         default=fields.Date.today)
     travel_id = fields.Many2one(
         'tms.travel', 'Travel',
-        required=True)
+        required=True
+        )
     unit_id = fields.Many2one(
-        'fleet.vehicle', related='travel_id.unit_id',
-        string='Unit', readonly=True)
+        'fleet.vehicle',
+        string='Unit',
+        related='travel_id.unit_id')
     employee_id = fields.Many2one(
-        'hr.employee', string='Driver',
-        related='travel_id.employee_id',  readonly=True)
-    product_id = fields.Many2one(
-        'product.product', 'Product',
-        domain=[('purchase_ok', '=', 1),
-                ('tms_category', '=', 'real_expense')],
+        'hr.employee',
+        string='Driver',
+        related='travel_id.employee_id'
+        )
+    amount = fields.Monetary(
         required=True)
-    product_uom_qty = fields.Float(
-        'Quantity', required=True, default=1.0)
-    product_uom_id = fields.Many2one(
-        'product.uom', 'Unit of Measure ')
-    price_unit = fields.Float('Price Unit', required=True)
-    price_unit_control = fields.Float('Price Unit', readonly=True)
-    subtotal = fields.Float(
-        # compute=_amount,
-        string='Subtotal')
-    tax_amount = fields.Float(
-        # compute=_amount,
-        string='Tax Amount')
-    total = fields.Float(
-        'Total', required=True)
     notes = fields.Text()
     move_id = fields.Many2one(
-        'account.move', 'Journal Entry', readonly=True,
+        'account.move', 'Journal Entry',
         help="Link to the automatically generated Journal Items.\nThis move "
-        "is only for Travel Expense Records with balance < 0.0")
+        "is only for Travel Expense Records with balance < 0.0",
+        readonly=True,)
     paid = fields.Boolean(
-        # compute=_paid
+        compute='compute_paid',
+        readonly=True
     )
+    payment_id = fields.Many2one(
+        'account.payment',
+        string="Payment Reference",
+        readonly=True)
     currency_id = fields.Many2one(
-        'res.currency', 'Currency', required=True,
+        'res.currency',
+        'Currency',
+        required=True,
         default=lambda self: self.env.user.company_id.currency_id)
     auto_expense = fields.Boolean(
         help="Check this if you want this product and amount to be "
         "automatically created when Travel Expense Record is created.")
     expense_id = fields.Many2one(
-        'tms.expense', 'Expense Record', readonly=True)
-    expense2_id = fields.Many2one(
-        'tms.expense', 'Expense Record for Drivef Helper',
+        'tms.expense',
+        'Expense Record',
         readonly=True)
+
+    _sql_constraints = [
+        ('name_uniq', 'unique(name)', 'Advance number must be unique !'),
+    ]
 
     @api.model
     def create(self, values):
         advance = super(TmsAdvance, self).create(values)
         sequence = advance.base_id.advance_sequence_id
-        advance.name = sequence.next_by_id()
-        return advance
+        if advance.amount <= 0:
+            raise exceptions.ValidationError(
+                _('The amount must be greater than zero.'))
+        else:
+            advance.name = sequence.next_by_id()
+            if advance.name == 'False':
+                raise exceptions.ValidationError(
+                    _('Error you need define an'
+                        ' advance sequence in the base.'))
+            else:
+                return advance
 
-    @api.onchange('travel_id')
-    def _onchange_travel(self):
-        self.base_id = self.travel_id.base_id
+    @api.multi
+    def compute_paid(self):
+        for advance in self:
+            if advance.payment_id.id:
+                advance.paid = True
+
+    @api.multi
+    def action_approve(self):
+        self.state = 'approved'
+        self.message_post(_(
+            '<strong>Advance approved.</strong><ul>'
+            '<li><strong>Approved by: </strong>%s</li>'
+            '<li><strong>Approved at: </strong>%s</li>'
+            '</ul>') % (self.env.user.name, fields.Datetime.now()))
+
+    @api.multi
+    def action_confirm(self):
+        for advance in self:
+            if advance.amount <= 0:
+                raise exceptions.ValidationError(
+                    _('The amount must be greater than zero.'))
+            else:
+                obj_account_move = self.env['account.move']
+                advance_journal_id = advance.base_id.advance_journal_id.id
+                advance_debit_account_id = (
+                    advance.employee_id.
+                    tms_advance_account_id.id
+                    )
+                advance_credit_account_id = (
+                    advance.employee_id.
+                    address_id.property_account_payable_id.id
+                    )
+                advance_product_id = advance.base_id.advance_product_id.id
+                if not (
+                        advance_journal_id and
+                        advance_credit_account_id and
+                        advance_debit_account_id and
+                        advance_product_id):
+                    raise exceptions.ValidationError(
+                        _('Check if you already set the journal / product in '
+                            'the base and the account of the driver.'))
+                move_lines = []
+                notes = _('* Base: %s \n'
+                          '* Advance: %s \n'
+                          '* Product: %s \n'
+                          '* Travel: %s \n'
+                          '* Driver: %s \n'
+                          '* Vehicle: %s') % (
+                    advance.base_id.name,
+                    advance.name,
+                    advance.base_id.advance_product_id.name,
+                    advance.travel_id.name,
+                    advance.employee_id.name,
+                    advance.unit_id.name)
+                total = advance.currency_id.compute(
+                    advance.amount,
+                    self.env.user.currency_id)
+                if total > 0.0:
+                    move_line = (
+                        0, 0,
+                        {
+                            'name': advance.name,
+                            'account_id': advance_credit_account_id,
+                            'narration': notes,
+                            'debit': 0.0,
+                            'credit': total,
+                            'journal_id': advance_journal_id,
+                            'partner_id': self.env.user.company_id.id,
+                        })
+                    move_lines.append(move_line)
+                    move_line = (
+                        0, 0,
+                        {
+                            'name': advance.name,
+                            'account_id': advance_debit_account_id,
+                            'narration': notes,
+                            'debit': total,
+                            'credit': 0.0,
+                            'journal_id': advance_journal_id,
+                            'partner_id': self.env.user.company_id.id,
+                        })
+                    move_lines.append(move_line)
+                    move = {
+                        'date': fields.Date.today(),
+                        'journal_id': advance_journal_id,
+                        'name': _('Advance: %s') % (advance.name),
+                        'partner_id': self.env.user.company_id.id,
+                        'line_ids': [line for line in move_lines],
+                    }
+                    move_id = obj_account_move.create(move)
+                    if not move_id:
+                        raise exceptions.ValidationError(
+                            -('An error has occurred in the creation'
+                                ' of the accounting move. '))
+                    else:
+                        self.write(
+                            {
+                                'move_id': move_id.id,
+                                'state': 'confirmed'
+                            })
+                        self.message_post(_(
+                            '<strong>Advance confirmed.</strong><ul>'
+                            '<li><strong>Confirmed by: </strong>%s</li>'
+                            '<li><strong>Confirmed at: </strong>%s</li>'
+                            '</ul>') % (self.env.user.name,
+                                        fields.Datetime.now()))
+
+    @api.multi
+    def action_cancel(self):
+        if self.paid:
+            raise exceptions.ValidationError(
+                _('Could not cancel this advance because'
+                    'the advance is already paid. '
+                    'Please cancel the payment first.'))
+        else:
+            self.move_id.unlink()
+            self.state = 'cancel'
+            self.message_post(_(
+                '<strong>Advance cancelled.</strong><ul>'
+                '<li><strong>Cancelled by: </strong>%s</li>'
+                '<li><strong>Cancelled at: </strong>%s</li>'
+                '</ul>') % (self.env.user.name, fields.Datetime.now()))
+
+    @api.multi
+    def action_cancel_draft(self):
+        if self.travel_id.state == 'cancel':
+            raise exceptions.ValidationError(
+                _('Could not set this advance to draft because'
+                    ' the travel is cancelled.'))
+        else:
+            self.state = 'draft'
+            self.message_post(_(
+                '<strong>Advance drafted.</strong><ul>'
+                '<li><strong>Drafted by: </strong>%s</li>'
+                '<li><strong>Drafted at: </strong>%s</li>'
+                '</ul>') % (self.env.user.name, fields.Datetime.now()))
