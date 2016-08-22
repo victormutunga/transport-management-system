@@ -9,6 +9,7 @@
                 <notebook position="inside">
                     <page string="TMS">
                         <group>
+                            <field name="base_id"/>
                             <field name="tms_category"/>
                             <field attrs="{'required':[('tms_category','=','driver')], 'invisible':[('tms_category','!=','driver')] }" name="tms_advance_account_id"/>
                             <field attrs="{'required':[('tms_category','=','driver')], 'invisible':[('tms_category','!=','driver')] }" name="tms_expense_negative_balance_account_id"/>

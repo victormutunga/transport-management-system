@@ -84,7 +84,6 @@ class TmsTravel(models.Model):
         'Fuel Efficiency Travel')
     fuel_efficiency_extraction = fields.Float(
         'Fuel Efficiency Extraction')
-    base_id = fields.Many2one('tms.base', 'Base', required=True)
     departure_id = fields.Many2one(
         'tms.place',
         related='route_id.departure_id',
@@ -108,6 +107,7 @@ class TmsTravel(models.Model):
     is_available = fields.Boolean(
         compute='_is_available',
         string='Travel available')
+    base_id = fields.Many2one('tms.base', 'Base')
 
     @api.onchange('kit_id')
     def _onchange_kit(self):

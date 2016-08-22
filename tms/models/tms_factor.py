@@ -12,11 +12,11 @@ class TmsFactor(models.Model):
     _description = "Factors to calculate Payment (Driver/Supplier) "
     "& Client charge"
 
-    name = fields.Char('Name', size=64, required=True)
+    name = fields.Char(required=True)
     route_id = fields.Many2one('tms.route', string="Route")
     travel_id = fields.Many2one('tms.travel', string='Travel')
     waybill_id = fields.Many2one(
-        'tms.waybill', string='waybill', ondelete='cascade',
+        'tms.waybill', string='waybill',
         select=True, readonly=True)
     category = fields.Selection([
         ('driver', 'Driver'),
@@ -41,13 +41,13 @@ For next option you only have to type Fixed Amount:
 For next option you only have to type Factor like 10.5 for 10.50%:
  - Income Percent
                         """)
-    range_start = fields.Float('Range Start', digits=(16, 4))
-    range_end = fields.Float('Range End', digits=(16, 4))
-    factor = fields.Float('Factor', digits=(16, 4))
-    fixed_amount = fields.Float('Fixed Amount', digits=(16, 4))
-    mixed = fields.Boolean('Mixed', default=False)
+    range_start = fields.Float()
+    range_end = fields.Float()
+    factor = fields.Float()
+    fixed_amount = fields.Float()
+    mixed = fields.Boolean()
     sequence = fields.Integer(
-        'Sequence', help="Gives the sequence calculation for these factors.",
+        help="Gives the sequence calculation for these factors.",
         default=10)
     notes = fields.Text('Notes')
 
@@ -96,6 +96,8 @@ For next option you only have to type Factor like 10.5 for 10.50%:
                             res += (rec.factor * value) + rec.fixed_amount
                         else:
                             res += rec.factor * value
+                    elif rec.range_start == 0 & rec.range_end == 0:
+                        res += rec.factor * value
         if res != 0.0:
             return res
         raise ValidationError(

@@ -22,6 +22,7 @@ class TmsAdvance(models.Model):
         [('draft', 'Draft'),
          ('approved', 'Approved'),
          ('confirmed', 'Confirmed'),
+         ('closed', 'Closed'),
          ('cancel', 'Cancelled')],
         'State',
         readonly=True,
@@ -123,7 +124,7 @@ class TmsAdvance(models.Model):
                     )
                 advance_credit_account_id = (
                     advance.employee_id.
-                    address_id.property_account_payable_id.id
+                    address_home_id.property_account_payable_id.id
                     )
                 advance_product_id = advance.base_id.advance_product_id.id
                 if not (
@@ -151,35 +152,22 @@ class TmsAdvance(models.Model):
                     advance.amount,
                     self.env.user.currency_id)
                 if total > 0.0:
-                    move_line = (
-                        0, 0,
-                        {
+                    accounts = {'credit': advance_credit_account_id,
+                                'debit': advance_debit_account_id}
+                    for name, account in accounts.items():
+                        move_line = (0, 0, {
                             'name': advance.name,
-                            'account_id': advance_credit_account_id,
+                            'account_id': account,
                             'narration': notes,
-                            'debit': 0.0,
-                            'credit': total,
+                            'debit': (total if name == 'debit' else 0.0),
+                            'credit': (total if name == 'credit' else 0.0),
                             'journal_id': advance_journal_id,
-                            'partner_id': self.env.user.company_id.id,
-                        })
-                    move_lines.append(move_line)
-                    move_line = (
-                        0, 0,
-                        {
-                            'name': advance.name,
-                            'account_id': advance_debit_account_id,
-                            'narration': notes,
-                            'debit': total,
-                            'credit': 0.0,
-                            'journal_id': advance_journal_id,
-                            'partner_id': self.env.user.company_id.id,
-                        })
-                    move_lines.append(move_line)
+                            })
+                        move_lines.append(move_line)
                     move = {
                         'date': fields.Date.today(),
                         'journal_id': advance_journal_id,
                         'name': _('Advance: %s') % (advance.name),
-                        'partner_id': self.env.user.company_id.id,
                         'line_ids': [line for line in move_lines],
                     }
                     move_id = obj_account_move.create(move)

@@ -10,12 +10,6 @@
                     <field name="travel_id"/> 
                     <field name="line_type"/>
                     <field name="name"/>
-                    <field name="product_id"/>
-                    <field name="product_uom"/>
-                    <field name="product_uom_qty"/>
-                    <field name="price_unit"/>
-                    <field name="price_subtotal"/> 
-                    <field name="tax_amount"/> 
                     <field name="price_total"/>
                     <field name="sequence"/>
                     <!-- <field name="operation_id" />-->
@@ -38,12 +32,7 @@
                         </group>
                         <group>
                             <group string="Product Details">
-                                <field attrs="{'readonly':[('control','!=',False)]}" context="{'default_tms_category': 'real_expense','default_type': 'service', 'default_procure_method':'make_to_stock', 'default_supply_method': 'buy'}" domain="[('tms_category','=', line_type)]" name="product_id"  required="1"/>
-                                <field attrs="{'readonly':[('control','!=',False)]}" name="product_uom" required="1"/>
-                                <field attrs="{'readonly':[('control','!=',False)]}" name="product_uom_qty" required="1"/>
-                                <field invisible="1" name="price_unit"/>
-                                <field name="price_unit_control" readonly="1"/>
-                                <field name="special_tax_amount" readonly="1"/>
+                                <field name="price_total"/>
                                 <newline/>
                             </group>
                             <group string="Supplier Details">

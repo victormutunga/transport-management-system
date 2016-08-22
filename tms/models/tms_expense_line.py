@@ -37,19 +37,6 @@ class TmsExpenseLine(models.Model):
         help="Gives the sequence order when displaying a list of "
         "sales order lines.",
         default=10)
-    product_id = fields.Many2one(
-        'product.product',
-        string='Product'
-        )
-    price_unit = fields.Float(
-        required=True
-        )
-    price_unit_control = fields.Float(
-        'Price Unit')
-    price_subtotal = fields.Float(
-        # compute=_amount_line,
-        string='SubTotal'
-        )
     price_total = fields.Float(
         string='Total'
         )
@@ -60,12 +47,6 @@ class TmsExpenseLine(models.Model):
     tax_id = fields.Many2many(
         'account.tax',
         string='Taxes')
-    product_uom_qty = fields.Float(
-        string='Quantity (UoM)',
-        default=1)
-    product_uom = fields.Many2one(
-        'product.uom',
-        string='Unit of Measure')
     notes = fields.Text()
     employee_id = fields.Many2one(
         'hr.employee',
