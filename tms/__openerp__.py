@@ -9,8 +9,8 @@
     "category": "Transport",
     "author": "Argil Consulting, Jarsa Sistemas",
     "website": "http://www.argil.mx, https://www.jarsa.com.mx",
-    "depends": ["hr", "account_accountant",
-                "purchase", "sale", "fleet"],
+    "depends": ["account_accountant", "fleet", "hr",
+                "account", "purchase", "sale"],
     "summary": "Management System for Carriers, Trucking and other companies",
     "license": "AGPL-3",
     "data": [
@@ -39,6 +39,7 @@
         'data/ir_sequence_data.xml',
         'data/tms_base_data.xml',
         'wizards/tms_advance_payment_view.xml',
+        'wizards/tms_waybill_invoice_view.xml',
     ],
     "demo": [
         'demo/account_account.xml',

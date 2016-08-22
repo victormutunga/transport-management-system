@@ -189,21 +189,27 @@ class TmsWaybill(models.Model):
         sequence = waybill.base_id.waybill_sequence_id
         waybill.name = sequence.next_by_id()
         products = [
-            waybill.base_id.waybill_other_product_id,
-            waybill.base_id.waybill_insurance_id,
-            waybill.base_id.waybill_highway_tolls_id,
-            waybill.base_id.waybill_moves_id,
-            waybill.base_id.waybill_freight_id
+            [waybill.base_id.waybill_other_product_id,
+             waybill.base_id.account_other_id],
+            [waybill.base_id.waybill_insurance_id,
+             waybill.base_id.account_insurance_id],
+            [waybill.base_id.waybill_highway_tolls_id,
+             waybill.base_id.account_highway_tolls_id],
+            [waybill.base_id.waybill_moves_id,
+             waybill.base_id.account_moves_id],
+            [waybill.base_id.waybill_freight_id,
+             waybill.base_id.account_freight_id]
         ]
         for product in products:
             self.waybill_line_ids.create({
-                'name': product.name,
+                'name': product[0][0].name,
                 'waybill_id': waybill.id,
-                'product_id': product.id,
+                'product_id': product[0][0].id,
                 'tax_ids': [(
                     6, 0, [x.id for x in (
-                        product.supplier_taxes_id)]
+                        product[0][0].supplier_taxes_id)]
                 )],
+                'account_id': product[1][0].id,
             })
         return waybill
 
@@ -234,36 +240,39 @@ class TmsWaybill(models.Model):
             rec.invoice_paid = paid
 
     @api.multi
-    @api.onchange('transportable_line_ids', 'customer_factor_id')
+    @api.onchange('transportable_line_ids', 'customer_factor_ids')
     def _transportable_product(self):
         for waybill in self:
             volume = weight = qty = distance_real = distance_route = 0.0
             for record in waybill.transportable_line_ids:
-                qty += record.quantity
-                if record.transportable_uom_id.category_id.name == 'Volume':
-                    volume += record.quantity
-                elif record.transportable_uom_id.category_id.name == 'Weight':
-                    weight += record.quantity
-                elif (record.transportable_uom_id.category_id.name ==
-                        'Distance Real (Km/Mi)'):
-                    distance_real += record.quantity
-                elif (record.transportable_uom_id.category_id.name ==
-                        'Distance Route (Km/Mi)'):
-                    distance_route += record.quantity
+                for factor in waybill.customer_factor_ids:
+                    qty = record.quantity
+                    if (record.transportable_uom_id.category_id.name ==
+                            'Volume'):
+                        volume += record.quantity
+                    elif (record.transportable_uom_id.category_id.name ==
+                            'Weight'):
+                        weight += record.quantity
+                    elif (record.transportable_uom_id.category_id.name ==
+                            'Length / Distance'):
+                        if factor.factor_type == 'distance':
+                            distance_route += record.quantity
+                        else:
+                            distance_real += record.quantity
 
-                waybill.product_qty = qty
-                waybill.product_volume = volume
-                waybill.product_weight = weight
-                waybill.distance_route = distance_route
-                waybill.distance_real = distance_real
-                total_price = waybill.customer_factor_ids.get_amount(
-                    waybill.product_weight, waybill.distance_route,
-                    waybill.distance_real, waybill.product_qty,
-                    waybill.product_volume, 0.0)
-                for product in waybill.waybill_line_ids:
-                    if (product.product_id.name ==
-                            waybill.base_id.waybill_freight_id.name):
-                        product.update({'unit_price': total_price})
+                    waybill.product_qty = qty
+                    waybill.product_volume = volume
+                    waybill.product_weight = weight
+                    waybill.distance_route = distance_route
+                    waybill.distance_real = distance_real
+                    total_price = waybill.customer_factor_ids.get_amount(
+                        waybill.product_weight, waybill.distance_route,
+                        waybill.distance_real, waybill.product_qty,
+                        waybill.product_volume, factor.fixed_amount)
+                    for product in waybill.waybill_line_ids:
+                        if (product.product_id.name ==
+                                waybill.base_id.waybill_freight_id.name):
+                            product.update({'unit_price': total_price})
 
     @api.depends('waybill_line_ids')
     @api.multi
@@ -442,43 +451,44 @@ class TmsWaybill(models.Model):
     def action_cancel_draft(self):
         for waybill in self:
             for travel in waybill.travel_ids:
-                if travel.id and (
-                        travel.state == 'cancel'):
+                if travel.state == 'cancel':
                     raise exceptions.ValidationError(
                         _('Could not set to draft this Waybill !\n'
                           'Travel is Cancelled !!!'))
             waybill.message_post(body=_(
-                "<h5><strong>Cancelled</strong></h5>"
-                "<p><strong>Cancelled by: </strong> %s <br>"
-                "<strong>Cancelled at: </strong> %s</p") % (
+                "<h5><strong>Cancel to Draft</strong></h5>"
+                "<p><strong>by: </strong> %s <br>"
+                "<strong>at: </strong> %s</p") % (
                 waybill.user_id.name, fields.Datetime.now()))
-            waybill.state = 'cancel'
+            waybill.state = 'draft'
 
     @api.multi
     def action_cancel(self):
-        if self.travel_ids.state == 'done':
-            raise exceptions.ValidationError(
-                _('Could not cancel this waybill because'
-                  'the waybill is already linked to a travel.'))
-        elif self.paid:
-            raise exceptions.ValidationError(
-                _('Could not cancel this waybill because'
-                  'the waybill is already paid.'))
-        else:
-            move_obj = self.env['account.move']
-            move_id = (move_obj.search(
-                [('id', '=', self.move_id.id)]))
-            move_count = len(move_id)
+        for waybill in self:
+            for travel in waybill.travel_ids:
+                if travel.state == 'done':
+                    raise exceptions.ValidationError(
+                        _('Could not cancel this waybill because'
+                          'the waybill is already linked to a travel.'))
+            if waybill.paid:
+                raise exceptions.ValidationError(
+                    _('Could not cancel this waybill because'
+                      'the waybill is already paid.'))
+            else:
+                move_obj = self.env['account.move']
+                move_id = (move_obj.search(
+                    [('id', '=', waybill.move_id.id)]))
+                move_count = len(move_id)
 
-            if move_count > 0:
-                move_id.unlink()
+                if move_count > 0:
+                    move_id.unlink()
 
-            self.state = 'cancel'
-            self.message_post(body=_(
-                "<h5><strong>Cancelled</strong></h5>"
-                "<p><strong>Cancelled by: </strong> %s <br>"
-                "<strong>Cancelled at: </strong> %s</p") % (
-                self.user_id.name, fields.Datetime.now()))
+                waybill.state = 'cancel'
+                waybill.message_post(body=_(
+                    "<h5><strong>Cancelled</strong></h5>"
+                    "<p><strong>Cancelled by: </strong> %s <br>"
+                    "<strong>Cancelled at: </strong> %s</p") % (
+                    waybill.user_id.name, fields.Datetime.now()))
 
     @api.depends('supplier_invoice_id')
     def _compute_supplier_invoice_paid(self):

@@ -41,6 +41,9 @@ class TmsWaybillLine(models.Model):
     discount = fields.Float(
         string='Discount (%)',
         help="Please use 99.99 format...")
+    account_id = fields.Many2one(
+        'account.account',
+        string='Account')
 
     @api.onchange('product_id')
     def on_change_product_id(self):
