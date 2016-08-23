@@ -155,6 +155,7 @@
                                 <field attrs="{'readonly':[('state','in',('done'))]}" name="driver_factor_ids"/>
                             </page>
                             <page string="History">
+                                <field name="event_ids" context="{'default_travel_id':active_id}"/>
                                 <group>
                                     <separator colspan="4" string="Notes"/>
                                     <field attrs="{'readonly':[('state','in',('done'))]}" name="notes" nolabel="1"/>
