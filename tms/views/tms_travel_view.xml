@@ -95,13 +95,13 @@
                                 <field name="kit_id" attrs="{'readonly':[('state','in',('progress','done'))]}" />
                                 <field name="unit_id"
                                     attrs="{'readonly':[('state','in',('progress','done'))]}"/>
+                                    <field name="employee_id" attrs="{'readonly':[('state','in',('progress','done'))]}"/>
                                 <field name="trailer1_id" attrs="{'required':['|', ('dolly_id','!=',False),('trailer2_id','!=',False)], 'readonly':[('state','in',('progress','done'))]}" context="{'default_fleet_type': 'trailer'}" domain="[('id','!=',trailer2_id)]"/>
                                 <field name="dolly_id" attrs="{'required':[('trailer2_id','!=',False)],'readonly':[('state','in',('progress','done'))]}" context="{'default_fleet_type': 'dolly'}"/>
                                 <field name="trailer2_id" attrs="{'required':[('dolly_id','!=',False)],'readonly':[('state','in',('progress','done'))]}" context="{'default_fleet_type': 'trailer'}" domain="[('id','!=',trailer1_id)]"/>
                             </group>
                             <group>  
                                 <field name="date" attrs="{'readonly':[('state','in',('progress','done'))]}"/>
-                                <field name="employee_id" attrs="{'readonly':[('state','in',('progress','done'))]}"/>
                                 <field name="user_id" attrs="{'readonly':[('state','in',('progress','done'))]}"/>
                             </group>
                             <group colspan="4">

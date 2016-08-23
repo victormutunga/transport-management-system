@@ -26,6 +26,7 @@
                                 <field name="base_id"/>
                                 <field name="no_travel"/>
                                 <field name="travel_id" attrs="{'invisible':[('no_travel', '=', True)]}"/>
+                                <field attrs="{'invisible':[('internal_fuel', '=', True)]}" context="{'default_supplier': True}" name="vendor_id"/>
                                 <field name="vehicle_id"/>
                                 <field context="{'default_tms_category': 'driver'}" name="employee_id"/>
                                 <field name="odometer"/>
@@ -35,7 +36,6 @@
                                 <field name="internal_fuel"/>
                                 <field attrs="{'invisible':[('internal_fuel', '=', True)]}" name="date"/>
                                 <field attrs="{'invisible':[('internal_fuel', '=', True)]}" name="inv_ref"/>
-                                <field attrs="{'invisible':[('internal_fuel', '=', True)]}" context="{'default_supplier': True}" name="vendor_id"/>
                                 <field attrs="{'invisible':[('internal_fuel', '=', True)]}" name="currency_id"/>
                             </group>
                         </group>
