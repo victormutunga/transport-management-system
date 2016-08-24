@@ -23,7 +23,7 @@
                         </div>
                         <group>
                             <group string="Vehicle Details">
-                                <field name="base_id"/>
+                                <field name="base_id" required="1"/>
                                 <field name="no_travel"/>
                                 <field name="travel_id" attrs="{'invisible':[('no_travel', '=', True)]}"/>
                                 <field attrs="{'invisible':[('internal_fuel', '=', True)]}" context="{'default_supplier': True}" name="vendor_id"/>
@@ -41,7 +41,7 @@
                         </group>
                         <group>
                             <group string="Fuel Details">
-                                <field name="product_uom_qty"/>
+                                <field name="product_uom_qty" required="1"/>
                                 <field name="price_unit"/>
                                 <field name="price_subtotal"/>
                                 <field name="tax_amount"/>

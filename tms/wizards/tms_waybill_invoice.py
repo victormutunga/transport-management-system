@@ -34,7 +34,7 @@ class TmsWaybillInvoice(models.TransientModel):
                 if not partner_address:
                     raise exceptions.ValidationError(
                         _('You must configure the home address for the'
-                            ' Customer.'))
+                          ' Customer.'))
                 partner_ids.append(partner_address)
                 currency = waybill.currency_id
                 total += currency.compute(waybill.amount_total,
@@ -48,16 +48,28 @@ class TmsWaybillInvoice(models.TransientModel):
                 if product.price_subtotal > 0.0:
                     lines.append(
                         (0, 0, {
-                            'product_id': product.id,
+                            'product_id': product.product_id.id,
                             'quantity': product.product_qty,
                             'price_unit': product.price_subtotal,
                             'invoice_line_tax_ids': [(
                                 6, 0,
-                                [x.id for x in (product.tax_ids)]
+                                [x.id for x in product.tax_ids]
                             )],
                             'name': product.name,
                             'account_id': product.account_id.id,
                         }))
+            waybill.invoice_id = self.env['account.invoice'].create({
+                'partner_id': waybill.partner_id.id,
+                'fiscal_position_id': (
+                    waybill.partner_id.property_account_position_id.id),
+                'reference': waybill.name,
+                'currency_id': waybill.currency_id.id,
+                'account_id': (
+                    waybill.partner_id.property_account_payable_id.id),
+                'type': 'out_invoice',
+                'invoice_line_ids': [line for line in lines],
+                })
+            waybill.write({'invoice_id': waybill.invoice_id.id})
 
         for partner_id in partner_ids:
             if control == 0:
@@ -69,18 +81,6 @@ class TmsWaybillInvoice(models.TransientModel):
             if old_partner != current_partner:
                 raise exceptions.ValidationError(
                     _('The waybills must be of the same customer. '
-                        'Please check it.'))
+                      'Please check it.'))
             else:
                 old_partner = partner_id
-        waybill.invoice_id = self.env['account.invoice'].create({
-            'partner_id': waybill.partner_id.id,
-            'fiscal_position_id': (
-                waybill.partner_id.property_account_position_id.id),
-            'reference': waybill.name,
-            'currency_id': waybill.currency_id.id,
-            'account_id': waybill.partner_id.property_account_payable_id.id,
-            'type': 'in_invoice',
-            'invoice_line_ids': [line for line in lines],
-            })
-
-        waybill.write({'invoice_id': waybill.invoice_id.id})

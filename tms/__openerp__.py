@@ -9,8 +9,8 @@
     "category": "Transport",
     "author": "Argil Consulting, Jarsa Sistemas",
     "website": "http://www.argil.mx, https://www.jarsa.com.mx",
-    "depends": ["account_accountant", "fleet", "hr",
-                "account", "purchase", "sale"],
+    "depends": ["account", "account_accountant", "fleet", "hr",
+                "purchase", "sale"],
     "summary": "Management System for Carriers, Trucking and other companies",
     "license": "AGPL-3",
     "data": [

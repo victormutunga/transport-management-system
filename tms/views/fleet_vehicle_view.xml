@@ -31,8 +31,8 @@
                     </h1>
                 </xpath>
                 <field name="driver_id" position="before">
-                    <field name='base_id'/>
-                    <field name="fleet_type"/>
+                    <field name='base_id' required="1"/>
+                    <field name="fleet_type" required="1"/>
                 </field>
                 <field name="vin_sn" position="after">
                     <field name="serial_number"/>
