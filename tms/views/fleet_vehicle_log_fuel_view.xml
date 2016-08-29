@@ -104,6 +104,6 @@
             id="fuel_vehicle_log_menu" 
             name="Fuel Voucher" 
             parent="tms.menu_tms_travels" 
-            sequence="30"/>
+            sequence="10"/>
     </data>
 </odoo>

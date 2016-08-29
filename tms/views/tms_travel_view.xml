@@ -229,6 +229,6 @@
             <field name="view_mode">tree,form,calendar,gantt</field>
         </record>
         <!-- Menu for tms.travel -->
-        <menuitem action="open_view_tms_travel_form" id="menu_tms_travel_form" name="Travels" parent="menu_tms_travels" sequence="10"/>
+        <menuitem action="open_view_tms_travel_form" id="menu_tms_travel_form" name="Travels" parent="menu_tms_travels" sequence="4"/>
     </data>
 </odoo>
