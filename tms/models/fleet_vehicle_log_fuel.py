@@ -266,8 +266,9 @@ class FleetVehicleLogFuel(models.Model):
                         self.base_id.fuelvoucher_product_id.supplier_taxes_id)]
                     )],
                 'name': self.base_id.fuelvoucher_product_id.name,
-                'account_id': (self.base_id.fuelvoucher_product_id.
-                               property_account_expense_id.id)}),
+                'account_id': (
+                    self.base_id.fuelvoucher_product_id.
+                    property_account_expense_id.id)}),
                 (0, 0, {
                     'product_id': (
                         self.base_id.ieps_product_id.id),
