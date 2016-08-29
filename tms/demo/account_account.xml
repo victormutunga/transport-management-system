@@ -85,5 +85,29 @@
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field name="reconcile" eval="False"/>
         </record>
+          <record id="account_fuel_expense" model="account.account">
+            <field name="name">Fuel Log Expense</field>
+            <field name="code">1000-022-077</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="True"/>
+        </record>
+          <record id="account_fuel_income" model="account.account">
+            <field name="name">Fuel Log Income</field>
+            <field name="code">1000-023-078</field>
+            <field name="user_type_id" ref="account.data_account_type_other_income"/>
+            <field name="reconcile" eval="True"/>
+        </record>
+          <record id="account_ieps_expense" model="account.account">
+            <field name="name">IEPS Expense</field>
+            <field name="code">1000-022-0227</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="reconcile" eval="True"/>
+        </record>
+          <record id="account_ieps_income" model="account.account">
+            <field name="name">IEPS Income</field>
+            <field name="code">1000-0222-0711</field>
+            <field name="user_type_id" ref="account.data_account_type_other_income"/>
+            <field name="reconcile" eval="True"/>
+        </record>
     </data>
 </odoo>
