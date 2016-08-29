@@ -6,7 +6,9 @@
             <field name="route_id" ref="tms_route_02"></field>
             <field name="unit_id" ref="tms_fleet_vehicle_01"></field>
             <field name="employee_id" ref="tms_hr_employee_01"></field>
-            <field name="date">08/11/2016 12:14:22</field>
+            <field name="date" eval="datetime.now()"/>
+            <field name="date_start" eval="datetime.now()"/>
+            <field name="date_end" eval="datetime.now()+timedelta(days=2)"/>
             <field name="base_id" ref="tms_base_1"></field>
         </record>
          <record id="tms_travel_02" model="tms.travel">
@@ -14,7 +16,9 @@
             <field name="route_id" ref="tms_route_02"></field>
             <field name="unit_id" ref="tms_fleet_vehicle_02"></field>
             <field name="employee_id" ref="tms_hr_employee_02"></field>
-            <field name="date">08/11/2016 12:14:22</field>
+            <field name="date" eval="datetime.now()"/>
+            <field name="date_start" eval="datetime.now()"/>
+            <field name="date_end" eval="datetime.now()+timedelta(days=2)"/>
             <field name="base_id" ref="tms_base_1"></field>
         </record>
          <record id="tms_travel_03" model="tms.travel">
@@ -22,7 +26,9 @@
             <field name="route_id" ref="tms_route_02"></field>
             <field name="unit_id" ref="tms_fleet_vehicle_03"></field>
             <field name="employee_id" ref="tms_hr_employee_03"></field>
-            <field name="date">08/11/2016 12:14:22</field>
+            <field name="date" eval="datetime.now()"/>
+            <field name="date_start" eval="datetime.now()"/>
+            <field name="date_end" eval="datetime.now()+timedelta(days=2)"/>
             <field name="base_id" ref="tms_base_1"></field>
         </record>
          <record id="tms_travel_04" model="tms.travel">
@@ -30,7 +36,9 @@
             <field name="unit_id" ref="tms_fleet_vehicle_04"></field>
             <field name="route_id" ref="tms_route_02"></field>
             <field name="employee_id" ref="tms_hr_employee_04"></field>
-            <field name="date">08/11/2016 12:14:22</field>
+            <field name="date" eval="datetime.now()"/>
+            <field name="date_start" eval="datetime.now()"/>
+            <field name="date_end" eval="datetime.now()+timedelta(days=2)"/>
             <field name="base_id" ref="tms_base_1"></field>
         </record>
          <record id="tms_travel_05" model="tms.travel">
@@ -38,31 +46,9 @@
             <field name="employee_id" ref="tms_hr_employee_05"></field>
             <field name="unit_id" ref="tms_fleet_vehicle_05"></field>
             <field name="route_id" ref="tms_route_02"></field>
-            <field name="date">08/11/2016 12:14:22</field>
-            <field name="base_id" ref="tms_base_1"></field>
-        </record>
-         <record id="tms_travel_06" model="tms.travel">
-            <field name="state">draft</field>
-            <field name="employee_id" ref="tms_hr_employee_06"></field>
-            <field name="route_id" ref="tms_route_02"></field>
-            <field name="unit_id" ref="tms_fleet_vehicle_06"></field>          
-            <field name="date">08/11/2016 12:14:22</field>
-            <field name="base_id" ref="tms_base_1"></field>
-        </record>
-         <record id="tms_travel_07" model="tms.travel">
-            <field name="state">draft</field>
-            <field name="employee_id" ref="tms_hr_employee_07"></field>
-            <field name="route_id" ref="tms_route_02"></field>
-            <field name="unit_id" ref="tms_fleet_vehicle_07"></field>
-            <field name="date">08/11/2016 12:14:22</field>
-            <field name="base_id" ref="tms_base_1"></field>
-        </record>
-         <record id="tms_travel_08" model="tms.travel">
-            <field name="state">draft</field>
-            <field name="employee_id" ref="tms_hr_employee_07"></field>
-            <field name="unit_id" ref="tms_fleet_vehicle_08"></field>
-            <field name="route_id" ref="tms_route_02"></field>
-            <field name="date">08/11/2016 12:14:22</field>
+            <field name="date" eval="datetime.now()"/>
+            <field name="date_start" eval="datetime.now()"/>
+            <field name="date_end" eval="datetime.now()+timedelta(days=2)"/>
             <field name="base_id" ref="tms_base_1"></field>
         </record>
     </data>

@@ -25,7 +25,7 @@ class FleetVehicle(models.Model):
     _description = "Vehicle"
     _order = 'name asc'
 
-    base_id = fields.Many2one('tms.base', string='Base', required=True)
+    base_id = fields.Many2one('tms.base', string='Base')
     year_model = fields.Char(string='Year Model')
     serial_number = fields.Char(string='Serial Number')
     registration = fields.Char(string='Registration')
@@ -34,6 +34,6 @@ class FleetVehicle(models.Model):
          ('trailer', 'Trailer'),
          ('dolly', 'Dolly'),
          ('other', 'Other')],
-        string='Unit Fleet Type', required=True)
+        string='Unit Fleet Type')
     notes = fields.Text()
     active = fields.Boolean(default=True)

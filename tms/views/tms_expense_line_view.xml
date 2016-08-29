@@ -12,7 +12,6 @@
                     <field name="name"/>
                     <field name="price_total"/>
                     <field name="sequence"/>
-                    <!-- <field name="operation_id" />-->
                     <field name="is_invoice"/> 
                 </tree>
             </field>
@@ -73,10 +72,5 @@
             <field name="search_view_id" ref="view_tms_expense_line_filter"/>
             <field name="help">TMS Travel Expenses Line</field>
         </record>
-        <menuitem 
-            action="action_tms_expense_line_form" 
-            id="menu_tms_expense_line" 
-            parent="menu_tms_travels" 
-            sequence="41"/>
     </data>
 </odoo>

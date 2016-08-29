@@ -23,9 +23,10 @@
                         </div>
                         <group>
                             <group string="Vehicle Details">
-                                <field name="base_id"/>
+                                <field name="base_id" required="1"/>
                                 <field name="no_travel"/>
                                 <field name="travel_id" attrs="{'invisible':[('no_travel', '=', True)]}"/>
+                                <field attrs="{'invisible':[('internal_fuel', '=', True)]}" context="{'default_supplier': True}" name="vendor_id"/>
                                 <field name="vehicle_id"/>
                                 <field context="{'default_tms_category': 'driver'}" name="employee_id"/>
                                 <field name="odometer"/>
@@ -35,13 +36,12 @@
                                 <field name="internal_fuel"/>
                                 <field attrs="{'invisible':[('internal_fuel', '=', True)]}" name="date"/>
                                 <field attrs="{'invisible':[('internal_fuel', '=', True)]}" name="inv_ref"/>
-                                <field attrs="{'invisible':[('internal_fuel', '=', True)]}" context="{'default_supplier': True}" name="vendor_id"/>
                                 <field attrs="{'invisible':[('internal_fuel', '=', True)]}" name="currency_id"/>
                             </group>
                         </group>
                         <group>
                             <group string="Fuel Details">
-                                <field name="product_uom_qty"/>
+                                <field name="product_uom_qty" required="1"/>
                                 <field name="price_unit"/>
                                 <field name="price_subtotal"/>
                                 <field name="tax_amount"/>
@@ -100,14 +100,6 @@
                 </search>
             </field>
         </record>
-        <record id='action_fleet_vehicle_log_fuel_form' model='ir.actions.act_window'>
-            <field name='name'>Fuel Log</field>
-            <field name='res_model'>fleet.vehicle.log.fuel</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-        </record>
-        <menuitem
-            action="action_fleet_vehicle_log_fuel_form"/>
         <menuitem action="fleet.fleet_vehicle_log_fuel_act" 
             id="fuel_vehicle_log_menu" 
             name="Fuel Voucher" 

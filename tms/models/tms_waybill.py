@@ -211,6 +211,9 @@ class TmsWaybill(models.Model):
                 )],
                 'account_id': product[1][0].id,
             })
+        waybill._transportable_product()
+        waybill.onchange_waybill_line_ids()
+
         return waybill
 
     @api.onchange('partner_id')
@@ -240,7 +243,8 @@ class TmsWaybill(models.Model):
             rec.invoice_paid = paid
 
     @api.multi
-    @api.onchange('transportable_line_ids', 'customer_factor_ids')
+    @api.onchange(
+        'transportable_line_ids', 'customer_factor_ids')
     def _transportable_product(self):
         for waybill in self:
             volume = weight = qty = distance_real = distance_route = 0.0

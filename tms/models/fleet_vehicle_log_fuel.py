@@ -20,12 +20,10 @@ class FleetVehicleLogFuel(models.Model):
     employee_id = fields.Many2one(
         'hr.employee',
         string='Driver',
-        required=True,
         domain=[('tms_category', '=', 'driver')])
     product_uom_id = fields.Many2one(
         'product.uom',
-        string='UoM ',
-        required=True)
+        string='UoM ')
     product_uom_qty = fields.Float(
         string='Liters', required=True, default=1.0)
     tax_amount = fields.Float(
@@ -51,8 +49,7 @@ class FleetVehicleLogFuel(models.Model):
         compute='_compute_invoiced_paid')
     base_id = fields.Many2one(
         'tms.base',
-        string='Base',
-        required=True)
+        string='Base')
     currency_id = fields.Many2one(
         'res.currency', string='Currency',
         required=True,
