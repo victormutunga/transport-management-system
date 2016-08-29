@@ -139,22 +139,8 @@ class TmsExpense(models.Model):
         expense.name = sequence.next_by_id()
         return expense
 
-    @api.multi
-    def action_draft(self):
-        self.state = 'draft'
-        self.amount_fuel = 0.0
-        self.amount_subtotal_total = 0.0
-        self.amount_tax_total = 0.0
-        self.amount_total_total = 0.0
-        self.amount_salary = 0.0
-        self.amount_real_expense = 0.0
-        self.amount_total_real = 0.0
-        self.amount_advance = 0.0
-        self.amount_balance = 0.0
-        self.amount_salary_discount = 0.0
-
-    @api.multi
-    def action_confirm(self):
+    @api.onchange('travel_id')
+    def get_all_info(self):
         for rec in self:
             rec.expense_line = {}
             rec.amount_real_expense = 0.0
@@ -210,8 +196,17 @@ class TmsExpense(models.Model):
                                            waybill.distance_real,
                                            waybill.product_qty,
                                            waybill.product_volume,
-                                           waybill_factor.factor))
+                                           waybill.amount_total))
                             rec.amount_salary += driver_salary
+                        rec.expense_line.create({
+                            'name': "Salary per travel: " + str(),
+                            'travel_id': travel.id,
+                            'expense_id': rec.id,
+                            'line_type': "salary",
+                            'price_total': rec.amount_salary,
+                            'is_invoice': 'none',
+                            'base_id': waybill.base_id.id
+                            })
                 else:
                     for factor in travel.driver_factor_ids:
                         driver_salary += factor.get_amount()
@@ -230,6 +225,32 @@ class TmsExpense(models.Model):
             rec.amount_balance = (rec.amount_total_real -
                                   rec.amount_advance)
             self.state = 'confirmed'
+
+    @api.multi
+    def action_draft(self):
+        self.state = 'draft'
+        self.amount_fuel = 0.0
+        self.amount_subtotal_total = 0.0
+        self.amount_tax_total = 0.0
+        self.amount_total_total = 0.0
+        self.amount_salary = 0.0
+        self.amount_real_expense = 0.0
+        self.amount_total_real = 0.0
+        self.amount_advance = 0.0
+        self.amount_balance = 0.0
+        self.amount_salary_discount = 0.0
+
+    @api.multi
+    def action_confirm(self):
+        for rec in self:
+            message = _('<b>Expense Confirmed.</b></br><ul>'
+                        '<li><b>Confirmed by: </b>%s</li>'
+                        '<li><b>Confirmed at: </b>%s</li>'
+                        '</ul>') % (
+                            self.env.user.name,
+                            fields.Datetime.now())
+            rec.message_post(body=message)
+        self.state = 'confirmed'
 
     @api.multi
     def action_approved(self):
