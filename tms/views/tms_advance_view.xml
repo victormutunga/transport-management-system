@@ -12,7 +12,7 @@
                     <filter domain="[('state','=','closed')]" string="Closed"/>
                     <filter domain="[('state','=','cancel')]" string="Cancelled"/>
                     <newline/>
-                    <filter domain="[('date','&gt;=', time.strftime('%%Y-%%m-01'))]" string="From this month" name="this_month"/>
+                    <filter domain="[('date','&gt;=', time.strftime('%Y-%m-01'))]" string="From this month" name="this_month"/>
                     <newline/>
                     <field name="date"/>
                     <field name="name"/>
@@ -53,10 +53,10 @@
             <field name="arch" type="xml">
                 <form string="Advances">
                     <header>
-                        <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
-                        <button name="action_cancel" states="draft,approved,confirmed" string="Cancel" type="object"/>
-                        <button name="action_approve" class="oe_highlight" states="draft" string="Approve" type="object"/>
-                        <button name="action_confirm" class="oe_highlight" states="approved" string="Confirm" type="object"/>
+                        <button name="action_cancel_draft" icon="fa-reply" states="cancel" string="Set to Draft" type="object"/>
+                        <button name="action_cancel" icon="fa-times" states="draft,approved,confirmed" string="Cancel" type="object"/>
+                        <button name="action_approve" icon="fa-thumbs-up" class="oe_highlight" states="draft" string="Approve" type="object"/>
+                        <button name="action_confirm" icon="fa-check-square-o" class="oe_highlight" states="approved" string="Confirm" type="object"/>
                         <field name="state" statusbar_visible="draft,approved,confirmed,cancel" widget="statusbar"/>
                     </header>
                     <sheet>
@@ -73,15 +73,14 @@
                                 <field name="unit_id" attrs="{'readonly':[('state','in',('confirmed','cancel'))]}"/>
                                 <field name="employee_id" attrs="{'readonly':[('state','in',('confirmed','cancel'))]}"/>
                             </group>
-                            <separator colspan="4" string="·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·" style="text-align: center;"/>
                         </group>
                         <group>
                             <group>
                                 <field name="currency_id" attrs="{'readonly':[('state','in',('confirmed','cancel'))]}"/>
-                                <field name="auto_expense" attrs="{'readonly':[('state','in',('confirmed','cancel'))]}" /> 
+                                <field name="amount" class="oe_text_right" options="{'currency_field': 'currency_id'}" widget="monetary" attrs="{'readonly':[('state','in',('confirmed','cancel'))]}"/>
                             </group>
-                            <group class="oe_subtotal_footer" style="margin-right:12%; margin-top:2%;">
-                                <field name="amount" class="oe_text_right" options="{'currency_field': 'currency_id'}" widget="monetary" attrs="{'readonly':[('state','in',('confirmed','cancel'))]}"/>  
+                            <group>
+                                 <field name="auto_expense" attrs="{'readonly':[('state','in',('confirmed','cancel'))]}" />
                             </group>
                         </group>
                         <group>
@@ -93,9 +92,9 @@
                                 </page>
                                 <page string="Log Info">
                                     <group col="4" colspan="4">
-                                        <field name="move_id" attrs="{'readonly':[('state','in',('confirmed','cancel'))]}"/>
-                                        <field name="paid" attrs="{'readonly':[('state','in',('confirmed','cancel'))]}"/>
-                                        <field name="expense_id" attrs="{'readonly':[('state','in',('confirmed','cancel'))]}"/>
+                                        <field name="move_id" readonly="1"/>
+                                        <field name="paid" readonly="1"/>
+                                        <field name="expense_id" readonly="1" />
                                         <field name="payment_id" readonly="1"/>
                                     </group>
                                 </page>
