@@ -139,7 +139,7 @@ class TmsExpense(models.Model):
         expense.name = sequence.next_by_id()
         return expense
 
-    @api.onchange('travel_id')
+    @api.onchange('employee_id')
     def get_all_info(self):
         for rec in self:
             rec.expense_line = {}
