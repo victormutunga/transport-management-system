@@ -45,14 +45,13 @@ class TmsAdvance(models.Model):
         string='Driver',
         related='travel_id.employee_id'
         )
-    amount = fields.Monetary(
-        required=True)
+    amount = fields.Monetary(required=True)
     notes = fields.Text()
     move_id = fields.Many2one(
         'account.move', 'Journal Entry',
         help="Link to the automatically generated Journal Items.\nThis move "
         "is only for Travel Expense Records with balance < 0.0",
-        readonly=True,)
+        readonly=True)
     paid = fields.Boolean(
         compute='compute_paid',
         readonly=True
@@ -126,25 +125,21 @@ class TmsAdvance(models.Model):
                     advance.employee_id.
                     address_home_id.property_account_payable_id.id
                     )
-                advance_product_id = advance.base_id.advance_product_id.id
                 if not (
                         advance_journal_id and
                         advance_credit_account_id and
-                        advance_debit_account_id and
-                        advance_product_id):
+                        advance_debit_account_id):
                     raise exceptions.ValidationError(
-                        _('Check if you already set the journal / product in '
-                            'the base and the account of the driver.'))
+                        _('Check if you already set the journal in '
+                            'the base and the accounts of the driver.'))
                 move_lines = []
                 notes = _('* Base: %s \n'
                           '* Advance: %s \n'
-                          '* Product: %s \n'
                           '* Travel: %s \n'
                           '* Driver: %s \n'
                           '* Vehicle: %s') % (
                     advance.base_id.name,
                     advance.name,
-                    advance.base_id.advance_product_id.name,
                     advance.travel_id.name,
                     advance.employee_id.name,
                     advance.unit_id.name)
@@ -190,30 +185,32 @@ class TmsAdvance(models.Model):
 
     @api.multi
     def action_cancel(self):
-        if self.paid:
-            raise exceptions.ValidationError(
-                _('Could not cancel this advance because'
-                    'the advance is already paid. '
-                    'Please cancel the payment first.'))
-        else:
-            self.move_id.unlink()
-            self.state = 'cancel'
-            self.message_post(_(
-                '<strong>Advance cancelled.</strong><ul>'
-                '<li><strong>Cancelled by: </strong>%s</li>'
-                '<li><strong>Cancelled at: </strong>%s</li>'
-                '</ul>') % (self.env.user.name, fields.Datetime.now()))
+        for rec in self:
+            if rec.paid:
+                raise exceptions.ValidationError(
+                    _('Could not cancel this advance because'
+                        'the advance is already paid. '
+                        'Please cancel the payment first.'))
+            else:
+                rec.move_id.unlink()
+                rec.state = 'cancel'
+                rec.message_post(_(
+                    '<strong>Advance cancelled.</strong><ul>'
+                    '<li><strong>Cancelled by: </strong>%s</li>'
+                    '<li><strong>Cancelled at: </strong>%s</li>'
+                    '</ul>') % (self.env.user.name, fields.Datetime.now()))
 
     @api.multi
     def action_cancel_draft(self):
-        if self.travel_id.state == 'cancel':
-            raise exceptions.ValidationError(
-                _('Could not set this advance to draft because'
-                    ' the travel is cancelled.'))
-        else:
-            self.state = 'draft'
-            self.message_post(_(
-                '<strong>Advance drafted.</strong><ul>'
-                '<li><strong>Drafted by: </strong>%s</li>'
-                '<li><strong>Drafted at: </strong>%s</li>'
-                '</ul>') % (self.env.user.name, fields.Datetime.now()))
+        for rec in self:
+            if rec.travel_id.state == 'cancel':
+                raise exceptions.ValidationError(
+                    _('Could not set this advance to draft because'
+                        ' the travel is cancelled.'))
+            else:
+                rec.state = 'draft'
+                rec.message_post(_(
+                    '<strong>Advance drafted.</strong><ul>'
+                    '<li><strong>Drafted by: </strong>%s</li>'
+                    '<li><strong>Drafted at: </strong>%s</li>'
+                    '</ul>') % (self.env.user.name, fields.Datetime.now()))

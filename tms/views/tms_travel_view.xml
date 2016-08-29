@@ -51,8 +51,8 @@
                     <field name="employee_id"/>
                     <field name="route_id"/>
                     <field name="state"/>
-                    <button groups="tms.group_travel_dispatch" icon="gtk-go-forward" name="action_dispatch" states="draft" string="Dispatch Travel" type="object"/>
-                    <button groups="tms.group_travel_end" icon="gtk-goto-last" name="action_end" states="progress" string="End Travel" type="object"/>
+                    <button groups="tms.group_travel_dispatch" icon="fa-thumbs-up" name="action_dispatch" states="draft" string="Dispatch Travel" type="object"/>
+                    <button groups="tms.group_travel_end" icon="fa-check-square" name="action_end" states="progress" string="End Travel" type="object"/>
                 </tree>
             </field>
         </record>
@@ -71,15 +71,15 @@
             <field name="arch" type="xml">
                 <form string="Travels">
                     <header>
-                        <button name="action_progress" type="object"
+                        <button name="action_progress" icon="fa-thumbs-up" type="object"
                                 string="Dispatch" states="draft"
                                 class="oe_highlight"/>
-                        <button name="action_done" type="object"
+                        <button name="action_done" icon="fa-check-square" type="object"
                                 string="Finish" states="progress"
                                 class="oe_highlight"/>
-                        <button name="action_cancel" type="object"
+                        <button name="action_cancel" icon="fa-times" type="object"
                                 string="Cancel" states="draft,progress"/>
-                        <button name="action_draft" type="object"
+                        <button name="action_draft" icon="fa-reply" type="object"
                                 string="Set to draft" states="done,cancel"/>
                         <field name="state" widget="statusbar"/>
                     </header>
