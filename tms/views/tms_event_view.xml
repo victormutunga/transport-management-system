@@ -71,14 +71,5 @@
                 </form>
             </field>
         </record>
-        <!-- Action for tms.event-->
-        <record id="action_view_tms_event_form" model="ir.actions.act_window">
-            <field name="name">TMS Events</field>
-            <field name="res_model">tms.event</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-        <!-- Menu for tms.event -->
-        <menuitem action="action_view_tms_event_form" id="menu_tms_event" name="Events" parent="menu_tms_travels"/>
     </data>
 </odoo>
