@@ -43,9 +43,6 @@ class TmsBase(models.Model):
     account_fuel_id = fields.Many2one(
         'account.account',
         string='Fuel Log Account')
-    account_advance_id = fields.Many2one(
-        'account.account',
-        string='Advance Account')
     account_freight_id = fields.Many2one(
         'account.account', string='Waybill Freight Account')
     account_moves_id = fields.Many2one(
@@ -63,9 +60,6 @@ class TmsBase(models.Model):
     fuelvoucher_product_id = fields.Many2one(
         'product.product',
         string="Fuel log product")
-    advance_product_id = fields.Many2one(
-        'product.product',
-        string='Advance product')
     waybill_freight_id = fields.Many2one(
         'product.product',
         string='Waybill Freight Product')

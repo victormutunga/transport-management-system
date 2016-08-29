@@ -74,7 +74,6 @@
             <field name="fleet_type">dolly</field>
         </record>
         <record id="tms_unit_kit_01" model="tms.unit.kit">
-            <field name="base_id" ref="tms.tms_base_1"/>
             <field name="name">Kit1</field>
             <field name="unit_id" ref="tms_fleet_vehicle_01"/>
             <field name="dolly_id" ref="tms_fleet_vehicle_04"/>
@@ -86,7 +85,6 @@
             <field name="active" eval="True"/>
         </record>
         <record id="tms_unit_kit_01" model="tms.unit.kit">
-            <field name="base_id" ref="tms.tms_base_1"/>
             <field name="name">Kit2</field>
             <field name="unit_id" ref="tms_fleet_vehicle_05"/>
             <field name="dolly_id" ref="tms_fleet_vehicle_08"/>
