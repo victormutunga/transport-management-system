@@ -3,7 +3,6 @@
     <data>
         <record id="tms.tms_base_1" model="tms.base">
             <field name="account_fuel_id" ref="tms.account_waybill_product_fuel_log"/>
-            <field name="account_advance_id" ref="tms.account_waybill_product_advance"/>
             <field name="account_freight_id" ref="tms.account_waybill_product_freight"/>
             <field name="account_moves_id" ref="tms.account_waybill_product_move"/>
             <field name="account_highway_tolls_id" ref="tms.account_waybill_product_highway_tolls"/>
