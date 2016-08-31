@@ -95,10 +95,11 @@ For next option you only have to type Factor like 10.5 for 10.50%:
                         if rec.mixed:
                             res += (rec.factor * value) + rec.fixed_amount
                         else:
-                            res += rec.factor * value
-                    elif rec.range_start == 0 & rec.range_end == 0:
+                            res += rec.factor
+                    elif rec.range_start == 0 and rec.range_end == 0:
                         res += rec.factor * value
+                    else:
+                        raise ValidationError(
+                            _('the amount isnt between of any ranges'))
         if res != 0.0:
             return res
-        raise ValidationError(
-            _('the amount isnt between of any ranges'))

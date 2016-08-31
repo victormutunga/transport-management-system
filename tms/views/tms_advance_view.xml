@@ -57,7 +57,7 @@
                         <button name="action_cancel" icon="fa-times" states="draft,approved,confirmed" string="Cancel" type="object"/>
                         <button name="action_approve" icon="fa-thumbs-up" class="oe_highlight" states="draft" string="Approve" type="object"/>
                         <button name="action_confirm" icon="fa-check-square-o" class="oe_highlight" states="approved" string="Confirm" type="object"/>
-                        <field name="state" statusbar_visible="draft,approved,confirmed,cancel" widget="statusbar"/>
+                        <field name="state" statusbar_visible="draft,approved,confirmed,cancel,closed" widget="statusbar"/>
                     </header>
                     <sheet>
                         <h1>

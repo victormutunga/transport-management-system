@@ -3,7 +3,6 @@
 # © <2016> <Jarsa Sistemas, S.A. de C.V.>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-
 from openerp import _, api, exceptions, fields, models
 
 
@@ -249,6 +248,7 @@ class TmsWaybill(models.Model):
         for waybill in self:
             volume = weight = qty = distance_real = distance_route = 0.0
             for record in waybill.transportable_line_ids:
+                total = 0.0
                 for factor in waybill.customer_factor_ids:
                     qty = record.quantity
                     if (record.transportable_uom_id.category_id.name ==
@@ -269,14 +269,15 @@ class TmsWaybill(models.Model):
                     waybill.product_weight = weight
                     waybill.distance_route = distance_route
                     waybill.distance_real = distance_real
-                    total_price = waybill.customer_factor_ids.get_amount(
+                    total_get_amount = waybill.customer_factor_ids.get_amount(
                         waybill.product_weight, waybill.distance_route,
                         waybill.distance_real, waybill.product_qty,
-                        waybill.product_volume, factor.fixed_amount)
+                        waybill.product_volume, waybill.amount_total)
+                    total = total + total_get_amount
                     for product in waybill.waybill_line_ids:
                         if (product.product_id.name ==
                                 waybill.base_id.waybill_freight_id.name):
-                            product.update({'unit_price': total_price})
+                            product.update({'unit_price': total})
 
     @api.depends('waybill_line_ids')
     @api.multi

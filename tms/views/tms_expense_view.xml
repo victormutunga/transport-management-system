@@ -33,15 +33,12 @@
                    <header>
                         <button name="action_draft" icon="fa-reply" type="object"
                                 string="Reset to draft"
-                                states="confirmed,done,approved"/>
+                                states="approved"/>
                         <button name="action_approved" icon="fa-thumbs-up" type="object"
                                 string="Approve" states="draft"
                                 class="oe_highlight"/>
                         <button name="action_confirm" type="object"
                                 string="Confirm" icon="fa-check-square-o" states="approved"
-                                class="oe_highlight"/>
-                        <button name="action_done" icon="fa-check-square" type="object"
-                                string="Mark as done" states="confirmed"
                                 class="oe_highlight"/>
                         <field name="state" widget="statusbar"/>
                     </header>

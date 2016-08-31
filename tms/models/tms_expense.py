@@ -139,16 +139,36 @@ class TmsExpense(models.Model):
         expense.name = sequence.next_by_id()
         return expense
 
-    @api.onchange('employee_id')
-    def get_all_info(self):
+    @api.multi
+    def action_draft(self):
         for rec in self:
             rec.expense_line = {}
+            rec.advance_ids = {}
+            rec.fuel_log_ids = {}
             rec.amount_real_expense = 0.0
             rec.amount_total_real = 0.0
             rec.amount_advance = 0.0
             rec.amount_balance = 0.0
             rec.amount_salary_discount = 0.0
+            rec.amount_salary = 0.0
+            rec.amount_fuel = 0.0
             rec.salary_discount = 0.0
+            rec.amount_subtotal_total = 0.0
+            rec.amount_tax_total = 0.0
+            rec.amount_total_total = 0.0
+            message = _('<b>Expense Drafted.</b></br><ul>'
+                        '<li><b>Drafted by: </b>%s</li>'
+                        '<li><b>Drafted at: </b>%s</li>'
+                        '</ul>') % (
+                            self.env.user.name,
+                            fields.Datetime.now())
+            rec.message_post(body=message)
+        self.state = 'draft'
+
+    @api.multi
+    def action_approved(self):
+        for rec in self:
+            rec.amount_salary = 0.0
             for travel in rec.travel_ids:
                 for advance in travel.advance_ids:
                     rec.advance_ids += advance
@@ -224,21 +244,7 @@ class TmsExpense(models.Model):
                                      rec.amount_total_real)
             rec.amount_balance = (rec.amount_total_real -
                                   rec.amount_advance)
-            self.state = 'confirmed'
-
-    @api.multi
-    def action_draft(self):
-        self.state = 'draft'
-        self.amount_fuel = 0.0
-        self.amount_subtotal_total = 0.0
-        self.amount_tax_total = 0.0
-        self.amount_total_total = 0.0
-        self.amount_salary = 0.0
-        self.amount_real_expense = 0.0
-        self.amount_total_real = 0.0
-        self.amount_advance = 0.0
-        self.amount_balance = 0.0
-        self.amount_salary_discount = 0.0
+            self.state = 'approved'
 
     @api.multi
     def action_confirm(self):
@@ -251,18 +257,6 @@ class TmsExpense(models.Model):
                             fields.Datetime.now())
             rec.message_post(body=message)
         self.state = 'confirmed'
-
-    @api.multi
-    def action_approved(self):
-        for rec in self:
-            message = _('<b>Expense Approved.</b></br><ul>'
-                        '<li><b>Approved by: </b>%s</li>'
-                        '<li><b>Approved at: </b>%s</li>'
-                        '</ul>') % (
-                            self.env.user.name,
-                            fields.Datetime.now())
-            rec.message_post(body=message)
-        self.state = 'approved'
 
     @api.multi
     def action_cancel(self):
