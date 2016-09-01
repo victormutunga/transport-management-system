@@ -62,6 +62,7 @@ class FleetVehicleLogFuel(models.Model):
         [('draft', 'Draft'),
          ('approved', 'Approved'),
          ('confirmed', 'Confirmed'),
+         ('closed', 'Closed'),
          ('cancel', 'Cancelled')],
         string='State',
         readonly=True,
