@@ -58,7 +58,7 @@ class TmsTravel(models.Model):
         domain=[('fleet_type', '=', 'trailer')])
     employee_id = fields.Many2one(
         'hr.employee', 'Driver', required=True,
-        domain=[('tms_category', '=', 'driver')])
+        domain=[('driver', '=', True)])
     date = fields.Datetime(
         'Date  registered', required=True,
         default=(fields.Datetime.now))

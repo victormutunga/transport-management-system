@@ -95,7 +95,6 @@
                                 <field name="kit_id" attrs="{'readonly':[('state','in',('progress','done'))]}" />
                                 <field name="unit_id"
                                     attrs="{'readonly':[('state','in',('progress','done'))]}"/>
-                                    <field name="employee_id" attrs="{'readonly':[('state','in',('progress','done'))]}"/>
                                 <field name="trailer1_id" attrs="{'required':['|', ('dolly_id','!=',False),('trailer2_id','!=',False)], 'readonly':[('state','in',('progress','done'))]}" context="{'default_fleet_type': 'trailer'}" domain="[('id','!=',trailer2_id)]"/>
                                 <field name="dolly_id" attrs="{'required':[('trailer2_id','!=',False)],'readonly':[('state','in',('progress','done'))]}" context="{'default_fleet_type': 'dolly'}"/>
                                 <field name="trailer2_id" attrs="{'required':[('dolly_id','!=',False)],'readonly':[('state','in',('progress','done'))]}" context="{'default_fleet_type': 'trailer'}" domain="[('id','!=',trailer1_id)]"/>
@@ -103,6 +102,7 @@
                             <group>  
                                 <field name="date" attrs="{'readonly':[('state','in',('progress','done'))]}"/>
                                 <field name="user_id" attrs="{'readonly':[('state','in',('progress','done'))]}"/>
+                                <field name="employee_id" attrs="{'readonly':[('state','in',('progress','done'))]}"/>
                             </group>
                             <group colspan="4">
                                 <field name="route_id" attrs="{'readonly':[('state','in',('progress','done'))]}"/>
@@ -130,7 +130,7 @@
                                 </field>
                             </page>
                             <page string="Advances">
-                                <field name="advance_ids" context="{'default_travel_id':active_id}"/>
+                                <field name="advance_ids" context="{'default_travel_id':active_id, 'default_base_id': base_id}"/>
                             </page>
                             <page string="Waybills">
                                 <group>
@@ -152,7 +152,7 @@
                                 </group>
                             </page>
                             <page string="Expense driver factor">
-                                <field attrs="{'readonly':[('state','in',('done'))]}" name="driver_factor_ids"/>
+                                <field name="driver_factor_ids" attrs="{'readonly':[('state','in',('done'))]}" context="{'default_category': 'driver'}"/>
                             </page>
                             <page string="History">
                                 <field name="event_ids" context="{'default_travel_id':active_id}"/>
@@ -166,11 +166,11 @@
                                     <group>
                                         <separator string="Distances (mi./kms)"/>
                                         <newline/>
-                                        <!-- <field name="distance_route" readonly="1"/> -->
-                                        <field attrs="{'readonly':[('state','in',('done'))]}" name="distance_driver"/>
-                                        <field attrs="{'readonly':[('state','in',('done'))]}" name="distance_loaded"/>
-                                        <field attrs="{'readonly':[('state','in',('done'))]}" name="distance_empty"/>
-                                        <field attrs="{'readonly':[('state','in',('done'))]}" name="distance_extraction"/>
+                                        <field name="distance_route" readonly="1" attrs="{'readonly':[('state','in',('done'))]}"/>
+                                        <field name="distance_driver" attrs="{'readonly':[('state','in',('done'))]}"/>
+                                        <field name="distance_loaded" attrs="{'readonly':[('state','in',('done'))]}"/>
+                                        <field name="distance_empty" attrs="{'readonly':[('state','in',('done'))]}"/>
+                                        <field name="distance_extraction" attrs="{'readonly':[('state','in',('done'))]}"/>
                                     </group>
                                     <group>
                                         <separator colspan="4" string="Fuel Efficiency"/>

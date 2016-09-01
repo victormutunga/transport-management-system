@@ -16,7 +16,7 @@ class TmsExpense(models.Model):
     base_id = fields.Many2one('tms.base', string='Base', required=True)
     employee_id = fields.Many2one(
         'hr.employee', 'Driver', required=True,
-        domain=[('tms_category', '=', 'driver')])
+        domain=[('driver', '=', True)])
     travel_ids = fields.Many2many(
         'tms.travel',
         string='Travels')

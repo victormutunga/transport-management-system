@@ -12,10 +12,8 @@ class HrEmployee(models.Model):
     _name = 'hr.employee'
     _inherit = 'hr.employee'
 
-    tms_category = fields.Selection(
-        [('driver', 'Driver')], 'TMS Category',
-        help='Used to define if this person will be used as a Driver '
-        '(Freights related) or Mechanic (Maintenance related)', required=False)
+    driver = fields.Boolean(
+        help='Used to define if this person will be used as a Driver')
     tms_advance_account_id = fields.Many2one(
         'account.account', 'Advance Account')
     tms_expense_negative_balance_account_id = fields.Many2one(

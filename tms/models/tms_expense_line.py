@@ -68,10 +68,6 @@ class TmsExpenseLine(models.Model):
     credit = fields.Boolean(
         help="Check this if you want to create Fuel Vouchers for "
         "this line")
-    fuel_supplier_id = fields.Many2one(
-        'res.partner',
-        string='Fuel Supplier',
-        domain=[('tms_category', '=', 'fuel')])
     # This fields were created to automatically generate the invoices of
     # the expenses
     is_invoice = fields.Boolean(string='Is Invoice?')

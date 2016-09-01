@@ -13,6 +13,7 @@ class FleetVehicleLogFuel(models.Model):
     "Class for Fuel Voucher"
     _name = 'fleet.vehicle.log.fuel'
     _inherit = ['fleet.vehicle.log.fuel', 'mail.thread', 'ir.needaction_mixin']
+    _order = "date desc,vehicle_id desc"
 
     name = fields.Char()
     travel_id = fields.Many2one('tms.travel', string='Travel')
@@ -20,7 +21,7 @@ class FleetVehicleLogFuel(models.Model):
     employee_id = fields.Many2one(
         'hr.employee',
         string='Driver',
-        domain=[('tms_category', '=', 'driver')])
+        domain=[('driver', '=', True)])
     product_uom_id = fields.Many2one(
         'product.uom',
         string='UoM ')

@@ -18,7 +18,7 @@ class TmsUnitKit(models.Model):
     dolly_id = fields.Many2one('fleet.vehicle', 'Dolly')
     trailer2_id = fields.Many2one('fleet.vehicle', 'Trailer 2')
     employee_id = fields.Many2one(
-        'hr.employee', 'Driver', domain=[('tms_category', '=', 'driver')])
+        'hr.employee', 'Driver', domain=[('driver', '=', True)])
     date_start = fields.Datetime('Date start', required=True)
     date_end = fields.Datetime('Date end', required=True)
     notes = fields.Text('Notes')

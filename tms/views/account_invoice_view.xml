@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model='ir.ui.view' id='account_invoice_tms_form'>
+            <field name='name'>Invoice for TMS</field>
+            <field name='model'>account.invoice</field>
+            <field name='inherit_id' ref='account.invoice_form'/>
+            <field name='arch' type='xml'>
+                <notebook position='inside'>
+                    <page string="TMS">
+                        <label for="waybill_ids"/>
+                        <field name="waybill_ids"/>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+    </data>
+</odoo>

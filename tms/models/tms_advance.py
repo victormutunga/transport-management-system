@@ -130,6 +130,11 @@ class TmsAdvance(models.Model):
                         _('Warning! The advance does not have a journal'
                           ' assigned. \nCheck if you already set the '
                           'journal for advances in the base.'))
+                if not advance_credit_account_id:
+                    raise exceptions.ValidationError(
+                        _('Warning! The driver does not have a home address'
+                          ' assigned. \nCheck if you already set the '
+                          'home address for the employee.'))
                 move_lines = []
                 notes = _('* Base: %s \n'
                           '* Advance: %s \n'
@@ -187,7 +192,7 @@ class TmsAdvance(models.Model):
             if rec.paid:
                 raise exceptions.ValidationError(
                     _('Could not cancel this advance because'
-                        'the advance is already paid. '
+                        ' the advance is already paid. '
                         'Please cancel the payment first.'))
             else:
                 rec.move_id.unlink()

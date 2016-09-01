@@ -10,9 +10,9 @@
                     <page string="TMS">
                         <group>
                             <field name="base_id"/>
-                            <field name="tms_category"/>
-                            <field attrs="{'required':[('tms_category','=','driver')], 'invisible':[('tms_category','!=','driver')] }" name="tms_advance_account_id"/>
-                            <field attrs="{'required':[('tms_category','=','driver')], 'invisible':[('tms_category','!=','driver')] }" name="tms_expense_negative_balance_account_id"/>
+                            <field name="driver"/>
+                            <field attrs="{'required':[('driver','=',True)], 'invisible':[('driver','=',False)] }" name="tms_advance_account_id"/>
+                            <field attrs="{'required':[('driver','=',True)], 'invisible':[('driver','=',False)] }" name="tms_expense_negative_balance_account_id"/>
                         </group>
                     </page>
                 </notebook>
@@ -23,7 +23,7 @@
             <field name="res_model">hr.employee</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="domain">[('tms_category','=','driver')]</field>
+            <field name="domain">[('driver','=',True)]</field>
             <field name="context">{}</field>
             <field eval="False" name="view_id"/>
             <field name="search_view_id" ref="hr.view_employee_filter"/>
