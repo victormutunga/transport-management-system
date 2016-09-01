@@ -7,8 +7,7 @@
             <field name='inherit_id' ref='account.invoice_form'/>
             <field name='arch' type='xml'>
                 <notebook position='inside'>
-                    <page string="TMS">
-                        <label for="waybill_ids"/>
+                    <page string="Waybills" attrs="{'invisible':[('waybill_ids','=',False)]}">
                         <field name="waybill_ids"/>
                     </page>
                 </notebook>

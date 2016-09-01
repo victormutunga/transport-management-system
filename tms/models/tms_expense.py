@@ -204,7 +204,7 @@ class TmsExpense(models.Model):
                     rec.amount_tax_total += (
                         fuel_log.tax_amount +
                         fuel_log.special_tax_amount)
-                if len(travel.waybill_ids) > 0:
+                if len(travel.waybill_ids.driver_factor_ids) > 0:
                     for waybill in travel.waybill_ids:
                         for waybill_factor in (
                                 waybill.driver_factor_ids):
