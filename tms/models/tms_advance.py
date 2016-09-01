@@ -125,13 +125,11 @@ class TmsAdvance(models.Model):
                     advance.employee_id.
                     address_home_id.property_account_payable_id.id
                     )
-                if not (
-                        advance_journal_id and
-                        advance_credit_account_id and
-                        advance_debit_account_id):
+                if not advance_journal_id:
                     raise exceptions.ValidationError(
-                        _('Check if you already set the journal in '
-                            'the base and the accounts of the driver.'))
+                        _('Warning! The advance does not have a journal'
+                          ' assigned. \nCheck if you already set the '
+                          'journal for advances in the base.'))
                 move_lines = []
                 notes = _('* Base: %s \n'
                           '* Advance: %s \n'
