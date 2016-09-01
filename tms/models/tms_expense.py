@@ -249,6 +249,10 @@ class TmsExpense(models.Model):
     @api.multi
     def action_confirm(self):
         for rec in self:
+            for advance in rec.advance_ids:
+                advance.state = 'closed'
+            for fuel_log in rec.fuel_log_ids:
+                fuel_log.state = 'closed'
             message = _('<b>Expense Confirmed.</b></br><ul>'
                         '<li><b>Confirmed by: </b>%s</li>'
                         '<li><b>Confirmed at: </b>%s</li>'
