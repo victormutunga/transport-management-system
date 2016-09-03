@@ -1,54 +1,25 @@
-# -*- encoding: utf-8 -*-
-###########################################################################
-#    Module Writen to OpenERP, Open Source Management Solution
-#
-#    Copyright (c) 2014 Argil Consulting - http://www.argil.mx
-############################################################################
-#    Coded by: Israel Cruz Argil (israel.cruz@argil.mx)
-############################################################################
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# -*- coding: utf-8 -*-
+# © <2012> <Israel Cruz Argil, Argil Consulting>
+# © <2016> <Jarsa Sistemas, S.A. de C.V.>
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 {
     "name": "TMS - Driver License Management",
-    "version": "1.0",
-    "author": "Argil Consulting",
-    "category": "Addon",
-    "description" : """
-TMS - Driver License Management
-===============================
-
-This module adds functionality to Manage Driver license expiration and 
-adds a constraint to avoid Dispatching Travels when Driver License is expired
-or about to expire in next [parameter] days.
-Also, adds an automated action where sends notification mail of licenses to
-expire in next [parameter] days, to [parameter] users.
-    """,
-    "website": "http://www.argil.mx/",
+    "summary": "Manage Driver license expiration and adds a constraint to "
+               "avoid Dispatching Travels when Driver License is expired",
+    "version": "9.0.1.0.0",
+    "category": "TMS",
+    "website": "https://www.jarsa.com.mx/",
+    "author": "Argil Consulting, Jarsa Sistemas",
     "license": "AGPL-3",
+    "application": False,
+    "installable": True,
     "depends": [
-            "tms", 
-            "report_webkit"
-                ],
+        "tms",
+    ],
+    "data": [
+        "views/hr_employee_view.xml",
+        "data/ir_config_parameter.xml",
+    ],
     "demo": [],
-    "data": ["views/hr_employee_view.xml", 
-             "views/ir_config_parameter.xml",
-             "views/hr_employee_expired_license_report.xml"],
-    "installable": False,
-    "active": False,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

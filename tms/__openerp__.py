@@ -54,6 +54,7 @@
         'demo/tms_travel.xml',
         'demo/tms_advance.xml',
         'demo/product_product.xml',
+        'demo/tms_unit_kit.xml',
     ],
     "application": True,
     "installable": True

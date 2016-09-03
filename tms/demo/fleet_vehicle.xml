@@ -73,27 +73,5 @@
             <field name="model_id" ref="fleet.model_a5"></field>
             <field name="fleet_type">dolly</field>
         </record>
-        <record id="tms_unit_kit_01" model="tms.unit.kit">
-            <field name="name">Kit1</field>
-            <field name="unit_id" ref="tms_fleet_vehicle_01"/>
-            <field name="dolly_id" ref="tms_fleet_vehicle_04"/>
-            <field name="trailer1_id" ref="tms_fleet_vehicle_02"/>
-            <field name="trailer2_id" ref="tms_fleet_vehicle_03"/>
-            <field name="employee_id" ref="tms.tms_hr_employee_04"/>
-            <field name="date_start" eval="datetime.now()"/>
-            <field name="date_end" eval="datetime.now()+timedelta(days=30)"/>
-            <field name="active" eval="True"/>
-        </record>
-        <record id="tms_unit_kit_01" model="tms.unit.kit">
-            <field name="name">Kit2</field>
-            <field name="unit_id" ref="tms_fleet_vehicle_05"/>
-            <field name="dolly_id" ref="tms_fleet_vehicle_08"/>
-            <field name="trailer1_id" ref="tms_fleet_vehicle_06"/>
-            <field name="trailer2_id" ref="tms_fleet_vehicle_07"/>
-            <field name="employee_id" ref="tms.tms_hr_employee_03"/>
-            <field name="date_start" eval="datetime.now()"/>
-            <field name="date_end" eval="datetime.now()+timedelta(days=5)"/>
-            <field name="active" eval="True"/>
-        </record>
     </data>
 </odoo>

@@ -2,32 +2,15 @@
    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
    :alt: License: AGPL-3
 
-===========================
-Transport Management System
-===========================
+===============================
+TMS - Driver License Management
+===============================
 
-This application allows you to manage Truckload Freights and Less-than-truckload freight. It also can help Companies such as owner-operators, carriers, brokers and shippers.
-
-It handles full Travel workflow:
-
-Transport Requirement => Waybill => Freight => Delivery
-
-Managing:
-=========
-* Driver Cash advance (Payment & Conciliation)
-* Fuel Voucher Management
-* Checking Travel Expenses
-* Freight Invoicing (Trucks of the company or third parties)
-
-It also can manage:
-===================
-* Trucks Red Tapes
-* Truck Odometers
-* Events during travel (Example: Arrival delay, Missing Cargo, etc)
-* Kits
-* Places (Linked with Google Maps)
-* Routes (Visible in Google Maps)
-* Easy integration with GPS System
+This module adds functionality to Manage Driver license expiration and 
+adds a constraint to avoid Dispatching Travels when Driver License is expired
+or about to expire in next [parameter] days.
+Also, adds an automated action where sends notification mail of licenses to
+expire in next [parameter] days, to [parameter] users.
 
 Installation
 ============
@@ -75,8 +58,6 @@ Contributors
 
 * Israel Cruz <israel.cruz@argil.mx>
 * Alan Ramos <alan.ramos@jarsa.com.mx>
-* Luis Triana <luis.triana@jarsa.com.mx>
-* Sarai Osorio <sarai.osorio@jarsa.com.mx>
 
 Maintainer
 ----------
