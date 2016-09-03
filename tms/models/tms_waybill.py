@@ -215,6 +215,12 @@ class TmsWaybill(models.Model):
 
         return waybill
 
+    @api.multi
+    def copy(self, default=None):
+        default = dict(default or {})
+        default['travel_ids'] = False
+        return super(TmsWaybill, self).copy(default)
+
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         if self.partner_id:

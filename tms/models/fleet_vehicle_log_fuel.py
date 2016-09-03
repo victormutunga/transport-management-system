@@ -239,42 +239,6 @@ class FleetVehicleLogFuel(models.Model):
         self.vehicle_id = self.travel_id.unit_id
         self.employee_id = self.travel_id.employee_id
 
-    @api.multi
-    def create_invoice(self):
-        "Returns an open invoice"
-        invoice_id = self.env['account.invoice'].create({
-            'partner_id': self.vendor_id.id,
-            'fiscal_position_id': (
-                self.vendor_id.property_account_position_id.id),
-            'reference': self.name,
-            'currency_id': self.currency_id.id,
-            'account_id': self.vendor_id.property_account_payable_id.id,
-            'type': 'in_invoice',
-            'invoice_line_ids': [(0, 0, {
-                'product_id': self.base_id.fuelvoucher_product_id.id,
-                'quantity': self.product_uom_qty,
-                'price_unit': self.price_unit,
-                'invoice_line_tax_ids': [(
-                    6, 0,
-                    [x.id for x in (
-                        self.base_id.fuelvoucher_product_id.supplier_taxes_id)]
-                    )],
-                'name': self.base_id.fuelvoucher_product_id.name,
-                'account_id': (
-                    self.base_id.fuelvoucher_product_id.
-                    property_account_expense_id.id)}),
-                (0, 0, {
-                    'product_id': (
-                        self.base_id.ieps_product_id.id),
-                    'quantity': 1.0,
-                    'price_unit': self.special_tax_amount,
-                    'name': self.base_id.ieps_product_id.name,
-                    'account_id': (
-                        self.base_id.ieps_product_id.
-                        property_account_expense_id.id)})]
-            })
-        self.write({'invoice_id': invoice_id.id})
-
     @api.depends('invoice_id')
     def _compute_invoiced_paid(self):
         for rec in self:

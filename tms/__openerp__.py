@@ -22,7 +22,6 @@
         'views/hr_employee_view.xml',
         'views/fleet_vehicle_view.xml',
         'views/fleet_vehicle_log_fuel_view.xml',
-        # 'views/product_category_view.xml',
         'views/tms_advance_view.xml',
         'views/tms_config_settings_view.xml',
         'views/tms_event_view.xml',
@@ -41,6 +40,7 @@
         'data/tms_base_data.xml',
         'wizards/tms_advance_payment_view.xml',
         'wizards/tms_waybill_invoice_view.xml',
+        'wizards/tms_fuelvoucher_invoice_view.xml',
     ],
     "demo": [
         'demo/account_account.xml',

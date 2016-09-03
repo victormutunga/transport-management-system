@@ -221,12 +221,57 @@
                 </calendar>
             </field>
         </record>
+
+        <record id="view_tms_travel_kanban" model="ir.ui.view">
+            <field name="name">tms.travel.kanban</field>
+            <field name="model">tms.travel</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="state">
+                    <field name="color"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div
+                                    t-attf-class="oe_kanban_color_{{kanban_getcolor(record.color.raw_value)}}
+                                                  oe_kanban_global_click_edit oe_semantic_html_override
+                                                  oe_kanban_card {{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}}">
+                                <div class="oe_dropdown_kanban">
+                                    <!-- dropdown menu -->
+                                    <div class="oe_dropdown_toggle">
+                                        <span class="oe_e">#</span>
+                                        <ul class="oe_dropdown_menu">
+                                            <li>
+                                                <a type="delete">Delete</a>
+                                            </li>
+                                            <li>
+                                                <ul class="oe_kanban_colorpicker"
+                                                    data-field="color"/>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="oe_clear"></div>
+                                </div>
+                                <div t-attf-class="oe_kanban_content">
+                                    Travel:
+                                    <field name="name"/>
+                                    <br/>
+                                    Unit:
+                                    <field name="unit_id"/>
+                                    <br/>
+                                    Driver:
+                                    <field name="employee_id"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
         <!-- Action for tms.travel -->
         <record id="open_view_tms_travel_form" model="ir.actions.act_window">
             <field name="name">TMS Travel</field>
             <field name="res_model">tms.travel</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,gantt</field>
+            <field name="view_mode">kanban,tree,form,calendar,gantt</field>
         </record>
         <!-- Menu for tms.travel -->
         <menuitem action="open_view_tms_travel_form" id="menu_tms_travel_form" name="Travels" parent="menu_tms_travels" sequence="4"/>

@@ -111,7 +111,8 @@ class TmsTravel(models.Model):
     is_available = fields.Boolean(
         compute='_is_available',
         string='Travel available')
-    base_id = fields.Many2one('tms.base', string='Base', required=True)
+    base_id = fields.Many2one('tms.base', 'Base')
+    color = fields.Integer()
 
     @api.depends('fuel_efficiency_expected', 'fuel_efficiency_travel')
     def _compute_fuel_efficiency_extraction(self):
@@ -148,6 +149,7 @@ class TmsTravel(models.Model):
                     rec.date_end_real, "%Y-%m-%d %H:%M:%S")
                 difference = (end_date - start_date).total_seconds() / 60 / 60
                 rec.travel_duration_real = difference
+>>>>>>> 636b4ad006133dc4313c09c0502436f2219c97ee
 
     @api.onchange('kit_id')
     def _onchange_kit(self):
@@ -160,6 +162,10 @@ class TmsTravel(models.Model):
 
     @api.onchange('route_id')
     def _onchange_route(self):
+<<<<<<< HEAD
+        self.driver_factor_ids = self.route_id.driver_factor_ids
+        self.travel_duration = self.route_id.travel_time
+=======
         for rec in self:
             rec.driver_factor_ids = rec.route_id.driver_factor_ids
             rec.distance_route = rec.route_id.distance
@@ -170,6 +176,7 @@ class TmsTravel(models.Model):
     def _compute_distance_driver(self):
         for rec in self:
             rec.distance_driver = rec.distance_empty + rec.distance_loaded
+>>>>>>> 636b4ad006133dc4313c09c0502436f2219c97ee
 
     @api.multi
     def action_draft(self):

@@ -57,7 +57,7 @@
             </field>
         </record>
         <record id='action_tms_base' model='ir.actions.act_window'>
-            <field name='name'>TMS Base Action</field>
+            <field name='name'>TMS Base</field>
             <field name='res_model'>tms.base</field>
             <field name='view_type'>form</field>
             <field name='view_mode'>tree,form</field>
