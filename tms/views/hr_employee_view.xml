@@ -36,6 +36,6 @@
               </p>
             </field>
         </record>
-        <menuitem action="tms_open_view_employee_list" id="menu_tms_open_view_employee_list" name="Drivers" parent="tms.menu_tms_settings_drivers" sequence="3"/>
+        <menuitem action="tms_open_view_employee_list" id="menu_tms_open_view_employee_list" name="Drivers" parent="tms.menu_tms_settings" sequence="3"/>
     </data>
 </odoo>

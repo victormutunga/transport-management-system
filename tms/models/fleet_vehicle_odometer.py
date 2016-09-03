@@ -13,14 +13,7 @@ from openerp import fields, models
 class FleetVehicleOdometer(models.Model):
     _inherit = ['fleet.vehicle.odometer']
     _name = 'fleet.vehicle.odometer'
-#  PENDIENTES
-# - CALCULAR LA DISTANCIA RECORRIDA ENTRE EL REGISTRO ACTUAL Y EL ANTERIOR
-# BASADA EN EL ODOMETRO ACTIVO. NO SE PUEDEN GUARDAR
 
-    # odometer_id = fields.Many2one(
-    #     'fleet.vehicle.odometer.device',
-    #     string='Odometer',
-    #     required=True)
     last_odometer = fields.Float(
         string='Last Read',
         required=True)
@@ -30,11 +23,4 @@ class FleetVehicleOdometer(models.Model):
     distance = fields.Float(
         string='Distance',
         required=True)
-    # tms_expense_id = fields.Many2one('tms.expense', 'Expense Rec')
-    tms_travel_id = fields.Many2one('tms.travel', string='Travel')
-
-    # _constraints = [
-    #     (_check_values,
-    #      'You can not have Current Reading <= Last Reading !',
-    #      ['current_odometer']),
-    # ]
+    travel_id = fields.Many2one('tms.travel', string='Travel')

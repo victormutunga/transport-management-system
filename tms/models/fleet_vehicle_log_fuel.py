@@ -72,7 +72,6 @@ class FleetVehicleLogFuel(models.Model):
         'No Travel', help="Check this if you want to create Fuel Voucher "
         "with no Travel.")
     vendor_id = fields.Many2one('res.partner', required=True)
-    internal_fuel = fields.Boolean(domain=[('state', '=', 'draft')])
     move_id = fields.Many2one('account.move')
 
     @api.multi
@@ -163,125 +162,82 @@ class FleetVehicleLogFuel(models.Model):
     def action_confirm(self):
         "Confirm Action"
         for rec in self:
-            if rec.internal_fuel is True:
-                if (rec.base_id.fuelvoucher_product_id.qty_available <
-                        rec.product_uom_qty):
-                    raise ValidationError(
-                        _('Warning! There is not stock'
-                          ' for Fuel Voucher %s') % (rec.name))
-            else:
-                if (rec.product_uom_qty <= 0 or
-                        rec.tax_amount <= 0 or
-                        rec.price_total <= 0):
-                    raise ValidationError(
-                        _('Liters, Taxes and Total'
-                          ' must be greater than zero.'))
-                move_lines = []
-                notes = _('* Voucher: %s \n'
-                          '* Product: %s \n'
-                          '* Travel: %s \n'
-                          '* Driver: %s \n'
-                          '* Vehicle: %s') % (
-                              rec.name,
-                              rec.base_id.fuelvoucher_product_id.name,
-                              rec.travel_id.name,
-                              rec.travel_id.employee_id.name,
-                              rec.travel_id.unit_id.name)
-                move_obj = self.env['account.move']
-                fuel_journal_id = rec.base_id.fuelvoucher_journal_id.id
-                fuel_account_id = rec.base_id.account_fuel_id.id
-                if not (fuel_journal_id and
-                        fuel_account_id and
-                        rec.base_id.fuelvoucher_product_id.id):
-                    raise ValidationError(
-                        _('You need to check the Base'
-                          ' Accounts for Fuel Voucher'))
-                move_line = (0, 0, {
-                    'name': _('Fuel Voucher: %s') % (rec.name),
-                    'account_id': fuel_account_id,
-                    'journal_id': fuel_journal_id,
-                    'narration': notes,
-                    'debit': 0.0,
-                    'credit': rec.price_subtotal,
-                    'fuel_product': rec.base_id.fuelvoucher_product_id.id,
-                    'product_uom_id':
-                    rec.base_id.fuelvoucher_product_id.uom_id.id,
-                    'quantity': rec.product_uom_qty
-                })
-                move_lines.append(move_line)
-                move_line = (0, 0, {
-                    'name': _('Fuel rec: %s') % (rec.name),
-                    'account_id': fuel_account_id,
-                    'journal_id': fuel_journal_id,
-                    'debit': rec.price_subtotal,
-                    'narration': notes,
-                    'credit': 0.0,
-                    'fuel_product': rec.base_id.fuelvoucher_product_id.id,
-                    'product_uom_id':
-                    rec.base_id.fuelvoucher_product_id.uom_id.id,
-                    'quantity': rec.product_uom_qty
-                })
-                move_lines.append(move_line)
-                move = {
-                    'ref': _('Fuel Voucher: %s') % (rec.name),
-                    'narration': rec.notes,
-                    'journal_id': fuel_journal_id,
-                    'line_ids': [x for x in move_lines],
-                    'date': fields.Date.today(),
-                }
-                move_id = move_obj.create(move)
-                if not move_id:
-                    raise ValidationError('There is a problem with the Move')
-                self.write({'move_id': move_id.id})
-            message = _(
-                '<b>Fuel Voucher Confirmed.</b></br><ul>'
-                '<li><b>Confirmed by: </b>%s</li>'
-                '<li><b>Confirmed at: </b>%s</li>'
-                '</ul>') % (self.env.user.name, fields.Datetime.now())
-            rec.message_post(body=message)
-            rec.state = 'confirmed'
+            if (rec.product_uom_qty <= 0 or
+                    rec.tax_amount <= 0 or
+                    rec.price_total <= 0):
+                raise ValidationError(
+                    _('Liters, Taxes and Total'
+                      ' must be greater than zero.'))
+            move_lines = []
+            notes = _('* Voucher: %s \n'
+                      '* Product: %s \n'
+                      '* Travel: %s \n'
+                      '* Driver: %s \n'
+                      '* Vehicle: %s') % (
+                          rec.name,
+                          rec.base_id.fuelvoucher_product_id.name,
+                          rec.travel_id.name,
+                          rec.travel_id.employee_id.name,
+                          rec.travel_id.unit_id.name)
+            move_obj = self.env['account.move']
+            fuel_journal_id = rec.base_id.fuelvoucher_journal_id.id
+            fuel_account_id = rec.base_id.account_fuel_id.id
+            if not (fuel_journal_id and
+                    fuel_account_id and
+                    rec.base_id.fuelvoucher_product_id.id):
+                raise ValidationError(
+                    _('You need to check the Base'
+                      ' Accounts for Fuel Voucher'))
+            move_line = (0, 0, {
+                'name': _('Fuel Voucher: %s') % (rec.name),
+                'account_id': fuel_account_id,
+                'journal_id': fuel_journal_id,
+                'narration': notes,
+                'debit': 0.0,
+                'credit': rec.price_subtotal,
+                'fuel_product': rec.base_id.fuelvoucher_product_id.id,
+                'product_uom_id':
+                rec.base_id.fuelvoucher_product_id.uom_id.id,
+                'quantity': rec.product_uom_qty
+            })
+            move_lines.append(move_line)
+            move_line = (0, 0, {
+                'name': _('Fuel rec: %s') % (rec.name),
+                'account_id': fuel_account_id,
+                'journal_id': fuel_journal_id,
+                'debit': rec.price_subtotal,
+                'narration': notes,
+                'credit': 0.0,
+                'fuel_product': rec.base_id.fuelvoucher_product_id.id,
+                'product_uom_id':
+                rec.base_id.fuelvoucher_product_id.uom_id.id,
+                'quantity': rec.product_uom_qty
+            })
+            move_lines.append(move_line)
+            move = {
+                'ref': _('Fuel Voucher: %s') % (rec.name),
+                'narration': rec.notes,
+                'journal_id': fuel_journal_id,
+                'line_ids': [x for x in move_lines],
+                'date': fields.Date.today(),
+            }
+            move_id = move_obj.create(move)
+            if not move_id:
+                raise ValidationError('There is a problem with the Move')
+            self.write({'move_id': move_id.id})
+        message = _(
+            '<b>Fuel Voucher Confirmed.</b></br><ul>'
+            '<li><b>Confirmed by: </b>%s</li>'
+            '<li><b>Confirmed at: </b>%s</li>'
+            '</ul>') % (self.env.user.name, fields.Datetime.now())
+        rec.message_post(body=message)
+        rec.state = 'confirmed'
 
     @api.onchange('travel_id')
     def _onchange_travel(self):
         self.base_id = self.travel_id.base_id
         self.vehicle_id = self.travel_id.unit_id
         self.employee_id = self.travel_id.employee_id
-
-    @api.multi
-    def create_invoice(self):
-        "Returns an open invoice"
-        invoice_id = self.env['account.invoice'].create({
-            'partner_id': self.vendor_id.id,
-            'fiscal_position_id': (
-                self.vendor_id.property_account_position_id.id),
-            'reference': self.name,
-            'currency_id': self.currency_id.id,
-            'account_id': self.vendor_id.property_account_payable_id.id,
-            'type': 'in_invoice',
-            'invoice_line_ids': [(0, 0, {
-                'product_id': self.base_id.fuelvoucher_product_id.id,
-                'quantity': self.product_uom_qty,
-                'price_unit': self.price_unit,
-                'invoice_line_tax_ids': [(
-                    6, 0,
-                    [x.id for x in (
-                        self.base_id.fuelvoucher_product_id.supplier_taxes_id)]
-                    )],
-                'name': self.base_id.fuelvoucher_product_id.name,
-                'account_id': (
-                    self.base_id.fuelvoucher_product_id.
-                    property_account_expense_id.id)}),
-                (0, 0, {
-                    'product_id': (
-                        self.base_id.ieps_product_id.id),
-                    'quantity': 1.0,
-                    'price_unit': self.special_tax_amount,
-                    'name': self.base_id.ieps_product_id.name,
-                    'account_id': (
-                        self.base_id.ieps_product_id.
-                        property_account_expense_id.id)})]
-            })
-        self.write({'invoice_id': invoice_id.id})
 
     @api.depends('invoice_id')
     def _compute_invoiced_paid(self):

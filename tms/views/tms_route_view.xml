@@ -31,6 +31,8 @@
                     <field name="departure_id"/>
                     <field name="arrival_id"/>
                     <field name="distance"/>
+                    <field name="distance_loaded"/>
+                    <field name="distance_empty"/>
                     <field name="travel_time" widget="float_time"/>
                 </tree>
             </field>
@@ -56,6 +58,9 @@
                             <field name="arrival_id"/>
                             <field name="distance"/>
                             <field name="travel_time" widget="float_time"/>
+                            <field name="distance_loaded"/>
+                            <field name="distance_empty"/>
+                            <field name="fuel_efficiency"/>
                             <field name="active"/>
                         </group>
                     </sheet>

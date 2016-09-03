@@ -82,6 +82,5 @@
             <field name="view_mode">form</field>
             <field name="target">inline</field>
         </record>
-        <menuitem action="action_tms_config" id="menu_tms_config" name="Settings" parent="tms.menu_tms_settings" sequence="1"/>
     </data>
 </odoo>
