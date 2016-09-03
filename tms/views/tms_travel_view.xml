@@ -166,18 +166,18 @@
                                     <group>
                                         <separator string="Distances (mi./kms)"/>
                                         <newline/>
-                                        <field name="distance_route" readonly="1" attrs="{'readonly':[('state','in',('done'))]}"/>
-                                        <field name="distance_driver" attrs="{'readonly':[('state','in',('done'))]}"/>
-                                        <field name="distance_loaded" attrs="{'readonly':[('state','in',('done'))]}"/>
-                                        <field name="distance_empty" attrs="{'readonly':[('state','in',('done'))]}"/>
-                                        <field name="distance_extraction" attrs="{'readonly':[('state','in',('done'))]}"/>
+                                        <field name="distance_route" readonly="1"/>
+                                        <field attrs="{'readonly':[('state','in',('done'))]}" name="distance_loaded"/>
+                                        <field attrs="{'readonly':[('state','in',('done'))]}" name="distance_empty"/>
+                                        <field name="distance_driver"/>
+                                        <field name="odometer" attrs="{'invisible':[('state','!=', 'done')]}"/>
                                     </group>
                                     <group>
                                         <separator colspan="4" string="Fuel Efficiency"/>
                                         <newline/>
                                         <field attrs="{'readonly':[('state','in',('done'))]}" name="fuel_efficiency_expected" readonly="1"/>
-                                        <field attrs="{'readonly':[('state','in',('done'))]}" name="fuel_efficiency_travel" readonly="1"/>
-                                        <field attrs="{'readonly':[('state','in',('done'))]}" name="fuel_efficiency_extraction" readonly="1"/>
+                                        <field attrs="{'readonly':[('state','in',('done'))]}" name="fuel_efficiency_travel"/>
+                                        <field name="fuel_efficiency_extraction"/>
                                     </group>
                                 </group>
                                 <separator colspan="4" string="Date and Times"/>

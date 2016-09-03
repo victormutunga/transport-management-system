@@ -44,6 +44,7 @@
     ],
     "demo": [
         'demo/account_account.xml',
+        'demo/res_partner.xml',
         'demo/hr_employee.xml',
         'demo/tms_place.xml',
         'demo/tms_route.xml',
