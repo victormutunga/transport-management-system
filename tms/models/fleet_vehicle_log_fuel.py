@@ -124,7 +124,8 @@ class FleetVehicleLogFuel(models.Model):
             elif move_id:
                 move_obj = self.env['account.move']
                 if not move_id:
-                    raise ValidationError('There is a problem with the Move')
+                    raise ValidationError(
+                        _('There is a problem with the Move'))
                 self.write({'invoice_id': False,
                             'move_id': False})
                 message = _('<b>Fuel Voucher Cancelled.</b></br><ul>'
@@ -223,7 +224,7 @@ class FleetVehicleLogFuel(models.Model):
             }
             move_id = move_obj.create(move)
             if not move_id:
-                raise ValidationError('There is a problem with the Move')
+                raise ValidationError(_('There is a problem with the Move'))
             self.write({'move_id': move_id.id})
         message = _(
             '<b>Fuel Voucher Confirmed.</b></br><ul>'

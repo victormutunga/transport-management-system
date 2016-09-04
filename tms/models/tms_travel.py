@@ -23,7 +23,7 @@ class TmsTravel(models.Model):
     name = fields.Char('Travel Number')
     state = fields.Selection(
         [('draft', 'Pending'), ('progress', 'In Progress'), ('done', 'Done'),
-         ('cancel', 'Cancelled')],
+         ('cancel', 'Cancelled'), ('closed', 'Closed')],
         'State', readonly=True, default='draft')
     route_id = fields.Many2one(
         'tms.route', 'Route', required=True,
@@ -41,7 +41,7 @@ class TmsTravel(models.Model):
         string='Route Distance (mi./km)')
     fuel_efficiency_expected = fields.Float(
         string='Fuel Efficiency Expected',
-        related="route_id.fuel_efficiency")
+        compute="_compute_fuel_efficiency_expected")
     kit_id = fields.Many2one(
         'tms.unit.kit', 'Kit')
     unit_id = fields.Many2one(
@@ -109,10 +109,15 @@ class TmsTravel(models.Model):
         'tms.expense', 'Expense Record', readonly=True)
     event_ids = fields.One2many('tms.event', 'travel_id', string='Events')
     is_available = fields.Boolean(
-        compute='_is_available',
+        compute='_compute_is_available',
         string='Travel available')
     base_id = fields.Many2one('tms.base', 'Base')
     color = fields.Integer()
+    framework = fields.Selection([
+        ('unit', 'Unit'),
+        ('single', 'Single'),
+        ('double', 'Double')],
+        compute='_compute_framework')
 
     @api.depends('fuel_efficiency_expected', 'fuel_efficiency_travel')
     def _compute_fuel_efficiency_extraction(self):
@@ -232,13 +237,13 @@ class TmsTravel(models.Model):
         return travel
 
     @api.depends()
-    def _is_available(self):
+    def _compute_is_available(self):
         for rec in self:
-            models = ['tms.advance', 'fleet.vehicle.log.fuel', 'tms.waybill']
+            objects = ['tms.advance', 'fleet.vehicle.log.fuel', 'tms.waybill']
             advances = len(rec.advance_ids)
             fuel_vehicle = len(rec.fuel_log_ids)
             count = 0
-            for model in models:
+            for model in objects:
                 if model == 'tms.advance' or model == 'fleet.vehicle.log.fuel':
                     object_ok = len(rec.env[model].search(
                         [('state', '=', 'confirmed'),
@@ -257,3 +262,23 @@ class TmsTravel(models.Model):
                         count += 1
             if count == 3:
                 rec.is_available = True
+
+    @api.depends('route_id', 'framework')
+    def _compute_fuel_efficiency_expected(self):
+        for rec in self:
+            res = self.env['tms.route.fuelefficiency'].search([
+                ('route_id', '=', rec.route_id.id),
+                ('engine_id', '=', rec.unit_id.engine_id.id),
+                ('type', '=', rec.framework)
+                ]).performance
+            rec.fuel_efficiency_expected = res
+
+    @api.depends('trailer1_id', 'trailer2_id')
+    def _compute_framework(self):
+        for rec in self:
+            if rec.trailer2_id:
+                rec.framework = 'double'
+            elif rec.trailer1_id:
+                rec.framework = 'single'
+            else:
+                rec.framework = 'unit'

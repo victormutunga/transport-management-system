@@ -9,7 +9,6 @@
             <field name="distance_loaded">587.00</field>
             <field name="distance_empty">300.00</field>
             <field name="travel_time"> 07.43</field>
-            <field name="fuel_efficiency"> 1.7 </field>
         </record>
         <record id="tms_route_02" model="tms.route">
             <field name="name">[Company] El Paso - Houston</field>
@@ -19,7 +18,6 @@
             <field name="distance_loaded">799.00</field>
             <field name="distance_empty">400.00</field>
             <field name="travel_time"> 10.43</field>
-            <field name="fuel_efficiency"> 1.2 </field>
         </record>
     </data>
 </odoo>

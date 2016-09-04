@@ -2,7 +2,6 @@
 # © <2016> <Jarsa Sistemas, S.A. de C.V.>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp.exceptions import UserError
 from openerp.tests.common import TransactionCase
 
 
@@ -41,12 +40,3 @@ class TestTmsPlace(TransactionCase):
         self.place._compute_complete_name()
         self.assertEqual(self.place.complete_name, 'San Antonio, Texas',
                          'Full Complete Name')
-
-    def test_40_tms_place_get_coordinates_force_error(self):
-        '''
-        This test check that Usererror get coords works.
-        '''
-        with self.assertRaisesRegexp(
-                UserError,
-                "Google Maps is not available."):
-            self.place.get_coordinates(error=True)

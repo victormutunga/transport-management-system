@@ -24,23 +24,24 @@
                     <sheet>
                         <h2> Travel Expenses Line </h2>
                          <group>
-                            <field name="travel_id"/> 
-                            <field invisible="1" name="control"/>
-                            <field attrs="{'readonly':[('control','!=',False)]}" name="line_type" required="1"/>
-                            <field attrs="{'readonly':[('control','!=',False)]}" name="name"/>
+                            <field name="travel_id" domain="[('expense_id', '=', expense_id)]"/>
+                            <field name="line_type"/>
+                            <field name="product_id"/>
                         </group>
                         <group>
                             <group string="Product Details">
+                                <field attrs="{'invisible':[('line_type','not in',('real_expense'))]}" name="product_uom_id"/>
+                                <field attrs="{'invisible':[('line_type','not in',('real_expense'))]}" name="product_uom_qty"/>
+                                <field attrs="{'invisible':[('line_type','not in',('real_expense'))]}" name="price_unit_control"/>
+                                <field attrs="{'invisible':[('line_type','not in',('real_expense'))]}" name="price_subtotal"/>
+                                <field name="tax_amount"/>
                                 <field name="price_total"/>
-                                <newline/>
                             </group>
                             <group string="Supplier Details">
-                                <field attrs="{'invisible':[('line_type','not in',('fuel','real_expense'))]}" name="is_invoice"/>
-                                <field attrs="{'invisible':[('is_invoice','=',False)],'required':[('is_invoice','=',True)]}" name="partner_id"/>
-                                <field attrs="{'invisible':[('is_invoice','=',False)],'required':[('is_invoice','=',True)]}" name="invoice_number"/>
-                                <field attrs="{'invisible':[('is_invoice','=',False)],'required':[('is_invoice','=',True)]}" name="invoice_date"/>
-                                <field attrs="{'invisible':[('is_invoice','=',False)]}" name="invoice_id"/>
-                                <field attrs="{'readonly':[('control','!=',False)]}" name="sequence"/>
+                                <field name="name"/>
+                                <field attrs="{'invisible':[('line_type','not in',('real_expense'))]}" name="is_invoice"/>
+                                <field attrs="{'invisible':[('line_type','not in',('real_expense'))]}" name="invoice_number"/>
+                                <field attrs="{'invisible':[('line_type','not in',('real_expense'))]}" name="invoice_date"/>
                             </group>
                         </group>
                         <newline/>
@@ -48,7 +49,7 @@
                         <newline/>
                         <!-- <field name="tax_amount" readonly="1"/> -->
                         <newline/>
-                        <!-- <field attrs="{'readonly':[('control','!=',False)]}" name="price_total" on_change="on_change_price_total(product_id, product_uom_qty, price_total, special_tax_amount)" required="1"/> -->
+                        <!-- <field attrs="{'readonly':[('control','!=',False)]}" name="price_total" on_change="on_change_price_total(product_id, product_uom_qty, price_total, special_tax_amount)"/> -->
                         <newline/>
                     </sheet>
                 </form>

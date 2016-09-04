@@ -49,6 +49,9 @@
                         </group>
                     </group>
                 </xpath>
+                <field name="transmission" position="before">
+                    <field name="engine_id"/>
+                </field>
             </field>
         </record>
         <record id="fleet_vehicle_tree_inherit_tms" model="ir.ui.view">

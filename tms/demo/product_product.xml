@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <record model='product.product' id="product_fuel">
-				<field name='property_account_expense_id' ref='account_fuel_expense'/>
-				<field name='property_account_income_id' ref='account_fuel_income'/>
-			</record>
-			<record model='product.product' id="product_ieps">
-				<field name='property_account_expense_id' ref='account_ieps_expense'/>
-				<field name='property_account_income_id' ref='account_ieps_income'/>
-			</record>
+        <record model='product.product' id="tms.product_fuel">
+                <field name='property_account_expense_id' ref='account_fuel_expense'/>
+                <field name='property_account_income_id' ref='account_fuel_income'/>
+            </record>
+            <record model='product.product' id="tms.product_ieps">
+                <field name='property_account_expense_id' ref='account_ieps_expense'/>
+                <field name='property_account_income_id' ref='account_ieps_income'/>
+            </record>
     </data>
 </odoo>

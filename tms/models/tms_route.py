@@ -38,7 +38,16 @@ class TmsRoute(models.Model):
         string='Distance Empty (mi./km)',
         required=True
         )
-    fuel_efficiency = fields.Float(required=True)
+    fuel_efficiency_ids = fields.One2many(
+        'tms.route.fuelefficiency',
+        'route_id',
+        string="Fuel Efficiency")
+    route_place_ids = fields.One2many(
+        'tms.route.place',
+        'route_id',
+        string='Places')
+    tollstation_ids = fields.Many2many(
+        'tms.route.tollstation', string="Toll Station")
 
     @api.depends('distance_empty', 'distance')
     @api.onchange('distance_empty')
@@ -77,14 +86,18 @@ class TmsRoute(models.Model):
             if not arrival['latitude'] and not arrival['longitude']:
                 raise exceptions.UserError(_(
                     "The arrival don't have coordinates."))
-            if error:
-                url = ''
-            else:
-                url = 'http://maps.googleapis.com/maps/api/distancematrix/json'
+            url = 'http://maps.googleapis.com/maps/api/distancematrix/json'
             origins = (str(departure['latitude']) + ',' +
                        str(departure['longitude']))
-            destinations = (str(arrival['latitude']) + ',' +
-                            str(arrival['longitude']))
+            destinations = ''
+            places = [str(x.place_id.latitude) + ',' +
+                      str(x.place_id.longitude) for x in rec.route_place_ids
+                      if x.place_id.latitude and x.place_id.longitude]
+            for place in places:
+                origins += "|" + place
+                destinations += place + "|"
+            destinations += (str(arrival['latitude']) + ',' +
+                             str(arrival['longitude']))
             params = {
                 'origins': origins,
                 'destinations': destinations,
@@ -96,9 +109,18 @@ class TmsRoute(models.Model):
                 result = json.loads(requests.get(url, params=params).content)
                 distance = duration = 0.0
                 if result['status'] == 'OK':
-                    res = result['rows'][0]['elements'][0]
-                    distance = res['distance']['value'] / 1000.0
-                    duration = res['duration']['value'] / 3600.0
+                    if len(rec.route_place_ids):
+                        for row in result['rows']:
+                            distance += (
+                                row['elements'][1]['distance']
+                                   ['value'] / 1000.0)
+                            duration += (
+                                row['elements'][1]['duration']
+                                   ['value'] / 3600.0)
+                    else:
+                        res = result['rows'][0]['elements'][0]
+                        distance = res['distance']['value'] / 1000.0
+                        duration = res['duration']['value'] / 3600.0
                 self.distance = distance
                 self.travel_time = duration
             except:
@@ -109,11 +131,27 @@ class TmsRoute(models.Model):
         for route in self:
             points = (
                 str(route.departure_id.latitude) + ',' +
-                str(route.departure_id.longitude) + ',' +
-                str(route.arrival_id.latitude) + ',' +
+                str(route.departure_id.longitude) +
+                (',' if len(route.route_place_ids) else '') +
+                ','.join([str(x.place_id.latitude) + ',' +
+                         str(x.place_id.longitude)
+                         for x in route.route_place_ids
+                         if x.place_id.latitude and x.place_id.longitude]) +
+                ',' + str(route.arrival_id.latitude) + ',' +
                 str(route.arrival_id.longitude))
             url = "/tms/static/src/googlemaps/get_route.html?" + points
         return {'type': 'ir.actions.act_url',
                 'url': url,
                 'nodestroy': True,
                 'target': 'new'}
+
+    @api.multi
+    def get_fuel_efficiency(self, vehicle_id, framework):
+        for rec in self:
+            fuel = self.env['tms.route.fuelefficiency']
+            fuel_id = fuel.search([
+                ('route_id', '=', rec.id),
+                ('engine_id', '=', vehicle_id.engine_id.id),
+                ('type', '=', framework)
+                ])
+        return fuel_id.performance

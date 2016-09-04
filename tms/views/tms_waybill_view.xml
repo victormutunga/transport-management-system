@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <record id="view_tms_waybill_tree" model="ir.ui.view">
             <field name="name">tms.waybill.tree</field>
@@ -247,4 +247,4 @@
         </record>
         <menuitem action="action_tms_waybill_form" id="menu_tms_waybill" parent="menu_tms_travels" sequence="2"/>
     </data>
-</openerp>
+</odoo>

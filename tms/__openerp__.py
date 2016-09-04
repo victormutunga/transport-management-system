@@ -35,6 +35,8 @@
         'views/tms_unit_kit_view.xml',
         'views/tms_waybill_view.xml',
         'views/account_invoice_view.xml',
+        'views/tms_route_tollstation_view.xml',
+        'views/fleet_vehicle_engine_view.xml',
         'data/product_product_data.xml',
         'data/ir_sequence_data.xml',
         'data/tms_base_data.xml',

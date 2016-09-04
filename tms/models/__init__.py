@@ -25,3 +25,8 @@ from . import tms_waybill_line
 from . import tms_waybill_transportable_line
 from . import tms_waybill_taxes
 from . import tms_base
+from . import tms_route_place
+from . import fleet_vehicle_engine
+from . import tms_route_fuelefficiency
+from . import tms_route_tollstation
+from . import tms_route_tollstation_costperaxis

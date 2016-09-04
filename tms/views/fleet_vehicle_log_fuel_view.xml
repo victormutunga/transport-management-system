@@ -25,7 +25,7 @@
                                 <field name="base_id" required="1"/>
                                 <field name="no_travel"/>
                                 <field name="travel_id" attrs="{'invisible':[('no_travel', '=', True)]}" domain="[('state','!=','cancel'),('state','!=','closed'),('base_id', '=', base_id)]"/>
-                                <field attrs="{'invisible':[('internal_fuel', '=', True)]}" context="{'default_supplier': True, 'default_customer':False}" name="vendor_id"/>
+                                <field context="{'default_supplier': True, 'default_customer':False}" name="vendor_id"/>
                                 <field name="vehicle_id"/>
                                 <field context="{'default_driver': True}" name="employee_id"/>
                                 <label for="odometer"/>

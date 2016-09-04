@@ -34,16 +34,13 @@ class TmsPlace(models.Model):
         help='GPS Longitude')
 
     @api.multi
-    def get_coordinates(self, error=False):
+    def get_coordinates(self):
         for rec in self:
             address = (rec.name + "," + rec.state_id.name + "," +
                        rec.country_id.name)
-            if error:
-                google_url = ''
-            else:
-                google_url = (
-                    'http://maps.googleapis.com/maps/api/geocode/json?' +
-                    'address=' + address.encode('utf-8') + '&sensor=false')
+            google_url = (
+                'http://maps.googleapis.com/maps/api/geocode/json?' +
+                'address=' + address.encode('utf-8') + '&sensor=false')
             try:
                 result = json.load(my_urllib.urlopen(google_url))
                 if result['status'] == 'OK':

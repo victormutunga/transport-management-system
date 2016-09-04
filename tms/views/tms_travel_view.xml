@@ -103,6 +103,7 @@
                                 <field name="date" attrs="{'readonly':[('state','in',('progress','done'))]}"/>
                                 <field name="user_id" attrs="{'readonly':[('state','in',('progress','done'))]}"/>
                                 <field name="employee_id" attrs="{'readonly':[('state','in',('progress','done'))]}"/>
+                                <field name="framework"/>
                             </group>
                             <group colspan="4">
                                 <field name="route_id" attrs="{'readonly':[('state','in',('progress','done'))]}"/>
@@ -271,7 +272,7 @@
             <field name="name">TMS Travel</field>
             <field name="res_model">tms.travel</field>
             <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form,calendar,gantt</field>
+            <field name="view_mode">tree,form,kanban,calendar,gantt</field>
         </record>
         <!-- Menu for tms.travel -->
         <menuitem action="open_view_tms_travel_form" id="menu_tms_travel_form" name="Travels" parent="menu_tms_travels" sequence="4"/>

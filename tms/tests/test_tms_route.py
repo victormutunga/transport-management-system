@@ -53,12 +53,3 @@ class TestTmsRoute(TransactionCase):
         This test check that method open in google works.
         '''
         self.route.open_in_google()
-
-    def test_50_tms_route_get_route_info_force_error(self):
-        '''
-        This test check that UserError get route info works.
-        '''
-        with self.assertRaisesRegexp(
-                UserError,
-                "Google Maps is not available."):
-            self.route.get_route_info(error=True)

@@ -98,37 +98,37 @@ class TmsWaybill(models.Model):
         'tms.waybill.transportable.line', 'waybill_id',
         string='Shipped Products')
     product_qty = fields.Float(
-        compute='_transportable_product',
+        compute='_compute_transportable_product',
         string='Sum Qty')
     product_volume = fields.Float(
-        compute='_transportable_product',
+        compute='_compute_transportable_product',
         string='Sum Volume')
     product_weight = fields.Float(
-        compute='_transportable_product',
+        compute='_compute_transportable_product',
         string='Sum Weight')
     amount_freight = fields.Float(
-        compute='_amount_all',
+        compute='_compute_amount_all',
         string='Freight')
     amount_move = fields.Float(
-        compute='_amount_all',
+        compute='_compute_amount_all',
         string='Moves')
     amount_highway_tolls = fields.Float(
-        compute='_amount_all',
+        compute='_compute_amount_all',
         string='Highway Tolls')
     amount_insurance = fields.Float(
-        compute='_amount_all',
+        compute='_compute_amount_all',
         string='Insurance')
     amount_other = fields.Float(
-        compute='_amount_all',
+        compute='_compute_amount_all',
         string='Other')
     amount_untaxed = fields.Float(
-        compute='_amount_all',
+        compute='_compute_amount_all',
         string='SubTotal')
     amount_tax = fields.Float(
-        compute='_amount_all',
+        compute='_compute_amount_all',
         string='Taxes')
     amount_total = fields.Float(
-        compute='_amount_all',
+        compute='_compute_amount_all',
         string='Total')
     distance_route = fields.Float(
         compute='_get_route_distance',
@@ -250,7 +250,7 @@ class TmsWaybill(models.Model):
     @api.multi
     @api.onchange(
         'transportable_line_ids', 'customer_factor_ids')
-    def _transportable_product(self):
+    def _compute_transportable_product(self):
         for waybill in self:
             volume = weight = qty = distance_real = distance_route = 0.0
             for record in waybill.transportable_line_ids:
@@ -287,7 +287,7 @@ class TmsWaybill(models.Model):
 
     @api.depends('waybill_line_ids')
     @api.multi
-    def _amount_all(self):
+    def _compute_amount_all(self):
         for waybill in self:
             for line in waybill.waybill_line_ids:
                 if line.product_id.id == waybill.base_id.waybill_freight_id.id:

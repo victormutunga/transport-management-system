@@ -10,3 +10,8 @@ access_tms_waybill_taxes,access_tms_waybill_taxes,model_tms_waybill_taxes,,1,1,1
 access_tms_base,access_tms_base,model_tms_base,,1,0,0,0
 access_tms_waybill_transportable_line,access_tms_waybill_transportable_line,model_tms_waybill_transportable_line,,1,0,0,0
 access_tms_event,access_tms_event,model_tms_event,,1,0,0,0
+access_tms_route_place,access_tms_route_place,model_tms_route_place,,1,0,0,0
+access_fleet_vehicle_engine,access_fleet_vehicle_engine,model_fleet_vehicle_engine,,1,0,0,0
+access_tms_route_fuelefficiency,access_tms_route_fuelefficiency,model_tms_route_fuelefficiency,,1,0,0,0
+access_tms_route_tollstation,access_tms_route_tollstation,model_tms_route_tollstation,,1,0,0,0
+access_tms_route_tollstation_costperaxis,access_tms_route_tollstation_costperaxis,model_tms_route_tollstation_costperaxis,,1,0,0,0

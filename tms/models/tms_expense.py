@@ -4,6 +4,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp import _, api, fields, models
+from openerp.exceptions import ValidationError
 
 
 class TmsExpense(models.Model):
@@ -20,6 +21,9 @@ class TmsExpense(models.Model):
     travel_ids = fields.Many2many(
         'tms.travel',
         string='Travels')
+    unit_id = fields.Many2one(
+        'fleet.vehicle', 'Unit', required=True,
+        domain=[('fleet_type', '=', 'tractor')])
     currency_id = fields.Many2one(
         'res.currency', 'Currency', required=True, readonly=True,
         default=lambda self: self.env.user.company_id.currency_id.id)
@@ -33,69 +37,86 @@ class TmsExpense(models.Model):
     date = fields.Date(
         'Date', required=True,
         default=fields.Date.today)
-    expense_line = fields.One2many(
+    expense_line_ids = fields.One2many(
         'tms.expense.line', 'expense_id', 'Expense Lines')
     amount_real_expense = fields.Float(
-        # compute=_amount_all,
-        string='Expenses')
+        compute='_amount_all',
+        string='Expenses',
+        store=True)
     amount_madeup_expense = fields.Float(
-        # compute=_amount_all,
-        string='Fake Expenses')
+        compute='_compute_madeup',
+        string='Fake Expenses',
+        store=True)
     fuel_qty = fields.Float(
-        # compute=_amount_all,
-        string='Fuel Qty')
+        compute='_amount_all',
+        string='Fuel Qty',
+        store=True)
     amount_fuel = fields.Float(
-        # compute=_amount_all,
-        string='Fuel (Cash)')
+        compute='_amount_all',
+        string='Fuel (Voucher)',
+        store=True)
     amount_salary = fields.Float(
-        # compute=_amount_all,
-        string='Salary')
+        compute='_amount_all',
+        string='Salary',
+        store=True)
     amount_net_salary = fields.Float(
-        # compute=_amount_all,
-        string='Net Salary')
+        compute='_amount_all',
+        string='Net Salary',
+        store=True)
     amount_salary_retention = fields.Float(
-        # compute=_amount_all,
-        string='Salary Retentions')
+        compute='_amount_all',
+        string='Salary Retentions',
+        store=True)
     amount_salary_discount = fields.Float(
-        # compute=_amount_all,
-        string='Salary Discounts')
+        compute='_amount_all',
+        string='Salary Discounts',
+        store=True)
     amount_advance = fields.Float(
-        # compute=_amount_all,
-        string='Advances')
+        compute='_amount_all',
+        string='Advances',
+        store=True)
     amount_balance = fields.Float(
-        # compute=_amount_all,
-        string='Balance')
+        compute='_amount_all',
+        string='Balance',
+        store=True)
     amount_balance2 = fields.Float(
-        # compute=_amount_all,
-        string='Balance')
+        compute='_amount_all',
+        string='Balance',
+        store=True)
     amount_tax_total = fields.Float(
-        # compute=_amount_all,
-        string='Taxes (All)')
+        compute='_amount_all',
+        string='Taxes (All)',
+        store=True)
     amount_tax_real = fields.Float(
-        # compute=_amount_all,
-        string='Taxes (Real)')
+        compute='_amount_all',
+        string='Taxes (Real)',
+        store=True)
     amount_total_real = fields.Float(
-        # compute=_amount_all,
-        string='Total (Real)')
+        compute='_amount_all',
+        string='Total (Real)',
+        store=True)
     amount_total_total = fields.Float(
-        # compute=_amount_all,
-        string='Total (All)')
+        compute='_amount_all',
+        string='Total (All)',
+        store=True)
     amount_subtotal_real = fields.Float(
-        # compute=_amount_all,
-        string='SubTotal (Real)')
+        compute='_amount_all',
+        string='SubTotal (Real)',
+        store=True)
     amount_subtotal_total = fields.Float(
-        # compute=_amount_all,
-        string='SubTotal (All)')
+        string='SubTotal (All)',
+        store=True)
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle')
     last_odometer = fields.Float('Last Read')
     vehicle_odometer = fields.Float('Vehicle Odometer')
     current_odometer = fields.Float('Current Read')
     distance_routes = fields.Float(
-        # compute=_get_route_distance,
+        compute='_amount_all',
         string='Distance from routes',
         help="Routes Distance")
     distance_real = fields.Float(
-        'Distance Real',
+        compute='_amount_all',
+        string='Distance Real',
         help="Route obtained by electronic reading and/or GPS")
     odometer_log_id = fields.Many2one(
         'fleet.vehicle.odometer', 'Odometer Record')
@@ -132,74 +153,21 @@ class TmsExpense(models.Model):
     fuel_log_ids = fields.One2many(
         'fleet.vehicle.log.fuel', 'expense_id')
 
-    @api.model
-    def create(self, values):
-        expense = super(TmsExpense, self).create(values)
-        sequence = expense.base_id.expense_sequence_id
-        expense.name = sequence.next_by_id()
-        return expense
-
-    @api.multi
-    def action_draft(self):
+    @api.depends('travel_ids')
+    def _amount_all(self):
         for rec in self:
-            rec.expense_line = {}
-            rec.advance_ids = {}
-            rec.fuel_log_ids = {}
-            rec.amount_real_expense = 0.0
-            rec.amount_total_real = 0.0
-            rec.amount_advance = 0.0
-            rec.amount_balance = 0.0
-            rec.amount_salary_discount = 0.0
-            rec.amount_salary = 0.0
-            rec.amount_fuel = 0.0
-            rec.salary_discount = 0.0
-            rec.amount_subtotal_total = 0.0
-            rec.amount_tax_total = 0.0
-            rec.amount_total_total = 0.0
-            message = _('<b>Expense Drafted.</b></br><ul>'
-                        '<li><b>Drafted by: </b>%s</li>'
-                        '<li><b>Drafted at: </b>%s</li>'
-                        '</ul>') % (
-                            self.env.user.name,
-                            fields.Datetime.now())
-            rec.message_post(body=message)
-        self.state = 'draft'
-
-    @api.multi
-    def action_approved(self):
-        for rec in self:
-            rec.amount_salary = 0.0
             for travel in rec.travel_ids:
+                rec.distance_real += travel.distance_driver
+                rec.distance_routes += travel.distance_route
                 for advance in travel.advance_ids:
-                    rec.advance_ids += advance
-                    rec.amount_advance += advance.amount
                     if advance.auto_expense:
                         rec.amount_real_expense += advance.amount
                         rec.amount_total_real += advance.amount
-                        rec.expense_line.create({
-                            'name': (str(advance.base_id.
-                                         advance_product_id.name)),
-                            'travel_id': travel.id,
-                            'expense_id': rec.id,
-                            'line_type': "real_expense",
-                            'price_total': advance.amount,
-                            'base_id': advance.base_id.id,
-                        })
                     else:
                         rec.amount_salary_discount += advance.amount
                 rec.amount_fuel = 0.0
                 driver_salary = 0.0
                 for fuel_log in travel.fuel_log_ids:
-                    rec.expense_line.create({
-                        'name': "Fuel voucher: " + str(fuel_log.name),
-                        'travel_id': travel.id,
-                        'expense_id': rec.id,
-                        'line_type': "fuel",
-                        'price_total': fuel_log.price_total,
-                        'is_invoice': fuel_log.invoice_paid,
-                        'base_id': fuel_log.base_id.id
-                        })
-                    rec.fuel_log_ids += fuel_log
                     rec.amount_fuel += fuel_log.price_total
                     rec.amount_tax_total += (
                         fuel_log.tax_amount +
@@ -218,25 +186,10 @@ class TmsExpense(models.Model):
                                            waybill.product_volume,
                                            waybill.amount_total))
                             rec.amount_salary += driver_salary
-                        rec.expense_line.create({
-                            'name': "Salary per travel: " + str(),
-                            'travel_id': travel.id,
-                            'expense_id': rec.id,
-                            'line_type': "salary",
-                            'price_total': rec.amount_salary,
-                            'is_invoice': 'none',
-                            'base_id': waybill.base_id.id
-                            })
                 else:
                     for factor in travel.driver_factor_ids:
                         driver_salary += factor.get_amount()
                 rec.amount_subtotal_total = rec.amount_fuel
-            for discount in rec.expense_line:
-                if discount.line_type == 'salary_discount':
-                    rec.amount_salary_discount += discount.price_total
-                    rec.amount_salary = (rec.amount_salary -
-                                         discount.price_total)
-
             rec.amount_total_total = (rec.amount_fuel +
                                       rec.amount_tax_total)
             rec.amount_total_real = (rec.amount_salary +
@@ -244,7 +197,158 @@ class TmsExpense(models.Model):
                                      rec.amount_total_real)
             rec.amount_balance = (rec.amount_total_real -
                                   rec.amount_advance)
-            self.state = 'approved'
+            for discount in rec.expense_line_ids:
+                if discount.line_type == 'madeup_expense':
+                    rec.amount_madeup_expense = discount.price_total
+                if discount.line_type == 'salary_discount':
+                    rec.amount_salary_discount += discount.price_total
+                    rec.amount_salary = (rec.amount_salary -
+                                         discount.price_total)
+
+    @api.multi
+    def get_travel_info(self):
+        for rec in self:
+            rec.expense_line_ids.unlink()
+            travels = self.env['tms.travel'].search(
+                [('expense_id', '=', rec.id)])
+            travels.write({
+                'expense_id': False,
+                'state': 'done'
+                })
+            advances = self.env['tms.advance'].search(
+                [('expense_id', '=', rec.id)])
+            advances.write({
+                'expense_id': False,
+                'state': 'confirmed'
+                })
+            fuel_logs = self.env['fleet.vehicle.log.fuel'].search(
+                [('expense_id', '=', rec.id)])
+            fuel_logs.write({
+                'expense_id': False,
+                'state': 'confirmed'
+                })
+            for travel in rec.travel_ids:
+                travel.write({
+                    'state': 'closed',
+                    'expense_id': rec.id
+                })
+                for advance in travel.advance_ids:
+                    if advance.state != 'confirmed':
+                        raise ValidationError(_(
+                            'Oops! All the advances must be confirmed'
+                            '\n Name of advance not confirmed: ' +
+                            advance.name +
+                            '\n State: ' + advance.state))
+                    else:
+                        advance.write({
+                            'state': 'closed',
+                            'expense_id': rec.id
+                        })
+                        if advance.auto_expense:
+                            rec.expense_line_ids.create({
+                                'name': (str(advance.base_id.
+                                             advance_product_id.name)),
+                                'travel_id': travel.id,
+                                'expense_id': rec.id,
+                                'line_type': "real_expense",
+                                'price_total': advance.amount,
+                                'base_id': advance.base_id.id
+                            })
+                for fuel_log in travel.fuel_log_ids:
+                    if fuel_log.state != 'confirmed':
+                        raise ValidationError(_(
+                            'Oops! All the voucher must be confirmed'
+                            '\n Name of voucher not confirmed: ' +
+                            fuel_log.name +
+                            '\n State: ' + fuel_log.state))
+                    else:
+                        fuel_log.write({
+                            'state': 'closed',
+                            'expense_id': rec.id
+                        })
+                        rec.expense_line_ids.create({
+                            'name': "Fuel voucher: " + str(fuel_log.name),
+                            'travel_id': travel.id,
+                            'expense_id': rec.id,
+                            'line_type': 'fuel',
+                            'price_total': fuel_log.price_total,
+                            'is_invoice': fuel_log.invoice_paid,
+                            'base_id': fuel_log.base_id.id
+                            })
+                rec.expense_line_ids.create({
+                    'name': "salary per travel: " + str(travel.name),
+                    'travel_id': travel.id,
+                    'expense_id': rec.id,
+                    'line_type': "salary",
+                    'price_total': rec.amount_salary,
+                    'base_id': travel.base_id.id
+                })
+
+    @api.model
+    def create(self, values):
+        expense = super(TmsExpense, self).create(values)
+        sequence = expense.base_id.expense_sequence_id
+        expense.name = sequence.next_by_id()
+        return expense
+
+    @api.multi
+    def write(self, values):
+        res = super(TmsExpense, self).write(values)
+        for rec in self:
+            rec.get_travel_info()
+        return res
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state == 'confirmed':
+                raise ValidationError(
+                    _('You can not delete a travel expense'
+                      'in status confirmed'))
+            else:
+                travels = self.env['tms.travel'].search(
+                    [('expense_id', '=', rec.id)])
+                travels.write({
+                    'expense_id': False,
+                    'state': 'done'
+                    })
+                advances = self.env['tms.advance'].search(
+                    [('expense_id', '=', rec.id)])
+                advances.write({
+                    'expense_id': False,
+                    'state': 'confirmed'
+                    })
+                fuel_logs = self.env['fleet.vehicle.log.fuel'].search(
+                    [('expense_id', '=', rec.id)])
+                fuel_logs.write({
+                    'expense_id': False,
+                    'state': 'confirmed'
+                    })
+                return super(TmsExpense, self).unlink()
+
+    @api.multi
+    def action_approved(self):
+        for rec in self:
+            message = _('<b>Expense Approved.</b></br><ul>'
+                        '<li><b>Approved by: </b>%s</li>'
+                        '<li><b>Approved at: </b>%s</li>'
+                        '</ul>') % (
+                            self.env.user.name,
+                            fields.Datetime.now())
+            rec.message_post(body=message)
+        self.state = 'approved'
+
+    @api.multi
+    def action_draft(self):
+        for rec in self:
+            message = _('<b>Expense Drafted.</b></br><ul>'
+                        '<li><b>Drafted by: </b>%s</li>'
+                        '<li><b>Drafted at: </b>%s</li>'
+                        '</ul>') % (
+                            self.env.user.name,
+                            fields.Datetime.now())
+            rec.message_post(body=message)
+        self.state = 'draft'
 
     @api.multi
     def action_confirm(self):

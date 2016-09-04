@@ -53,7 +53,7 @@ class TmsAdvance(models.Model):
         "is only for Travel Expense Records with balance < 0.0",
         readonly=True)
     paid = fields.Boolean(
-        compute='compute_paid',
+        compute='_compute_paid',
         readonly=True
     )
     payment_id = fields.Many2one(
@@ -94,7 +94,7 @@ class TmsAdvance(models.Model):
                 return advance
 
     @api.multi
-    def compute_paid(self):
+    def _compute_paid(self):
         for advance in self:
             if advance.payment_id.id:
                 advance.paid = True
