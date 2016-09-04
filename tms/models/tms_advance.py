@@ -33,7 +33,7 @@ class TmsAdvance(models.Model):
         required=True,
         default=fields.Date.today)
     travel_id = fields.Many2one(
-        'tms.travel', 'Travel',
+        'tms.travel', string='Travel',
         required=True
         )
     unit_id = fields.Many2one(

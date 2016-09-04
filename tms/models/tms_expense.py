@@ -151,7 +151,7 @@ class TmsExpense(models.Model):
         # compute=_get_fuel_diff,
         string='Global Fuel Efficiency Real')
     fuel_log_ids = fields.One2many(
-        'fleet.vehicle.log.fuel', 'expense_id')
+        'fleet.vehicle.log.fuel', 'expense_id', string='Fuel Vouchers')
 
     @api.depends('travel_ids')
     def _amount_all(self):

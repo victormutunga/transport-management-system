@@ -12,4 +12,5 @@ class AccountPayment(models.Model):
 
     advance_ids = fields.One2many(
         'tms.advance',
-        'payment_id')
+        'payment_id',
+        string='Advances')

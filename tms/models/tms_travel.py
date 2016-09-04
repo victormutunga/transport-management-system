@@ -101,7 +101,7 @@ class TmsTravel(models.Model):
         related='route_id.arrival_id',
         readonly=True)
     notes = fields.Text(
-        'Descripción')
+        'Description')
     user_id = fields.Many2one(
         'res.users', 'Responsable',
         default=lambda self: self.env.user)

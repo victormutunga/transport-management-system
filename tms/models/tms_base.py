@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 # © <2012> <Israel Cruz Argil, Argil Consulting>
 # © <2016> <Jarsa Sistemas, S.A. de C.V.>
@@ -12,8 +11,6 @@ class TmsBase(models.Model):
     _description = 'Base'
 
     name = fields.Char(string='', required=True)
-    employee_ids = fields.One2many('hr.employee', 'base_id')
-    travel_id = fields.One2many('tms.travel', 'base_id')
     travel_sequence_id = fields.Many2one(
         'ir.sequence',
         string='Travel Sequence', required=True)

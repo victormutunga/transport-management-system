@@ -180,7 +180,7 @@ class TmsWaybill(models.Model):
     replaced_waybill_id = fields.Many2one(
         'tms.waybill', 'Replaced Waybill', readonly=True)
     move_id = fields.Many2one(
-        'account.move', 'Account Move', readonly=True)
+        'account.move', string='Journal Entry', readonly=True)
 
     @api.model
     def create(self, values):

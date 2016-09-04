@@ -72,7 +72,7 @@ class FleetVehicleLogFuel(models.Model):
         'No Travel', help="Check this if you want to create Fuel Voucher "
         "with no Travel.")
     vendor_id = fields.Many2one('res.partner', required=True)
-    move_id = fields.Many2one('account.move')
+    move_id = fields.Many2one('account.move', string='Journal Entry')
 
     @api.multi
     @api.depends('product_uom_qty', 'tax_amount', 'price_total')
