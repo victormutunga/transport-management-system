@@ -45,19 +45,15 @@
         'wizards/tms_fuelvoucher_invoice_view.xml',
     ],
     "demo": [
-        'demo/account_account.xml',
-        'demo/res_partner.xml',
         'demo/hr_employee.xml',
         'demo/tms_place.xml',
         'demo/tms_route.xml',
         'demo/tms_transportable.xml',
         'demo/fleet_vehicle.xml',
-        'demo/tms_base.xml',
         'demo/tms_travel.xml',
         'demo/tms_advance.xml',
-        'demo/product_product.xml',
         'demo/tms_unit_kit.xml',
     ],
     "application": True,
-    "installable": True
+    "installable": True,
 }
