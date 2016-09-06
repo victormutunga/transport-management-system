@@ -5,14 +5,16 @@
 
 import urllib as my_urllib
 
-from openerp import api, fields, models
+from openerp import api, fields
 from openerp.exceptions import UserError
 from openerp.tools.translate import _
+from openerp.addons.base_geoengine import geo_model
+from openerp.addons.base_geoengine import fields as geo_fields
 
 import simplejson as json
 
 
-class TmsPlace(models.Model):
+class TmsPlace(geo_model.GeoModel):
     _name = 'tms.place'
     _description = 'Cities / Places'
 
@@ -20,8 +22,7 @@ class TmsPlace(models.Model):
     complete_name = fields.Char(compute='_compute_complete_name')
     state_id = fields.Many2one(
         'res.country.state',
-        string='State Name',
-        required=True)
+        string='State Name')
     country_id = fields.Many2one(
         'res.country',
         related='state_id.country_id',
@@ -32,6 +33,11 @@ class TmsPlace(models.Model):
     longitude = fields.Float(
         'Longitude', required=False, digits=(20, 10),
         help='GPS Longitude')
+    point = geo_fields.GeoPoint(
+        string='Coordinate',
+        # store=True,
+        # compute='_compute_point'
+        )
 
     @api.multi
     def get_coordinates(self):
@@ -63,5 +69,17 @@ class TmsPlace(models.Model):
 
     @api.depends('name', 'state_id')
     def _compute_complete_name(self):
-        for record in self:
-            record.complete_name = record.name + ', ' + record.state_id.name
+        for rec in self:
+            if rec.state_id:
+                rec.complete_name = rec.name + ', ' + rec.state_id.name
+            else:
+                rec.complete_name = rec.name
+
+    # @api.depends('latitude', 'longitude')
+    # def _compute_point(self):
+    #     for rec in self:
+    #         point = ('POINT(' + str(rec.latitude) +
+    #                  ' ' + str(rec.longitude) + ')')
+    #         rec.point = geo_fields.GeoPoint.from_latlon(
+    #             rec.env.cr, rec.latitude, rec.longitude)
+    #         rec.point = geo_fields.convert.value_to_shape(point)

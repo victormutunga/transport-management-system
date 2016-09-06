@@ -6,12 +6,8 @@
         <menuitem id="menu_tms_settings" name="Configuration" parent="menu_tms" sequence="99"/>
         <menuitem id="menu_tms_settings_unit" name="Units" parent="menu_tms_settings" sequence="30"/>
         <menuitem id="menu_tms_settings_routes" name="Routes" parent="menu_tms_settings" sequence="40"/>
-        <menuitem id="menu_tms_settings_waybill" name="Waybill" parent="menu_tms_settings" sequence="60"/>
-        <menuitem id="menu_tms_settings_product" name="Products" parent="menu_tms_settings" sequence="50"/>
         <menuitem action="base.action_partner_customer_form" id="menu_tms_account_customer" name="Customers" parent="menu_tms_settings" sequence="15"/>
         <menuitem action="base.action_partner_supplier_form" id="menu_tms_procurement_management_supplier_name" name="Suppliers" parent="menu_tms_settings" sequence="15"/>
-        <menuitem action="fleet.fleet_vehicle_act" id="tms_fleet_vehicle_menu" parent="menu_tms_settings_unit" name="Units" sequence="10"/> 
-         <menuitem action="fleet.fleet_vehicle_odometer_act" id="tms_fleet_vehicle_odometer_menu" parent="menu_tms_settings_unit" name="Units Odometers" sequence="12"/> 
         <menuitem action="fleet.fleet_vehicle_state_act" groups="fleet.group_fleet_manager" id="tms_fleet_vehicle_state_menu" parent="menu_tms_settings_unit" sequence="13"/>
     </data>
 </odoo>

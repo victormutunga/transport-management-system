@@ -54,18 +54,28 @@
                 </field>
             </field>
         </record>
-        <record id="fleet_vehicle_tree_inherit_tms" model="ir.ui.view">
+        <record id="fleet.fleet_vehicle_tree" model="ir.ui.view">
             <field name="name">fleet.vehicle.tms.tree</field>
             <field name="model">fleet.vehicle</field>
-            <field name="inherit_id" ref="fleet.fleet_vehicle_tree"/>
             <field name="arch" type="xml">
                 <tree string="Vehicle">
-                    <field name="year_model"/>
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="license_plate"/>
+                    <field name="driver_id"/>
                     <field name="serial_number"/>
-                    <field name="registration"/>
-                    <field name="fleet_type"/>
+                    <field name="state_id"/>
+                    <field name="odometer"/>
+                    <field name="odometer_unit"/>
                 </tree>
             </field>
         </record>
+        <record id='action_fleet_vehicle_tms' model='ir.actions.act_window'>
+            <field name='name'>Fleet Vehicle</field>
+            <field name='res_model'>fleet.vehicle</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+        </record>
+        <menuitem action="action_fleet_vehicle_tms" id="tms_fleet_vehicle_menu" parent="menu_tms_settings_unit" name="Units" sequence="10"/>
     </data>
 </odoo>

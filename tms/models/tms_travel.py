@@ -68,6 +68,7 @@ class TmsTravel(models.Model):
         default=(fields.Datetime.now))
     date_end = fields.Datetime(
         'End Sched',
+        store=True,
         compute='_compute_date_end')
     date_start_real = fields.Datetime(
         'Start Real')

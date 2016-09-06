@@ -15,5 +15,6 @@
                 </field>
             </field>
         </record>
+        <menuitem action="fleet.fleet_vehicle_odometer_act" id="tms_fleet_vehicle_odometer_menu" parent="menu_tms_settings_unit" name="Units Odometers" sequence="12"/>
     </data>
 </odoo>

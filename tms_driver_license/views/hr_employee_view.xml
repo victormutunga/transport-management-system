@@ -8,6 +8,7 @@
                 <field name="tms_expense_negative_balance_account_id" position="after">
                     <field name="driver_license" attrs="{'invisible': [('driver','=',False)]}"/>
                     <field name="license_type" attrs="{'required':[('driver_license','!=',False)], 'invisible': [('driver','=',False)]}"/>
+                    <field name="license_valid_from" attrs="{'required':[('driver_license','!=',False)], 'invisible': [('driver','=',False)]}"/>
                     <field name="license_expiration" attrs="{'required':[('driver_license','!=',False)], 'invisible': [('driver','=',False)]}"/>
                     <field name="days_to_expire" attrs="{'invisible': [('driver','=',False)]}"/>
                 </field>
