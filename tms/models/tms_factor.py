@@ -97,7 +97,10 @@ For next option you only have to type Factor like 10.5 for 10.50%:
                         else:
                             res += rec.factor
                     elif rec.range_start == 0 and rec.range_end == 0:
-                        res += rec.factor * value
+                        if rec.factor > 1:
+                            res += rec.factor * value
+                        else:
+                            res += value
                     else:
                         raise ValidationError(
                             _('the amount isnt between of any ranges'))

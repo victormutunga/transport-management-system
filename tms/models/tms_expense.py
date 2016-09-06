@@ -160,11 +160,7 @@ class TmsExpense(models.Model):
                 rec.distance_real += travel.distance_driver
                 rec.distance_routes += travel.distance_route
                 for advance in travel.advance_ids:
-                    if advance.auto_expense:
-                        rec.amount_real_expense += advance.amount
-                        rec.amount_total_real += advance.amount
-                    else:
-                        rec.amount_salary_discount += advance.amount
+                    rec.amount_advance += advance.amount
                 rec.amount_fuel = 0.0
                 driver_salary = 0.0
                 for fuel_log in travel.fuel_log_ids:
@@ -176,7 +172,6 @@ class TmsExpense(models.Model):
                     for waybill in travel.waybill_ids:
                         for waybill_factor in (
                                 waybill.driver_factor_ids):
-                            driver_salary = 0.0
                             driver_salary += (
                                 waybill_factor.
                                 get_amount(waybill.product_weight,
@@ -188,27 +183,37 @@ class TmsExpense(models.Model):
                             rec.amount_salary += driver_salary
                 else:
                     for factor in travel.driver_factor_ids:
-                        driver_salary += factor.get_amount()
+                        driver_salary += factor.get_amount(
+                            0.0,
+                            factor.route_id.distance,
+                            factor.travel_id.distance_driver,
+                            0.0,
+                            0.0,
+                            0.0)
+                        rec.amount_salary += driver_salary
                 rec.amount_subtotal_total = rec.amount_fuel
+            rec.amount_subtotal_real = (rec.amount_salary +
+                                        rec.amount_salary_discount +
+                                        rec.amount_real_expense)
+            rec.amount_total_real = (rec.amount_subtotal_real +
+                                     rec.amount_tax_real)
             rec.amount_total_total = (rec.amount_fuel +
                                       rec.amount_tax_total)
-            rec.amount_total_real = (rec.amount_salary +
-                                     rec.amount_fuel +
-                                     rec.amount_total_real)
             rec.amount_balance = (rec.amount_total_real -
                                   rec.amount_advance)
             for discount in rec.expense_line_ids:
-                if discount.line_type == 'madeup_expense':
-                    rec.amount_madeup_expense = discount.price_total
                 if discount.line_type == 'salary_discount':
                     rec.amount_salary_discount += discount.price_total
-                    rec.amount_salary = (rec.amount_salary -
-                                         discount.price_total)
 
     @api.multi
     def get_travel_info(self):
         for rec in self:
-            rec.expense_line_ids.unlink()
+            rec.expense_line_ids.search([
+                ('expense_id', '=', rec.id),
+                ('travel_id', 'not in', rec.travel_ids.ids)]).unlink()
+            rec.expense_line_ids.search([
+                ('expense_id', '=', rec.id),
+                ('control', '=', True)]).unlink()
             travels = self.env['tms.travel'].search(
                 [('expense_id', '=', rec.id)])
             travels.write({
@@ -228,10 +233,7 @@ class TmsExpense(models.Model):
                 'state': 'confirmed'
                 })
             for travel in rec.travel_ids:
-                travel.write({
-                    'state': 'closed',
-                    'expense_id': rec.id
-                })
+                travel.write({'state': 'closed', 'expense_id': rec.id})
                 for advance in travel.advance_ids:
                     if advance.state != 'confirmed':
                         raise ValidationError(_(
@@ -246,13 +248,12 @@ class TmsExpense(models.Model):
                         })
                         if advance.auto_expense:
                             rec.expense_line_ids.create({
-                                'name': (str(advance.base_id.
-                                             advance_product_id.name)),
+                                'name': advance.name,
                                 'travel_id': travel.id,
                                 'expense_id': rec.id,
                                 'line_type': "real_expense",
                                 'price_total': advance.amount,
-                                'base_id': advance.base_id.id
+                                'control': True
                             })
                 for fuel_log in travel.fuel_log_ids:
                     if fuel_log.state != 'confirmed':
@@ -267,21 +268,22 @@ class TmsExpense(models.Model):
                             'expense_id': rec.id
                         })
                         rec.expense_line_ids.create({
-                            'name': "Fuel voucher: " + str(fuel_log.name),
+                            'name': _("Fuel voucher: ") + str(fuel_log.name),
                             'travel_id': travel.id,
                             'expense_id': rec.id,
                             'line_type': 'fuel',
                             'price_total': fuel_log.price_total,
                             'is_invoice': fuel_log.invoice_paid,
-                            'base_id': fuel_log.base_id.id
+                            'invoice_id': fuel_log.invoice_id.id,
+                            'control': True
                             })
                 rec.expense_line_ids.create({
-                    'name': "salary per travel: " + str(travel.name),
+                    'name': _("Salary per travel: ") + str(travel.name),
                     'travel_id': travel.id,
                     'expense_id': rec.id,
                     'line_type': "salary",
                     'price_total': rec.amount_salary,
-                    'base_id': travel.base_id.id
+                    'control': True
                 })
 
     @api.model
@@ -293,10 +295,10 @@ class TmsExpense(models.Model):
 
     @api.multi
     def write(self, values):
-        res = super(TmsExpense, self).write(values)
         for rec in self:
+            res = super(TmsExpense, self).write(values)
             rec.get_travel_info()
-        return res
+            return res
 
     @api.multi
     def unlink(self):
