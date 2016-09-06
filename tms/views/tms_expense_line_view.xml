@@ -27,13 +27,14 @@
                             <field name="travel_id" domain="[('expense_id', '=', expense_id)]"/>
                             <field name="line_type"/>
                             <field name="product_id"/>
+                            <field name="expense_id" invisible="1"/>
                         </group>
                         <group>
                             <group string="Product Details">
-                                <field attrs="{'invisible':[('line_type','not in',('real_expense'))]}" name="product_uom_id"/>
-                                <field attrs="{'invisible':[('line_type','not in',('real_expense'))]}" name="product_uom_qty"/>
-                                <field attrs="{'invisible':[('line_type','not in',('real_expense'))]}" name="price_unit_control"/>
-                                <field attrs="{'invisible':[('line_type','not in',('real_expense'))]}" name="price_subtotal"/>
+                                <field attrs="{'invisible':[('line_type','not in',('real_expense'))],'required':[('line_type', 'in', 'real_expense')]}" name="product_uom_id"/>
+                                <field attrs="{'invisible':[('line_type','not in',('real_expense'))],'required':[('line_type', 'in', 'real_expense')]}" name="product_uom_qty"/>
+                                <field attrs="{'invisible':[('line_type','not in',('real_expense'))],'required':[('line_type', 'in', 'real_expense')]}" name="price_unit_control"/>
+                                <field attrs="{'invisible':[('line_type','not in',('real_expense'))],'required':[('line_type', 'in', 'real_expense')]}" name="price_subtotal"/>
                                 <field name="tax_amount"/>
                                 <field name="price_total"/>
                             </group>

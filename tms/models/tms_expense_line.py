@@ -3,7 +3,8 @@
 # © <2016> <Jarsa Sistemas, S.A. de C.V.>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import api, fields, models
+from openerp import _, api, fields, models
+from openerp.exceptions import ValidationError
 
 
 class TmsExpenseLine(models.Model):
@@ -55,9 +56,6 @@ class TmsExpenseLine(models.Model):
     employee_id = fields.Many2one(
         'hr.employee',
         string='Driver')
-    base_id = fields.Many2one(
-        'tms.base',
-        string='Base')
     date = fields.Date(readonly=True)
     state = fields.Char(readonly=True)
     fuel_voucher = fields.Boolean()
@@ -94,6 +92,11 @@ class TmsExpenseLine(models.Model):
             rec.price_subtotal = subtotal
             rec.tax_amount = total_discount
 
-    @api.multi
-    def unlink(self):
-        return super(TmsExpenseLine, self).unlink()
+   # @api.model
+   # def create(self, values):
+   #     expense_line = super(TmsExpenseLine, self).create(values)
+   #     if expense_line.line_type in ('salary_discount', 'negative_balance'):
+   #         if expense_line.price_total > 0:
+   #             raise ValidationError(_('This line type needs a '
+   #                                     'negative value to continue!'))
+   #     return expense_line
