@@ -1,0 +1,64 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* tms_driver_license
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 9.0e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-06 14:48+0000\n"
+"PO-Revision-Date: 2016-09-06 14:48+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: tms_driver_license
+#: model:ir.model.fields,field_description:tms_driver_license.field_hr_employee_days_to_expire
+msgid "Days to expire"
+msgstr ""
+
+#. module: tms_driver_license
+#: model:ir.model,name:tms_driver_license.model_hr_employee
+msgid "Employee"
+msgstr ""
+
+#. module: tms_driver_license
+#: model:ir.model.fields,field_description:tms_driver_license.field_hr_employee_driver_license
+msgid "License ID"
+msgstr ""
+
+#. module: tms_driver_license
+#: model:ir.model.fields,field_description:tms_driver_license.field_hr_employee_license_type
+msgid "License Type"
+msgstr ""
+
+#. module: tms_driver_license
+#: model:ir.model.fields,field_description:tms_driver_license.field_hr_employee_license_expiration
+msgid "License expiration"
+msgstr ""
+
+#. module: tms_driver_license
+#: model:ir.model.fields,field_description:tms_driver_license.field_hr_employee_license_valid_from
+msgid "License valid from"
+msgstr ""
+
+#. module: tms_driver_license
+#: code:addons/tms_driver_license/models/hr_employee.py:50
+#, python-format
+msgid "The driver license is not in SCT database"
+msgstr ""
+
+#. module: tms_driver_license
+#: model:ir.model,name:tms_driver_license.model_tms_travel
+msgid "Travel"
+msgstr ""
+
+#. module: tms_driver_license
+#: code:addons/tms_driver_license/models/tms_travel.py:21
+#, python-format
+msgid "You can not Dispatch this Travel because %s Driver's License Validity (%s) is expired or about to expire in next %s day(s)"
+msgstr ""
+
