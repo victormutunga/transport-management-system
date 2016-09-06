@@ -72,8 +72,7 @@ class TmsExpenseLine(models.Model):
     invoice_number = fields.Char()
     invoice_id = fields.Many2one(
         'account.invoice',
-        string='Supplier Invoice',
-        readonly=True)
+        string='Supplier Invoice')
     product_id = fields.Many2one(
         'product.product',
         domain=[('type', '=', 'service'),
