@@ -131,7 +131,7 @@ class TmsWaybill(models.Model):
         compute='_compute_amount_all',
         string='Total')
     distance_route = fields.Float(
-        compute='_get_route_distance',
+        # compute='_get_route_distance',
         string='Distance from route',
         help="Route Distance.")
     distance_real = fields.Float(
@@ -210,7 +210,7 @@ class TmsWaybill(models.Model):
                 )],
                 'account_id': product[1][0].id,
             })
-        waybill._transportable_product()
+        waybill._compute_transportable_product()
         waybill.onchange_waybill_line_ids()
 
         return waybill

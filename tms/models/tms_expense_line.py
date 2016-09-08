@@ -91,11 +91,11 @@ class TmsExpenseLine(models.Model):
             rec.price_subtotal = subtotal
             rec.tax_amount = total_discount
 
-   # @api.model
-   # def create(self, values):
-   #     expense_line = super(TmsExpenseLine, self).create(values)
-   #     if expense_line.line_type in ('salary_discount', 'negative_balance'):
-   #         if expense_line.price_total > 0:
-   #             raise ValidationError(_('This line type needs a '
-   #                                     'negative value to continue!'))
-   #     return expense_line
+    @api.model
+    def create(self, values):
+        expense_line = super(TmsExpenseLine, self).create(values)
+        if expense_line.line_type in ('salary_discount', 'negative_balance'):
+            if expense_line.price_total > 0:
+                raise ValidationError(_('This line type needs a '
+                                        'negative value to continue!'))
+        return expense_line
