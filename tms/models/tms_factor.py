@@ -76,6 +76,7 @@ For next option you only have to type Factor like 10.5 for 10.50%:
                        'distance_real': distance_real, 'qty': qty,
                        'volume': volume}
         res = 0.0
+        import ipdb; ipdb.set_trace()
         for rec in self:
             if rec.factor_type == 'travel':
                 res += rec.fixed_amount

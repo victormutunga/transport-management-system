@@ -172,7 +172,7 @@ class TmsExpense(models.Model):
                     if len(travel.waybill_ids.driver_factor_ids) > 0:
                         for waybill_factor in (
                                 waybill.driver_factor_ids):
-                            driver_salary += (
+                            driver_salary = (
                                 waybill_factor.
                                 get_amount(waybill.product_weight,
                                            waybill.distance_route,
@@ -180,17 +180,17 @@ class TmsExpense(models.Model):
                                            waybill.product_qty,
                                            waybill.product_volume,
                                            waybill.amount_total))
-                            rec.amount_salary += driver_salary
+                        rec.amount_salary += driver_salary
                     else:
                         for factor in travel.driver_factor_ids:
-                            driver_salary += factor.get_amount(
+                            driver_salary = factor.get_amount(
                                 waybill.product_weight,
                                 waybill.distance_route,
                                 waybill.distance_real,
                                 waybill.product_qty,
                                 waybill.product_volume,
                                 waybill.amount_total)
-                            rec.amount_salary += driver_salary
+                        rec.amount_salary += driver_salary
             rec.amount_total_total = (rec.amount_fuel +
                                       rec.amount_tax_total)
 
