@@ -35,8 +35,8 @@ class TmsPlace(geo_model.GeoModel):
         help='GPS Longitude')
     point = geo_fields.GeoPoint(
         string='Coordinate',
-        # store=True,
-        # compute='_compute_point'
+        store=True,
+        compute='_compute_point'
         )
 
     @api.multi
@@ -75,11 +75,8 @@ class TmsPlace(geo_model.GeoModel):
             else:
                 rec.complete_name = rec.name
 
-    # @api.depends('latitude', 'longitude')
-    # def _compute_point(self):
-    #     for rec in self:
-    #         point = ('POINT(' + str(rec.latitude) +
-    #                  ' ' + str(rec.longitude) + ')')
-    #         rec.point = geo_fields.GeoPoint.from_latlon(
-    #             rec.env.cr, rec.latitude, rec.longitude)
-    #         rec.point = geo_fields.convert.value_to_shape(point)
+    @api.depends('latitude', 'longitude')
+    def _compute_point(self):
+        for rec in self:
+            rec.point = geo_fields.GeoPoint.from_latlon(
+                self.env.cr, rec.latitude, rec.longitude)
