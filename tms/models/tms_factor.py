@@ -72,14 +72,11 @@ For next option you only have to type Factor like 10.5 for 10.50%:
     @api.multi
     def get_amount(self, weight=0.0, distance=0.0, distance_real=0.0, qty=0.0,
                    volume=0.0, income=0.0):
-        factor_list = {
-            'weight': weight,
-            'distance': distance,
-            'distance_real': distance_real,
-            'qty': qty,
-            'volume': volume
-        }
+        factor_list = {'weight': weight, 'distance': distance,
+                       'distance_real': distance_real, 'qty': qty,
+                       'volume': volume}
         res = 0.0
+        import ipdb; ipdb.set_trace()
         for rec in self:
             if rec.factor_type == 'travel':
                 res += rec.fixed_amount

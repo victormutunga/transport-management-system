@@ -40,67 +40,67 @@ class TmsExpense(models.Model):
     expense_line_ids = fields.One2many(
         'tms.expense.line', 'expense_id', 'Expense Lines')
     amount_real_expense = fields.Float(
-        compute='_amount_all',
+        compute='_compute_real_expense',
         string='Expenses',
         store=True)
     amount_madeup_expense = fields.Float(
-        compute='_compute_madeup',
+        compute='_compute_madeup_expense',
         string='Fake Expenses',
         store=True)
     fuel_qty = fields.Float(
-        compute='_amount_all',
+        compute='_compute_amount_all',
         string='Fuel Qty',
         store=True)
     amount_fuel = fields.Float(
-        compute='_amount_all',
+        compute='_compute_amount_all',
         string='Fuel (Voucher)',
         store=True)
     amount_salary = fields.Float(
-        compute='_amount_all',
+        compute='_compute_amount_all',
         string='Salary',
         store=True)
     amount_net_salary = fields.Float(
-        compute='_amount_all',
+        compute='_compute_amount_all',
         string='Net Salary',
         store=True)
     amount_salary_retention = fields.Float(
-        compute='_amount_all',
+        compute='_compute_amount_all',
         string='Salary Retentions',
         store=True)
     amount_salary_discount = fields.Float(
-        compute='_amount_all',
+        compute='_compute_salary_discount',
         string='Salary Discounts',
         store=True)
     amount_advance = fields.Float(
-        compute='_amount_all',
+        compute='_compute_amount_all',
         string='Advances',
         store=True)
     amount_balance = fields.Float(
-        compute='_amount_all',
+        compute='_compute_subtotal_real',
         string='Balance',
         store=True)
     amount_balance2 = fields.Float(
-        compute='_amount_all',
+        compute='_compute_amount_all',
         string='Balance',
         store=True)
     amount_tax_total = fields.Float(
-        compute='_amount_all',
+        compute='_compute_amount_all',
         string='Taxes (All)',
         store=True)
     amount_tax_real = fields.Float(
-        compute='_amount_all',
+        compute='_compute_amount_all',
         string='Taxes (Real)',
         store=True)
     amount_total_real = fields.Float(
-        compute='_amount_all',
+        compute='_compute_subtotal_real',
         string='Total (Real)',
         store=True)
     amount_total_total = fields.Float(
-        compute='_amount_all',
+        compute='_compute_amount_all',
         string='Total (All)',
         store=True)
     amount_subtotal_real = fields.Float(
-        compute='_amount_all',
+        compute='_compute_subtotal_real',
         string='SubTotal (Real)',
         store=True)
     amount_subtotal_total = fields.Float(
@@ -111,11 +111,11 @@ class TmsExpense(models.Model):
     vehicle_odometer = fields.Float('Vehicle Odometer')
     current_odometer = fields.Float('Current Read')
     distance_routes = fields.Float(
-        compute='_amount_all',
+        compute='_compute_amount_all',
         string='Distance from routes',
         help="Routes Distance")
     distance_real = fields.Float(
-        compute='_amount_all',
+        compute='_compute_amount_all',
         string='Distance Real',
         help="Route obtained by electronic reading and/or GPS")
     odometer_log_id = fields.Many2one(
@@ -154,7 +154,7 @@ class TmsExpense(models.Model):
         'fleet.vehicle.log.fuel', 'expense_id', string='Fuel Vouchers')
 
     @api.depends('travel_ids')
-    def _amount_all(self):
+    def _compute_amount_all(self):
         for rec in self:
             for travel in rec.travel_ids:
                 rec.distance_real += travel.distance_driver
@@ -168,11 +168,11 @@ class TmsExpense(models.Model):
                     rec.amount_tax_total += (
                         fuel_log.tax_amount +
                         fuel_log.special_tax_amount)
-                if len(travel.waybill_ids.driver_factor_ids) > 0:
-                    for waybill in travel.waybill_ids:
+                for waybill in travel.waybill_ids:
+                    if len(travel.waybill_ids.driver_factor_ids) > 0:
                         for waybill_factor in (
                                 waybill.driver_factor_ids):
-                            driver_salary += (
+                            driver_salary = (
                                 waybill_factor.
                                 get_amount(waybill.product_weight,
                                            waybill.distance_route,
@@ -180,30 +180,19 @@ class TmsExpense(models.Model):
                                            waybill.product_qty,
                                            waybill.product_volume,
                                            waybill.amount_total))
-                            rec.amount_salary += driver_salary
-                else:
-                    for factor in travel.driver_factor_ids:
-                        driver_salary += factor.get_amount(
-                            0.0,
-                            factor.route_id.distance,
-                            factor.travel_id.distance_driver,
-                            0.0,
-                            0.0,
-                            0.0)
                         rec.amount_salary += driver_salary
-                rec.amount_subtotal_total = rec.amount_fuel
-            rec.amount_subtotal_real = (rec.amount_salary +
-                                        rec.amount_salary_discount +
-                                        rec.amount_real_expense)
-            rec.amount_total_real = (rec.amount_subtotal_real +
-                                     rec.amount_tax_real)
+                    else:
+                        for factor in travel.driver_factor_ids:
+                            driver_salary = factor.get_amount(
+                                waybill.product_weight,
+                                waybill.distance_route,
+                                waybill.distance_real,
+                                waybill.product_qty,
+                                waybill.product_volume,
+                                waybill.amount_total)
+                        rec.amount_salary += driver_salary
             rec.amount_total_total = (rec.amount_fuel +
                                       rec.amount_tax_total)
-            rec.amount_balance = (rec.amount_total_real -
-                                  rec.amount_advance)
-            for discount in rec.expense_line_ids:
-                if discount.line_type == 'salary_discount':
-                    rec.amount_salary_discount += discount.price_total
 
     @api.multi
     def get_travel_info(self):
@@ -216,10 +205,7 @@ class TmsExpense(models.Model):
                 ('control', '=', True)]).unlink()
             travels = self.env['tms.travel'].search(
                 [('expense_id', '=', rec.id)])
-            travels.write({
-                'expense_id': False,
-                'state': 'done'
-                })
+            travels.write({'expense_id': False, 'state': 'done'})
             advances = self.env['tms.advance'].search(
                 [('expense_id', '=', rec.id)])
             advances.write({
@@ -292,6 +278,46 @@ class TmsExpense(models.Model):
         sequence = expense.base_id.expense_sequence_id
         expense.name = sequence.next_by_id()
         return expense
+
+    @api.multi
+    @api.depends('expense_line_ids')
+    def _compute_salary_discount(self):
+        for rec in self:
+            for discount in rec.expense_line_ids:
+                if discount.line_type == 'salary_discount':
+                    rec.amount_salary_discount += discount.price_total
+
+    @api.multi
+    @api.depends('expense_line_ids')
+    def _compute_madeup_expense(self):
+        for rec in self:
+            for discount in rec.expense_line_ids:
+                if discount.line_type == 'madeup_expense':
+                    rec.amount_madeup_expense += discount.price_total
+
+    @api.multi
+    @api.depends('expense_line_ids')
+    def _compute_real_expense(self):
+        for rec in self:
+            for discount in rec.expense_line_ids:
+                if discount.line_type == 'real_expense':
+                    rec.amount_real_expense += discount.price_total
+
+    @api.multi
+    @api.depends('amount_salary',
+                 'amount_salary_discount',
+                 'amount_real_expense',
+                 'amount_tax_real')
+    def _compute_subtotal_real(self):
+        for rec in self:
+            rec.amount_subtotal_real = (
+                rec.amount_salary +
+                rec.amount_salary_discount + rec.amount_real_expense)
+            rec.amount_total_real = (
+                rec.amount_subtotal_real +
+                rec.amount_tax_real)
+            rec.amount_balance = (rec.amount_total_real -
+                                  rec.amount_advance)
 
     @api.multi
     def write(self, values):

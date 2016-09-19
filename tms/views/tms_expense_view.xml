@@ -49,7 +49,7 @@
                         <group col="4">
                             <field name="base_id"/>
                             <field name="date"/>
-                            <field name="unit_id"/>
+                            <field name="unit_id" domain="[('base_id', '=', base_id)]"/>
                             <field name="employee_id" domain="[('base_id','=',base_id)]"/>
                             <field name="currency_id"/>
                         </group>
@@ -68,7 +68,7 @@
                                             <field class="oe_text_right" name="amount_advance"/>
                                             <field class="oe_text_right" name="amount_balance" style="font-weight: bold;"/>
                                             <separator colspan="2" string="Including Fuel Vouchers"/>
-                                            <field class="oe_text_right" name="amount_fuel"/>tambi
+                                            <field class="oe_text_right" name="amount_fuel"/>
                                             <field class="oe_text_right" name="amount_subtotal_total" style="font-weight: bold;"/>
                                             <field class="oe_text_right" name="amount_tax_total"/>
                                             <field class="oe_text_right" name="amount_total_total" style="font-weight: bold;"/>
