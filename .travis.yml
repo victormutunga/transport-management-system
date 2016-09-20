@@ -24,6 +24,8 @@ addons:
 #     Search your packages here:
 #       https://github.com/travis-ci/apt-package-whitelist/blob/master/ubuntu-precise
       - wkhtmltopdf  # only add if needed and check the before_install section below
+      - python-Shapely
+      - python-geojson
 
 # set up an X server to run wkhtmltopdf.
 #before_install:
