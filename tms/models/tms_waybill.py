@@ -197,14 +197,14 @@ class TmsWaybill(models.Model):
         ]
         for product in products:
             self.waybill_line_ids.create({
-                'name': product[0][0].name,
+                'name': product[0].name,
                 'waybill_id': waybill.id,
-                'product_id': product[0][0].id,
+                'product_id': product[0].id,
                 'tax_ids': [(
                     6, 0, [x.id for x in (
-                        product[0][0].supplier_taxes_id)]
+                        product[0].supplier_taxes_id)]
                 )],
-                'account_id': product[1][0].id,
+                'account_id': product[1].id,
             })
         waybill._compute_transportable_product()
         waybill.onchange_waybill_line_ids()
@@ -248,7 +248,7 @@ class TmsWaybill(models.Model):
         'transportable_line_ids', 'customer_factor_ids')
     def _compute_transportable_product(self):
         for waybill in self:
-            volume = weight = qty = distance_real = distance_route = 0.0
+            volume = weight = qty = distance_real = distance_route = 0
             for record in waybill.transportable_line_ids:
                 total = 0.0
                 for factor in waybill.customer_factor_ids:
@@ -275,11 +275,11 @@ class TmsWaybill(models.Model):
                         waybill.product_weight, waybill.distance_route,
                         waybill.distance_real, waybill.product_qty,
                         waybill.product_volume, waybill.amount_total)
-                    total = total + total_get_amount
+                    total = (total + total_get_amount) * qty
                     for product in waybill.waybill_line_ids:
                         if (product.product_id.name ==
                                 waybill.base_id.waybill_freight_id.name):
-                            product.update({'unit_price': total})
+                            product.write({'unit_price': total})
 
     @api.depends('waybill_line_ids')
     @api.multi
