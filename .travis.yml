@@ -24,8 +24,6 @@ addons:
 #     Search your packages here:
 #       https://github.com/travis-ci/apt-package-whitelist/blob/master/ubuntu-precise
       - wkhtmltopdf  # only add if needed and check the before_install section below
-      - python-Shapely
-      - python-geojson
 
 # set up an X server to run wkhtmltopdf.
 #before_install:
@@ -69,6 +67,7 @@ virtualenv:
   system_site_packages: true
 
 install:
+  - pip install geojson Shapely
   - wget https://pypi.python.org/packages/40/b7/ee769260fbfb1617fadbfd3919cb5e3f019071b6f1bea338745f82e466f1/sodapy-1.3.0.tar.gz && tar xvf sodapy-1.3.0.tar.gz && cd sodapy-* && python setup.py install
   - git clone --depth=1 https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
   - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}

@@ -100,5 +100,4 @@ For next option you only have to type Factor like 10.5 for 10.50%:
                     else:
                         raise ValidationError(
                             _('the amount isnt between of any ranges'))
-        if res != 0.0:
-            return res
+        return res
