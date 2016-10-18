@@ -5,16 +5,14 @@
 
 import urllib as my_urllib
 
-from openerp import api, fields
+from openerp import api, fields, models
 from openerp.exceptions import UserError
 from openerp.tools.translate import _
-from openerp.addons.base_geoengine import geo_model
-from openerp.addons.base_geoengine import fields as geo_fields
 
 import simplejson as json
 
 
-class TmsPlace(geo_model.GeoModel):
+class TmsPlace(models.Model):
     _name = 'tms.place'
     _description = 'Cities / Places'
 
@@ -33,11 +31,6 @@ class TmsPlace(geo_model.GeoModel):
     longitude = fields.Float(
         'Longitude', required=False, digits=(20, 10),
         help='GPS Longitude')
-    point = geo_fields.GeoPoint(
-        string='Coordinate',
-        store=True,
-        compute='_compute_point'
-        )
 
     @api.multi
     def get_coordinates(self):
@@ -74,9 +67,3 @@ class TmsPlace(geo_model.GeoModel):
                 rec.complete_name = rec.name + ', ' + rec.state_id.name
             else:
                 rec.complete_name = rec.name
-
-    @api.depends('latitude', 'longitude')
-    def _compute_point(self):
-        for rec in self:
-            rec.point = geo_fields.GeoPoint.from_latlon(
-                self.env.cr, rec.latitude, rec.longitude)

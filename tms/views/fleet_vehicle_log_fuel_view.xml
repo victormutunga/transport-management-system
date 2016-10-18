@@ -68,7 +68,7 @@
         <record id="fleet_vehicle_log_fuel_tree" model="ir.ui.view">
             <field name="name">tms.fleet.vehicle.log.fuel.tree</field>
             <field name="model">fleet.vehicle.log.fuel</field>
-            <field name="inherit_id" ref="fleet.fleet_vehicle_log_fuel_tree"/>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_log_fuel_view_tree"/>
             <field name="arch" type="xml">
                 <field name="liter" position="replace"></field>
                 <field name="purchaser_id" position="replace"></field>
@@ -82,7 +82,7 @@
                 </field>
             </field>
         </record>
-        <menuitem action="fleet.fleet_vehicle_log_fuel_act" 
+        <menuitem action="fleet.fleet_vehicle_log_fuel_action" 
             id="fuel_vehicle_log_menu" 
             name="Fuel Voucher" 
             parent="tms.menu_tms_travels" 

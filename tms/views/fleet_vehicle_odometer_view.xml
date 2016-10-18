@@ -4,7 +4,7 @@
         <record id="fleet_vehicle_odometer_inherit_tms" model="ir.ui.view">
             <field name="name">fleet.vehicle.odometer.tree.tms</field>
             <field name="model">fleet.vehicle.odometer</field>
-            <field name="inherit_id" ref="fleet.fleet_vehicle_odometer_tree"/>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_odometer_view_tree"/>
             <field name="arch" type="xml">
                 <field name="vehicle_id" position="after">
                     <!-- <field name="odometer_id" />-->
@@ -15,6 +15,6 @@
                 </field>
             </field>
         </record>
-        <menuitem action="fleet.fleet_vehicle_odometer_act" id="tms_fleet_vehicle_odometer_menu" parent="menu_tms_settings_unit" name="Units Odometers" sequence="12"/>
+        <menuitem action="fleet.fleet_vehicle_odometer_action" id="tms_fleet_vehicle_odometer_menu" parent="menu_tms_settings_unit" name="Units Odometers" sequence="12"/>
     </data>
 </odoo>

@@ -15,7 +15,6 @@
         "hr",
         "purchase",
         "sale",
-        "base_geoengine",
         ],
     "summary": "Management System for Carriers, Trucking and other companies",
     "license": "AGPL-3",
