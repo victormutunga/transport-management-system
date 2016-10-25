@@ -67,6 +67,10 @@ class TestTmsFactor(TransactionCase):
             'distance', 'driver', 'distance', 12.0, 2)
         for record in factor_type_list:
             factor.write({'factor_type': record[0]})
+            if factor.factor_type == 'distance':
+                factor.write({'mixed': True})
+            else:
+                factor.write({'mixed': False})
             value = factor.get_amount(12.0, 12.0, 12.0, 12.0, 12.0, 12.0)
             if factor.factor_type == 'travel':
                 self.assertEqual(
