@@ -18,11 +18,14 @@ class TestTmsFactor(TransactionCase):
         super(TestTmsFactor, self).setUp()
         self.factor = self.env['tms.factor']
 
-    def create_factor(self, name, category, factor_type):
+    def create_factor(self, name, category, factor_type, factor,
+                      fixed_amount):
         factor = self.factor.create({
             'name': name,
             'category': category,
             'factor_type': factor_type,
+            'factor': factor,
+            'fixed_amount': fixed_amount,
         })
         return factor
 
@@ -43,8 +46,14 @@ class TestTmsFactor(TransactionCase):
         ]
 
         factor = self.create_factor(
-            'distance', 'driver', 'distance')
+            'distance', 'driver', 'distance', 12.0, 2)
         for record in factor_type_list:
             factor.write({'factor_type': record[0]})
             factor._onchange_factor_type()
             self.assertEqual(factor.name, record[1], 'On change works')
+
+    def test_20_tms_factor_get_amount(self):
+        factor = self.create_factor(
+            'distance', 'driver', 'distance', 12.0, 2)
+        value = factor.get_amount(12.0, 12.0, 12.0, 12.0, 12.0, 12.0)
+        self.assertEqual(value, 144.0, 'Get Amount Correct')
