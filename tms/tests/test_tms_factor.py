@@ -53,7 +53,30 @@ class TestTmsFactor(TransactionCase):
             self.assertEqual(factor.name, record[1], 'On change works')
 
     def test_20_tms_factor_get_amount(self):
+        factor_type_list = [
+            ['distance', 'Distance Route (Km/Mi)'],
+            ['distance_real', 'Distance Real (Km/Mi)'],
+            ['weight', 'Weight'],
+            ['travel', 'Travel'],
+            ['qty', 'Quantity'],
+            ['volume', 'Volume'],
+            ['percent', 'Income Percent'],
+        ]
+
         factor = self.create_factor(
             'distance', 'driver', 'distance', 12.0, 2)
-        value = factor.get_amount(12.0, 12.0, 12.0, 12.0, 12.0, 12.0)
-        self.assertEqual(value, 144.0, 'Get Amount Correct')
+        for record in factor_type_list:
+            factor.write({'factor_type': record[0]})
+            value = factor.get_amount(12.0, 12.0, 12.0, 12.0, 12.0, 12.0)
+            if factor.factor_type == 'travel':
+                self.assertEqual(
+                    value, 2.0,
+                    'Get Amount Incorrect factor type(travel)')
+            elif factor.factor_type == 'percent':
+                self.assertEqual(
+                    value, 1.44,
+                    'Get Amount Incorrect factor type(travel)')
+            else:
+                self.assertEqual(
+                    value, 144.0,
+                    'Get Amount Incorrect factor type(travel)')
