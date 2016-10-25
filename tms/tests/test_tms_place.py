@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp.tests.common import TransactionCase
-
+from openerp import api
 
 class TestTmsPlace(TransactionCase):
     """
@@ -40,3 +40,15 @@ class TestTmsPlace(TransactionCase):
         self.place._compute_complete_name()
         self.assertEqual(self.place.complete_name, 'San Antonio, Texas',
                          'Full Complete Name')
+
+    @api.depends('name', 'state_id')
+    def test_40_tms_place_compute_complete_name(self):
+        '''
+        This test check the compute complete name.
+        '''
+        self.place.write({'name': 'San Francisco'})
+        self.place._compute_complete_name()
+        self.assertEqual(
+            self.place.complete_name,
+            'San Francisco, Texas',
+            'On change works')
