@@ -16,7 +16,12 @@
         "purchase",
         "sale",
         "base_geoengine",
+    ],
+    'external_dependencies': {
+        'python': [
+            'sodapy',
         ],
+    },
     "summary": "Management System for Carriers, Trucking and other companies",
     "license": "AGPL-3",
     "data": [
@@ -51,16 +56,18 @@
         'wizards/tms_fuelvoucher_invoice_view.xml',
     ],
     "demo": [
+        'demo/fleet_vehicle_engine.xml',
+        'demo/fleet_vehicle.xml',
         'demo/hr_employee.xml',
         'demo/tms_place.xml',
         'demo/tms_route.xml',
-        'demo/tms_transportable.xml',
-        'demo/fleet_vehicle_engine.xml',
-        'demo/fleet_vehicle.xml',
         'demo/tms_travel.xml',
         'demo/tms_advance.xml',
-        'demo/tms_unit_kit.xml',
         'demo/tms_route_fuelefficiency.xml',
+        'demo/tms_transportable.xml',
+        'demo/tms_travel.xml',
+        'demo/tms_unit_kit.xml',
+        # 'demo/tms_waybill.xml'
     ],
     "application": True,
     "installable": True,

@@ -4,6 +4,9 @@
 
 from openerp.tests.common import TransactionCase
 from openerp import api
+from mock import MagicMock
+from openerp.exceptions import UserError
+
 
 class TestTmsPlace(TransactionCase):
     """
@@ -52,3 +55,14 @@ class TestTmsPlace(TransactionCase):
             self.place.complete_name,
             'San Francisco, Texas',
             'On change works')
+        self.place.write({'state_id': False})
+        self.place._compute_complete_name()
+        self.assertEqual(
+            self.place.complete_name,
+            'San Francisco',
+            'On change works')
+
+    def test_50_tms_place_get_cordinates(self):
+        self.place.get_coordinates = MagicMock()
+        self.place.get_coordinates.return_value = UserError(
+            'Google Maps is not available.')

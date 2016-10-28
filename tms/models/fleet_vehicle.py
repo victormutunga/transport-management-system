@@ -4,7 +4,6 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp import fields, models
-from openerp.osv import fields as old_fields
 
 
 class OldFleetVehicle(models.Model):
@@ -14,9 +13,8 @@ class OldFleetVehicle(models.Model):
     """
     _name = 'fleet.vehicle'
     _inherit = 'fleet.vehicle'
-    _columns = {
-        'name': old_fields.char('Name', required=True),
-    }
+
+    name = fields.Char('Name', required=True)
 
 
 class FleetVehicle(models.Model):
