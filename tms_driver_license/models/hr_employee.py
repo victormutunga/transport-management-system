@@ -3,10 +3,17 @@
 # © <2016> <Jarsa Sistemas, S.A. de C.V.>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
+import logging
+from datetime import datetime
+
 from openerp import _, api, fields, models
 from openerp.exceptions import ValidationError
-from datetime import datetime
-from sodapy import Socrata
+
+_logger = logging.getLogger(__name__)
+try:
+    from sodapy import Socrata
+except ImportError:
+    _logger.debug('Cannot `import sodapy`.')
 
 
 class HrEmployee(models.Model):

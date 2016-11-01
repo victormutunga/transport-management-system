@@ -23,10 +23,12 @@
 ##############################################################################
 
 
-from osv import osv
-from tools.translate import _
 from datetime import datetime, timedelta
+
+from osv import osv
 from tools import DEFAULT_SERVER_DATE_FORMAT
+from tools.translate import _
+
 
 class tms_travel(osv.osv):
     _inherit='tms.travel'

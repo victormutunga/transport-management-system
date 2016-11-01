@@ -5,13 +5,13 @@
 
 import urllib as my_urllib
 
+import simplejson as json
+
 from openerp import api, fields
+from openerp.addons.base_geoengine import fields as geo_fields
+from openerp.addons.base_geoengine import geo_model
 from openerp.exceptions import UserError
 from openerp.tools.translate import _
-from openerp.addons.base_geoengine import geo_model
-from openerp.addons.base_geoengine import fields as geo_fields
-
-import simplejson as json
 
 
 class TmsPlace(geo_model.GeoModel):

@@ -23,10 +23,11 @@
 ##############################################################################
 
 
-from osv import osv, fields
-from tools.translate import _
 from datetime import datetime, timedelta
+
+from osv import fields, osv
 from tools import DEFAULT_SERVER_DATE_FORMAT
+from tools.translate import _
 
 
 class fleet_vehicle_expired_insurance(osv.osv_memory):
