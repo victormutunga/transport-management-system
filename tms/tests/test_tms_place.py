@@ -64,5 +64,6 @@ class TestTmsPlace(TransactionCase):
 
     def test_50_tms_place_get_cordinates(self):
         self.place.get_coordinates = MagicMock()
-        self.place.get_coordinates.return_value = UserError(
-            'Google Maps is not available.')
+        attrs = {'other.side_effect': UserError}
+        self.place.get_coordinates.configure_mock(**attrs)
+        self.place.get_coordinates.other()
