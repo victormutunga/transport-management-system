@@ -13,7 +13,7 @@ class TmsAdvance(models.Model):
     _order = "name desc, date desc"
 
     base_id = fields.Many2one(
-        'tms.base', string='Base', required=True
+        'operating.unit', string='Base', required=True
     )
     name = fields.Char(
         'Advance Number',

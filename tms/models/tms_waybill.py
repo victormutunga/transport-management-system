@@ -13,7 +13,7 @@ class TmsWaybill(models.Model):
     _order = 'name desc'
 
     base_id = fields.Many2one(
-        'tms.base', string='Base', required=True)
+        'operating.unit', string='Base', required=True)
     customer_factor_ids = fields.One2many(
         'tms.factor', 'waybill_id',
         string='Waybill Customer Charge Factors',
