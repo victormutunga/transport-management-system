@@ -5,6 +5,8 @@
 
 
 from openerp import fields, models
+
+
 # from openerp.tools.translate import _
 
 # Vehicle Odometer records
