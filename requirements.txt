@@ -1,3 +1,4 @@
 geojson
 Shapely
-sodapy
+geopy
+geographiclib
