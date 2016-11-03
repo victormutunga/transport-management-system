@@ -21,5 +21,10 @@
         "views/hr_employee_view.xml",
         "data/ir_config_parameter.xml",
     ],
+    'external_dependencies': {
+        'python': [
+            'sodapy',
+        ],
+    },
     "demo": [],
 }

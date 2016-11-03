@@ -2,10 +2,10 @@
 # © <2016> <Jarsa Sistemas, S.A. de C.V.>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
+from psycopg2 import IntegrityError
+
 from openerp.tests.common import TransactionCase
 from openerp.tools import mute_logger
-
-from psycopg2 import IntegrityError
 
 
 class TestTmsTransportable(TransactionCase):

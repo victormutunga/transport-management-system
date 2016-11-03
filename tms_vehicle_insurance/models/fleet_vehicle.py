@@ -23,11 +23,13 @@
 ##############################################################################
 
 
-from osv import osv, fields
-import netsvc
-from tools.translate import _
-from datetime import datetime
 import base64
+from datetime import datetime
+
+import netsvc
+from osv import fields, osv
+from tools.translate import _
+
 
 class fleet_vehicle(osv.osv):
     _inherit='fleet.vehicle'
@@ -99,5 +101,3 @@ class fleet_vehicle(osv.osv):
             mail_mail_obj.write(cr, uid, msg_id, {'attachment_ids': [(6, 0, [attachment_id])]}, context=context)
             mail_mail_obj.send(cr, uid, [msg_id], context=context)
         return True
-
-
