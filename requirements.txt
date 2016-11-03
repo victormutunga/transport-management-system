@@ -1,2 +1,4 @@
 geojson
 Shapely
+geopy
+geographiclib
