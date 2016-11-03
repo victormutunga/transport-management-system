@@ -27,7 +27,7 @@ class TestTmsTransportable(TransactionCase):
             self.transportable.create({'name': 'Test', 'uom_id': self.ton.id})
             self.transportable.create({'name': 'Test', 'uom_id': self.ton.id})
 
-    def test_20_duplicate_transportable(self):
-        transportable = self.env.ref('tms.tms_transportable_01')
-        transportable.copy()
-        transportable.copy()
+    # def test_20_duplicate_transportable(self):
+    #     transportable = self.env.ref('tms.tms_transportable_01')
+    #     transportable.copy()
+    #     transportable.copy()

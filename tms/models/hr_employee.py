@@ -19,4 +19,4 @@ class HrEmployee(models.Model):
     tms_expense_negative_balance_account_id = fields.Many2one(
         'account.account', 'Negative Balance Account')
     base_id = fields.Many2one(
-        'tms.base', 'Base')
+        'operating.unit', 'Base')

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <record id="tms.tms_base_1" model="tms.base">
+        <record id="tms.tms_base_1" model="operating.unit">
             <field name="account_fuel_id" ref="tms_demo.account_waybill_product_fuel_log"/>
             <field name="account_freight_id" ref="tms_demo.account_waybill_product_freight"/>
             <field name="account_moves_id" ref="tms_demo.account_waybill_product_move"/>

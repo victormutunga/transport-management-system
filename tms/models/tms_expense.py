@@ -14,7 +14,7 @@ class TmsExpense(models.Model):
     _order = 'name desc'
 
     name = fields.Char(readonly=True)
-    base_id = fields.Many2one('tms.base', string='Base', required=True)
+    base_id = fields.Many2one('operating.unit', string='Base', required=True)
     employee_id = fields.Many2one(
         'hr.employee', 'Driver', required=True,
         domain=[('driver', '=', True)])

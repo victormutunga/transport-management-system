@@ -6,22 +6,20 @@
 from openerp import fields, models
 
 
-class TmsBase(models.Model):
-    _name = 'tms.base'
-    _description = 'Base'
+class OperatingUnit(models.Model):
+    _inherit = 'operating.unit'
 
-    name = fields.Char(string='', required=True)
     travel_sequence_id = fields.Many2one(
         'ir.sequence',
-        string='Travel Sequence', required=True)
+        string='Travel Sequence')
     fuel_log_sequence_id = fields.Many2one(
-        'ir.sequence', string='Fuel Log Sequence', required=True)
+        'ir.sequence', string='Fuel Log Sequence')
     advance_sequence_id = fields.Many2one(
-        'ir.sequence', string='Advance Sequence', required=True)
+        'ir.sequence', string='Advance Sequence')
     waybill_sequence_id = fields.Many2one(
-        'ir.sequence', string='Waybill Sequence', required=True)
+        'ir.sequence', string='Waybill Sequence')
     expense_sequence_id = fields.Many2one(
-        'ir.sequence', string='Expense Sequence', required=True)
+        'ir.sequence', string='Expense Sequence')
     advance_journal_id = fields.Many2one(
         'account.journal',
         string='Advance Journal')

@@ -3,6 +3,7 @@
 # © <2016> <Jarsa Sistemas, S.A. de C.V.>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
+from . import operating_unit
 from . import account_payment
 from . import account_invoice
 from . import fleet_vehicle
@@ -24,7 +25,6 @@ from . import tms_waybill
 from . import tms_waybill_line
 from . import tms_waybill_transportable_line
 from . import tms_waybill_taxes
-from . import tms_base
 from . import tms_route_place
 from . import fleet_vehicle_engine
 from . import tms_route_fuelefficiency

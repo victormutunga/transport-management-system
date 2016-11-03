@@ -49,7 +49,7 @@ class FleetVehicleLogFuel(models.Model):
         string='Invoice Paid',
         compute='_compute_invoiced_paid')
     base_id = fields.Many2one(
-        'tms.base',
+        'operating.unit',
         string='Base')
     currency_id = fields.Many2one(
         'res.currency', string='Currency',
