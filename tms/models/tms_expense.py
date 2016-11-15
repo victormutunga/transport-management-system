@@ -133,7 +133,7 @@ class TmsExpense(models.Model):
         help="Link to the automatically generated Journal Items.")
     paid = fields.Boolean(
         # compute=_paid
-        )
+    )
     advance_ids = fields.One2many(
         'tms.advance', 'expense_id', string='Advances', readonly=True)
     fuel_qty_real = fields.Float(
@@ -146,7 +146,7 @@ class TmsExpense(models.Model):
         "versus Fuel qty computed based on Distance Real and Global Fuel "
         "Efficiency Real obtained by electronic reading and/or GPS"
         # compute=_get_fuel_diff
-        )
+    )
     global_fuel_efficiency_real = fields.Float(
         # compute=_get_fuel_diff,
         string='Global Fuel Efficiency Real')
@@ -164,7 +164,7 @@ class TmsExpense(models.Model):
                 rec.amount_fuel = 0.0
                 driver_salary = 0.0
                 for fuel_log in travel.fuel_log_ids:
-                    rec.amount_fuel += fuel_log.price_total
+                    rec.amount_fuel += fuel_log.price_subtotal
                     rec.amount_tax_total += (
                         fuel_log.tax_amount +
                         fuel_log.special_tax_amount)
@@ -211,13 +211,13 @@ class TmsExpense(models.Model):
             advances.write({
                 'expense_id': False,
                 'state': 'confirmed'
-                })
+            })
             fuel_logs = self.env['fleet.vehicle.log.fuel'].search(
                 [('expense_id', '=', rec.id)])
             fuel_logs.write({
                 'expense_id': False,
                 'state': 'confirmed'
-                })
+            })
             for travel in rec.travel_ids:
                 travel.write({'state': 'closed', 'expense_id': rec.id})
                 for advance in travel.advance_ids:
@@ -262,7 +262,7 @@ class TmsExpense(models.Model):
                             'is_invoice': fuel_log.invoice_paid,
                             'invoice_id': fuel_log.invoice_id.id,
                             'control': True
-                            })
+                        })
                 rec.expense_line_ids.create({
                     'name': _("Salary per travel: ") + str(travel.name),
                     'travel_id': travel.id,
@@ -339,19 +339,19 @@ class TmsExpense(models.Model):
                 travels.write({
                     'expense_id': False,
                     'state': 'done'
-                    })
+                })
                 advances = self.env['tms.advance'].search(
                     [('expense_id', '=', rec.id)])
                 advances.write({
                     'expense_id': False,
                     'state': 'confirmed'
-                    })
+                })
                 fuel_logs = self.env['fleet.vehicle.log.fuel'].search(
                     [('expense_id', '=', rec.id)])
                 fuel_logs.write({
                     'expense_id': False,
                     'state': 'confirmed'
-                    })
+                })
                 return super(TmsExpense, self).unlink()
 
     @api.multi

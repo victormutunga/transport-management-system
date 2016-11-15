@@ -62,19 +62,6 @@ class TmsWaybillInvoice(models.TransientModel):
                                 'name': product.name,
                                 'account_id': product.account_id.id,
                             }))
-                waybill.invoice_id = self.env['account.invoice'].create({
-                    'partner_id': waybill.partner_id.id,
-                    'fiscal_position_id': (
-                        waybill.partner_id.property_account_position_id.id),
-                    'reference': waybill.name,
-                    'currency_id': waybill.currency_id.id,
-                    'account_id': (
-                        waybill.partner_id.property_account_payable_id.id),
-                    'type': 'out_invoice',
-                    'invoice_line_ids': [line for line in lines],
-                    })
-                waybill.write({'invoice_id': waybill.invoice_id.id})
-
         for partner_id in partner_ids:
             if control == 0:
                 old_partner = partner_id
@@ -88,3 +75,18 @@ class TmsWaybillInvoice(models.TransientModel):
                       'Please check it.'))
             else:
                 old_partner = partner_id
+
+        invoice_id = self.env['account.invoice'].create({
+            'partner_id': waybill.partner_id.id,
+            'fiscal_position_id': (
+                waybill.partner_id.property_account_position_id.id),
+            'reference': waybill_names,
+            'currency_id': currency.id,
+            'account_id': (
+                waybill.partner_id.property_account_payable_id.id),
+            'type': 'out_invoice',
+            'invoice_line_ids': [line for line in lines],
+        })
+
+        for waybill in active_ids:
+            waybill.write({'invoice_id': invoice_id.id})

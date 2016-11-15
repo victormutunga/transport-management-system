@@ -78,22 +78,20 @@ class FleetVehicleLogFuel(models.Model):
     @api.depends('product_uom_qty', 'tax_amount', 'price_total')
     def _compute_price_subtotal(self):
         for rec in self:
-            rec.price_subtotal = rec.price_total - rec.tax_amount
+            rec.price_subtotal = rec.tax_amount / 0.16
 
     @api.multi
     @api.depends('product_uom_qty', 'price_total', 'tax_amount')
     def _compute_price_unit(self):
         for rec in self:
-            rec.price_unit = ((rec.price_total - rec.tax_amount -
-                               rec.special_tax_amount) /
-                              rec.product_uom_qty)
+            rec.price_unit = rec.price_subtotal / rec.product_uom_qty
 
     @api.multi
     @api.depends('product_uom_qty', 'tax_amount')
     def _compute_special_tax_amount(self):
         for rec in self:
-            rec.special_tax_amount = rec.price_subtotal - ((
-                rec.tax_amount / 16) * 100)
+            rec.special_tax_amount = rec.price_total - (
+                rec.price_subtotal + rec.tax_amount)
 
     @api.multi
     def action_approved(self):
