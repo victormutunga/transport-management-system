@@ -502,3 +502,17 @@ class TmsWaybill(models.Model):
         for rec in self:
             paid = (rec.invoice_id and rec.invoice_id.state == 'paid')
             self.supplier_invoice_paid = paid
+
+    @api.constrains('travel_ids')
+    def check_travel_ids(self):
+        flag = False
+        old_driver = 0
+        for line in self.travel_ids:
+            if not flag:
+                old_driver = line.employee_id.id
+                flag = True
+            if line.employee_id.id != old_driver:
+                raise exceptions.ValidationError(
+                    _('You cannot add two different operators in a waybill'))
+            else:
+                old_driver = line.employee_id.id
