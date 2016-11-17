@@ -84,13 +84,13 @@ class TmsWaybill(models.Model):
         'account.invoice', 'Invoice', readonly=True)
     invoice_paid = fields.Boolean(
         compute="_compute_invoice_paid"
-        )
+    )
     supplier_invoice_id = fields.Many2one(
         'account.invoice', 'Supplier Invoice', readonly=True)
     supplier_invoice_paid = fields.Boolean(
         compute='_compute_supplier_invoice_paid',
         string='Supplier Invoice Paid',
-        )
+    )
     waybill_line_ids = fields.One2many(
         'tms.waybill.line', 'waybill_id',
         string='Waybill Lines')
@@ -133,6 +133,8 @@ class TmsWaybill(models.Model):
     distance_real = fields.Float(
         'Distance Real',
         help="Route obtained by electronic reading")
+    distance_route = fields.Float(
+        'Distance Route')
     notes = fields.Text()
     date_start = fields.Datetime(
         'Load Date Sched', help="Date Start time for Load",
@@ -184,14 +186,6 @@ class TmsWaybill(models.Model):
         sequence = waybill.base_id.waybill_sequence_id
         waybill.name = sequence.next_by_id()
         products = [
-            [waybill.base_id.waybill_other_product_id,
-             waybill.base_id.account_other_id],
-            [waybill.base_id.waybill_insurance_id,
-             waybill.base_id.account_insurance_id],
-            [waybill.base_id.waybill_highway_tolls_id,
-             waybill.base_id.account_highway_tolls_id],
-            [waybill.base_id.waybill_moves_id,
-             waybill.base_id.account_moves_id],
             [waybill.base_id.waybill_freight_id,
              waybill.base_id.account_freight_id]
         ]
@@ -379,7 +373,7 @@ class TmsWaybill(models.Model):
                 xsubtotal = waybill.currency_id.compute(
                     waybill_line.price_subtotal,
                     waybill.currency_id,
-                    )
+                )
                 if xsubtotal > 0.0:
                     move_line = (
                         0, 0,
@@ -435,7 +429,7 @@ class TmsWaybill(models.Model):
             tax_grouped = {}
             for line in waybill.waybill_line_ids:
                 unit_price = (
-                    line.unit_price * (1-(line.discount or 0.0) / 100.0))
+                    line.unit_price * (1 - (line.discount or 0.0) / 100.0))
                 taxes = line.tax_ids.compute_all(
                     unit_price, waybill.currency_id, line.product_qty,
                     line.product_id, waybill.partner_id)
