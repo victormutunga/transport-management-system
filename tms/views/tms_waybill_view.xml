@@ -67,7 +67,6 @@
                                             <field name="transportable_uom_id"/>
                                             <field name='quantity'/>
                                             <field name="notes"/>
-                                            <field name="sequence"/>
                                         </tree>
                                     </field>
                                     <separator colspan="4" string="Waybill Lines"/>

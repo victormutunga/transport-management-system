@@ -14,7 +14,7 @@ class OldFleetVehicle(models.Model):
     _name = 'fleet.vehicle'
     _inherit = 'fleet.vehicle'
 
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name')
 
 
 class FleetVehicle(models.Model):
