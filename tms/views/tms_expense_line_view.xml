@@ -28,23 +28,14 @@
                             <field name="line_type"/>
                             <field name="name"/>
                             <field name="expense_id" invisible="1"/>
+                            <field name="product_id" attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}"/>
                         </group>
-                        <group>
-                            <group string="Product Details">
-                                <field name="product_id" attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}"/>
-                                <field name="product_uom_id" attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}"/>
-                                <field name="product_uom_qty" attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}"/>
-                                <field name="price_unit_control" attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}"/>
-                                <field name="price_subtotal" attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}"/>
-                                <field name="tax_amount" attrs="{'invisible':[('is_invoice', '=', False)]}"/>
-                                <field name="price_total"/>
-                            </group>
+                            
                             <group string="Supplier Details">
                                 <field name="is_invoice" attrs="{'invisible':[('line_type','!=','real_expense')]}"/>
                                 <field name="partner_id" attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}"/>
-                                <field name="invoice_id" attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}" domain="[('partner_id', '=', partner_id)]" />
+                                <field name="invoice_id" attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}" domain="[('partner_id', '=', partner_id),('state', 'not in', ['paid'])]" />
                             </group>
-                        </group>
                         <newline/>
                         <!-- <field name="price_subtotal" readonly="1"/> -->
                         <newline/>

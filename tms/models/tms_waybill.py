@@ -496,3 +496,12 @@ class TmsWaybill(models.Model):
         for rec in self:
             paid = (rec.invoice_id and rec.invoice_id.state == 'paid')
             self.supplier_invoice_paid = paid
+
+    @api.multi
+    @api.constrains('departure_address_id', 'arrival_address_id')
+    def departure_arrival(self):
+        for rec in self:
+            if rec.departure_address_id == rec.arrival_address_id:
+                raise exceptions.ValidationError(
+                    _('The Departure Address and the Arrival'
+                      ' Address cannot be the same'))

@@ -27,7 +27,6 @@ class TmsAdvance(models.Model):
         'State',
         readonly=True,
         default='draft')
-
     date = fields.Date(
         'Date',
         required=True,
@@ -135,6 +134,10 @@ class TmsAdvance(models.Model):
                         _('Warning! The driver does not have a home address'
                           ' assigned. \nCheck if you already set the '
                           'home address for the employee.'))
+                if not advance_debit_account_id:
+                    raise exceptions.ValidationError(
+                        _('Warning! You must have configured the accounts'
+                            'of the tms'))
                 move_lines = []
                 notes = _('* Base: %s \n'
                           '* Advance: %s \n'

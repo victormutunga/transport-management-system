@@ -152,6 +152,7 @@ class TmsExpense(models.Model):
         string='Global Fuel Efficiency Real')
     fuel_log_ids = fields.One2many(
         'fleet.vehicle.log.fuel', 'expense_id', string='Fuel Vouchers')
+    salary_amount_withholding = fields.Float(string='Salary Withholding')
 
     @api.depends('travel_ids')
     def _compute_amount_all(self):

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!--  Make Expense Invoice-->
+        <record id="tms_view_expense_invoice" model="ir.ui.view">
+            <field name="name">Make Payment</field>
+            <field name="model">tms.expense.invoice.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Make Payment">
+                    <separator colspan="4" string="Are you sure you want to create an invoice of expenses?"/>
+                    <footer>
+                        <button name="make_expense_invoices" class="oe_highlight" string="Confirm" type="object"/>
+                        <button special="cancel" string="Cancel"/></footer>
+                </form>
+            </field>
+        </record>
+        
+        <act_window 
+            id="action_tms_view_expense_invoice" 
+            key2="client_action_multi" 
+            name="Make an Invoice of Expenses" 
+            res_model="tms.expense.invoice.wizard" 
+            src_model="tms.expense" 
+            target="new" 
+            view_mode="form"/>
+    </data>
+</odoo>

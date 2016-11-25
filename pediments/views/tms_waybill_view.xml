@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="tms_waybill_form" model="ir.ui.view">
+			<field name="name">tms_waybill_pediment.form</field>
+			<field name="model">tms.waybill</field>
+			<field name="inherit_id" ref="tms.view_tms_waybill_form"/>
+			<field name="arch" type="xml">
+				<field name="transportable_line_ids" position="after">
+					<separator coslpan="4" string="Customs"/>
+					<field name="customs_ids" nolabel="1"/>
+				</field>
+			</field>
+		</record>
+	</data>
+</openerp>

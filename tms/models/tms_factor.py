@@ -42,7 +42,7 @@ For next option you only have to type Factor like 10.5 for 10.50%:
  - Income Percent
                         """)
     range_start = fields.Float()
-    range_end = fields.Float()
+    range_end = fields.Float(default="1")
     factor = fields.Float()
     fixed_amount = fields.Float()
     mixed = fields.Boolean()

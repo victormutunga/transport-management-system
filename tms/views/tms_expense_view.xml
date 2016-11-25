@@ -61,6 +61,7 @@
                                             <separator colspan="2" string="Resumen de Gastos"/>
                                             <field class="oe_text_right" name="amount_salary"/>
                                             <field class="oe_text_right" name="amount_salary_discount"/>
+                                            <field class="oe_text_right" name="salary_amount_withholding"/>
                                             <field class="oe_text_right" name="amount_real_expense"/>
                                             <field class="oe_text_right" name="amount_subtotal_real" style="font-weight: bold;"/>
                                             <field class="oe_text_right" name="amount_tax_real"/>
