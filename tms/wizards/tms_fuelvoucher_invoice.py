@@ -98,3 +98,12 @@ class TmsFuelvoucherInvoice(models.TransientModel):
 
         for fuel in active_ids:
             fuel.write({'invoice_id': invoice_id.id})
+        return {
+            'name': 'Customer Invoice',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'target': 'current',
+            'res_model': 'account.invoice',
+            'res_id': invoice_id.id,
+            'type': 'ir.actions.act_window'
+        }

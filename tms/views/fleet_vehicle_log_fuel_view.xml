@@ -21,28 +21,28 @@
                         </div>
                         <group>
                             <group>
-                                <field name="base_id" required="1"/>
-                                <field context="{'default_supplier': True, 'default_customer':False}" name="vendor_id"/>
-                                <field name="no_travel"/>
-                                <field attrs="{'invisible':[('no_travel', '=', True)]}" domain="[('state','!=','cancel'),('state','!=','closed'),('base_id', '=', base_id)]" name="travel_id"/>
-                                <field name="vehicle_id"/>
+                                <field name="base_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" required="1"/>
+                                <field name="vendor_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" context="{'default_supplier': True, 'default_customer':False}"/>
+                                <field name="no_travel" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                <field name="travel_id" attrs="{'invisible':[('no_travel', '=', True)], 'readonly':[('state','in',('confirmed','cancel','closed'))]}" domain="[('state','!=','cancel'),('state','!=','closed'),('base_id', '=', base_id)]"/>
+                                <field name="vehicle_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                             </group>
                             <group>
-                                <field name="date"/>
-                                <field name="inv_ref"/>
-                                <field name="currency_id"/>
+                                <field name="date" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                <field name="inv_ref" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                <field name="currency_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                             </group>
                         </group>
                         <group>
                             <notebook colspan="4">
                                 <page string="Fuel Details">
                                     <group>
-                                        <field name="product_uom_qty" required="1"/>
-                                        <field name="price_unit"/>
-                                        <field name="price_subtotal"/>
-                                        <field name="tax_amount"/>
-                                        <field name="special_tax_amount"/>
-                                        <field name="price_total"/>
+                                        <field name="product_uom_qty" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" required="1"/>
+                                        <field name="price_unit" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                        <field name="price_subtotal" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                        <field name="tax_amount" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                        <field name="special_tax_amount" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                        <field name="price_total" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                                     </group>
                                 </page>
                                 <page string="Other Info">
@@ -55,13 +55,13 @@
                                         </div>
                                     </group>
                                     <group>
-                                        <field name="invoice_id"/>
-                                        <field name="invoice_paid"/>
+                                        <field name="invoice_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                        <field name="invoice_paid" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                                     </group>
                                 </page>
                             </notebook>
                             <group colspan="4" string='Notes'>
-                                <field name="notes" nolabel="1"/>
+                                <field name="notes" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" nolabel="1"/>
                             </group>
                         </group>
                     </sheet>
