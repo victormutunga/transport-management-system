@@ -7,12 +7,12 @@
             <field name="priority">2</field>
             <field name="arch" type="xml">
                 <tree colors="blue:line_type=='salary';gray:line_type=='madeup_expense';red:price_total&lt;0;" string="Expense Lines">
-                    <field name="travel_id"/> 
+                    <field name="travel_id"/>
                     <field name="line_type"/>
                     <field name="name"/>
                     <field name="price_total"/>
                     <field name="sequence"/>
-                    <field name="is_invoice"/> 
+                    <field name="is_invoice"/>
                 </tree>
             </field>
         </record>
@@ -22,27 +22,26 @@
             <field name="arch" type="xml">
                 <form string="Expense Lines">
                     <sheet>
-                        <h2> Travel Expenses Line </h2>
-                         <group>
-                            <field name="travel_id" domain="[('expense_id', '=', expense_id)]"/>
-                            <field name="line_type"/>
+                        <h2>Travel Expenses Line </h2>
+                        <group>
+                            <field domain="[('expense_id', '=', expense_id)]" name="travel_id"/>
+                            <field name="line_type" required='1'/>
+                            <field name="product_id" required='1'/>
                             <field name="name"/>
-                            <field name="expense_id" invisible="1"/>
-                            <field name="product_id" attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}"/>
+                            <field name="product_uom_id" required='1'/>
+                            <field name="product_uom_qty" required='1'/>
+                            <field invisible="1" name="expense_id"/>
+                            <field name='unit_price' required='1'/>
+                            <field name='tax_ids' widget='many2many_tags'/>
+                            <field name="price_subtotal" required="1"/>
+                            <field name="tax_amount"/>
+                            <field name="price_total" required='1'/>
                         </group>
-                            
-                            <group string="Supplier Details">
-                                <field name="is_invoice" attrs="{'invisible':[('line_type','!=','real_expense')]}"/>
-                                <field name="partner_id" attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}"/>
-                                <field name="invoice_id" attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}" domain="[('partner_id', '=', partner_id),('state', 'not in', ['paid'])]" />
-                            </group>
-                        <newline/>
-                        <!-- <field name="price_subtotal" readonly="1"/> -->
-                        <newline/>
-                        <!-- <field name="tax_amount" readonly="1"/> -->
-                        <newline/>
-                        <!-- <field attrs="{'readonly':[('control','!=',False)]}" name="price_total" on_change="on_change_price_total(product_id, product_uom_qty, price_total, special_tax_amount)"/> -->
-                        <newline/>
+                        <group string="Supplier Details">
+                            <field attrs="{'invisible':[('line_type','!=','real_expense')]}" name="is_invoice"/>
+                            <field attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}" name="partner_id"/>
+                            <field attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}" domain="[('partner_id', '=', partner_id),('state', 'not in', ['paid'])]" name="invoice_id"/>
+                        </group>
                     </sheet>
                 </form>
             </field>

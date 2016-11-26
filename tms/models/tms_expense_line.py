@@ -21,8 +21,10 @@ class TmsExpenseLine(models.Model):
         readonly=True)
     product_uom_qty = fields.Float(
         string='Qty (UoM)')
-    price_unit_control = fields.Float()
-    price_subtotal = fields.Float()
+    unit_price = fields.Float()
+    price_subtotal = fields.Float(
+        compute='_compute_price_subtotal',
+        string='Subtotal',)
     product_uom_id = fields.Many2one(
         'product.uom',
         string='Unit of Measure')
@@ -43,15 +45,18 @@ class TmsExpenseLine(models.Model):
         "sales order lines.",
         default=10)
     price_total = fields.Float(
-        string='Total'
+        string='Total',
+        compute='_compute_price_total',
         )
-    tax_amount = fields.Float()
+    tax_amount = fields.Float(
+        compute='_compute_tax_amount',)
     special_tax_amount = fields.Float(
         string='Special Tax'
         )
-    tax_id = fields.Many2many(
+    tax_ids = fields.Many2many(
         'account.tax',
-        string='Taxes')
+        string='Taxes',
+        domain=[('type_tax_use', '=', 'purchase')])
     notes = fields.Text()
     employee_id = fields.Many2one(
         'hr.employee',
@@ -79,17 +84,33 @@ class TmsExpenseLine(models.Model):
                 ('purchase_ok', '=', 'True')],
         string='Product')
 
-    @api.onchange('product_uom_qty', 'price_total')
-    def _onchange_get_total(self):
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        self.tax_ids = self.product_id.supplier_taxes_id
+        self.product_uom_id = self.product_id.uom_id.id
+
+    @api.depends('tax_ids', 'product_uom_qty', 'unit_price')
+    def _compute_tax_amount(self):
         for rec in self:
-            total = rec.price_total
-            percent = rec.product_id.taxes_id.amount
-            qty = rec.product_uom_qty
-            total_discount = (percent * total) / 100.0
-            unit_total = total - total_discount
-            subtotal = unit_total * qty
-            rec.price_subtotal = subtotal
-            rec.tax_amount = total_discount
+            taxes = rec.tax_ids.compute_all(
+                rec.unit_price, rec.expense_id.currency_id,
+                rec.product_uom_qty,
+                rec.expense_id.employee_id.address_home_id)
+            if taxes:
+                for tax in taxes['taxes']:
+                    rec.tax_amount += tax['amount']
+            else:
+                rec.tax_amount = 0.0
+
+    @api.depends('product_uom_qty', 'unit_price')
+    def _compute_price_subtotal(self):
+        for rec in self:
+            rec.price_subtotal = rec.product_uom_qty * rec.unit_price
+
+    @api.depends('price_subtotal')
+    def _compute_price_total(self):
+        for rec in self:
+            rec.price_total = rec.price_subtotal + rec.tax_amount
 
     @api.model
     def create(self, values):

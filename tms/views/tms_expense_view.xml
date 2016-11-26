@@ -109,20 +109,24 @@
                                         <field attrs="{'invisible': True}" name="vehicle_odometer"/>
                                         <field attrs="{'invisible':[('odometer_log_id','=',False)]}" name="odometer_log_id"/>
                                     </group>
-                             <!--       <group col="2" colspan="2">
-                                        <separator colspan="2" string="Fuel Performance"/>
-                                        <field name="fuel_qty"/>
-                                        <field name="fuel_qty_real" />
-                                        <field name="fuel_diff"/>
-                                        <field name="global_fuel_efficiency_routes"/>
-                                        <field name="global_fuel_efficiency_real"/>
-                                        <field name="loaded_fuel_efficiency"/>
-                                        <field name="unloaded_fuel_efficiency"/>
-                                    </group> -->
                                 </group>
                             </page>
                             <page string="Expense Lines">
-                                <field colspan="4" context="{'default_expense_id': active_id, 'group_by_line_type': 1, 'default_travel_ids': travel_ids}" name="expense_line_ids" nolabel="1"/>
+                                <field colspan="4" context="{'default_expense_id': active_id, 'group_by_line_type': 1, 'default_travel_ids': travel_ids}" name="expense_line_ids" nolabel="1">
+                                    <tree>
+                                        <field name='travel_id' readonly='1'/>
+                                        <field name='line_type' readonly='1'/>
+                                        <field name='product_id' readonly='1'/>
+                                        <field name='name' readonly='1'/>
+                                        <field name='product_uom_id' readonly='1'/>
+                                        <field name='product_uom_qty' readonly='1'/>
+                                        <field name='unit_price' readonly='1'/>
+                                        <field name='tax_ids' widget='many2many_tags' readonly='1'/>
+                                        <field name='price_subtotal'/>
+                                        <field name='tax_amount'/>
+                                        <field name='price_subtotal'/>
+                                    </tree>
+                                </field>
                             </page>
                             <page string="Advances">
                                 <field colspan="4" name="advance_ids" nolabel="1" readonly="1">
