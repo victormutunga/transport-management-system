@@ -269,25 +269,25 @@ class TmsExpense(models.Model):
     @api.depends('expense_line_ids')
     def _compute_salary_discount(self):
         for rec in self:
-            for discount in rec.expense_line_ids:
-                if discount.line_type == 'salary_discount':
-                    rec.amount_salary_discount += discount.price_total
+            for line in rec.expense_line_ids:
+                if line.line_type == 'salary_discount':
+                    rec.amount_salary_discount += line.price_total
 
     @api.multi
     @api.depends('expense_line_ids')
     def _compute_madeup_expense(self):
         for rec in self:
-            for discount in rec.expense_line_ids:
-                if discount.line_type == 'madeup_expense':
-                    rec.amount_madeup_expense += discount.price_total
+            for line in rec.expense_line_ids:
+                if line.line_type == 'madeup_expense':
+                    rec.amount_madeup_expense += line.price_total
 
     @api.multi
     @api.depends('expense_line_ids')
     def _compute_real_expense(self):
         for rec in self:
-            for discount in rec.expense_line_ids:
-                if discount.line_type == 'real_expense':
-                    rec.amount_real_expense += discount.price_total
+            for line in rec.expense_line_ids:
+                if line.line_type == 'real_expense':
+                    rec.amount_real_expense += line.price_total
 
     @api.multi
     @api.depends('amount_salary',
