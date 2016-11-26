@@ -228,6 +228,11 @@ class TmsExpense(models.Model):
                             '\n Name of advance not confirmed: ' +
                             advance.name +
                             '\n State: ' + advance.state))
+                    elif not advance.paid:
+                        raise ValidationError(_(
+                            'Oops! All the advances must be paid'
+                            '\n Name of advance not paid: ' +
+                            advance.name))
                     else:
                         advance.write({
                             'state': 'closed',
