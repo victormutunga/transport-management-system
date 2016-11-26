@@ -6,13 +6,18 @@
             <field name="model">tms.expense.line</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <tree colors="blue:line_type=='salary';gray:line_type=='madeup_expense';red:price_total&lt;0;" string="Expense Lines">
-                    <field name="travel_id"/>
-                    <field name="line_type"/>
-                    <field name="name"/>
-                    <field name="price_total"/>
-                    <field name="sequence"/>
-                    <field name="is_invoice"/>
+                <tree colors="blue:line_type=='salary';green:line_type=='fuel';gray:line_type=='madeup_expense';red:price_total&lt;0;" string="Expense Lines">
+                    <field name='travel_id' readonly='1'/>
+                        <field name='line_type'/>
+                        <field name='product_id'/>
+                        <field name='name'/>
+                        <field name='product_uom_id'/>
+                        <field name='product_qty'/>
+                        <field name='unit_price'/>
+                        <field name='tax_ids' widget='many2many_tags'/>
+                        <field name='price_subtotal'/>
+                        <field name='tax_amount'/>
+                        <field name='price_total'/>
                 </tree>
             </field>
         </record>

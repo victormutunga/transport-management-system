@@ -102,10 +102,13 @@ class TmsExpenseLine(models.Model):
             else:
                 rec.tax_amount = 0.0
 
-    @api.depends('product_qty', 'unit_price')
+    @api.depends('product_qty', 'unit_price', 'line_type')
     def _compute_price_subtotal(self):
         for rec in self:
-            rec.price_subtotal = rec.product_qty * rec.unit_price
+            if rec.line_type in ['salary_retention', 'salary_discount']:
+                rec.price_subtotal = rec.product_qty * rec.unit_price * -1
+            else:
+                rec.price_subtotal = rec.product_qty * rec.unit_price
 
     @api.depends('price_subtotal')
     def _compute_price_total(self):

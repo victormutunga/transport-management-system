@@ -112,21 +112,7 @@
                                 </group>
                             </page>
                             <page string="Expense Lines">
-                                <field colspan="4" context="{'default_expense_id': active_id, 'group_by_line_type': 1, 'default_travel_ids': travel_ids}" name="expense_line_ids" nolabel="1">
-                                    <tree>
-                                        <field name='travel_id' readonly='1'/>
-                                        <field name='line_type' readonly='1'/>
-                                        <field name='product_id' readonly='1'/>
-                                        <field name='name' readonly='1'/>
-                                        <field name='product_uom_id' readonly='1'/>
-                                        <field name='product_qty' readonly='1'/>
-                                        <field name='unit_price' readonly='1'/>
-                                        <field name='tax_ids' widget='many2many_tags' readonly='1'/>
-                                        <field name='price_subtotal'/>
-                                        <field name='tax_amount'/>
-                                        <field name='price_subtotal'/>
-                                    </tree>
-                                </field>
+                                <field colspan="4" colors="red:price_total&lt;'0';green:control==True;" context="{'default_expense_id': active_id, 'group_by_line_type': 1, 'default_travel_ids': travel_ids}" name="expense_line_ids" nolabel="1"/>
                             </page>
                             <page string="Advances">
                                 <field colspan="4" name="advance_ids" nolabel="1" readonly="1">
