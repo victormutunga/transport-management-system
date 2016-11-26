@@ -240,11 +240,12 @@ class TmsExpense(models.Model):
                         })
                         if advance.auto_expense:
                             rec.expense_line_ids.create({
-                                'name': advance.name,
+                                'name': _("Advance: ") + str(advance.name),
                                 'travel_id': travel.id,
                                 'expense_id': rec.id,
                                 'line_type': "real_expense",
-                                'price_total': advance.amount,
+                                'product_qty': 1.0,
+                                'unit_price': advance.amount,
                                 'control': True
                             })
                 for fuel_log in travel.fuel_log_ids:
@@ -264,7 +265,8 @@ class TmsExpense(models.Model):
                             'travel_id': travel.id,
                             'expense_id': rec.id,
                             'line_type': 'fuel',
-                            'price_total': fuel_log.price_total,
+                            'product_qty': 1.0,
+                            'unit_price': fuel_log.price_total,
                             'is_invoice': fuel_log.invoice_paid,
                             'invoice_id': fuel_log.invoice_id.id,
                             'control': True
@@ -274,7 +276,8 @@ class TmsExpense(models.Model):
                     'travel_id': travel.id,
                     'expense_id': rec.id,
                     'line_type': "salary",
-                    'price_total': rec.amount_salary,
+                    'product_qty': 1.0,
+                    'unit_price': rec.amount_salary,
                     'control': True
                 })
 

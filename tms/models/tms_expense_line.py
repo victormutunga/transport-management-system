@@ -19,7 +19,7 @@ class TmsExpenseLine(models.Model):
         'tms.expense',
         string='Expense',
         readonly=True)
-    product_uom_qty = fields.Float(
+    product_qty = fields.Float(
         string='Qty (UoM)')
     unit_price = fields.Float()
     price_subtotal = fields.Float(
@@ -89,12 +89,12 @@ class TmsExpenseLine(models.Model):
         self.tax_ids = self.product_id.supplier_taxes_id
         self.product_uom_id = self.product_id.uom_id.id
 
-    @api.depends('tax_ids', 'product_uom_qty', 'unit_price')
+    @api.depends('tax_ids', 'product_qty', 'unit_price')
     def _compute_tax_amount(self):
         for rec in self:
             taxes = rec.tax_ids.compute_all(
                 rec.unit_price, rec.expense_id.currency_id,
-                rec.product_uom_qty,
+                rec.product_qty,
                 rec.expense_id.employee_id.address_home_id)
             if taxes:
                 for tax in taxes['taxes']:
@@ -102,10 +102,10 @@ class TmsExpenseLine(models.Model):
             else:
                 rec.tax_amount = 0.0
 
-    @api.depends('product_uom_qty', 'unit_price')
+    @api.depends('product_qty', 'unit_price')
     def _compute_price_subtotal(self):
         for rec in self:
-            rec.price_subtotal = rec.product_uom_qty * rec.unit_price
+            rec.price_subtotal = rec.product_qty * rec.unit_price
 
     @api.depends('price_subtotal')
     def _compute_price_total(self):
