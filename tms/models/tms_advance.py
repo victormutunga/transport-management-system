@@ -32,17 +32,19 @@ class TmsAdvance(models.Model):
         required=True,
         default=fields.Date.today)
     travel_id = fields.Many2one(
-        'tms.travel', string='Travel',
+        'tms.travel',
+        string='Travel',
         required=True
         )
     unit_id = fields.Many2one(
         'fleet.vehicle',
         string='Unit',
-        related='travel_id.unit_id')
+        related='travel_id.unit_id',
+        )
     employee_id = fields.Many2one(
         'hr.employee',
         string='Driver',
-        related='travel_id.employee_id'
+        related='travel_id.employee_id',
         )
     amount = fields.Monetary(required=True)
     notes = fields.Text()
@@ -84,7 +86,7 @@ class TmsAdvance(models.Model):
             raise exceptions.ValidationError(
                 _('The amount must be greater than zero.'))
         else:
-            advance.name = sequence.next_by_id()
+            advance.name = _('Advance ') + sequence.next_by_id()
             if advance.name == 'False':
                 raise exceptions.ValidationError(
                     _('Error you need define an'
