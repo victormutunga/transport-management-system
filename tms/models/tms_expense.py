@@ -48,23 +48,23 @@ class TmsExpense(models.Model):
         string='Fake Expenses',
         store=True)
     fuel_qty = fields.Float(
-        compute='_compute_amount_all',
+        compute='compute_fuel_qty',
         string='Fuel Qty',
         store=True)
     amount_fuel = fields.Float(
-        compute='_compute_amount_all',
+        compute='compute_amount_fuel',
         string='Fuel (Voucher)',
         store=True)
     amount_salary = fields.Float(
-        compute='_compute_amount_all',
+        compute='compute_amount_salary',
         string='Salary',
         store=True)
     amount_net_salary = fields.Float(
-        compute='_compute_amount_all',
+        compute='compute_amount_net_salary',
         string='Net Salary',
         store=True)
     amount_salary_retention = fields.Float(
-        compute='_compute_amount_all',
+        compute='compute_amount_salary_retention',
         string='Salary Retentions',
         store=True)
     amount_salary_discount = fields.Float(
@@ -72,7 +72,7 @@ class TmsExpense(models.Model):
         string='Salary Discounts',
         store=True)
     amount_advance = fields.Float(
-        compute='_compute_amount_all',
+        compute='compute_amount_advance',
         string='Advances',
         store=True)
     amount_balance = fields.Float(
@@ -80,15 +80,15 @@ class TmsExpense(models.Model):
         string='Balance',
         store=True)
     amount_balance2 = fields.Float(
-        compute='_compute_amount_all',
+        compute='compute_amount_balance2',
         string='Balance',
         store=True)
     amount_tax_total = fields.Float(
-        compute='_compute_amount_all',
+        compute='compute_amount_tax_total',
         string='Taxes (All)',
         store=True)
     amount_tax_real = fields.Float(
-        compute='_compute_amount_all',
+        compute='compute_amount_tax_real',
         string='Taxes (Real)',
         store=True)
     amount_total_real = fields.Float(
@@ -96,7 +96,7 @@ class TmsExpense(models.Model):
         string='Total (Real)',
         store=True)
     amount_total_total = fields.Float(
-        compute='_compute_amount_all',
+        compute='compute_amount_total_total',
         string='Total (All)',
         store=True)
     amount_subtotal_real = fields.Float(
@@ -111,11 +111,11 @@ class TmsExpense(models.Model):
     vehicle_odometer = fields.Float('Vehicle Odometer')
     current_odometer = fields.Float('Current Read')
     distance_routes = fields.Float(
-        compute='_compute_amount_all',
+        compute='compute_distance_routes',
         string='Distance from routes',
         help="Routes Distance")
     distance_real = fields.Float(
-        compute='_compute_amount_all',
+        compute='compute_distance_real',
         string='Distance Real',
         help="Route obtained by electronic reading and/or GPS")
     odometer_log_id = fields.Many2one(
@@ -154,46 +154,23 @@ class TmsExpense(models.Model):
         'fleet.vehicle.log.fuel', 'expense_id', string='Fuel Vouchers')
     salary_amount_withholding = fields.Float(string='Salary Withholding')
 
-    @api.depends('travel_ids')
-    def _compute_amount_all(self):
-        for rec in self:
-            for travel in rec.travel_ids:
-                rec.distance_real += travel.distance_driver
-                rec.distance_routes += travel.distance_route
-                for advance in travel.advance_ids:
-                    rec.amount_advance += advance.amount
-                rec.amount_fuel = 0.0
-                driver_salary = 0.0
-                for fuel_log in travel.fuel_log_ids:
-                    rec.amount_fuel += fuel_log.price_subtotal
-                    rec.amount_tax_total += (
-                        fuel_log.tax_amount +
-                        fuel_log.special_tax_amount)
-                for waybill in travel.waybill_ids:
-                    if len(travel.waybill_ids.driver_factor_ids) > 0:
-                        for waybill_factor in (
-                                waybill.driver_factor_ids):
-                            driver_salary = (
-                                waybill_factor.
-                                get_amount(waybill.product_weight,
-                                           waybill.distance_route,
-                                           waybill.distance_real,
-                                           waybill.product_qty,
-                                           waybill.product_volume,
-                                           waybill.amount_total))
-                        rec.amount_salary += driver_salary
-                    else:
-                        for factor in travel.driver_factor_ids:
-                            driver_salary = factor.get_amount(
-                                waybill.product_weight,
-                                waybill.distance_route,
-                                waybill.distance_real,
-                                waybill.product_qty,
-                                waybill.product_volume,
-                                waybill.amount_total)
-                        rec.amount_salary += driver_salary
-            rec.amount_total_total = (rec.amount_fuel +
-                                      rec.amount_tax_total)
+    # @api.depends('travel_ids')
+    # def _compute_amount_all(self):
+    #     for rec in self:
+    #         for travel in rec.travel_ids:
+    #             rec.distance_real += travel.distance_driver
+    #             rec.distance_routes += travel.distance_route
+    #             for advance in travel.advance_ids:
+    #                 rec.amount_advance += advance.amount
+    #             rec.amount_fuel = 0.0
+    #             driver_salary = 0.0
+    #             for fuel_log in travel.fuel_log_ids:
+    #                 rec.amount_fuel += fuel_log.price_subtotal
+    #                 rec.amount_tax_total += (
+    #                     fuel_log.tax_amount +
+    #                     fuel_log.special_tax_amount)
+    #         rec.amount_total_total = (rec.amount_fuel +
+    #                                   rec.amount_tax_total)
 
     @api.multi
     def get_travel_info(self):
@@ -402,6 +379,96 @@ class TmsExpense(models.Model):
                             fields.Datetime.now())
             rec.message_post(body=message)
         self.state = 'confirmed'
+
+    @api.depends('travel_ids')
+    def compute_fuel_qty(self):
+        for rec in self:
+            rec.fuel_qty = 1.0
+
+    @api.depends('travel_ids')
+    def compute_amount_fuel(self):
+        for rec in self:
+            rec.amount_fuel = 1.0
+
+    @api.depends('travel_ids')
+    def compute_amount_salary(self):
+        for rec in self:
+            driver_salary = 0.0
+            for travel in rec.travel_ids:
+                for waybill in travel.waybill_ids:
+                    if len(travel.waybill_ids.driver_factor_ids) > 0:
+                        for waybill_factor in (
+                                waybill.driver_factor_ids):
+                            driver_salary += (
+                                waybill_factor.get_amount(
+                                    weight=waybill.product_weight,
+                                    distance=waybill.distance_route,
+                                    distance_real=waybill.distance_real,
+                                    qty=waybill.product_qty,
+                                    volume=waybill.product_volume,
+                                    income=waybill.amount_total))
+                    elif len(travel.driver_factor_ids) > 0:
+                        for factor in travel.driver_factor_ids:
+                            driver_salary += factor.get_amount(
+                                weight=waybill.product_weight,
+                                distance=waybill.distance_route,
+                                distance_real=waybill.distance_real,
+                                qty=waybill.product_qty,
+                                volume=waybill.product_volume,
+                                income=waybill.amount_total)
+                    else:
+                        raise ValidationError(_(
+                            'Oops! You have not defined a Driver factor in '
+                            'the Travel or the Waybill\nTravel: %s' %
+                            travel.name))
+            rec.amount_salary = driver_salary
+
+    @api.depends('travel_ids')
+    def compute_amount_net_salary(self):
+        for rec in self:
+            rec.amount_net_salary = 1.0
+
+    @api.depends('travel_ids')
+    def compute_amount_salary_retention(self):
+        for rec in self:
+            rec.amount_salary_retention = 1.0
+
+    @api.depends('travel_ids')
+    def compute_amount_advance(self):
+        for rec in self:
+            rec.amount_advance = 1.0
+
+    @api.depends('travel_ids')
+    def compute_amount_balance2(self):
+        for rec in self:
+            rec.amount_balance2 = 1.0
+
+    @api.depends('travel_ids')
+    def compute_amount_tax_total(self):
+        for rec in self:
+            rec.amount_tax_total = 1.0
+
+    @api.depends('travel_ids')
+    def compute_amount_tax_real(self):
+        for rec in self:
+            rec.amount_tax_real = 1.0
+
+    @api.depends('travel_ids')
+    def compute_amount_total_total(self):
+        for rec in self:
+            rec.amount_total_total = 1.0
+
+    @api.depends('travel_ids')
+    def compute_distance_routes(self):
+        for rec in self:
+            rec.distance_routes = 1.0
+
+    @api.depends('travel_ids')
+    def compute_distance_real(self):
+        for rec in self:
+            rec.distance_real = 1.0
+
+
 
     @api.multi
     def action_cancel(self):
