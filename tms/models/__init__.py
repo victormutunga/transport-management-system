@@ -3,13 +3,14 @@
 # © <2016> <Jarsa Sistemas, S.A. de C.V.>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from . import operating_unit
 from . import account_payment
 from . import account_invoice
 from . import fleet_vehicle
 from . import fleet_vehicle_log_fuel
 from . import fleet_vehicle_odometer
 from . import hr_employee
+from . import operating_unit
+from . import product_template
 from . import tms_advance
 from . import tms_config_settings
 from . import tms_event
