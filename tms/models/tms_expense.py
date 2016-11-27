@@ -234,6 +234,7 @@ class TmsExpense(models.Model):
             rec.amount_total_real = (
                 rec.amount_subtotal_real +
                 rec.amount_tax_real)
+
     @api.depends('travel_ids', 'expense_line_ids')
     def _compute_amount_balance(self):
         for rec in self:
@@ -375,6 +376,173 @@ class TmsExpense(models.Model):
     @api.multi
     def action_confirm(self):
         for rec in self:
+            obj_account_move = self.env['account.move']
+            expense_journal_id = rec.base_id.expense_journal_id.id
+            advance_account_id = (
+                rec.employee_id.
+                tms_advance_account_id.id
+                )
+            negative_balance_account = (
+                rec.employee_id.
+                tms_expense_negative_balance_account_id.id
+                )
+            driver_account_payable = (
+                rec.employee_id.
+                address_home_id.property_account_payable_id.id
+                )
+            if not expense_journal_id:
+                raise ValidationError(
+                    _('Warning! The expense does not have a journal'
+                      ' assigned. \nCheck if you already set the '
+                      'journal for expense moves in the Operating Unit.'))
+            if not driver_account_payable:
+                raise ValidationError(
+                    _('Warning! The driver does not have a home address'
+                      ' assigned. \nCheck if you already set the '
+                      'home address for the employee.'))
+            if not advance_account_id:
+                raise ValidationError(
+                    _('Warning! You must have configured the accounts'
+                        'of the tms for the Driver'))
+            move_lines = []
+            if rec.amount_advance > 0:
+                move_line = (0, 0, {
+                    'name': _('Advance Discount'),
+                    'ref': (rec.name),
+                    'account_id': advance_account_id,
+                    'narration': rec.name,
+                    'debit': 0.0,
+                    'credit': rec.amount_advance,
+                    'journal_id': negative_balance_account,
+                    'partner_id': rec.employee_id.address_home_id.id,
+                    })
+                move_lines.append(move_line)
+
+            for line in rec.expense_line_ids:
+                if line.line_type not in ('madeup_expense', 'fuel', 'salary'):
+                    product_account = (
+                        negative_balance_account
+                        if (line.product_id.
+                            tms_product_category == 'negative_balance')
+                        else (line.product_id.
+                              property_account_expense_id.id)
+                        if (line.product_id.
+                            property_account_expense_id.id)
+                        else (line.product_id.categ_id.
+                              property_account_expense_categ_id.id)
+                        if (line.product_id.categ_id.
+                            property_account_expense_categ_id.id)
+                        else False)
+                    if not product_account:
+                        raise ValidationError(
+                            _('Warning ! Expense Account is not defined for'
+                                ' product %s') % (line.product_id.name))
+                    inv_id = False
+                    if line.is_invoice:
+                        inv_id = self.create_supplier_invoice(line)
+                        line.invoice_id = inv_id
+                        move_line = (0, 0, {
+                            'name': (rec.name + ' ' + line.name),
+                            'ref': (rec.name + ' - Inv ID - ' +
+                                    str(inv_id) if inv_id else ''),
+                            'account_id': (
+                                line.partner_id.property_account_payable.id),
+                            'debit': (
+                                line.price_total if line.price_total > 0.0
+                                else 0.0),
+                            'credit': (
+                                line.price_total if line.price_total <= 0.0
+                                else 0.0),
+                            'journal_id': expense_journal_id,
+                            'partner_id': line.partner_id.id,
+                            })
+                        move_lines.append(move_line)
+
+                    else:
+                        move_line = (0, 0, {
+                            'name': rec.name + ' ' + line.name,
+                            'ref': rec.name,
+                            'account_id': product_account,
+                            'debit': (
+                                line.price_subtotal
+                                if line.price_subtotal > 0.0
+                                else 0.0),
+                            'credit': (
+                                line.price_subtotal
+                                if line.price_subtotal <= 0.0
+                                else 0.0),
+                            'journal_id': expense_journal_id,
+                            'partner_id': rec.employee_id.address_home_id.id,
+                            })
+                        move_lines.append(move_line)
+
+                    for tax in line.tax_ids:
+                        tax_account = tax.account_id.id
+                        if not tax_account:
+                            raise ValidationError(
+                                _('Warning !'),
+                                _('Tax Account is not defined for \
+                                Tax %s (id:%d)') % (tax.name, tax.id,))
+                        tax_amount = line.tax_amount
+                        # We create a move line for the line tax
+                        if not line.is_invoice:
+                            move_line = (0, 0, {
+                                'name': (rec.name + ' ' + line.name),
+                                'ref': rec.name,
+                                'account_id': tax_account,
+                                'debit': (
+                                    tax_amount if tax_amount > 0.0
+                                    else 0.0),
+                                'credit': (
+                                    tax_amount if tax_amount <= 0.0
+                                    else 0.0),
+                                'journal_id': expense_journal_id,
+                                'partner_id': (
+                                    rec.employee_id.address_home_id.id),
+                            })
+                            move_lines.append(move_line)
+
+            if rec.amount_balance < 0:
+                move_line = (0, 0, {
+                    'name': _('Negative Balance'),
+                    'ref': rec.name,
+                    'account_id': negative_balance_account,
+                    'debit': rec.amount_balance * -1.0,
+                    'credit': 0.0,
+                    'journal_id': expense_journal_id,
+                    'partner_id':
+                    rec.employee_id.address_home_id.id,
+                })
+                move_lines.append(move_line)
+            else:
+                move_line = (0, 0, {
+                    'name': _('Positive Balance'),
+                    'ref': rec.name,
+                    'account_id': driver_account_payable,
+                    'debit': 0.0,
+                    'credit': rec.amount_balance,
+                    'journal_id': expense_journal_id,
+                    'partner_id':
+                    rec.employee_id.address_home_id.id,
+                })
+                move_lines.append(move_line)
+            move = {
+                'date': fields.Date.today(),
+                'journal_id': expense_journal_id,
+                'name': rec.name,
+                'line_ids': [line for line in move_lines],
+                }
+            move_id = obj_account_move.create(move)
+            if not move_id:
+                raise ValidationError(
+                    -('An error has occurred in the creation'
+                        ' of the accounting move. '))
+            else:
+                rec.write(
+                    {
+                        'move_id': move_id.id,
+                        'state': 'confirmed'
+                    })
             for advance in rec.advance_ids:
                 advance.state = 'closed'
             for fuel_log in rec.fuel_log_ids:
@@ -386,7 +554,6 @@ class TmsExpense(models.Model):
                             self.env.user.name,
                             fields.Datetime.now())
             rec.message_post(body=message)
-        self.state = 'confirmed'
 
     @api.multi
     def action_cancel(self):
@@ -462,7 +629,11 @@ class TmsExpense(models.Model):
                             'travel_id': travel.id,
                             'expense_id': rec.id,
                             'line_type': 'fuel',
+                            'product_id': self.env.ref(
+                                'product.product_product_1_product_template'
+                            ).id,
                             'product_qty': fuel_log.product_uom_qty,
+                            'product_uom_id': fuel_log.uom_id.id,
                             'unit_price': fuel_log.price_unit,
                             'is_invoice': fuel_log.invoice_paid,
                             'invoice_id': fuel_log.invoice_id.id,
@@ -474,6 +645,11 @@ class TmsExpense(models.Model):
                     'expense_id': rec.id,
                     'line_type': "salary",
                     'product_qty': 1.0,
+                    'product_uom_id': self.env.ref(
+                        'sale.advance_product_0_product_template'
+                    ).uom_id.id,
+                    'product_id': self.env.ref(
+                        'sale.advance_product_0_product_template').id,
                     'unit_price': rec.amount_salary,
                     'control': True
                 })
