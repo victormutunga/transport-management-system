@@ -61,7 +61,7 @@
                                             <separator colspan="2" string="Resumen de Gastos"/>
                                             <field class="oe_text_right" name="amount_salary"/>
                                             <field class="oe_text_right" name="amount_salary_discount"/>
-                                            <field class="oe_text_right" name="salary_amount_withholding"/>
+                                            <field class="oe_text_right" name="amount_salary_retention"/>
                                             <field class="oe_text_right" name="amount_real_expense"/>
                                             <field class="oe_text_right" name="amount_subtotal_real" style="font-weight: bold;"/>
                                             <field class="oe_text_right" name="amount_tax_real"/>
@@ -99,8 +99,7 @@
                                 <newline/>
                                 <separator colspan="4" string="Global Performance"/>
                                 <group col="4" colspan="4">
-                                    <group col="2" colspan="2">
-                                        <separator colspan="2" string="Distances"/>
+                                    <group col="2" colspan="2" string="Distances">
                                         <field name="distance_routes"/>
                                         <field name="distance_real" />
                                         <field name="current_odometer" />
@@ -109,10 +108,14 @@
                                         <field attrs="{'invisible': True}" name="vehicle_odometer"/>
                                         <field attrs="{'invisible':[('odometer_log_id','=',False)]}" name="odometer_log_id"/>
                                     </group>
+                                    <group col="2" colspan="2" string="Fuel">
+                                        <field name="fuel_qty"/>
+                                        <field name="amount_fuel"/>
+                                    </group>
                                 </group>
                             </page>
                             <page string="Expense Lines">
-                                <field colspan="4" colors="red:price_total&lt;'0';green:control==True;" context="{'default_expense_id': active_id, 'group_by_line_type': 1, 'default_travel_ids': travel_ids}" name="expense_line_ids" nolabel="1"/>
+                                <field context="{'default_expense_id': active_id, 'group_by_line_type': 1, 'default_travel_ids': travel_ids}" name="expense_line_ids" nolabel="1"/>
                             </page>
                             <page string="Advances">
                                 <field colspan="4" name="advance_ids" nolabel="1" readonly="1">
@@ -128,18 +131,7 @@
                                 </field>
                             </page>
                             <page string="Fuel log Vouchers">
-                                <field colspan="4" name="fuel_log_ids" nolabel="1" readonly="1">
-                                    <!--<tree string="">
-                                        <field invisible="1" name="state"/>
-                                        <field name="name"/>
-                                        <field name="date"/>
-                                        <field name="travel_id"/>
-                                        <field name="employee_id"/>
-                                        <field name="product_id"/>
-                                        <field name="total" sum="Total"/>
-                                        <field name="auto_expense"/>
-                                    </tree>-->
-                                </field>
+                                <field colspan="4" name="fuel_log_ids" nolabel="1" readonly="1"/>
                             </page>
                             <page string="Notes">
                                 <group>

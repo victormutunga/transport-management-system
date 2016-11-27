@@ -20,7 +20,7 @@ class TmsExpenseLine(models.Model):
         string='Expense',
         readonly=True)
     product_qty = fields.Float(
-        string='Qty (UoM)')
+        string='Qty', default=1.0)
     unit_price = fields.Float()
     price_subtotal = fields.Float(
         compute='_compute_price_subtotal',
@@ -88,6 +88,7 @@ class TmsExpenseLine(models.Model):
     def _onchange_product_id(self):
         self.tax_ids = self.product_id.supplier_taxes_id
         self.product_uom_id = self.product_id.uom_id.id
+        self.name = self.product_id.name
 
     @api.depends('tax_ids', 'product_qty', 'unit_price')
     def _compute_tax_amount(self):
