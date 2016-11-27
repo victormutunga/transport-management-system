@@ -21,6 +21,7 @@
     'external_dependencies': {
         'python': [
             'sodapy',
+            'num2words',
         ],
     },
     "summary": "Management System for Carriers, Trucking and other companies",
@@ -47,15 +48,18 @@
         'views/tms_travel_view.xml',
         'views/tms_unit_kit_view.xml',
         'views/tms_waybill_view.xml',
+        'views/tms_waybill_extradata_view.xml',
         'views/account_invoice_view.xml',
         'views/tms_route_tollstation_view.xml',
         'views/fleet_vehicle_engine_view.xml',
+        'views/tms_factor_special_view.xml',
         'data/product_product_data.xml',
         'data/ir_sequence_data.xml',
         'data/tms_base_data.xml',
         'wizards/tms_advance_payment_view.xml',
         'wizards/tms_waybill_invoice_view.xml',
         'wizards/tms_fuelvoucher_invoice_view.xml',
+        'report/waybill_report.xml',
         'wizards/tms_expense_invoice_view.xml'
     ],
     "demo": [
@@ -70,7 +74,6 @@
         'demo/tms_transportable.xml',
         'demo/tms_travel.xml',
         'demo/tms_unit_kit.xml',
-        # 'demo/tms_waybill.xml'
     ],
     "application": True,
     "installable": True,

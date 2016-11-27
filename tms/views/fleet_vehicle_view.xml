@@ -18,14 +18,14 @@
                     </group>
                 </search>
             </field>
-        </record> 
+        </record>
         <record id="fleet_vehicle_form_inherit_tms" model="ir.ui.view">
             <field name="name">fleet.vehicle.tms.form</field>
             <field name="model">fleet.vehicle</field>
             <field name="inherit_id" ref="fleet.fleet_vehicle_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//label[@for='model_id']" name="model_id" position="before">
-                    <label for="name" class="oe_edit_only"/>
+                    <label class="oe_edit_only" for="name"/>
                     <h1>
                         <field name="name" placeholder="e.g. T-1"/>
                     </h1>
@@ -35,18 +35,54 @@
                     <field name="employee_id"/>
                 </field>
                 <field name="driver_id" position="before">
-                    <field name='base_id' required="1"/>
+                    <field name="base_id" required="1"/>
                     <field name="fleet_type" required="1"/>
                 </field>
                 <field name="vin_sn" position="after">
                     <field name="serial_number"/>
                     <field name="registration"/>
+                    <field name="supplier_unit"/>
                 </field>
                 <field name="car_value" position="after">
                     <field name="year_model"/>
                     <field name="active"/>
                 </field>
                 <xpath expr="//sheet/group[2]" position="after">
+                    <notebook>
+                        <page string="Extra Data">
+                            <group>
+                                <field name="unit_extradata_ids" nolabel="1" widget="one2many_list">
+                                    <tree editable="bottom" string="Extra Data">
+                                        <field context="{'default_type':'extra_data'}" name="extra_data_id"/>
+                                        <field name="extra_value"/>
+                                    </tree>
+                                    <form string="Extra Data">
+                                        <group colspan="4">
+                                            <field context="{'default_type':'extra_data'}" name="extra_data_id"/>
+                                            <field name="extra_value"/>
+                                        </group>
+                                    </form>
+                                </field>
+                            </group>
+                        </page>
+                        <page string="Expiry Data">
+                            <group>
+                                <field name="unit_expiry_ids" nolabel="1">
+                                    <tree editable="bottom" string="Expiry Data">
+                                        <field context="{'default_type':'expiry'}" name="expiry_id"/>
+                                        <field name="extra_value" on_change="on_change_extra_value(extra_value)"/>
+                                        <field invisible="1" name="name"/>
+                                    </tree>
+                                    <form string="Extra Data">
+                                        <group colspan="4">
+                                            <field context="{'default_type':'expiry'}" name="expiry_id"/>
+                                            <field name="extra_value"/>
+                                        </group>
+                                    </form>
+                                </field>
+                            </group>
+                        </page>
+                    </notebook>
                     <group>
                         <group string="Notes">
                             <field name="notes" nolabel="1"/>
@@ -75,12 +111,12 @@
                 </tree>
             </field>
         </record>
-        <record id='action_fleet_vehicle_tms' model='ir.actions.act_window'>
-            <field name='name'>Fleet Vehicle</field>
-            <field name='res_model'>fleet.vehicle</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
+        <record id="action_fleet_vehicle_tms" model="ir.actions.act_window">
+            <field name="name">Fleet Vehicle</field>
+            <field name="res_model">fleet.vehicle</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="action_fleet_vehicle_tms" id="tms_fleet_vehicle_menu" parent="menu_tms_settings_unit" name="Units" sequence="10"/>
+        <menuitem action="action_fleet_vehicle_tms" id="tms_fleet_vehicle_menu" name="Units" parent="menu_tms_settings_unit" sequence="10"/>
     </data>
 </odoo>

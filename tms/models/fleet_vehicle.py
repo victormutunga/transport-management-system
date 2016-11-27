@@ -4,6 +4,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp import fields, models
+from openerp.osv import fields as old_fields
 
 
 class OldFleetVehicle(models.Model):
@@ -13,8 +14,9 @@ class OldFleetVehicle(models.Model):
     """
     _name = 'fleet.vehicle'
     _inherit = 'fleet.vehicle'
-
-    name = fields.Char('Name')
+    _columns = {
+        'name': old_fields.char('Name', required=True),
+    }
 
 
 class FleetVehicle(models.Model):
@@ -42,3 +44,8 @@ class FleetVehicle(models.Model):
         domain=[('driver', '=', True)])
     expense_ids = fields.One2many('tms.expense', 'unit_id', string='Expenses')
     engine_id = fields.Many2one('fleet.vehicle.engine', string='Engine')
+    supplier_unit = fields.Boolean(string='Supplier Unit')
+    unit_extradata_ids = fields.One2many(
+        'tms.unit.extradata', 'unit_id', 'Extra Data')
+    unit_expiry_ids = fields.One2many(
+        'tms.unit.expiry', 'unit_id', 'Expiry Extra Data')

@@ -22,6 +22,7 @@ class TmsFactor(models.Model):
         ('driver', 'Driver'),
         ('customer', 'Customer'),
         ('supplier', 'Supplier')], 'Type', required=True)
+    factor_special_id = fields.Many2one('tms.factor.special', 'Special')
     factor_type = fields.Selection([
         ('distance', 'Distance Route (Km/Mi)'),
         ('distance_real', 'Distance Real (Km/Mi)'),
@@ -29,7 +30,8 @@ class TmsFactor(models.Model):
         ('travel', 'Travel'),
         ('qty', 'Quantity'),
         ('volume', 'Volume'),
-        ('percent', 'Income Percent')], 'Factor Type', required=True, help="""
+        ('percent', 'Income Percent'),
+        ('special', 'Special')], 'Factor Type', required=True, help="""
 For next options you have to type Ranges or Fixed Amount
  - Distance Route (Km/mi)
  - Distance Real (Km/Mi)
@@ -40,9 +42,10 @@ For next option you only have to type Fixed Amount:
  - Travel
 For next option you only have to type Factor like 10.5 for 10.50%:
  - Income Percent
-                        """)
+For next option you only have to type Special Python Code:
+ - Special""")
     range_start = fields.Float()
-    range_end = fields.Float(default="1")
+    range_end = fields.Float()
     factor = fields.Float()
     fixed_amount = fields.Float()
     mixed = fields.Boolean()
@@ -63,6 +66,7 @@ For next option you only have to type Factor like 10.5 for 10.50%:
             'qty': _('Quantity'),
             'volume': _('Volume'),
             'percent': _('Income Percent'),
+            'special': _('Special')
         }
         if not self.factor_type:
             self.name = 'name'
@@ -85,6 +89,8 @@ For next option you only have to type Factor like 10.5 for 10.50%:
                     res += amount + rec.fixed_amount
                 else:
                     res += amount
+            elif rec.factor_type == 'special':
+                exec(rec.factor_special_id.python_code)
             for key, value in factor_list.items():
                 if rec.factor_type == key:
                     if rec.range_start <= value <= rec.range_end:

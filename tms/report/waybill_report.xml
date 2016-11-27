@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="header_super">
+            <div class="row">
+                <p class="text-center">
+                    <span t-field="doc.company_id.name"/>
+                    <br/>
+                    <span t-field="doc.company_id.email"/>
+                </p>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-xs-4">
+                    <img style="max-height:104px;" t-att-src="'data:image/png;base64,%s' % doc.company_id.logo" t-if="doc.company_id.logo"/>
+                </div>
+                <div class="col-xs-4 text-center">
+                    <strong>
+                        <span t-field="doc.company_id.partner_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;, &quot;fax&quot;], &quot;no_marker&quot;: true, &quot;phone_icons&quot;: true}"/>
+                    </strong>
+                </div>
+                <div class="col-xs-4">
+                    <div class="panel" style="border-color: #333 !important;">
+                        <div class="panel-heading" t-att-style="Panel_Header">
+                            <p style="color:#E0FFFF !important; text-align:center; font-size:12px; font-weight:bold; color:#333 !important; ">BILL OF LADING: </p>
+                        </div>
+                        <div class="panel-body" t-att-style="Panel">
+                            <p style="font-size:10px ">
+                                <strong>DATE:</strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+        <template id="waybill_report">
+            <t t-as="doc" t-foreach="docs">
+                <div class="page">
+                    <t t-call="tms.header_super"/>
+                    <br/>
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <strong>R.F.C </strong>
+                            <span t-field="doc.company_id.partner_id.vat"/>
+                        </div>
+                        <div class="col-xs-3">
+                            <strong>EXPEDITION PLACE</strong>
+                            <span t-field="doc.base_id.name"/>
+                        </div>
+                        <div class="col-xs-3">
+                            <strong>NATIONAL TRAFFIC</strong>
+                        </div>
+                        <div class="col-xs-3">
+                            <strong>INTERNATIONAL TRAFFIC</strong>
+                        </div>
+                    </div>
+                    <br/>
+                    <table class="table table-condensed table-bordered">
+                        <tr>
+                            <td colspan="2">
+                                <span t-field="doc.partner_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;, &quot;fax&quot;], &quot;no_marker&quot;: true, &quot;phone_icons&quot;: true}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>
+                                    <span>FROM:</span>
+                                </strong>
+                                <span t-field="doc.departure_address_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;, &quot;fax&quot;], &quot;no_marker&quot;: true, &quot;phone_icons&quot;: true}"/>
+                                <br/>
+                                <strong>
+                                    <span>ORIGIN:</span>
+                                </strong>
+                            </td>
+                            <td>
+                                <strong>
+                                    <span>CONSIGNED TO:</span>
+                                </strong>
+                                <span t-field="doc.arrival_address_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;, &quot;fax&quot;], &quot;no_marker&quot;: true, &quot;phone_icons&quot;: true}"/>
+                                <br/>
+                                <strong>
+                                    <span>DESTINATION: </span>
+                                </strong>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="table table-condensed" t-as="concept" t-foreach="doc.waybill_line_ids">
+                        <thead>
+                            <tr class="table-active">
+                                <th colspan="6" style="text-align:center;">
+                                    <span t-esc="concept.product_id.name"/>
+                                </th>
+                            </tr>
+                            <tr style="text-align:left;">
+                                <th>Transportable</th>
+                                <th>Description</th>
+                                <th>Unit of Measure</th>
+                                <th>Estimated Quantity</th>
+                                <th>Unit Price</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="name" t-value="concept.product_id.name"/>
+                            <t t-if="name == 'Freight'">
+                                <tr t-as="line" t-foreach="doc.transportable_line_ids">
+                                    <td>
+                                        <span t-field="line.transportable_id.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line.transportable_uom_id.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line.quantity"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="doc.customer_factor_ids.factor"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line.quantity * doc.customer_factor_ids.factor" t-esc-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;res_company.currency_id&quot;}"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <t t-if="name != 'Freight'">
+                                <tr>
+                                    <td>
+                                        <span t-field="concept.product_id.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="concept.name"/>
+                                    </td>
+                                    <td>
+                                        <span>Unit</span>
+                                    </td>
+                                    <td>
+                                        <span t-esc="concept.product_qty"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="concept.unit_price" t-esc-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;res_company.currency_id&quot;}"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="concept.unit_price * concept.product_qty" t-esc-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;res_company.currency_id&quot;}"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    <div class="row">
+                        <div class="col-xs-8">
+                            <span>OBSERVATIONS</span>
+                            <span t-esc="doc.notes"/>
+                        </div>
+                        <div class="col-xs-4">
+                            <table>
+                                <tr>
+                                    <th class="text-left">
+                                        <span>SUBTOTAL: </span>
+                                    </th>
+                                    <td class="text-right">
+                                        <span t-esc="doc.amount_untaxed" t-esc-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;res_company.currency_id&quot;}"/>
+                                    </td>
+                                </tr>
+                                <tr t-as="tax" t-foreach="doc.tax_line_ids">
+                                    <th class="text-left">
+                                        <span t-esc="tax.tax_id.name"/>
+                                        <span>: </span>
+                                    </th>
+                                    <td class="text-right">
+                                        <span t-esc="tax.tax_amount" t-esc-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;res_company.currency_id&quot;}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-center" colspan="2">_________________________________
+                                        </th>
+                                </tr>
+                                <tr>
+                                    <th class="text-left">
+                                        <span>TOTAL: </span>
+                                    </th>
+                                    <td class="text-right">
+                                        <span t-esc="doc.amount_total" t-esc-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;res_company.currency_id&quot;}"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row" style="font-size:8px;">
+                        <div class="col-xs-8">THIS DOCUMENT DOES NOT BE ONCE OF BILL, IT IS FOR TRANSPORTATION EFFECTS ONLY. THE CONDITIONS OF THE TRANSPORT CONTRACT OF THIS LETTER PORTE ARE PRINTED ON THE REVERSE OF THE ORIGINAL AND ITS COPIES.
+                            THE UNAUTHORIZED REPRODUCTION OF THIS PROOF CONSTITUTES A CRIME IN THE TERMS OF THE TAX PROVISIONS.
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-xs-8">
+                            <strong>AMOUNT: </strong>
+                            <span t-esc="'*( %s )*' % ( doc._amount_to_text(doc.amount_total, doc.currency_id.name, doc.partner_id.lang))"/>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-xs-5">
+                            <strong>PEDIMENTOS</strong>
+                        </div>
+                        <div class="col-xs-4">
+                            <strong>DOCUMENT: </strong>
+                            <span t-esc="doc.partner_id.name"/>
+                        </div>
+                        <div class="col-xs-3 text-center">
+                            <strong>I GO CONFIRMED</strong>
+                            <br/>
+                            <br/>
+                            <hr style="width: 100%; color: black; height: 3px; background-color:black;"/>
+                            <strong>SIGNATURE OF CONSIGNER</strong>
+                        </div>
+                    </div>
+                    <div style="border-radius : 0px;margin : 0px; position : absolute;width : 100%; text-align: center;">
+                        <p class="navbar-text">&quot;Contribuyente del Régimel Fiscal: RÉGIMEN DE LOS COORDINADOS&quot;</p>
+                    </div>
+                </div>
+            </t>
+        </template>
+        <record id="paperformat_94_150" model="report.paperformat">
+            <field name="name">US Letter</field>
+            <field eval="True" name="default"/>
+            <field name="format">Letter</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">5</field>
+            <field name="margin_bottom">20</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field eval="False" name="header_line"/>
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+        </record>
+        <template id="waybill_report_translate">
+            <t t-call="report.html_container">
+                <t t-as="doc_id" t-foreach="doc_ids">
+                    <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'tms.waybill_report')"/>
+                </t>
+            </t>
+        </template>
+        <report file="tms.waybill_report" id="print_waybill_report" model="tms.waybill" name="tms.waybill_report" report_type="qweb-pdf" string="Waybill Report"/>
+        <record id="print_waybill_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="paperformat_94_150"/>
+        </record>
+    </data>
+</odoo>

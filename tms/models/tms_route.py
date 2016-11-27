@@ -32,11 +32,11 @@ class TmsRoute(models.Model):
     distance_loaded = fields.Float(
         string='Distance Loaded (mi./km)',
         required=True
-        )
+    )
     distance_empty = fields.Float(
         string='Distance Empty (mi./km)',
         required=True
-        )
+    )
     fuel_efficiency_ids = fields.One2many(
         'tms.route.fuelefficiency',
         'route_id',
@@ -152,5 +152,5 @@ class TmsRoute(models.Model):
                 ('route_id', '=', rec.id),
                 ('engine_id', '=', vehicle_id.engine_id.id),
                 ('type', '=', framework)
-                ])
+            ])
         return fuel_id.performance

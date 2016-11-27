@@ -18,5 +18,5 @@ class TmsRouteFuelEficciency(models.Model):
         ('unit', 'Unit'),
         ('single', 'Single'),
         ('double', 'Double')
-        ], required=True)
+    ], required=True)
     performance = fields.Float(required=True)

@@ -210,7 +210,7 @@ class TmsTravel(models.Model):
                 'distance': rec.distance_driver,
                 'current_odometer': rec.unit_id.odometer + rec.distance_driver,
                 'value': rec.unit_id.odometer + rec.distance_driver
-                })
+            })
             rec.state = "done"
             rec.odometer = odometer.current_odometer
             rec.date_end_real = fields.Datetime.now()
@@ -272,7 +272,7 @@ class TmsTravel(models.Model):
                 ('route_id', '=', rec.route_id.id),
                 ('engine_id', '=', rec.unit_id.engine_id.id),
                 ('type', '=', rec.framework)
-                ]).performance
+            ]).performance
             rec.fuel_efficiency_expected = res
 
     @api.depends('trailer1_id', 'trailer2_id')

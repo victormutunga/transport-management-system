@@ -31,3 +31,7 @@ from . import fleet_vehicle_engine
 from . import tms_route_fuelefficiency
 from . import tms_route_tollstation
 from . import tms_route_tollstation_costperaxis
+from . import tms_waybill_extradata
+from . import tms_unit_extradata
+from . import tms_unit_expiry
+from . import tms_factor_special

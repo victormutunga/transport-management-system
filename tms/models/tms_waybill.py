@@ -3,7 +3,15 @@
 # © <2016> <Jarsa Sistemas, S.A. de C.V.>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
+import logging
+
 from openerp import _, api, exceptions, fields, models
+
+_logger = logging.getLogger(__name__)
+try:
+    from num2words import num2words
+except ImportError:
+    _logger.debug('Cannot `import num2words`.')
 
 
 class TmsWaybill(models.Model):
@@ -60,6 +68,9 @@ class TmsWaybill(models.Model):
     currency_id = fields.Many2one(
         'res.currency', 'Currency', required=True,
         default=lambda self: self.env.user.company_id.currency_id)
+    company_id = fields.Many2one(
+        'res.company', 'Currency', required=True,
+        default=lambda self: self.env.user.company_id)
     partner_invoice_id = fields.Many2one(
         'res.partner', 'Invoice Address', required=True,
         help="Invoice address for current Waybill.",
@@ -107,28 +118,28 @@ class TmsWaybill(models.Model):
         compute='_compute_transportable_product',
         string='Sum Weight')
     amount_freight = fields.Float(
-        compute='_compute_amount_all',
+        compute='_compute_amount_freight',
         string='Freight')
     amount_move = fields.Float(
-        compute='_compute_amount_all',
+        compute='_compute_amount_move',
         string='Moves')
     amount_highway_tolls = fields.Float(
-        compute='_compute_amount_all',
+        compute='_compute_amount_highway_tolls',
         string='Highway Tolls')
     amount_insurance = fields.Float(
-        compute='_compute_amount_all',
+        compute='_compute_amount_insurance',
         string='Insurance')
     amount_other = fields.Float(
-        compute='_compute_amount_all',
+        compute='_compute_amount_other',
         string='Other')
     amount_untaxed = fields.Float(
-        compute='_compute_amount_all',
+        compute='_compute_amount_untaxed',
         string='SubTotal')
     amount_tax = fields.Float(
-        compute='_compute_amount_all',
+        compute='_compute_amount_tax',
         string='Taxes')
     amount_total = fields.Float(
-        compute='_compute_amount_all',
+        compute='_compute_amount_total',
         string='Total')
     distance_real = fields.Float(
         'Distance Real',
@@ -179,26 +190,50 @@ class TmsWaybill(models.Model):
         'tms.waybill', 'Replaced Waybill', readonly=True)
     move_id = fields.Many2one(
         'account.move', string='Journal Entry', readonly=True)
+    waybill_type = fields.Selection(
+        compute='_get_waybill_type',
+        selection=[('self', 'Self'), ('outsourced', 'Outsourced')],
+        string='Waybill Type',
+        help=" - Self: Travel with our own units. \n "
+        "- Outsourced: Travel without our own units.", default='self')
+    client_order_ref = fields.Char(
+        'Customer Reference', size=64, readonly=False,
+        states={'confirmed': [('readonly', True)]})
+    billing_policy = fields.Selection([
+        ('manual', 'Manual'),
+        ('automatic', 'Automatic'), ],
+        'Billing Policy', readonly=False,
+        states={'confirmed': [('readonly', True)]},
+        help="Gives the state of the Waybill. \n "
+        "-The exception state is automatically set "
+        "when a cancel operation occurs in the invoice "
+        "validation (Invoice Exception) or in the picking "
+        "list process (Shipping Exception). \n"
+        "The 'Waiting Schedule' state is set when the invoice "
+        "is confirmed but waiting for the scheduler to run on "
+        "the date 'Ordered Date'.", select=True, default='manual')
+    waybill_extradata = fields.One2many(
+        'tms.waybill.extradata', 'waybill_id',
+        string='Extra Data Fields',
+        readonly=False, states={'confirmed': [('readonly', True)]})
 
     @api.model
     def create(self, values):
         waybill = super(TmsWaybill, self).create(values)
         sequence = waybill.base_id.waybill_sequence_id
         waybill.name = sequence.next_by_id()
-        products = [
-            [waybill.base_id.waybill_freight_id,
-             waybill.base_id.account_freight_id]
-        ]
-        for product in products:
+        product = self.env['product.template'].search([
+            ('tms_product_category', '=', 'freight')])
+        if product:
             self.waybill_line_ids.create({
-                'name': product[0].name,
+                'name': product.name,
                 'waybill_id': waybill.id,
-                'product_id': product[0].id,
+                'product_id': product.id,
                 'tax_ids': [(
                     6, 0, [x.id for x in (
-                        product[0].supplier_taxes_id)]
+                        product.taxes_id)]
                 )],
-                'account_id': product[1].id,
+                'account_id': product.property_account_income_id.id,
             })
         waybill._compute_transportable_product()
         waybill.onchange_waybill_line_ids()
@@ -230,6 +265,15 @@ class TmsWaybill(models.Model):
                 self.user_id.name, fields.Datetime.now()))
         return True
 
+    @api.depends('travel_ids')
+    def _get_waybill_type(self):
+        for waybill in self:
+            for travel in waybill.travel_ids:
+                self.waybill_type = (
+                    'outsourced'
+                    if travel.unit_id.supplier_unit
+                    else 'self')
+
     @api.multi
     @api.depends('invoice_id')
     def _compute_invoice_paid(self):
@@ -238,7 +282,7 @@ class TmsWaybill(models.Model):
             rec.invoice_paid = paid
 
     @api.multi
-    @api.onchange(
+    @api.depends(
         'transportable_line_ids', 'customer_factor_ids')
     def _compute_transportable_product(self):
         for waybill in self:
@@ -271,30 +315,60 @@ class TmsWaybill(models.Model):
                         waybill.product_volume, waybill.amount_total)
                     total = (total + total_get_amount) * qty
                     for product in waybill.waybill_line_ids:
-                        if (product.product_id.name ==
-                                waybill.base_id.waybill_freight_id.name):
+                        if (product.product_id.tms_product_category ==
+                                'freight'):
                             product.write({'unit_price': total})
 
-    @api.depends('waybill_line_ids')
     @api.multi
-    def _compute_amount_all(self):
+    def _compute_amount_all(self, category):
+        for waybill in self:
+            field = 0.0
+            for line in waybill.waybill_line_ids:
+                if (line.product_id.tms_product_category ==
+                        category):
+                        field += line.price_subtotal
+            return field
+
+    @api.depends('waybill_line_ids')
+    def _compute_amount_freight(self):
+        for rec in self:
+            rec.amount_freight = rec._compute_amount_all('freight')
+
+    @api.depends('waybill_line_ids')
+    def _compute_amount_move(self):
+        for rec in self:
+            rec.amount_move = rec._compute_amount_all('move')
+
+    @api.depends('waybill_line_ids')
+    def _compute_amount_highway_tolls(self):
+        for rec in self:
+            rec.amount_highway_tolls = rec._compute_amount_all('tolls')
+
+    @api.depends('waybill_line_ids')
+    def _compute_amount_insurance(self):
+        for rec in self:
+            rec.amount_insurance = rec._compute_amount_all('insurance')
+
+    @api.depends('waybill_line_ids')
+    def _compute_amount_other(self):
+        for rec in self:
+            rec.amount_other = rec._compute_amount_all('other')
+
+    @api.depends('waybill_line_ids')
+    def _compute_amount_untaxed(self):
         for waybill in self:
             for line in waybill.waybill_line_ids:
-                if line.product_id.id == waybill.base_id.waybill_freight_id.id:
-                    waybill.amount_freight += line.price_subtotal
-                elif line.product_id.id == waybill.base_id.waybill_moves_id.id:
-                    waybill.amount_move += line.price_subtotal
-                elif (line.product_id.id ==
-                        waybill.base_id.waybill_highway_tolls_id.id):
-                    waybill.amount_highway_tolls += line.price_subtotal
-                elif (line.product_id.id ==
-                        waybill.base_id.waybill_insurance_id.id):
-                    waybill.amount_insurance += line.price_subtotal
-                elif (line.product_id.id ==
-                        waybill.base_id.waybill_other_product_id.id):
-                    waybill.amount_other += line.price_subtotal
                 waybill.amount_untaxed += line.price_subtotal
+
+    @api.depends('waybill_line_ids')
+    def _compute_amount_tax(self):
+        for waybill in self:
+            for line in waybill.waybill_line_ids:
                 waybill.amount_tax += line.tax_amount
+
+    @api.depends('amount_untaxed', 'amount_tax')
+    def _compute_amount_total(self):
+        for waybill in self:
             waybill.amount_total = waybill.amount_untaxed + waybill.amount_tax
 
     @api.multi
@@ -309,125 +383,14 @@ class TmsWaybill(models.Model):
                     _('Could not confirm Waybill !\n'
                       'Waybill must be assigned to a Travel before '
                       'confirming.'))
-            waybill_journal_id = waybill.base_id.waybill_journal_id.id
-            if not waybill_journal_id:
-                    raise exceptions.ValidationError(
-                        _('You have not defined Waybill Journal...'))
-            move_obj = self.env['account.move']
-            freight = waybill.base_id.waybill_freight_id
-            moves = waybill.base_id.waybill_moves_id
-            highway = waybill.base_id.waybill_highway_tolls_id
-            insurance = waybill.base_id.waybill_insurance_id
-            other = waybill.base_id.waybill_other_product_id
-            base = waybill.base_id
-            move_lines = []
-            for waybill_line in waybill.waybill_line_ids:
-                product = waybill_line.product_id
-                if product == freight:
-                    waybill_debit_account_id = (
-                        freight.property_account_income_id.id if
-                        freight.property_account_income_id else
-                        freight.categ_id.property_account_income_categ_id.id)
-                    waybill_credit_account_id = base.account_freight_id.id
-                elif product == moves:
-                    waybill_debit_account_id = (
-                        moves.property_account_income_id.id if
-                        moves.property_account_income_id else
-                        moves.categ_id.property_account_income_categ_id.id)
-                    waybill_credit_account_id = base.account_moves_id.id
-                elif product == highway:
-                    waybill_debit_account_id = (
-                        highway.property_account_income_id.id if
-                        highway.property_account_income_id else
-                        highway.categ_id.property_account_income_categ_id.id)
-                    waybill_credit_account_id = (
-                        base.account_highway_tolls_id.id)
-                elif product == insurance:
-                    waybill_debit_account_id = (
-                        insurance.property_account_income_id.id if
-                        insurance.property_account_income_id else
-                        insurance.categ_id.property_account_income_categ_id.id)
-                    waybill_credit_account_id = base.account_insurance_id.id
-                elif product == other:
-                    waybill_debit_account_id = (
-                        other.property_account_income_id.id if
-                        other.property_account_income_id else
-                        other.categ_id.property_account_income_categ_id.id)
-                    waybill_credit_account_id = base.account_other_id.id
-                if not (
-                    waybill_credit_account_id and
-                        waybill_debit_account_id):
-                    raise exceptions.ValidationError(
-                        _('Check if you already set the journal / product '
-                          'in the base and the account of the driver.'))
-
-                notes = _(
-                    '* Waybill: %s \n'
-                    '* Travel: %s \n'
-                    '* Driver: %s \n'
-                    '* Vehicle: %s') % (
-                    waybill.name,
-                    waybill.travel_ids.name,
-                    waybill.travel_ids.employee_id.name,
-                    waybill.travel_ids.unit_id.name)
-                xsubtotal = waybill.currency_id.compute(
-                    waybill_line.price_subtotal,
-                    waybill.currency_id,
-                )
-                if xsubtotal > 0.0:
-                    move_line = (
-                        0, 0,
-                        {
-                            'name': waybill.name,
-                            'account_id': waybill_credit_account_id,
-                            'narration': notes,
-                            'debit': 0.0,
-                            'credit': xsubtotal,
-                            'journal_id': waybill_journal_id,
-                            'partner_id': self.env.user.company_id.id,
-                        })
-                    move_lines.append(move_line)
-                    move_line = (
-                        0, 0,
-                        {
-                            'name': waybill.name,
-                            'account_id': waybill_debit_account_id,
-                            'narration': notes,
-                            'debit': xsubtotal,
-                            'credit': 0.0,
-                            'journal_id': waybill_journal_id,
-                            'partner_id': self.env.user.company_id.id,
-                        })
-                    move_lines.append(move_line)
-
-            move = {
-                'date': fields.Date.today(),
-                'journal_id': waybill_journal_id,
-                'name': _('Waybill: %s') % (waybill.name),
-                'line_ids': [line for line in move_lines],
-            }
-            move_id = move_obj.create(move)
-            if not move_id:
-                raise exceptions.ValidationError(
-                    _('An error has occurred in the creation'
-                        ' of the accounting move. '))
-            else:
-                self.write(
-                    {
-                        'move_id': move_id.id,
-                        'state': 'confirmed'
-                    })
-                self.message_post(body=_(
-                    "<h5><strong>Confirmed</strong></h5>"
-                    "<p><strong>Confirmed by: </strong> %s <br>"
-                    "<strong>Confirmed at: </strong> %s</p") % (
-                    self.user_id.name, fields.Datetime.now()))
+            waybill.state = 'confirmed'
 
     @api.onchange('waybill_line_ids')
     def onchange_waybill_line_ids(self):
         for waybill in self:
             tax_grouped = {}
             for line in waybill.waybill_line_ids:
+
                 unit_price = (
                     line.unit_price * (1 - (line.discount or 0.0) / 100.0))
                 taxes = line.tax_ids.compute_all(
@@ -471,7 +434,7 @@ class TmsWaybill(models.Model):
                     raise exceptions.ValidationError(
                         _('Could not cancel this waybill because'
                           'the waybill is already linked to a travel.'))
-            if waybill.paid:
+            if waybill.invoice_paid:
                 raise exceptions.ValidationError(
                     _('Could not cancel this waybill because'
                       'the waybill is already paid.'))
@@ -498,6 +461,35 @@ class TmsWaybill(models.Model):
             self.supplier_invoice_paid = paid
 
     @api.multi
+    def waybill_print(self):
+        for rec in self:
+            context = dict(
+                self.env.context or {},
+                active_ids=[rec.id],
+                active_model='tms.waybill')
+            return {
+                'type': 'ir.actions.report.xml',
+                'report_name': 'tms.waybill_report',
+                'context': context,
+                'docs': rec.id,
+            }
+
+    @api.multi
+    def _amount_to_text(self, amount_total, currency, partner_lang='es_MX'):
+        total = str(float(amount_total)).split('.')[0]
+        decimals = str(float(amount_total)).split('.')[1]
+        currency_type = 'M.N.'
+        if partner_lang != 'es_MX':
+            total = num2words(float(amount_total)).upper()
+        else:
+            total = num2words(float(total), lang='es').upper()
+        if currency != 'MXN':
+            currency_type = 'M.E.'
+        else:
+            currency = 'PESOS'
+        return '%s %s %s/100 %s' % (
+            total, currency, decimals or 0.0, currency_type)
+
     @api.constrains('departure_address_id', 'arrival_address_id')
     def departure_arrival(self):
         for rec in self:

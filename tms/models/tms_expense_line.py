@@ -47,12 +47,12 @@ class TmsExpenseLine(models.Model):
     price_total = fields.Float(
         string='Total',
         compute='_compute_price_total',
-        )
+    )
     tax_amount = fields.Float(
         compute='_compute_tax_amount',)
     special_tax_amount = fields.Float(
         string='Special Tax'
-        )
+    )
     tax_ids = fields.Many2many(
         'account.tax',
         string='Taxes',

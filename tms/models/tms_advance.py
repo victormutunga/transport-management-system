@@ -17,7 +17,7 @@ class TmsAdvance(models.Model):
     )
     name = fields.Char(
         'Advance Number',
-        )
+    )
     state = fields.Selection(
         [('draft', 'Draft'),
          ('approved', 'Approved'),
@@ -35,17 +35,17 @@ class TmsAdvance(models.Model):
         'tms.travel',
         string='Travel',
         required=True
-        )
+    )
     unit_id = fields.Many2one(
         'fleet.vehicle',
         string='Unit',
         related='travel_id.unit_id',
-        )
+    )
     employee_id = fields.Many2one(
         'hr.employee',
         string='Driver',
         related='travel_id.employee_id',
-        )
+    )
     amount = fields.Monetary(required=True)
     notes = fields.Text()
     move_id = fields.Many2one(
@@ -121,11 +121,11 @@ class TmsAdvance(models.Model):
                 advance_debit_account_id = (
                     advance.employee_id.
                     tms_advance_account_id.id
-                    )
+                )
                 advance_credit_account_id = (
                     advance.employee_id.
                     address_home_id.property_account_payable_id.id
-                    )
+                )
                 if not advance_journal_id:
                     raise exceptions.ValidationError(
                         _('Warning! The advance does not have a journal'
@@ -165,7 +165,7 @@ class TmsAdvance(models.Model):
                             'debit': (total if name == 'debit' else 0.0),
                             'credit': (total if name == 'credit' else 0.0),
                             'journal_id': advance_journal_id,
-                            })
+                        })
                         move_lines.append(move_line)
                     move = {
                         'date': fields.Date.today(),

@@ -37,7 +37,7 @@ class TmsPlace(geo_model.GeoModel):
         string='Coordinate',
         store=True,
         compute='_compute_point'
-        )
+    )
 
     @api.multi
     def get_coordinates(self):
