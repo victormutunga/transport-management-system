@@ -47,19 +47,16 @@ class TmsFuelvoucherInvoice(models.TransientModel):
                 lines.append(
                     (0, 0, {
                         'product_id': (
-                            fuel.base_id.fuelvoucher_product_id.id),
-                        'quantity': fuel.product_uom_qty,
+                            fuel.product_id.id),
+                        'quantity': fuel.product_qty,
                         'price_unit': fuel.price_unit,
                         'invoice_line_tax_ids': [(
                             6, 0,
-                            [x.id for x in (
-                                fuel.base_id.fuelvoucher_product_id.
-                                supplier_taxes_id)]
+                            [x.id for x in fuel.product_id.supplier_taxes_id]
                         )],
-                        'name': fuel.base_id.fuelvoucher_product_id.name,
+                        'name': fuel.product_id.name,
                         'account_id': (
-                            fuel.base_id.fuelvoucher_product_id.
-                            property_account_expense_id.id)}))
+                            fuel.product_id.property_account_expense_id.id)}))
                 lines.append((0, 0, {
                     'product_id': (
                         fuel.base_id.ieps_product_id.id),

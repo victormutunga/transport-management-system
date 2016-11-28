@@ -59,22 +59,22 @@
                                     <div>
                                         <group>
                                             <separator colspan="2" string="Resumen de Gastos"/>
-                                            <field class="oe_text_right" name="amount_salary"/>
-                                            <field class="oe_text_right" name="amount_salary_discount"/>
-                                            <field class="oe_text_right" name="amount_salary_retention"/>
-                                            <field class="oe_text_right" name="amount_real_expense"/>
-                                            <field class="oe_text_right" name="amount_subtotal_real" style="font-weight: bold;"/>
-                                            <field class="oe_text_right" name="amount_tax_real"/>
-                                            <field class="oe_text_right" name="amount_total_real" style="font-weight: bold;"/>
-                                            <field class="oe_text_right" name="amount_advance"/>
-                                            <field class="oe_text_right" name="amount_balance" style="font-weight: bold;"/>
+                                            <field name="amount_salary"/>
+                                            <field name="amount_salary_discount"/>
+                                            <field name="amount_salary_retention"/>
+                                            <field name="amount_real_expense"/>
+                                            <field name="amount_subtotal_real"/>
+                                            <field name="amount_tax_real"/>
+                                            <field name="amount_total_real"/>
+                                            <field name="amount_advance"/>
+                                            <field name="amount_balance"/>
                                             <separator colspan="2" string="Including Fuel Vouchers"/>
-                                            <field class="oe_text_right" name="amount_fuel"/>
-                                            <field class="oe_text_right" name="amount_subtotal_total" style="font-weight: bold;"/>
-                                            <field class="oe_text_right" name="amount_tax_total"/>
-                                            <field class="oe_text_right" name="amount_total_total" style="font-weight: bold;"/>
+                                            <field name="amount_fuel"/>
+                                            <field name="amount_subtotal_total"/>
+                                            <field name="amount_tax_total"/>
+                                            <field name="amount_total_total"/>
                                             <separator colspan="2" string="· · · · · · · · · ·" style="text-align: center;"/>
-                                            <field class="oe_text_right" name="amount_madeup_expense"/>
+                                            <field name="amount_madeup_expense"/>
                                         </group>
                                     </div>
                                     <div/>
@@ -110,7 +110,6 @@
                                     </group>
                                     <group col="2" colspan="2" string="Fuel">
                                         <field name="fuel_qty"/>
-                                        <field name="amount_fuel"/>
                                     </group>
                                 </group>
                             </page>

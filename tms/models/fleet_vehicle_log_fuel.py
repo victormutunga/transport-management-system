@@ -30,7 +30,7 @@ class FleetVehicleLogFuel(models.Model):
     product_uom_id = fields.Many2one(
         'product.uom',
         string='UoM ')
-    product_uom_qty = fields.Float(
+    product_qty = fields.Float(
         string='Liters',
         required=True,
         default=1.0,)
@@ -80,26 +80,37 @@ class FleetVehicleLogFuel(models.Model):
         "with no Travel.",)
     vendor_id = fields.Many2one(
         'res.partner',
-        required=True,)
+        required=True)
+    product_id = fields.Many2one(
+        'product.product',
+        string='Product',
+        required=True,
+        domain=[('tms_product_category', '=', 'fuel')])
 
     @api.multi
-    @api.depends('product_uom_qty', 'tax_amount', 'price_total')
+    @api.depends('tax_amount')
     def _compute_price_subtotal(self):
         for rec in self:
-            rec.price_subtotal = rec.tax_amount / 0.16
+            rec.price_subtotal = 0
+            if rec.tax_amount > 0:
+                rec.price_subtotal = rec.tax_amount / 0.16
 
     @api.multi
-    @api.depends('product_uom_qty', 'price_total', 'tax_amount')
+    @api.depends('product_qty', 'price_subtotal')
     def _compute_price_unit(self):
         for rec in self:
-            rec.price_unit = rec.price_subtotal / rec.product_uom_qty
+            rec.price_unit = 0
+            if rec.product_qty and rec.price_subtotal > 0:
+                rec.price_unit = rec.price_subtotal / rec.product_qty
 
     @api.multi
-    @api.depends('product_uom_qty', 'tax_amount')
+    @api.depends('price_subtotal', 'tax_amount', 'price_total')
     def _compute_special_tax_amount(self):
         for rec in self:
-            rec.special_tax_amount = rec.price_total - (
-                rec.price_subtotal + rec.tax_amount)
+            rec.special_tax_amount = 0
+            if rec.price_subtotal and rec.price_total and rec.tax_amount > 0:
+                rec.special_tax_amount = (
+                    rec.price_total - rec.price_subtotal - rec.tax_amount)
 
     @api.multi
     def action_approved(self):
@@ -127,10 +138,15 @@ class FleetVehicleLogFuel(models.Model):
 
     @api.model
     def create(self, values):
-        fuel_log = super(FleetVehicleLogFuel, self).create(values)
-        sequence = fuel_log.base_id.fuel_log_sequence_id
-        fuel_log.name = sequence.next_by_id()
-        return fuel_log
+        res = super(FleetVehicleLogFuel, self).create(values)
+        if not res.base_id.fuel_log_sequence_id:
+            raise ValidationError(_(
+                'You need to define the sequence for fuel logs in base %s' %
+                res.base_id.name
+                ))
+        sequence = res.base_id.fuel_log_sequence_id
+        res.name = sequence.next_by_id()
+        return res
 
     @api.multi
     def set_2_draft(self):
@@ -146,19 +162,19 @@ class FleetVehicleLogFuel(models.Model):
     @api.multi
     def action_confirm(self):
         for rec in self:
-            if (rec.product_uom_qty <= 0 or
+            if (rec.product_qty <= 0 or
                     rec.tax_amount <= 0 or
                     rec.price_total <= 0):
                 raise ValidationError(
                     _('Liters, Taxes and Total'
                       ' must be greater than zero.'))
-        message = _(
-            '<b>Fuel Voucher Confirmed.</b></br><ul>'
-            '<li><b>Confirmed by: </b>%s</li>'
-            '<li><b>Confirmed at: </b>%s</li>'
-            '</ul>') % (self.env.user.name, fields.Datetime.now())
-        rec.message_post(body=message)
-        rec.state = 'confirmed'
+            message = _(
+                '<b>Fuel Voucher Confirmed.</b></br><ul>'
+                '<li><b>Confirmed by: </b>%s</li>'
+                '<li><b>Confirmed at: </b>%s</li>'
+                '</ul>') % (self.env.user.name, fields.Datetime.now())
+            rec.message_post(body=message)
+            rec.state = 'confirmed'
 
     @api.onchange('travel_id')
     def _onchange_travel(self):

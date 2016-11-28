@@ -68,7 +68,7 @@ class TmsExpense(models.Model):
         string='Salary Retentions',
         store=True)
     amount_salary_discount = fields.Float(
-        compute='_compute_salary_discount',
+        compute='_compute_amount_salary_discount',
         string='Salary Discounts',
         store=True)
     amount_advance = fields.Float(
@@ -105,6 +105,7 @@ class TmsExpense(models.Model):
         store=True)
     amount_subtotal_total = fields.Float(
         string='SubTotal (All)',
+        compute='_compute_amount_subtotal_total',
         store=True)
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle')
     last_odometer = fields.Float('Last Read')
@@ -160,12 +161,12 @@ class TmsExpense(models.Model):
                 if line.line_type == 'fuel':
                     rec.fuel_qty += line.product_qty
 
-    @api.depends('travel_ids')
+    @api.depends('travel_ids', 'expense_line_ids')
     def _compute_amount_fuel(self):
         for rec in self:
             for line in rec.expense_line_ids:
                 if line.line_type == 'fuel':
-                    rec.amount_fuel += line.price_subtotal
+                    rec.amount_fuel += line.price_total
 
     @api.depends('travel_ids')
     def _compute_amount_salary(self):
@@ -203,6 +204,7 @@ class TmsExpense(models.Model):
     @api.depends('expense_line_ids')
     def _compute_amount_salary_discount(self):
         for rec in self:
+            rec.amount_salary_discount = 0
             for line in rec.expense_line_ids:
                 if line.line_type == 'salary_discount':
                     rec.amount_salary_discount += line.price_total
@@ -210,6 +212,7 @@ class TmsExpense(models.Model):
     @api.depends('expense_line_ids')
     def _compute_amount_madeup_expense(self):
         for rec in self:
+            rec.amount_madeup_expense = 0
             for line in rec.expense_line_ids:
                 if line.line_type == 'madeup_expense':
                     rec.amount_madeup_expense += line.price_total
@@ -217,9 +220,10 @@ class TmsExpense(models.Model):
     @api.depends('expense_line_ids')
     def _compute_amount_real_expense(self):
         for rec in self:
+            rec.amount_real_expense = 0
             for line in rec.expense_line_ids:
                 if line.line_type == 'real_expense':
-                    rec.amount_real_expense += line.price_total
+                    rec.amount_real_expense += line.price_subtotal
 
     @api.depends('travel_ids', 'expense_line_ids')
     def _compute_amount_subtotal_real(self):
@@ -256,27 +260,50 @@ class TmsExpense(models.Model):
     @api.depends('travel_ids')
     def _compute_amount_advance(self):
         for rec in self:
-            rec.amount_advance = 1.0
+            rec.amount_advance = 0
+            for travel in rec.travel_ids:
+                for advance in travel.advance_ids:
+                    rec.amount_advance += advance.amount
 
     @api.depends('travel_ids')
     def _compute_amount_balance2(self):
         for rec in self:
             rec.amount_balance2 = 1.0
 
-    @api.depends('travel_ids')
+    @api.depends('travel_ids', 'expense_line_ids')
     def _compute_amount_tax_total(self):
         for rec in self:
-            rec.amount_tax_total = 1.0
+            rec.amount_tax_total = 0
+            for travel in rec.travel_ids:
+                for fuel_log in travel.fuel_log_ids:
+                    rec.amount_tax_total += fuel_log.tax_amount
+            rec.amount_tax_total += rec.amount_balance
 
-    @api.depends('travel_ids')
+    @api.depends('expense_line_ids')
     def _compute_amount_tax_real(self):
         for rec in self:
-            rec.amount_tax_real = 1.0
+            rec.amount_tax_real = 0
+            for line in rec.expense_line_ids:
+                if line.line_type == 'real_expense':
+                    rec.amount_tax_real += line.tax_amount
 
-    @api.depends('travel_ids')
+    @api.depends('travel_ids', 'expense_line_ids')
+    def _compute_amount_subtotal_total(self):
+        for rec in self:
+            rec.amount_subtotal_total = 0
+            for travel in rec.travel_ids:
+                for fuel_log in travel.fuel_log_ids:
+                    rec.amount_subtotal_total += fuel_log.price_subtotal
+            for line in rec.expense_line_ids:
+                if line.line_type == 'real_expense':
+                    rec.amount_subtotal_total += line.price_subtotal
+            rec.amount_subtotal_total += rec.amount_balance
+
+    @api.depends('travel_ids', 'expense_line_ids')
     def _compute_amount_total_total(self):
         for rec in self:
-            rec.amount_total_total = 1.0
+            rec.amount_total_total = (
+                rec.amount_subtotal_total + rec.amount_tax_total)
 
     @api.depends('travel_ids')
     def _compute_distance_routes(self):
@@ -287,25 +314,6 @@ class TmsExpense(models.Model):
     def _compute_distance_real(self):
         for rec in self:
             rec.distance_real = 1.0
-
-
-    # @api.depends('travel_ids')
-    # def _compute_amount_all(self):
-    #     for rec in self:
-    #         for travel in rec.travel_ids:
-    #             rec.distance_real += travel.distance_driver
-    #             rec.distance_routes += travel.distance_route
-    #             for advance in travel.advance_ids:
-    #                 rec.amount_advance += advance.amount
-    #             rec.amount_fuel = 0.0
-    #             driver_salary = 0.0
-    #             for fuel_log in travel.fuel_log_ids:
-    #                 rec.amount_fuel += fuel_log.price_subtotal
-    #                 rec.amount_tax_total += (
-    #                     fuel_log.tax_amount +
-    #                     fuel_log.special_tax_amount)
-    #         rec.amount_total_total = (rec.amount_fuel +
-    #                                   rec.amount_tax_total)
 
     @api.model
     def create(self, values):
@@ -608,6 +616,9 @@ class TmsExpense(models.Model):
                                 'travel_id': travel.id,
                                 'expense_id': rec.id,
                                 'line_type': "real_expense",
+                                'product_id': self.env.ref(
+                                    'product.product_product_1_product_template'
+                                    ).id,
                                 'product_qty': 1.0,
                                 'unit_price': advance.amount,
                                 'control': True
@@ -632,9 +643,9 @@ class TmsExpense(models.Model):
                             'product_id': self.env.ref(
                                 'product.product_product_1_product_template'
                             ).id,
-                            'product_qty': fuel_log.product_uom_qty,
-                            'product_uom_id': fuel_log.uom_id.id,
-                            'unit_price': fuel_log.price_unit,
+                            'product_qty': fuel_log.product_qty,
+                            'product_uom_id': fuel_log.product_uom_id.id,
+                            'unit_price': fuel_log.price_total,
                             'is_invoice': fuel_log.invoice_paid,
                             'invoice_id': fuel_log.invoice_id.id,
                             'control': True

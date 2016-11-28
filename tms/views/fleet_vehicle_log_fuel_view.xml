@@ -37,12 +37,17 @@
                             <notebook colspan="4">
                                 <page string="Fuel Details">
                                     <group>
-                                        <field name="product_uom_qty" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" required="1"/>
-                                        <field name="price_unit" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
-                                        <field name="price_subtotal" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
-                                        <field name="tax_amount" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
-                                        <field name="special_tax_amount" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
-                                        <field name="price_total" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                        <group>
+                                            <group>
+                                                <field name="product_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                                <field name="product_qty" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                                <field name="price_unit"/>
+                                                <field name="price_subtotal"/>
+                                                <field name="tax_amount" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                                <field name="special_tax_amount"/>
+                                                <field name="price_total" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                            </group>
+                                        </group>
                                     </group>
                                 </page>
                                 <page string="Other Info">
@@ -84,7 +89,7 @@
                     <field name="travel_id"/>
                     <field name="employee_id"/>
                     <field name="vendor_id"/>
-                    <field name="product_uom_qty"/>
+                    <field name="product_qty"/>
                     <field name="state"/>
                 </field>
             </field>
