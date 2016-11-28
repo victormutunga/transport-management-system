@@ -291,18 +291,14 @@ class TmsWaybill(models.Model):
                 total = 0.0
                 for factor in waybill.customer_factor_ids:
                     qty = record.quantity
-                    if (record.transportable_uom_id.category_id.name ==
-                            'Volume'):
+                    if factor.factor_type == 'volume':
                         volume += record.quantity
-                    elif (record.transportable_uom_id.category_id.name ==
-                            'Weight'):
+                    elif factor.factor_type == 'weight':
                         weight += record.quantity
-                    elif (record.transportable_uom_id.category_id.name ==
-                            'Length / Distance'):
-                        if factor.factor_type == 'distance':
-                            distance_route += record.quantity
-                        else:
-                            distance_real += record.quantity
+                    elif factor.factor_type == 'distance':
+                        distance_route += record.quantity
+                    else:
+                        distance_real += record.quantity
 
                     waybill.product_qty = qty
                     waybill.product_volume = volume

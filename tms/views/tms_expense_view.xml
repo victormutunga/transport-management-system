@@ -44,6 +44,7 @@
                     </header>
                     <sheet>
                         <h1>
+                            <label class="oe_inline" style="font-size:30px;" string="Expense - " attrs="{'invisible':[('name','=', False)]}"/>
                             <field class="oe_inline" name="name" readonly="1"/>
                         </h1>
                         <group col="4">

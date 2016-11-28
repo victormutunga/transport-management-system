@@ -80,8 +80,6 @@ class TmsExpenseLine(models.Model):
         string='Supplier Invoice')
     product_id = fields.Many2one(
         'product.product',
-        domain=[('type', '=', 'service'),
-                ('purchase_ok', '=', 'True')],
         string='Product')
 
     @api.onchange('product_id')

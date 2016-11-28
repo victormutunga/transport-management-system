@@ -132,9 +132,9 @@ class FleetVehicleLogFuel(models.Model):
             elif (rec.travel_id and
                   rec.travel_id.state == 'closed'):
                 raise ValidationError(
-                    _('Could not cancel Fuel Voucher !'),
-                    _('This Fuel Voucher is already linked to Travel Expenses'
-                      'record'))
+                    _('Could not cancel Fuel Voucher !'
+                        'This Fuel Voucher is already linked to Travel '
+                        'Expenses record'))
 
     @api.model
     def create(self, values):

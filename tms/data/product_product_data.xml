@@ -1,54 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <record id="product_freight" model="product.product">
+        <record id="product_freight" model="product.template">
             <field name="name">Freight</field>
             <field name="type">service</field>
             <field eval="False" name="purchase_ok"/>
             <field eval="True" name="sale_ok"/>
             <field name="tms_product_category">freight</field>
         </record>
-        <record id="product_move" model="product.product">
+        <record id="product_move" model="product.template">
             <field name="name">Move</field>
             <field name="type">service</field>
             <field eval="False" name="purchase_ok"/>
             <field eval="True" name="sale_ok"/>
             <field name="tms_product_category">move</field>
         </record>
-        <record id="product_insurance" model="product.product">
+        <record id="product_insurance" model="product.template">
             <field name="name">Insurance</field>
             <field name="type">service</field>
             <field eval="False" name="purchase_ok"/>
             <field eval="True" name="sale_ok"/>
             <field name="tms_product_category">insurance</field>
         </record>
-        <record id="product_highway_tolls" model="product.product">
+        <record id="product_highway_tolls" model="product.template">
             <field name="name">Highway Tolls</field>
             <field name="type">service</field>
             <field eval="False" name="purchase_ok"/>
             <field eval="True" name="sale_ok"/>
             <field name="tms_product_category">tolls</field>
         </record>
-        <record id="product_other" model="product.product">
+        <record id="product_other" model="product.template">
             <field name="name">Other</field>
             <field name="type">service</field>
             <field eval="False" name="purchase_ok"/>
             <field eval="True" name="sale_ok"/>
             <field name="tms_product_category">other</field>
         </record>
-        <record id="product_real_expense" model="product.product">
+        <record id="product_real_expense" model="product.template">
             <field name="name">Real Expense</field>
             <field name="type">service</field>
             <field eval="True" name="purchase_ok"/>
             <field eval="False" name="sale_ok"/>
+            <field name="tms_product_category">real_expense</field>
         </record>
-        <record id="product_fuel" model="product.product">
+        <record id="product_fuel" model="product.template">
             <field name="name">Fuel</field>
             <field name="type">product</field>
             <field eval="True" name="purchase_ok"/>
             <field eval="False" name="sale_ok"/>
+            <field name="tms_product_category">fuel</field>
         </record>
-        <record id="product_ieps" model="product.product">
+        <record id="product_ieps" model="product.template">
             <field name="name">IEPS</field>
             <field name="type">product</field>
             <field eval="True" name="purchase_ok"/>

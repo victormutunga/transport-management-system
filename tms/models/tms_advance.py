@@ -86,7 +86,7 @@ class TmsAdvance(models.Model):
             raise exceptions.ValidationError(
                 _('The amount must be greater than zero.'))
         else:
-            advance.name = _('Advance ') + sequence.next_by_id()
+            advance.name = sequence.next_by_id()
             if advance.name == 'False':
                 raise exceptions.ValidationError(
                     _('Error you need define an'
