@@ -230,7 +230,9 @@ class TmsExpense(models.Model):
         for rec in self:
             rec.amount_subtotal_real = (
                 rec.amount_salary +
-                rec.amount_salary_discount + rec.amount_real_expense)
+                rec.amount_salary_discount +
+                rec.amount_real_expense +
+                rec.amount_salary_retention)
 
     @api.depends('travel_ids', 'expense_line_ids')
     def _compute_amount_total_real(self):
@@ -413,7 +415,7 @@ class TmsExpense(models.Model):
                     _('Warning! You must have configured the accounts'
                         'of the tms for the Driver'))
             move_lines = []
-            if rec.amount_advance > 0:
+            if rec.amount_advance - rec.amount_real_expense > 0:
                 move_line = (0, 0, {
                     'name': _('Advance Discount'),
                     'ref': (rec.name),
@@ -425,9 +427,10 @@ class TmsExpense(models.Model):
                     'partner_id': rec.employee_id.address_home_id.id,
                     })
                 move_lines.append(move_line)
+                notes = '\n' + _('Advance Discount %d') % rec.amount_advance
 
             for line in rec.expense_line_ids:
-                if line.line_type not in ('madeup_expense', 'fuel', 'salary'):
+                if line.line_type not in ('madeup_expense', 'fuel'):
                     product_account = (
                         negative_balance_account
                         if (line.product_id.
@@ -465,6 +468,7 @@ class TmsExpense(models.Model):
                             'partner_id': line.partner_id.id,
                             })
                         move_lines.append(move_line)
+                        notes += '\n' + line.name + ' ' + line.price_total
 
                     else:
                         move_line = (0, 0, {
@@ -476,13 +480,14 @@ class TmsExpense(models.Model):
                                 if line.price_subtotal > 0.0
                                 else 0.0),
                             'credit': (
-                                line.price_subtotal
+                                line.price_subtotal * - 1.0
                                 if line.price_subtotal <= 0.0
                                 else 0.0),
                             'journal_id': expense_journal_id,
                             'partner_id': rec.employee_id.address_home_id.id,
                             })
                         move_lines.append(move_line)
+                        notes += '\n' + line.name + ' ' + line.price_subtotal
 
                     for tax in line.tax_ids:
                         tax_account = tax.account_id.id
@@ -509,6 +514,7 @@ class TmsExpense(models.Model):
                                     rec.employee_id.address_home_id.id),
                             })
                             move_lines.append(move_line)
+                            notes += '\n' + line.name + ' ' + line.tax_amount
 
             if rec.amount_balance < 0:
                 move_line = (0, 0, {
@@ -522,6 +528,9 @@ class TmsExpense(models.Model):
                     rec.employee_id.address_home_id.id,
                 })
                 move_lines.append(move_line)
+                notes += (
+                    '\n' + _('Balance: ') +
+                    line.name + ' ' + rec.amount_balance * -1.0)
             else:
                 move_line = (0, 0, {
                     'name': _('Positive Balance'),
@@ -534,6 +543,9 @@ class TmsExpense(models.Model):
                     rec.employee_id.address_home_id.id,
                 })
                 move_lines.append(move_line)
+                notes += (
+                    '\n' + _('Balance: ') +
+                    line.name + ' ' + rec.amount_balance * -1.0)
             move = {
                 'date': fields.Date.today(),
                 'journal_id': expense_journal_id,
@@ -606,22 +618,28 @@ class TmsExpense(models.Model):
                             '\n Name of advance not paid: ' +
                             advance.name))
                     else:
-                        advance.write({
-                            'state': 'closed',
-                            'expense_id': rec.id
-                        })
                         if advance.auto_expense:
+                            product_id = self.env['product.template'].search(
+                                [('tms_product_category',
+                                    '=', 'Real_Expense')])
+                            if not product_id:
+                                raise ValidationError(_(
+                                    'Oops! You must create a product for the'
+                                    ' Real Expense with the Real Expense TMS '
+                                    'product_category'))
                             rec.expense_line_ids.create({
                                 'name': _("Advance: ") + str(advance.name),
                                 'travel_id': travel.id,
                                 'expense_id': rec.id,
                                 'line_type': "real_expense",
-                                'product_id': self.env.ref(
-                                    'product.product_product_1_product_template'
-                                    ).id,
+                                'product_id': product_id.id,
                                 'product_qty': 1.0,
                                 'unit_price': advance.amount,
                                 'control': True
+                            })
+                            advance.write({
+                                'state': 'closed',
+                                'expense_id': rec.id
                             })
                 for fuel_log in travel.fuel_log_ids:
                     if fuel_log.state != 'confirmed':
@@ -631,18 +649,20 @@ class TmsExpense(models.Model):
                             fuel_log.name +
                             '\n State: ' + fuel_log.state))
                     else:
-                        fuel_log.write({
-                            'state': 'closed',
-                            'expense_id': rec.id
-                        })
+                        product_id = self.env['product.template'].search(
+                            [('tms_product_category',
+                                '=', 'fuel')])
+                        if not product_id:
+                            raise ValidationError(_(
+                                'Oops! You must create a product for the'
+                                ' Fuel Vouchers with the fuel TMS '
+                                'Product Category'))
                         rec.expense_line_ids.create({
                             'name': _("Fuel voucher: ") + str(fuel_log.name),
                             'travel_id': travel.id,
                             'expense_id': rec.id,
                             'line_type': 'fuel',
-                            'product_id': self.env.ref(
-                                'product.product_product_1_product_template'
-                            ).id,
+                            'product_id': product_id.id,
                             'product_qty': fuel_log.product_qty,
                             'product_uom_id': fuel_log.product_uom_id.id,
                             'unit_price': fuel_log.price_total,
@@ -650,6 +670,17 @@ class TmsExpense(models.Model):
                             'invoice_id': fuel_log.invoice_id.id,
                             'control': True
                         })
+                        fuel_log.write({
+                            'state': 'closed',
+                            'expense_id': rec.id
+                        })
+                product_id = self.env['product.template'].search(
+                    [('tms_product_category', '=', 'salary')])
+                if not product_id:
+                    raise ValidationError(_(
+                        'Oops! You must create a product for the'
+                        ' diver salary with the Salary TMS '
+                        'Product Category'))
                 rec.expense_line_ids.create({
                     'name': _("Salary per travel: ") + str(travel.name),
                     'travel_id': travel.id,
