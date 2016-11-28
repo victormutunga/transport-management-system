@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!--  Make Payment Expense-->
+        <record id="tms_view_advance_payment" model="ir.ui.view">
+            <field name="name">Make Payment Expense</field>
+            <field name="model">tms.expense.payment</field>
+            <field name="arch" type="xml">
+                <form string="Make Payment">
+                    <separator colspan="4" string="Are you sure you want to create payment for selected Travel Expenses ?"/>
+                    <footer>
+                        <button name="make_payment" class="oe_highlight" string="Confirm" type="object"/>
+                        <button special="cancel" string="Cancel"/></footer>
+                </form>
+            </field>
+        </record>
+        
+        <act_window 
+            id="action_view_advance_payment" 
+            key2="client_action_multi" 
+            name="Make Driver Expense Payment." 
+            res_model="tms.expense.payment" 
+            src_model="tms.expense" 
+            target="new" 
+            view_mode="form"/>
+    </data>
+</odoo>
