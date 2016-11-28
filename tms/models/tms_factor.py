@@ -106,4 +106,4 @@ For next option you only have to type Special Python Code:
                     else:
                         raise ValidationError(
                             _('the amount isnt between of any ranges'))
-        return res
+            return res
