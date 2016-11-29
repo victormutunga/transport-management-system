@@ -34,8 +34,7 @@ class TmsExpenseLine(models.Model):
          ('salary', 'Salary'),
          ('fuel', 'Fuel'),
          ('salary_retention', 'Salary Retention'),
-         ('salary_discount', 'Salary Discount'),
-         ('negative_balance', 'Negative Balance')],
+         ('salary_discount', 'Salary Discount')],
         default='real_expense')
     name = fields.Char(
         'Description',
@@ -84,9 +83,16 @@ class TmsExpenseLine(models.Model):
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
-        self.tax_ids = self.product_id.supplier_taxes_id
+        if self.line_type not in [
+                'salary', 'salary_retention', 'salary_discount']:
+                self.tax_ids = self.product_id.supplier_taxes_id
+
         self.product_uom_id = self.product_id.uom_id.id
         self.name = self.product_id.name
+
+    @api.onchange('line_type')
+    def _onchange_line_type(self):
+        self.product_id = False
 
     @api.depends('tax_ids', 'product_qty', 'unit_price')
     def _compute_tax_amount(self):
@@ -98,8 +104,6 @@ class TmsExpenseLine(models.Model):
             if taxes:
                 for tax in taxes['taxes']:
                     rec.tax_amount += tax['amount']
-                if rec.line_type in ['salary_retention', 'salary_discount']:
-                    rec.tax_amount * - 1.0
             else:
                 rec.tax_amount = 0.0
 
@@ -126,7 +130,7 @@ class TmsExpenseLine(models.Model):
     @api.model
     def create(self, values):
         expense_line = super(TmsExpenseLine, self).create(values)
-        if expense_line.line_type in ('salary_discount', 'negative_balance'):
+        if expense_line.line_type in ('salary_discount', 'salary_retention'):
             if expense_line.price_total > 0:
                 raise ValidationError(_('This line type needs a '
                                         'negative value to continue!'))

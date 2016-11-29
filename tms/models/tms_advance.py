@@ -165,6 +165,7 @@ class TmsAdvance(models.Model):
                             'debit': (total if name == 'debit' else 0.0),
                             'credit': (total if name == 'credit' else 0.0),
                             'journal_id': advance_journal_id,
+                            'operating_unit_id': advance.base_id.id,
                         })
                         move_lines.append(move_line)
                     move = {
@@ -172,6 +173,7 @@ class TmsAdvance(models.Model):
                         'journal_id': advance_journal_id,
                         'name': _('Advance: %s') % (advance.name),
                         'line_ids': [line for line in move_lines],
+                        'operating_unit_id': advance.base_id.id
                     }
                     move_id = obj_account_move.create(move)
                     if not move_id:

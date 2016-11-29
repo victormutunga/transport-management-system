@@ -20,7 +20,6 @@ class ProductTemplate(models.Model):
         ('salary', 'Salary'),
         ('salary_retention', 'Salary Retention'),
         ('salary_discount', 'Salary Discount'),
-        ('negative_balance', 'Negative Balance'),
         ('fuel', 'Fuel'),
         ('indirect_expense', 'Indirect Expense')],
         string='TMS Product Category')

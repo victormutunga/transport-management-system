@@ -50,6 +50,34 @@
             <field eval="False" name="sale_ok"/>
             <field name="tms_product_category">fuel</field>
         </record>
+        <record id="product_salary" model="product.product">
+            <field name="name">Salary</field>
+            <field name="type">service</field>
+            <field eval="True" name="purchase_ok"/>
+            <field eval="False" name="sale_ok"/>
+            <field name="tms_product_category">salary</field>
+        </record>
+        <record id="product_retention" model="product.product">
+            <field name="name">Salary Retention</field>
+            <field name="type">service</field>
+            <field eval="True" name="purchase_ok"/>
+            <field eval="False" name="sale_ok"/>
+            <field name="tms_product_category">salary_retention</field>
+        </record>
+        <record id="product_discount" model="product.product">
+            <field name="name">Salary Discount</field>
+            <field name="type">service</field>
+            <field eval="True" name="purchase_ok"/>
+            <field eval="False" name="sale_ok"/>
+            <field name="tms_product_category">salary_discount</field>
+        </record>
+        <record id="product_madeup" model="product.product">
+            <field name="name">Made Up Expense</field>
+            <field name="type">service</field>
+            <field eval="True" name="purchase_ok"/>
+            <field eval="False" name="sale_ok"/>
+            <field name="tms_product_category">made_up_expense</field>
+        </record>
         <record id="product_ieps" model="product.product">
             <field name="name">IEPS</field>
             <field name="type">product</field>

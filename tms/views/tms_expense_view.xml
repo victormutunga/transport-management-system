@@ -39,7 +39,7 @@
                                 class="oe_highlight"/>
                         <button name="action_confirm" type="object"
                                 string="Confirm" icon="fa-check-square-o" states="approved"
-                                class="oe_highlight"/>
+                                class="oe_highlight" confirm="Are you sure to confirm this expense? This action can't be changed."/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
@@ -48,15 +48,15 @@
                             <field class="oe_inline" name="name" readonly="1"/>
                         </h1>
                         <group col="4">
-                            <field name="base_id"/>
-                            <field name="date"/>
-                            <field name="unit_id" domain="[('base_id', '=', base_id)]"/>
-                            <field name="employee_id" domain="[('base_id','=',base_id)]"/>
-                            <field name="currency_id"/>
+                            <field name="base_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                            <field name="date" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                            <field name="unit_id" domain="[('base_id', '=', base_id),('fleet_type', '=', 'tractor')]" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                            <field name="employee_id" domain="[('base_id','=',base_id)]" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                            <field name="currency_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                         </group>
                         <notebook>
                             <page string="Resume">
-                                <group col="4">
+                                <group col="2">
                                     <div>
                                         <group>
                                             <separator colspan="2" string="Resumen de Gastos"/>
@@ -78,12 +78,12 @@
                                             <field name="amount_madeup_expense"/>
                                         </group>
                                     </div>
-                                    <div/>
+                                    <div></div>
                                 </group>
                             </page>
                             <page string="Travels">
                                 <separator colspan="4" string="Travels for Driver"/>
-                                <field  name="travel_ids" colspan="4" domain="[('employee_id','=', employee_id), ('state','=', 'done'), ('state','!=','cancel'), ('unit_id', '=', unit_id)]" nolabel="1" >
+                                <field  name="travel_ids" colspan="4" domain="[('employee_id','=', employee_id), ('state','=', 'done'), ('state','!=','cancel'), ('unit_id', '=', unit_id)]" nolabel="1" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" >
                                     <tree string="" default_order="name">
                                         <field invisible="1" name="state"/>
                                         <field name="name"/>
@@ -101,21 +101,19 @@
                                 <separator colspan="4" string="Global Performance"/>
                                 <group col="4" colspan="4">
                                     <group col="2" colspan="2" string="Distances">
-                                        <field name="distance_routes"/>
-                                        <field name="distance_real" />
-                                        <field name="current_odometer" />
-                                        <field attrs="{'invisible':[('odometer_log_id','=',False)]}" name="vehicle_id"/>
-                                        <field attrs="{'invisible': True}" name="last_odometer"/>
-                                        <field attrs="{'invisible': True}" name="vehicle_odometer"/>
-                                        <field attrs="{'invisible':[('odometer_log_id','=',False)]}" name="odometer_log_id"/>
+                                        <field name="distance_routes" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                        <field name="distance_real" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                        <field name="current_odometer" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                        <field attrs="{'invisible':[('odometer_log_id','=',False)], 'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="vehicle_id" />
+                                        <field attrs="{'invisible':[('odometer_log_id','=',False)], 'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="odometer_log_id"/>
                                     </group>
                                     <group col="2" colspan="2" string="Fuel">
-                                        <field name="fuel_qty"/>
+                                        <field name="fuel_qty" />
                                     </group>
                                 </group>
                             </page>
                             <page string="Expense Lines">
-                                <field context="{'default_expense_id': active_id, 'group_by_line_type': 1, 'default_travel_ids': travel_ids}" name="expense_line_ids" nolabel="1"/>
+                                <field context="{'default_expense_id': active_id, 'group_by_line_type': 1, 'default_travel_ids': travel_ids}" name="expense_line_ids" nolabel="1" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                             </page>
                             <page string="Advances">
                                 <field colspan="4" name="advance_ids" nolabel="1" readonly="1">

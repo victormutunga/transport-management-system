@@ -419,7 +419,9 @@ class TmsExpense(models.Model):
                     _('Warning! You must have configured the accounts'
                         'of the tms for the Driver'))
             move_lines = []
-            if rec.amount_advance:
+            # We check if the advance amount is higher than zero to create
+            # a move line
+            if rec.amount_advance > 0:
                 move_line = (0, 0, {
                     'name': _('Advance Discount'),
                     'ref': (rec.name),
@@ -429,10 +431,14 @@ class TmsExpense(models.Model):
                     'credit': rec.amount_advance,
                     'journal_id': negative_balance_account,
                     'partner_id': rec.employee_id.address_home_id.id,
+                    'operating_unit_id': rec.base_id.id,
                     })
                 move_lines.append(move_line)
+            invoices = []
 
             for line in rec.expense_line_ids:
+                # We only need all the lines except the fuel and the
+                # made up expenses
                 if line.line_type not in ('madeup_expense', 'fuel'):
                     product_account = (
                         negative_balance_account
@@ -452,13 +458,18 @@ class TmsExpense(models.Model):
                             _('Warning ! Expense Account is not defined for'
                                 ' product %s') % (line.product_id.name))
                     inv_id = False
+                    # We check if the expense line is an invoice to create it
+                    # and make the move line based in the total with taxes
                     if line.is_invoice:
                         inv_id = self.create_supplier_invoice(line)
                         line.write({'invoice_id': inv_id.id})
+                        invoices.append(inv_id)
                         move_line = (0, 0, {
-                            'name': (rec.name + ' ' + line.name),
-                            'ref': (rec.name + ' - Inv ID - ' +
-                                    str(inv_id) if inv_id else ''),
+                            'name': (
+                                rec.name + ' ' + line.name +
+                                ' - Inv ID - ' + str(inv_id.id)),
+                            'ref': (
+                                rec.name + ' - Inv ID - ' + str(inv_id.id)),
                             'account_id': (
                                 line.partner_id.
                                 property_account_payable_id.id),
@@ -470,9 +481,11 @@ class TmsExpense(models.Model):
                                 else 0.0),
                             'journal_id': expense_journal_id,
                             'partner_id': line.partner_id.id,
+                            'operating_unit_id': rec.base_id.id,
                             })
                         move_lines.append(move_line)
-
+                    # if the expense line not be a invoice we make the move
+                    # line based in the subtotal
                     else:
                         move_line = (0, 0, {
                             'name': rec.name + ' ' + line.name,
@@ -488,9 +501,11 @@ class TmsExpense(models.Model):
                                 else 0.0),
                             'journal_id': expense_journal_id,
                             'partner_id': rec.employee_id.address_home_id.id,
+                            'operating_unit_id': rec.base_id.id,
                             })
                         move_lines.append(move_line)
-
+                    # we check the line tax to create the move line if
+                    # the line not be an invoice
                     for tax in line.tax_ids:
                         tax_account = tax.account_id.id
                         if not tax_account:
@@ -514,9 +529,11 @@ class TmsExpense(models.Model):
                                 'journal_id': expense_journal_id,
                                 'partner_id': (
                                     rec.employee_id.address_home_id.id),
+                                'operating_unit_id': rec.base_id.id,
                             })
                             move_lines.append(move_line)
-
+            # Here we check if the balance is positive or negative to create
+            # the move line with the correct values
             if rec.amount_balance < 0:
                 move_line = (0, 0, {
                     'name': _('Negative Balance'),
@@ -527,6 +544,7 @@ class TmsExpense(models.Model):
                     'journal_id': expense_journal_id,
                     'partner_id':
                     rec.employee_id.address_home_id.id,
+                    'operating_unit_id': rec.base_id.id,
                 })
                 move_lines.append(move_line)
             else:
@@ -539,6 +557,7 @@ class TmsExpense(models.Model):
                     'journal_id': expense_journal_id,
                     'partner_id':
                     rec.employee_id.address_home_id.id,
+                    'operating_unit_id': rec.base_id.id,
                 })
                 move_lines.append(move_line)
             move = {
@@ -547,6 +566,7 @@ class TmsExpense(models.Model):
                 'name': rec.name,
                 'line_ids': [line for line in move_lines],
                 'partner_id': self.env.user.company_id.id,
+                'operating_unit_id': rec.base_id.id,
                 }
             move_id = move_obj.create(move)
             if not move_id:
@@ -554,6 +574,9 @@ class TmsExpense(models.Model):
                     -('An error has occurred in the creation'
                         ' of the accounting move. '))
             else:
+                # Here we reconcile the invoices with the corresponding
+                # move line
+                self.reconcile_supplier_invoices(invoices, move_id)
                 rec.write(
                     {
                         'move_id': move_id.id,
@@ -712,7 +735,7 @@ class TmsExpense(models.Model):
             'price_unit': line.unit_price,
             'invoice_line_tax_ids':
             [(6, 0,
-                [x.id for x in line.product_id.supplier_taxes_id])],
+                [x.id for x in line.tax_ids])],
             'uom_id': line.product_uom_id.id,
             'product_id': line.product_id.id,
         })
@@ -735,6 +758,30 @@ class TmsExpense(models.Model):
             'fiscal_position_id': (
                 line.partner_id.property_account_position_id.id or False),
             'comment': notes,
+            'operating_unit_id': line.expense_id.base_id.id,
         }
         invoice_id = self.env['account.invoice'].create(invoice)
+        invoice_id.signal_workflow('invoice_open')
         return invoice_id
+
+    @api.multi
+    def reconcile_supplier_invoices(self, invoice_ids, move_id):
+        move_line_obj = self.env['account.move.line']
+        for invoice in invoice_ids:
+            move_ids = []
+            invoice_str_id = str(invoice.id)
+            expense_move_line = move_line_obj.search(
+                [('move_id', '=', move_id.id), (
+                    'name', 'ilike', invoice_str_id)])
+            if not expense_move_line:
+                raise ValidationError(
+                    _('Error ! Move line was not found,'
+                        ' please check your data.'))
+            move_ids.append(expense_move_line.id)
+            for move_line in invoice.move_id.line_ids:
+                if move_line.account_id.internal_type == 'payable':
+                    invoice_move_line_id = move_line
+            move_ids.append(invoice_move_line_id.id)
+            reconcile_ids = move_line_obj.browse(move_ids)
+            reconcile_ids.reconcile()
+        return True
