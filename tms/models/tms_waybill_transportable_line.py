@@ -33,10 +33,10 @@ class TmsWaybillTransportableLine(models.Model):
         self.transportable_uom_id = self.transportable_id.uom_id
         factors = []
         for factor in self.waybill_id.customer_factor_ids:
-            factors.append(factor.factor_type)
-        return{
-            'domain': {'transportable_id': [
-                ('factor_type', 'in', (factors)),
-                ('factor_type', 'not in', [
-                    'travel', 'percent', 'qty', 'special'])]}
-        }
+            if factor.factor_type not in [
+                    'travel', 'percent', 'qty', 'special']:
+                factors.append(factor.factor_type)
+                return{
+                    'domain': {'transportable_id': [
+                        ('factor_type', 'in', (factors))]}
+                }
