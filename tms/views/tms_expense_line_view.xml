@@ -45,7 +45,7 @@
                         <group string="Supplier Details">
                             <field attrs="{'invisible':[('line_type','!=','real_expense')]}" name="is_invoice"/>
                             <field attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}" name="partner_id"/>
-                            <field attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}" domain="[('partner_id', '=', partner_id),('state', 'not in', ['paid'])]" name="invoice_id"/>
+                            <field attrs="{'invisible':[('is_invoice', '=', False)]}" domain="[('partner_id', '=', partner_id),('state', 'not in', ['paid'])]" name="invoice_id" readonly="1"/>
                         </group>
                     </sheet>
                 </form>

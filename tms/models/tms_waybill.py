@@ -222,7 +222,7 @@ class TmsWaybill(models.Model):
         waybill = super(TmsWaybill, self).create(values)
         sequence = waybill.base_id.waybill_sequence_id
         waybill.name = sequence.next_by_id()
-        product = self.env['product.template'].search([
+        product = self.env['product.product'].search([
             ('tms_product_category', '=', 'freight')])
         if product:
             self.waybill_line_ids.create({

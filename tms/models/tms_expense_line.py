@@ -98,6 +98,8 @@ class TmsExpenseLine(models.Model):
             if taxes:
                 for tax in taxes['taxes']:
                     rec.tax_amount += tax['amount']
+                if rec.line_type in ['salary_retention', 'salary_discount']:
+                    rec.tax_amount * - 1.0
             else:
                 rec.tax_amount = 0.0
 

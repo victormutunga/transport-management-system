@@ -83,7 +83,7 @@
                             </page>
                             <page string="Travels">
                                 <separator colspan="4" string="Travels for Driver"/>
-                                <field  name="travel_ids" colspan="4" domain="[('employee_id','=', employee_id), ('state','=', 'done'), ('is_available','=', True), ('state','!=','cancel'), ('unit_id', '=', unit_id)]" nolabel="1" >
+                                <field  name="travel_ids" colspan="4" domain="[('employee_id','=', employee_id), ('state','=', 'done'), ('state','!=','cancel'), ('unit_id', '=', unit_id)]" nolabel="1" >
                                     <tree string="" default_order="name">
                                         <field invisible="1" name="state"/>
                                         <field name="name"/>

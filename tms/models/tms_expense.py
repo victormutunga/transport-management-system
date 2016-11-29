@@ -454,12 +454,14 @@ class TmsExpense(models.Model):
                     inv_id = False
                     if line.is_invoice:
                         inv_id = self.create_supplier_invoice(line)
+                        line.write({'invoice_id': inv_id.id})
                         move_line = (0, 0, {
                             'name': (rec.name + ' ' + line.name),
                             'ref': (rec.name + ' - Inv ID - ' +
                                     str(inv_id) if inv_id else ''),
                             'account_id': (
-                                line.partner_id.property_account_payable.id),
+                                line.partner_id.
+                                property_account_payable_id.id),
                             'debit': (
                                 line.price_total if line.price_total > 0.0
                                 else 0.0),
@@ -539,12 +541,12 @@ class TmsExpense(models.Model):
                     rec.employee_id.address_home_id.id,
                 })
                 move_lines.append(move_line)
-            import ipdb; ipdb.set_trace()
             move = {
                 'date': fields.Date.today(),
                 'journal_id': expense_journal_id,
                 'name': rec.name,
                 'line_ids': [line for line in move_lines],
+                'partner_id': self.env.user.company_id.id,
                 }
             move_id = move_obj.create(move)
             if not move_id:
@@ -701,42 +703,38 @@ class TmsExpense(models.Model):
             raise ValidationError(
                 _('Error !',
                     'You have not defined Travel Expense Supplier Journal...'))
-        line = (0, 0, {
+        invoice_line = (0, 0, {
             'name': _('%s (TMS Expense Record %s)') % (line.product_id.name,
                                                        line.expense_id.name),
             'origin': line.expense_id.name,
             'account_id': product_account,
             'quantity': line.product_qty,
             'price_unit': line.unit_price,
-            'invoice_line_tax_id':
+            'invoice_line_tax_ids':
             [(6, 0,
                 [x.id for x in line.product_id.supplier_taxes_id])],
-            'uom_id': line.product_uom.id,
+            'uom_id': line.product_uom_id.id,
             'product_id': line.product_id.id,
-            'notes': line.name,
         })
         notes = line.expense_id.name + ' - ' + line.product_id.name
-        partner_account = line.partner_id.property_account_payable.id
+        partner_account = line.partner_id.property_account_payable_id.id
         invoice = {
-            'name': line.expense_id.name + ' - ' + line.invoice_number,
             'origin': line.expense_id.name,
             'type': 'in_invoice',
             'journal_id': journal_id,
             'reference': line.expense_id.name,
             'account_id': partner_account,
             'partner_id': line.partner_id.id,
-            'invoice_line': [line],
+            'invoice_line_ids': [invoice_line],
             'currency_id': line.expense_id.currency_id.id,
-            'payment_term': (
-                line.partner_id.property_supplier_payment_term_id
-                if
+            'payment_term_id': (
                 line.partner_id.property_supplier_payment_term_id.id
+                if
+                line.partner_id.property_supplier_payment_term_id
                 else False),
-            'fiscal_position': (
+            'fiscal_position_id': (
                 line.partner_id.property_account_position_id.id or False),
             'comment': notes,
         }
         invoice_id = self.env['account.invoice'].create(invoice)
-        res = self.env['tms.expense.line'].write(
-            [line.id], {'invoice_id': invoice_id})
-        return res
+        return invoice_id
