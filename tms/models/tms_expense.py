@@ -14,7 +14,8 @@ class TmsExpense(models.Model):
     _order = 'name desc'
 
     name = fields.Char(readonly=True)
-    base_id = fields.Many2one('operating.unit', string='Base', required=True)
+    operating_unit_id = fields.Many2one(
+        'operating.unit', string='Operating Unit', required=True)
     employee_id = fields.Many2one(
         'hr.employee', 'Driver', required=True,
         domain=[('driver', '=', True)])
@@ -324,7 +325,7 @@ class TmsExpense(models.Model):
     @api.model
     def create(self, values):
         expense = super(TmsExpense, self).create(values)
-        sequence = expense.base_id.expense_sequence_id
+        sequence = expense.operating_unit_id.expense_sequence_id
         expense.name = sequence.next_by_id()
         return expense
 
@@ -391,7 +392,7 @@ class TmsExpense(models.Model):
     def action_confirm(self):
         for rec in self:
             move_obj = self.env['account.move']
-            expense_journal_id = rec.base_id.expense_journal_id.id
+            expense_journal_id = rec.operating_unit_id.expense_journal_id.id
             advance_account_id = (
                 rec.employee_id.
                 tms_advance_account_id.id
@@ -431,7 +432,7 @@ class TmsExpense(models.Model):
                     'credit': rec.amount_advance,
                     'journal_id': negative_balance_account,
                     'partner_id': rec.employee_id.address_home_id.id,
-                    'operating_unit_id': rec.base_id.id,
+                    'operating_unit_id': rec.operating_unit_id.id,
                     })
                 move_lines.append(move_line)
             invoices = []
@@ -481,7 +482,7 @@ class TmsExpense(models.Model):
                                 else 0.0),
                             'journal_id': expense_journal_id,
                             'partner_id': line.partner_id.id,
-                            'operating_unit_id': rec.base_id.id,
+                            'operating_unit_id': rec.operating_unit_id.id,
                             })
                         move_lines.append(move_line)
                     # if the expense line not be a invoice we make the move
@@ -501,7 +502,7 @@ class TmsExpense(models.Model):
                                 else 0.0),
                             'journal_id': expense_journal_id,
                             'partner_id': rec.employee_id.address_home_id.id,
-                            'operating_unit_id': rec.base_id.id,
+                            'operating_unit_id': rec.operating_unit_id.id,
                             })
                         move_lines.append(move_line)
                     # we check the line tax to create the move line if
@@ -529,7 +530,7 @@ class TmsExpense(models.Model):
                                 'journal_id': expense_journal_id,
                                 'partner_id': (
                                     rec.employee_id.address_home_id.id),
-                                'operating_unit_id': rec.base_id.id,
+                                'operating_unit_id': rec.operating_unit_id.id,
                             })
                             move_lines.append(move_line)
             # Here we check if the balance is positive or negative to create
@@ -544,7 +545,7 @@ class TmsExpense(models.Model):
                     'journal_id': expense_journal_id,
                     'partner_id':
                     rec.employee_id.address_home_id.id,
-                    'operating_unit_id': rec.base_id.id,
+                    'operating_unit_id': rec.operating_unit_id.id,
                 })
                 move_lines.append(move_line)
             else:
@@ -557,7 +558,7 @@ class TmsExpense(models.Model):
                     'journal_id': expense_journal_id,
                     'partner_id':
                     rec.employee_id.address_home_id.id,
-                    'operating_unit_id': rec.base_id.id,
+                    'operating_unit_id': rec.operating_unit_id.id,
                 })
                 move_lines.append(move_line)
             move = {
@@ -566,7 +567,7 @@ class TmsExpense(models.Model):
                 'name': rec.name,
                 'line_ids': [line for line in move_lines],
                 'partner_id': self.env.user.company_id.id,
-                'operating_unit_id': rec.base_id.id,
+                'operating_unit_id': rec.operating_unit_id.id,
                 }
             move_id = move_obj.create(move)
             if not move_id:
@@ -711,7 +712,7 @@ class TmsExpense(models.Model):
 
     @api.multi
     def create_supplier_invoice(self, line):
-        journal_id = self.base_id.expense_journal_id.id
+        journal_id = self.operating_unit_id.expense_journal_id.id
         product_account = (
             line.product_id.product_tmpl_id.property_account_expense_id.id)
         if not product_account:
@@ -758,7 +759,7 @@ class TmsExpense(models.Model):
             'fiscal_position_id': (
                 line.partner_id.property_account_position_id.id or False),
             'comment': notes,
-            'operating_unit_id': line.expense_id.base_id.id,
+            'operating_unit_id': line.expense_id.operating_unit_id.id,
         }
         invoice_id = self.env['account.invoice'].create(invoice)
         invoice_id.signal_workflow('invoice_open')

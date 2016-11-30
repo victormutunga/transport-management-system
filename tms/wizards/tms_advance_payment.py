@@ -37,7 +37,7 @@ class TmsAdvancePayment(models.TransientModel):
                 total += currency.compute(advance.amount,
                                           self.env.user.currency_id)
                 advance_names += ' ' + advance.name + ', '
-                operating_unit_id = advance.base_id.id
+                operating_unit_id = advance.operating_unit_id.id
             else:
                 raise exceptions.ValidationError(
                     _('The advances must be in confirmed / closed state'

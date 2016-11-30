@@ -66,8 +66,8 @@
                         </h1>
                         <group>
                             <group>
-                                <field name="base_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
-                                <field name="travel_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" domain="[('state','!=','cancel'),('state','!=','closed'),('base_id', '=', base_id)]" />
+                                <field name="operating_unit_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                <field name="travel_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" domain="[('state','!=','cancel'),('state','!=','closed'),('operating_unit_id', '=', operating_unit_id)]" />
                                 <field name="unit_id" readonly="1"/>
                                 <field name="employee_id" readonly="1"/>
                             </group>

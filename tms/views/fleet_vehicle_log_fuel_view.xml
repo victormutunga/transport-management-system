@@ -22,10 +22,10 @@
                         </div>
                         <group>
                             <group>
-                                <field name="base_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" required="1"/>
+                                <field name="operating_unit_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" required="1"/>
                                 <field name="vendor_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" context="{'default_supplier': True, 'default_customer':False}"/>
                                 <field name="no_travel" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
-                                <field name="travel_id" attrs="{'invisible':[('no_travel', '=', True)], 'readonly':[('state','in',('confirmed','cancel','closed'))]}" domain="[('state','!=','cancel'),('state','!=','closed'),('base_id', '=', base_id)]"/>
+                                <field name="travel_id" attrs="{'invisible':[('no_travel', '=', True)], 'readonly':[('state','in',('confirmed','cancel','closed'))]}" domain="[('state','!=','cancel'),('state','!=','closed'),('operating_unit_id', '=', operating_unit_id)]"/>
                                 <field name="vehicle_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                             </group>
                             <group>

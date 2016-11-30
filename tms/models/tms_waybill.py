@@ -20,8 +20,8 @@ class TmsWaybill(models.Model):
     _description = 'Waybills'
     _order = 'name desc'
 
-    base_id = fields.Many2one(
-        'operating.unit', string='Base', required=True)
+    operating_unit_id = fields.Many2one(
+        'operating.unit', string='Operating Unit', required=True)
     customer_factor_ids = fields.One2many(
         'tms.factor', 'waybill_id',
         string='Waybill Customer Charge Factors',
@@ -219,7 +219,7 @@ class TmsWaybill(models.Model):
     @api.model
     def create(self, values):
         waybill = super(TmsWaybill, self).create(values)
-        sequence = waybill.base_id.waybill_sequence_id
+        sequence = waybill.operating_unit_id.waybill_sequence_id
         waybill.name = sequence.next_by_id()
         product = self.env['product.product'].search([
             ('tms_product_category', '=', 'freight')])

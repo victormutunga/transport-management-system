@@ -48,10 +48,10 @@
                             <field class="oe_inline" name="name" readonly="1"/>
                         </h1>
                         <group col="4">
-                            <field name="base_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                            <field name="operating_unit_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                             <field name="date" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
-                            <field name="unit_id" domain="[('base_id', '=', base_id),('fleet_type', '=', 'tractor')]" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
-                            <field name="employee_id" domain="[('base_id','=',base_id)]" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                            <field name="unit_id" domain="[('operating_unit_id', '=', operating_unit_id),('fleet_type', '=', 'tractor')]" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                            <field name="employee_id" domain="[('operating_unit_id','=',operating_unit_id)]" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                             <field name="currency_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                         </group>
                         <notebook>

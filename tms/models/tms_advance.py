@@ -12,8 +12,8 @@ class TmsAdvance(models.Model):
     _description = 'Money advance payments for Travel expenses'
     _order = "name desc, date desc"
 
-    base_id = fields.Many2one(
-        'operating.unit', string='Base', required=True
+    operating_unit_id = fields.Many2one(
+        'operating.unit', string='Operating Unit', required=True
     )
     name = fields.Char(
         'Advance Number',
@@ -81,7 +81,7 @@ class TmsAdvance(models.Model):
     @api.model
     def create(self, values):
         advance = super(TmsAdvance, self).create(values)
-        sequence = advance.base_id.advance_sequence_id
+        sequence = advance.operating_unit_id.advance_sequence_id
         if advance.amount <= 0:
             raise exceptions.ValidationError(
                 _('The amount must be greater than zero.'))
@@ -117,7 +117,8 @@ class TmsAdvance(models.Model):
                     _('The amount must be greater than zero.'))
             else:
                 obj_account_move = self.env['account.move']
-                advance_journal_id = advance.base_id.advance_journal_id.id
+                advance_journal_id = (
+                    advance.operating_unit_id.advance_journal_id.id)
                 advance_debit_account_id = (
                     advance.employee_id.
                     tms_advance_account_id.id
@@ -146,7 +147,7 @@ class TmsAdvance(models.Model):
                           '* Travel: %s \n'
                           '* Driver: %s \n'
                           '* Vehicle: %s') % (
-                    advance.base_id.name,
+                    advance.operating_unit_id.name,
                     advance.name,
                     advance.travel_id.name,
                     advance.employee_id.name,
@@ -165,7 +166,7 @@ class TmsAdvance(models.Model):
                             'debit': (total if name == 'debit' else 0.0),
                             'credit': (total if name == 'credit' else 0.0),
                             'journal_id': advance_journal_id,
-                            'operating_unit_id': advance.base_id.id,
+                            'operating_unit_id': advance.operating_unit_id.id,
                         })
                         move_lines.append(move_line)
                     move = {
@@ -173,7 +174,7 @@ class TmsAdvance(models.Model):
                         'journal_id': advance_journal_id,
                         'name': _('Advance: %s') % (advance.name),
                         'line_ids': [line for line in move_lines],
-                        'operating_unit_id': advance.base_id.id
+                        'operating_unit_id': advance.operating_unit_id.id
                     }
                     move_id = obj_account_move.create(move)
                     if not move_id:
