@@ -118,7 +118,7 @@
                         </group>
                         <notebook colspan="4">
                             <page string="Vehicle log fuel">
-                                <field name="fuel_log_ids" nolabel="1" context="{'default_travel_id':active_id}">
+                                <field name="fuel_log_ids" nolabel="1" context="{'default_travel_id':active_id, 'default_base_id':base_id}">
                                   <tree colors="red:state=='cancel'; green:state=='approved';blue:state=='confirmed';">
                                         <field name='name'/>
                                         <field name='employee_id'/>
