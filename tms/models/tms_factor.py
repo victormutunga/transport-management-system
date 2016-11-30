@@ -31,19 +31,13 @@ class TmsFactor(models.Model):
         ('qty', 'Quantity'),
         ('volume', 'Volume'),
         ('percent', 'Income Percent'),
-        ('special', 'Special')], 'Factor Type', required=True, help="""
-For next options you have to type Ranges or Fixed Amount
- - Distance Route (Km/mi)
- - Distance Real (Km/Mi)
- - Weight
- - Quantity
- - Volume
-For next option you only have to type Fixed Amount:
- - Travel
-For next option you only have to type Factor like 10.5 for 10.50%:
- - Income Percent
-For next option you only have to type Special Python Code:
- - Special""")
+        ('special', 'Special')], string='Factor Type', required=True,
+        help='For next options you have to type Ranges or Fixed Amount\n - '
+             'Distance Route (Km/mi)\n - Distance Real (Km/Mi)\n - Weight\n'
+             ' - Quantity\n - Volume\nFor next option you only have to type'
+             ' Fixed Amount:\n - Travel\nFor next option you only have to type'
+             ' Factor like 10.5 for 10.50%:\n - Income Percent\nFor next option'
+             ' you only have to type Special Python Code:\n - Special')
     range_start = fields.Float()
     range_end = fields.Float()
     factor = fields.Float()

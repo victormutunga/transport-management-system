@@ -3,7 +3,7 @@
     <data>
         <record id="tms_waybill_01" model="tms.waybill">
             <field name="state">draft</field>
-            <field name="base_id" ref="tms_base_1"/>
+            <field name="operatin_unit_id" ref="tms.tms_operating_unit_1"/>
             <field name="partner_id" ref="base.main_partner"/>
             <field name="travel_ids" ref="tms_travel_01"/>
             <field name="departure_address_id" ref="base.main_partner"/>

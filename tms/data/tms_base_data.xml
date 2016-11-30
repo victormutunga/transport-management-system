@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <record model="operating.unit" id="tms_base_1">
+        <record model="operating.unit" id="tms_operating_unit_1">
             <field name="name">TMS</field>
             <field name="code">TMS</field>
             <field name="partner_id" ref="base.main_partner"/>
