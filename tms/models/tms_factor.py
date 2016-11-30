@@ -84,18 +84,12 @@ class TmsFactor(models.Model):
             for key, value in factor_list.items():
                 if rec.factor_type == key:
                     if rec.range_start <= value <= rec.range_end:
-                        if rec.mixed:
-                            amount += (rec.factor * value) + rec.fixed_amount
-                        else:
-                            amount += rec.factor
+                        amount += rec.factor * value
                     elif rec.range_start == 0 and rec.range_end == 0:
-                        if rec.factor > 1:
-                            amount += rec.factor * value
-                        else:
-                            amount += value
-                    else:
-                        raise ValidationError(
-                            _('the amount isnt between of any ranges'))
+                        amount += rec.factor * value
             if rec.mixed:
                     amount += rec.fixed_amount
+        if amount == 0.0:
+            raise ValidationError(
+                _('the amount isnt between of any ranges'))
         return amount
