@@ -5,43 +5,43 @@
             <field name="name">Fernando Bedoya</field>
             <field name="address_id" ref="base.main_partner"/>
             <field name="driver" eval="True"/>
-            <field name="base_id" ref="tms.tms_base_1"/>
+            <field name="operating_unit_id" ref="tms.tms_operating_unit_1"/>
         </record>
         <record id="tms_hr_employee_02" model="hr.employee">
             <field name="name">Jose Almendrariz</field>
             <field name="address_id" ref="base.main_partner"/>
             <field name="driver" eval="True"/>
-            <field name="base_id" ref="tms.tms_base_1"/>
+            <field name="operating_unit_id" ref="tms.tms_operating_unit_1"/>
         </record>
         <record id="tms_hr_employee_03" model="hr.employee">
             <field name="name">Ricardo Bocanegra</field>
             <field name="address_id" ref="base.main_partner"/>
             <field name="driver" eval="True"/>
-            <field name="base_id" ref="tms.tms_base_1"/>
+            <field name="operating_unit_id" ref="tms.tms_operating_unit_1"/>
         </record>
         <record id="tms_hr_employee_04" model="hr.employee">
             <field name="name">Jhon Hawk</field>
             <field name="address_id" ref="base.main_partner"/>
             <field name="driver" eval="True"/>
-            <field name="base_id" ref="tms.tms_base_1"/>
+            <field name="operating_unit_id" ref="tms.tms_operating_unit_1"/>
         </record>
         <record id="tms_hr_employee_05" model="hr.employee">
             <field name="name">Jonathan Tomlinson</field>
             <field name="address_id" ref="base.main_partner"/>
             <field name="driver" eval="True"/>
-            <field name="base_id" ref="tms.tms_base_1"/>
+            <field name="operating_unit_id" ref="tms.tms_operating_unit_1"/>
         </record>
         <record id="tms_hr_employee_06" model="hr.employee">
             <field name="name">Fernando Hernandez</field>
             <field name="address_id" ref="base.main_partner"/>
             <field name="driver" eval="True"/>
-            <field name="base_id" ref="tms.tms_base_1"/>
+            <field name="operating_unit_id" ref="tms.tms_operating_unit_1"/>
         </record>
         <record id="tms_hr_employee_07" model="hr.employee">
             <field name="name">Luis Esparza</field>
             <field name="address_id" ref="base.main_partner"/>
             <field name="driver" eval="True"/>
-            <field name="base_id" ref="tms.tms_base_1"/>
+            <field name="operating_unit_id" ref="tms.tms_operating_unit_1"/>
         </record>
     </data>
 </odoo>

@@ -20,8 +20,8 @@ class TmsWaybill(models.Model):
     _description = 'Waybills'
     _order = 'name desc'
 
-    base_id = fields.Many2one(
-        'operating.unit', string='Base', required=True)
+    operating_unit_id = fields.Many2one(
+        'operating.unit', string='Operating Unit', required=True)
     customer_factor_ids = fields.One2many(
         'tms.factor', 'waybill_id',
         string='Waybill Customer Charge Factors',
@@ -94,14 +94,13 @@ class TmsWaybill(models.Model):
     invoice_id = fields.Many2one(
         'account.invoice', 'Invoice', readonly=True)
     invoice_paid = fields.Boolean(
-        compute="_compute_invoice_paid"
-    )
+        compute="_compute_invoice_paid", required=True)
     supplier_invoice_id = fields.Many2one(
-        'account.invoice', 'Supplier Invoice', readonly=True)
+        'account.invoice', string='Supplier Invoice', readonly=True)
     supplier_invoice_paid = fields.Boolean(
         compute='_compute_supplier_invoice_paid',
-        string='Supplier Invoice Paid',
-    )
+        readonly=True,
+        string='Supplier Invoice Paid')
     waybill_line_ids = fields.One2many(
         'tms.waybill.line', 'waybill_id',
         string='Waybill Lines')
@@ -220,9 +219,9 @@ class TmsWaybill(models.Model):
     @api.model
     def create(self, values):
         waybill = super(TmsWaybill, self).create(values)
-        sequence = waybill.base_id.waybill_sequence_id
+        sequence = waybill.operating_unit_id.waybill_sequence_id
         waybill.name = sequence.next_by_id()
-        product = self.env['product.template'].search([
+        product = self.env['product.product'].search([
             ('tms_product_category', '=', 'freight')])
         if product:
             self.waybill_line_ids.create({
@@ -281,34 +280,42 @@ class TmsWaybill(models.Model):
             paid = (rec.invoice_id and rec.invoice_id.state == 'paid')
             rec.invoice_paid = paid
 
-    @api.multi
-    @api.depends(
-        'transportable_line_ids', 'customer_factor_ids')
+    @api.depends('transportable_line_ids', 'customer_factor_ids')
     def _compute_transportable_product(self):
         for waybill in self:
             volume = weight = qty = distance_real = distance_route = 0
+            control = ""
             for record in waybill.transportable_line_ids:
                 total = 0.0
                 for factor in waybill.customer_factor_ids:
                     qty = record.quantity
                     if (record.transportable_uom_id.category_id.name ==
-                            'Volume'):
+                            _('Volume')):
                         volume += record.quantity
+                        control = "volume"
                     elif (record.transportable_uom_id.category_id.name ==
-                            'Weight'):
+                            _('Weight')):
                         weight += record.quantity
+                        control = "weight"
                     elif (record.transportable_uom_id.category_id.name ==
-                            'Length / Distance'):
+                            _('Length / Distance')):
                         if factor.factor_type == 'distance':
                             distance_route += record.quantity
+                            control = "distance"
                         else:
                             distance_real += record.quantity
-
+                            control = "distance_real"
                     waybill.product_qty = qty
                     waybill.product_volume = volume
                     waybill.product_weight = weight
                     waybill.distance_route = distance_route
                     waybill.distance_real = distance_real
+                    if factor.factor_type != control and (
+                        factor.factor_type not in [
+                            'travel', 'percent', 'qty', 'special']):
+                        raise exceptions.ValidationError(
+                            _('Check the type of customer factor for the '
+                              'product to be transported.'))
                     total_get_amount = waybill.customer_factor_ids.get_amount(
                         waybill.product_weight, waybill.distance_route,
                         waybill.distance_real, waybill.product_qty,

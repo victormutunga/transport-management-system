@@ -25,6 +25,7 @@ class TmsAdvancePayment(models.TransientModel):
         total = 0.0
         advance_names = ''
         control = 0
+        operating_unit_id = False
         for advance in active_ids:
             if advance.state in ('confirmed', 'closed') and not advance.paid:
                 if not advance.employee_id.address_home_id.id:
@@ -36,6 +37,7 @@ class TmsAdvancePayment(models.TransientModel):
                 total += currency.compute(advance.amount,
                                           self.env.user.currency_id)
                 advance_names += ' ' + advance.name + ', '
+                operating_unit_id = advance.operating_unit_id.id
             else:
                 raise exceptions.ValidationError(
                     _('The advances must be in confirmed / closed state'
@@ -75,6 +77,7 @@ class TmsAdvancePayment(models.TransientModel):
                 'default_name': advance_names,
                 'default_advance_ids': [id for id in active_ids.ids],
                 'default_payment_type': 'outbound',
+                'default_operating_unit_id': operating_unit_id,
                 'close_after_process': False,
                 'default_type': 'payment',
                 'type': 'payment'

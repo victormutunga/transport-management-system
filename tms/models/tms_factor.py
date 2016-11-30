@@ -31,19 +31,13 @@ class TmsFactor(models.Model):
         ('qty', 'Quantity'),
         ('volume', 'Volume'),
         ('percent', 'Income Percent'),
-        ('special', 'Special')], 'Factor Type', required=True, help="""
-For next options you have to type Ranges or Fixed Amount
- - Distance Route (Km/mi)
- - Distance Real (Km/Mi)
- - Weight
- - Quantity
- - Volume
-For next option you only have to type Fixed Amount:
- - Travel
-For next option you only have to type Factor like 10.5 for 10.50%:
- - Income Percent
-For next option you only have to type Special Python Code:
- - Special""")
+        ('special', 'Special')], string='Factor Type', required=True,
+        help='For next options you have to type Ranges or Fixed Amount\n - '
+             'Distance Route (Km/mi)\n - Distance Real (Km/Mi)\n - Weight\n'
+             ' - Quantity\n - Volume\nFor next option you only have to type'
+             ' Fixed Amount:\n - Travel\nFor next option you only have to type'
+             ' Factor like 10.5 for 10.50%:\n - Income Percent\nFor next option'
+             ' you only have to type Special Python Code:\n - Special')
     range_start = fields.Float()
     range_end = fields.Float()
     factor = fields.Float()
@@ -79,31 +73,23 @@ For next option you only have to type Special Python Code:
         factor_list = {'weight': weight, 'distance': distance,
                        'distance_real': distance_real, 'qty': qty,
                        'volume': volume}
-        res = 0.0
+        amount = 0.0
         for rec in self:
             if rec.factor_type == 'travel':
-                res += rec.fixed_amount
+                amount += rec.fixed_amount
             elif rec.factor_type == 'percent':
-                amount = income * (rec.factor / 100)
-                if rec.mixed:
-                    res += amount + rec.fixed_amount
-                else:
-                    res += amount
+                amount += income * (rec.factor / 100)
             elif rec.factor_type == 'special':
                 exec(rec.factor_special_id.python_code)
             for key, value in factor_list.items():
                 if rec.factor_type == key:
                     if rec.range_start <= value <= rec.range_end:
-                        if rec.mixed:
-                            res += (rec.factor * value) + rec.fixed_amount
-                        else:
-                            res += rec.factor
+                        amount += rec.factor * value
                     elif rec.range_start == 0 and rec.range_end == 0:
-                        if rec.factor > 1:
-                            res += rec.factor * value
-                        else:
-                            res += value
-                    else:
-                        raise ValidationError(
-                            _('the amount isnt between of any ranges'))
-            return res
+                        amount += rec.factor * value
+            if rec.mixed:
+                    amount += rec.fixed_amount
+        if amount == 0.0:
+            raise ValidationError(
+                _('the amount isnt between of any ranges'))
+        return amount

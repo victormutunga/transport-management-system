@@ -38,10 +38,11 @@
                     </header>
                     <sheet>
                         <h1>
+                            <label class="oe_inline" style="font-size:30px;" string="Waybill - " attrs="{'invisible':[('name','=', False)]}"/>
                             <field class="oe_inline" name="name" readonly="1"/>
                         </h1>
                         <group col="4">
-                            <field attrs="{'readonly':[('state','in',('confirmed'))]}" name="base_id"/>
+                            <field attrs="{'readonly':[('state','in',('confirmed'))]}" name="operating_unit_id"/>
                             <field attrs="{'readonly':[('state','in',('confirmed'))]}" name="date_order"/>
                             <field attrs="{'readonly':[('state','in',('confirmed'))]}" groups="base.group_multi_currency" name="currency_id"/>
                             <separator colspan="4" string="·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·" style="text-align: center;"/>

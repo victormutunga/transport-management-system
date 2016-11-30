@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <field name="invoice_policy" position="after">
                     <group colspan="4" string="">
-                        <field name="tms_product_category"/>
+                        <field name="tms_product_category" groups="base.group_no_one"/>
                     </group>
                 </field>
             </field>

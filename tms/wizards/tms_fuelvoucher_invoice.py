@@ -48,7 +48,7 @@ class TmsFuelvoucherInvoice(models.TransientModel):
                 fuel_names.append(fuel.name)
 
                 product = fuel.product_id
-                ieps = fuel.base_id.ieps_product_id
+                ieps = fuel.operating_unit_id.ieps_product_id
                 if (product.property_account_expense_id and
                         ieps.property_account_expense_id):
                     account = product.property_account_expense_id
@@ -81,13 +81,12 @@ class TmsFuelvoucherInvoice(models.TransientModel):
 
                 lines.append((0, 0, {
                     'product_id': (
-                        fuel.base_id.ieps_product_id.id),
+                        fuel.operating_unit_id.ieps_product_id.id),
                     'quantity': 1.0,
                     'price_unit': fuel.special_tax_amount,
-                    'name': fuel.base_id.ieps_product_id.name,
-                    'account_id': (account_ieps.id)})
+                    'name': fuel.operating_unit_id.ieps_product_id.name,
+                    'account_id': account_ieps.id})
                 )
-
         for partner_id in partner_ids:
             if control == 0:
                 old_partner = partner_id

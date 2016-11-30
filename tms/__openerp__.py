@@ -16,7 +16,7 @@
         "purchase",
         "sale",
         "base_geoengine",
-        "operating_unit",
+        "account_operating_unit",
     ],
     'external_dependencies': {
         'python': [

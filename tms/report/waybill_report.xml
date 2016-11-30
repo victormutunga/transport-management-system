@@ -45,7 +45,7 @@
                         </div>
                         <div class="col-xs-3">
                             <strong>EXPEDITION PLACE</strong>
-                            <span t-field="doc.base_id.name"/>
+                            <span t-field="doc.operating_unit_id.name"/>
                         </div>
                         <div class="col-xs-3">
                             <strong>NATIONAL TRAFFIC</strong>

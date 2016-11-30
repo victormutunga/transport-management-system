@@ -13,6 +13,12 @@ class TmsTransportable(models.Model):
     name = fields.Char(required=True)
     uom_id = fields.Many2one(
         'product.uom', 'Unit of Measure ', required=True)
+    factor_type = fields.Selection([
+        ('distance', 'Distance Route (Km/Mi)'),
+        ('distance_real', 'Distance Real (Km/Mi)'),
+        ('weight', 'Weight'),
+        ('volume', 'Volume'),
+        ], required=True,)
 
     @api.multi
     def copy(self, default=None):

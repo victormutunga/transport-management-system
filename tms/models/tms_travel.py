@@ -113,7 +113,7 @@ class TmsTravel(models.Model):
     is_available = fields.Boolean(
         compute='_compute_is_available',
         string='Travel available')
-    base_id = fields.Many2one('operating.unit', 'Base')
+    operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit')
     color = fields.Integer()
     framework = fields.Selection([
         ('unit', 'Unit'),
@@ -234,7 +234,7 @@ class TmsTravel(models.Model):
     @api.model
     def create(self, values):
         travel = super(TmsTravel, self).create(values)
-        sequence = travel.base_id.travel_sequence_id
+        sequence = travel.operating_unit_id.travel_sequence_id
         travel.name = sequence.next_by_id()
         return travel
 

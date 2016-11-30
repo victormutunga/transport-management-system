@@ -57,9 +57,9 @@ class FleetVehicleLogFuel(models.Model):
     invoice_paid = fields.Boolean(
         string='Invoice Paid',
         compute='_compute_invoiced_paid')
-    base_id = fields.Many2one(
+    operating_unit_id = fields.Many2one(
         'operating.unit',
-        string='Base',)
+        string='Operating Unit',)
     currency_id = fields.Many2one(
         'res.currency', string='Currency',
         required=True,
@@ -132,19 +132,19 @@ class FleetVehicleLogFuel(models.Model):
             elif (rec.travel_id and
                   rec.travel_id.state == 'closed'):
                 raise ValidationError(
-                    _('Could not cancel Fuel Voucher !'),
-                    _('This Fuel Voucher is already linked to Travel Expenses'
-                      'record'))
+                    _('Could not cancel Fuel Voucher !'
+                        'This Fuel Voucher is already linked to Travel '
+                        'Expenses record'))
 
     @api.model
     def create(self, values):
         res = super(FleetVehicleLogFuel, self).create(values)
-        if not res.base_id.fuel_log_sequence_id:
+        if not res.operating_unit_id.fuel_log_sequence_id:
             raise ValidationError(_(
                 'You need to define the sequence for fuel logs in base %s' %
-                res.base_id.name
+                res.operating_unit_id.name
                 ))
-        sequence = res.base_id.fuel_log_sequence_id
+        sequence = res.operating_unit_id.fuel_log_sequence_id
         res.name = sequence.next_by_id()
         return res
 

@@ -9,7 +9,7 @@
                 <notebook position="inside">
                     <page string="TMS">
                         <group>
-                            <field name="base_id"/>
+                            <field name="operating_unit_id"/>
                             <field name="driver"/>
                         </group>
                         <group col="4">
