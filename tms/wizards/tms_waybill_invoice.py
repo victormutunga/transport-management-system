@@ -115,7 +115,7 @@ class TmsWaybillInvoice(models.TransientModel):
             'partner_id': waybill.partner_id.id,
             'fiscal_position_id': fpos.id,
             'reference': "Invoice of: " + ', '.join(waybill_names),
-            'journal_id': waybill.base_id.sale_journal_id.id,
+            'journal_id': waybill.operating_unit_id.sale_journal_id.id,
             'currency_id': waybill.currency_id.id,
             'account_id': (
                 waybill.partner_id.property_account_payable_id.id),
