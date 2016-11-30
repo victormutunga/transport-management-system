@@ -59,8 +59,8 @@
         'wizards/tms_advance_payment_view.xml',
         'wizards/tms_waybill_invoice_view.xml',
         'wizards/tms_fuelvoucher_invoice_view.xml',
+        'wizards/tms_expense_payment_view.xml',
         'report/waybill_report.xml',
-        'wizards/tms_expense_invoice_view.xml'
     ],
     "demo": [
         'demo/fleet_vehicle_engine.xml',

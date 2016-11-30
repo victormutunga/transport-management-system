@@ -78,6 +78,6 @@ class TmsExpensePayment(models.TransientModel):
                 'close_after_process': False,
                 'default_type': 'payment',
                 'type': 'payment'
-                }
             }
+        }
         return res

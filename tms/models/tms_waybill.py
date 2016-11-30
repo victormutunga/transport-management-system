@@ -190,7 +190,7 @@ class TmsWaybill(models.Model):
     move_id = fields.Many2one(
         'account.move', string='Journal Entry', readonly=True)
     waybill_type = fields.Selection(
-        compute='_get_waybill_type',
+        compute='_compute_waybill_type',
         selection=[('self', 'Self'), ('outsourced', 'Outsourced')],
         string='Waybill Type',
         help=" - Self: Travel with our own units. \n "
@@ -265,7 +265,7 @@ class TmsWaybill(models.Model):
         return True
 
     @api.depends('travel_ids')
-    def _get_waybill_type(self):
+    def _compute_waybill_type(self):
         for waybill in self:
             for travel in waybill.travel_ids:
                 self.waybill_type = (

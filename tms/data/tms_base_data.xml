@@ -13,6 +13,8 @@
             <field name="ieps_product_id" ref="product_ieps"/>
             <field name="advance_journal_id" ref="tms.tms_account_journal_advance"/>
             <field name="expense_journal_id" ref="tms.tms_account_journal_expense"/>
+            <field name="sale_journal_id" ref="tms.tms_account_journal_sale"/>
+            <field name="purchase_journal_id" ref="tms.tms_account_journal_purchase"/>
         </record>
     </data>
 </odoo>
