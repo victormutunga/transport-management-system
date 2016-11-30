@@ -73,31 +73,29 @@ class TmsFactor(models.Model):
         factor_list = {'weight': weight, 'distance': distance,
                        'distance_real': distance_real, 'qty': qty,
                        'volume': volume}
-        res = 0.0
+        amount = 0.0
         for rec in self:
             if rec.factor_type == 'travel':
-                res += rec.fixed_amount
+                amount += rec.fixed_amount
             elif rec.factor_type == 'percent':
-                amount = income * (rec.factor / 100)
-                if rec.mixed:
-                    res += amount + rec.fixed_amount
-                else:
-                    res += amount
+                amount += income * (rec.factor / 100)
             elif rec.factor_type == 'special':
                 exec(rec.factor_special_id.python_code)
             for key, value in factor_list.items():
                 if rec.factor_type == key:
                     if rec.range_start <= value <= rec.range_end:
                         if rec.mixed:
-                            res += (rec.factor * value) + rec.fixed_amount
+                            amount += (rec.factor * value) + rec.fixed_amount
                         else:
-                            res += rec.factor
+                            amount += rec.factor
                     elif rec.range_start == 0 and rec.range_end == 0:
                         if rec.factor > 1:
-                            res += rec.factor * value
+                            amount += rec.factor * value
                         else:
-                            res += value
+                            amount += value
                     else:
                         raise ValidationError(
                             _('the amount isnt between of any ranges'))
-        return res
+            if rec.mixed:
+                    amount += rec.fixed_amount
+        return amount
