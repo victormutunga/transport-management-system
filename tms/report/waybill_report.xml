@@ -71,6 +71,7 @@
                                 <strong>
                                     <span>ORIGIN:</span>
                                 </strong>
+                                <span t-field="doc.upload_point"/>
                             </td>
                             <td>
                                 <strong>
@@ -81,6 +82,7 @@
                                 <strong>
                                     <span>DESTINATION: </span>
                                 </strong>
+                                <span t-field="doc.download_point"/>
                             </td>
                         </tr>
                     </table>
@@ -101,8 +103,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <t t-set="name" t-value="concept.product_id.name"/>
-                            <t t-if="name == 'Freight'">
+                            <t t-set="name" t-value="concept.product_id.tms_product_category"/>
+                            <t t-if="name == 'freight'">
                                 <tr t-as="line" t-foreach="doc.transportable_line_ids">
                                     <td>
                                         <span t-field="line.transportable_id.name"/>
@@ -124,7 +126,7 @@
                                     </td>
                                 </tr>
                             </t>
-                            <t t-if="name != 'Freight'">
+                            <t t-if="name != 'freight'">
                                 <tr>
                                     <td>
                                         <span t-field="concept.product_id.name"/>
@@ -212,7 +214,7 @@
                             <strong>I GO CONFIRMED</strong>
                             <br/>
                             <br/>
-                            <hr style="width: 100%; color: black; height: 3px; background-color:black;"/>
+                            <hr style="width: 100%; color: black; height: 1px; background-color:black;"/>
                             <strong>SIGNATURE OF CONSIGNER</strong>
                         </div>
                     </div>
