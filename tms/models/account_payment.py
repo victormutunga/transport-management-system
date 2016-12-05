@@ -7,7 +7,6 @@ from openerp import fields, models
 
 
 class AccountPayment(models.Model):
-    _name = 'account.payment'
     _inherit = 'account.payment'
 
     advance_ids = fields.One2many(

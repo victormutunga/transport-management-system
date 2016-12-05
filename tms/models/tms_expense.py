@@ -396,15 +396,15 @@ class TmsExpense(models.Model):
             advance_account_id = (
                 rec.employee_id.
                 tms_advance_account_id.id
-                )
+            )
             negative_balance_account = (
                 rec.employee_id.
                 tms_expense_negative_balance_account_id.id
-                )
+            )
             driver_account_payable = (
                 rec.employee_id.
                 address_home_id.property_account_payable_id.id
-                )
+            )
             if not expense_journal_id:
                 raise ValidationError(
                     _('Warning! The expense does not have a journal'
@@ -433,7 +433,7 @@ class TmsExpense(models.Model):
                     'journal_id': negative_balance_account,
                     'partner_id': rec.employee_id.address_home_id.id,
                     'operating_unit_id': rec.operating_unit_id.id,
-                    })
+                })
                 move_lines.append(move_line)
             invoices = []
 
@@ -483,7 +483,7 @@ class TmsExpense(models.Model):
                             'journal_id': expense_journal_id,
                             'partner_id': line.partner_id.id,
                             'operating_unit_id': rec.operating_unit_id.id,
-                            })
+                        })
                         move_lines.append(move_line)
                     # if the expense line not be a invoice we make the move
                     # line based in the subtotal
@@ -503,7 +503,7 @@ class TmsExpense(models.Model):
                             'journal_id': expense_journal_id,
                             'partner_id': rec.employee_id.address_home_id.id,
                             'operating_unit_id': rec.operating_unit_id.id,
-                            })
+                        })
                         move_lines.append(move_line)
                     # we check the line tax to create the move line if
                     # the line not be an invoice
@@ -512,8 +512,8 @@ class TmsExpense(models.Model):
                         if not tax_account:
                             raise ValidationError(
                                 _('Warning !'),
-                                _('Tax Account is not defined for \
-                                Tax %s (id:%d)') % (tax.name, tax.id,))
+                                _('Tax Account is not defined for '
+                                  'Tax %s (id:%d)') % (tax.name, tax.id,))
                         tax_amount = line.tax_amount
                         # We create a move line for the line tax
                         if not line.is_invoice:
@@ -568,7 +568,7 @@ class TmsExpense(models.Model):
                 'line_ids': [line for line in move_lines],
                 'partner_id': self.env.user.company_id.id,
                 'operating_unit_id': rec.operating_unit_id.id,
-                }
+            }
             move_id = move_obj.create(move)
             if not move_id:
                 raise ValidationError(

@@ -14,6 +14,7 @@ class TmsTravel(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = 'Travel'
     _order = "date desc"
+
     waybill_ids = fields.Many2many(
         'tms.waybill', string='Waybills')
     driver_factor_ids = fields.One2many(

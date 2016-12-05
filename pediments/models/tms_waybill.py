@@ -6,7 +6,6 @@ from openerp import fields, models
 
 
 class TmsWaybill(models.Model):
-    _name = 'tms.waybill'
     _inherit = 'tms.waybill'
 
     customs_ids = fields.One2many(

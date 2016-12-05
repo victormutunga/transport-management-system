@@ -9,7 +9,6 @@ from openerp.exceptions import ValidationError
 
 
 class FleetVehicleLogFuel(models.Model):
-    "Class for Fuel Voucher"
     _name = 'fleet.vehicle.log.fuel'
     _inherit = ['fleet.vehicle.log.fuel', 'mail.thread', 'ir.needaction_mixin']
     _order = "date desc,vehicle_id desc"
@@ -143,7 +142,7 @@ class FleetVehicleLogFuel(models.Model):
             raise ValidationError(_(
                 'You need to define the sequence for fuel logs in base %s' %
                 res.operating_unit_id.name
-                ))
+            ))
         sequence = res.operating_unit_id.fuel_log_sequence_id
         res.name = sequence.next_by_id()
         return res

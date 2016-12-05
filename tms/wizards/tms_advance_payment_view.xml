@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <!--  Make Payment-->
         <record id="tms_view_advance_payment" model="ir.ui.view">
             <field name="name">Make Payment</field>
             <field name="model">tms.advance.payment</field>

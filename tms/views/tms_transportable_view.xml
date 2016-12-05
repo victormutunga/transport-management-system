@@ -8,7 +8,6 @@
                 <tree editable="bottom" string="Transportable">
                     <field name="name"/>
                     <field name="uom_id"/>
-                    <field name="factor_type"/>
                 </tree>
             </field>
         </record>

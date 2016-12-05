@@ -14,7 +14,6 @@ from openerp import fields, models
 
 class FleetVehicleOdometer(models.Model):
     _inherit = ['fleet.vehicle.odometer']
-    _name = 'fleet.vehicle.odometer'
 
     last_odometer = fields.Float(
         string='Last Read',
