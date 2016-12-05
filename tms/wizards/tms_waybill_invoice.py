@@ -50,17 +50,17 @@ class TmsWaybillInvoice(models.TransientModel):
                 waybill_names.append(waybill.name)
                 fpos = waybill.partner_id.property_account_position_id
                 for product in waybill.waybill_line_ids:
-                    if (product.product_id.property_account_expense_id):
+                    if (product.product_id.property_account_income_id):
                         account = (
-                            product.product_id.property_account_expense_id)
+                            product.product_id.property_account_income_id)
                     elif (product.product_id.categ_id.
-                            property_account_expense_categ_id):
+                            property_account_income_categ_id):
                         account = (
                             product.product_id.categ_id.
-                            property_account_expense_categ_id)
+                            property_account_income_categ_id)
                     else:
                         raise exceptions.ValidationError(
-                            _('You must have an expense account in the '
+                            _('You must have an income account in the '
                               'product or its category'))
 
                     fpos_tax_ids = fpos.map_tax(
@@ -115,7 +115,7 @@ class TmsWaybillInvoice(models.TransientModel):
             'partner_id': waybill.partner_id.id,
             'fiscal_position_id': fpos.id,
             'reference': "Invoice of: " + ', '.join(waybill_names),
-            'journal_id': waybill.base_id.sale_journal_id.id,
+            'journal_id': waybill.operating_unit_id.sale_journal_id.id,
             'currency_id': waybill.currency_id.id,
             'account_id': (
                 waybill.partner_id.property_account_payable_id.id),

@@ -122,7 +122,7 @@ class TmsFuelvoucherInvoice(models.TransientModel):
             'partner_id': fuel.vendor_id.id,
             'fiscal_position_id': fpos.id,
             'reference': "Invoice of: " + ', '.join(fuel_names),
-            'journal_id': fuel.base_id.purchase_journal_id.id,
+            'journal_id': fuel.operating_unit_id.purchase_journal_id.id,
             'currency_id': fuel.currency_id.id,
             'account_id': (
                 fuel.vendor_id.property_account_payable_id.id),
