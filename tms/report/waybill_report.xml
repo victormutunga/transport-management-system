@@ -218,7 +218,7 @@
                             <strong>SIGNATURE OF CONSIGNER</strong>
                         </div>
                     </div>
-                    <div style="border-radius : 0px;margin : 0px; position : absolute;width : 100%; text-align: center;">
+                    <div style="bottom: 0; text-align: center;">
                         <p class="navbar-text">&quot;Contribuyente del Régimel Fiscal: RÉGIMEN DE LOS COORDINADOS&quot;</p>
                     </div>
                 </div>
