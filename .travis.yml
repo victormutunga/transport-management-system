@@ -19,6 +19,10 @@ addons:
       - python-serial
       - python-yaml
       - wkhtmltopdf
+      - libgeos-dev
+      - postgis
+      - postgresql-9.3-postgis-scripts
+      - postgresql-9.3-postgis-2.3
 
 before_install:
  - "export DISPLAY=:99.0"
@@ -45,9 +49,7 @@ virtualenv:
 install:
   - git clone --depth=1 https://github.com/Vauxoo/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
   - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
-  - if [[ "${RUNBOT}" == "1" ]]; then git clone --depth=1 git@github.com:odoo/enterprise.git -b $VERSION ${HOME}/enterprise; fi
-  - if [[ "${RUNBOT}" == "1" ]]; then apt-get update && apt-get install libgeos-dev postgis postgresql-9.3-postgis-scripts postgresql-9.3-postgis-2.3; fi
-  - pip install Shapely
+  - if [[ "${OCA_RUNBOT}" == "1" ]]; then git clone --depth=1 git@github.com:odoo/enterprise.git -b $VERSION ${HOME}/enterprise; fi
   - travis_install_nightly
 
 script:

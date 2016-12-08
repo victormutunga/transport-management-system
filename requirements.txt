@@ -1,5 +1,6 @@
 geojson
 geopy
 geographiclib
-num2words
+Shapely
 sodapy
+num2words
