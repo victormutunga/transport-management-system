@@ -572,7 +572,7 @@ class TmsExpense(models.Model):
             move_id = move_obj.create(move)
             if not move_id:
                 raise ValidationError(
-                    -('An error has occurred in the creation'
+                    _('An error has occurred in the creation'
                         ' of the accounting move. '))
             else:
                 # Here we reconcile the invoices with the corresponding
