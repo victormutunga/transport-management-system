@@ -468,20 +468,6 @@ class TmsWaybill(models.Model):
             self.supplier_invoice_paid = paid
 
     @api.multi
-    def waybill_print(self):
-        for rec in self:
-            context = dict(
-                self.env.context or {},
-                active_ids=[rec.id],
-                active_model='tms.waybill')
-            return {
-                'type': 'ir.actions.report.xml',
-                'report_name': 'tms.waybill_report',
-                'context': context,
-                'docs': rec.id,
-            }
-
-    @api.multi
     def _amount_to_text(self, amount_total, currency, partner_lang='es_MX'):
         total = str(float(amount_total)).split('.')[0]
         decimals = str(float(amount_total)).split('.')[1]

@@ -26,8 +26,8 @@ class TmsExpense(models.Model):
         'fleet.vehicle', 'Unit', required=True,
         domain=[('fleet_type', '=', 'tractor')])
     currency_id = fields.Many2one(
-        'res.currency', 'Currency', required=True, readonly=True,
-        default=lambda self: self.env.user.company_id.currency_id.id)
+        'res.currency', 'Currency', required=True,
+        default=lambda self: self.env.user.company_id.currency_id)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('approved', 'Approved'),

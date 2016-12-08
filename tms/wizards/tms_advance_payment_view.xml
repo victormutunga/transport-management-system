@@ -13,11 +13,10 @@
                 </form>
             </field>
         </record>
-        
         <act_window 
             id="action_view_advance_payment" 
             key2="client_action_multi" 
-            name="Make Driver Advance Payment" 
+            name="Make Driver Advance Payment." 
             res_model="tms.advance.payment" 
             src_model="tms.advance" 
             target="new" 
