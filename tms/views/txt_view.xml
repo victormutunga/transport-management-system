@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_txt_file_form" model="ir.ui.view">
+            <field name="name">txt.file.form</field>
+            <field name="model">txt.file</field>
+            <field name="arch" type="xml">
+                <form string="TXT">
+                    <sheet>
+                        <group col="2">
+                            <field name="name"/>
+                            <field name="txt_date"/>
+                            <field name="txt_reference"/>
+                            <field invisible="1" name="txt_filename"/>
+                            <field filename="txt_filename" name="txt_binary" readonly="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_txt_file_tree" model="ir.ui.view">
+            <field name="name">txt.file.tree</field>
+            <field name="model">txt.file</field>
+            <field name="arch" type="xml">
+                <tree string="TXT Export" create="false">
+                    <field name="name"/>
+                    <field name="txt_date"/>
+                    <field name="txt_reference"/>
+                    <field invisible="1" name="txt_filename"/>
+                    <field filename="txt_filename" name="txt_binary" readonly="1"/>
+                </tree>
+            </field>
+        </record>
+        <record id="open_view_txt_file_form" model="ir.actions.act_window">
+            <field name="name">Text Export</field>
+            <field name="res_model">txt.file</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+        </record>
+        <menuitem action="open_view_txt_file_form" id="tms_txt_menu" name="Text" parent="tms.menu_tms_settings" sequence="100"/>
+    </data>
+</odoo>
