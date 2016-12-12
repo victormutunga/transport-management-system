@@ -15,19 +15,51 @@ class TmsWaybillInvoice(models.TransientModel):
     _description = 'Make Payment for Advances'
 
     @api.multi
-    def make_waybill_invoices(self):
+    def waybill_active_ids(self):
         active_ids = self.env['tms.waybill'].browse(
             self._context.get('active_ids'))
         if not active_ids:
             return {}
+        return active_ids
 
+    @api.model
+    def prepare_lines(self, product, fpos_tax_ids, account):
+        return {
+            'product_id': product.product_id.id,
+            'quantity': product.product_qty,
+            'price_unit': product.price_subtotal,
+            'invoice_line_tax_ids': [(
+                6, 0,
+                [x.id for x in fpos_tax_ids]
+            )],
+            'name': product.name,
+            'account_id': account.id,
+        }
+
+    @api.multi
+    def create_waybill_invoices(self, waybill, fpos, waybill_names, lines):
+        invoice_id = self.env['account.invoice'].create({
+                'partner_id': waybill.partner_id.id,
+                'fiscal_position_id': fpos.id,
+                'reference': "Invoice of: " + ', '.join(waybill_names),
+                'journal_id': waybill.operating_unit_id.sale_journal_id.id,
+                'currency_id': waybill.currency_id.id,
+                'account_id': (
+                    waybill.partner_id.property_account_payable_id.id),
+                'type': 'out_invoice',
+                'invoice_line_ids': [line for line in lines],
+            })
+        return invoice_id
+
+    @api.multi
+    def make_waybill_invoices(self):
         partner_ids = []
         waybill_names = []
         control = 0
         lines = []
         currency_ids = []
         control_c = 0
-        for waybill in active_ids:
+        for waybill in self.waybill_active_ids():
             if len(waybill.invoice_id) > 0:
                 raise exceptions.ValidationError(
                     _('The waybill already has an invoice'))
@@ -67,17 +99,8 @@ class TmsWaybillInvoice(models.TransientModel):
                         product.product_id.supplier_taxes_id)
                     if product.price_subtotal > 0.0:
                         lines.append(
-                            (0, 0, {
-                                'product_id': product.product_id.id,
-                                'quantity': product.product_qty,
-                                'price_unit': product.price_subtotal,
-                                'invoice_line_tax_ids': [(
-                                    6, 0,
-                                    [x.id for x in fpos_tax_ids]
-                                )],
-                                'name': product.name,
-                                'account_id': account.id,
-                            }))
+                            (0, 0, self.prepare_lines
+                                (product, fpos_tax_ids, account)))
 
         for partner_id in partner_ids:
             if control == 0:
@@ -111,19 +134,10 @@ class TmsWaybillInvoice(models.TransientModel):
             raise exceptions.ValidationError(
                 _('Set account payable by customer'))
 
-        invoice_id = self.env['account.invoice'].create({
-            'partner_id': waybill.partner_id.id,
-            'fiscal_position_id': fpos.id,
-            'reference': "Invoice of: " + ', '.join(waybill_names),
-            'journal_id': waybill.operating_unit_id.sale_journal_id.id,
-            'currency_id': waybill.currency_id.id,
-            'account_id': (
-                waybill.partner_id.property_account_payable_id.id),
-            'type': 'out_invoice',
-            'invoice_line_ids': [line for line in lines],
-        })
+        invoice_id = self.create_waybill_invoices(
+            waybill, fpos, waybill_names, lines)
 
-        for waybill in active_ids:
+        for waybill in self.waybill_active_ids():
             waybill.write({'invoice_id': invoice_id.id})
         return {
             'name': 'Customer Invoice',

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		<record id="group_model" model="res.groups">
+			<field name="name">Group Model</field>
+		</record>
+		<record id="group_monitoring" model="res.groups">
+			<field name="name">Group Monitoring</field>
+		</record>
+		<record id="group_traffic" model="res.groups">
+			<field name="name">Group Traffic</field>
+		</record>
+		<record id="group_supervisor_traffic" model="res.groups">
+			<field name="name">Group Supervisor Traffic</field>
+		</record>
+		<record id="group_expenses" model="res.groups">
+			<field name="name">Group Expenses</field>
+		</record>
+		<record id="group_treasury" model="res.groups">
+			<field name="name">Group Treasury</field>
+		</record>
+	</data>
+</odoo>

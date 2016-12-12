@@ -16,7 +16,7 @@
         "purchase",
         "sale",
         "base_geoengine",
-        "account_operating_unit",
+        "account_operating_unit"
     ],
     'external_dependencies': {
         'python': [
@@ -27,6 +27,7 @@
     "summary": "Management System for Carriers, Trucking and other companies",
     "license": "AGPL-3",
     "data": [
+        'security/security.xml',
         'security/ir.model.access.csv',
         'views/tms_view.xml',
         'data/account_journal_data.xml',
