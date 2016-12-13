@@ -45,7 +45,7 @@ class FleetVehicle(models.Model):
     expense_ids = fields.One2many('tms.expense', 'unit_id', string='Expenses')
     engine_id = fields.Many2one('fleet.vehicle.engine', string='Engine')
     supplier_unit = fields.Boolean(string='Supplier Unit')
-    unit_extradata_ids = fields.One2many(
-        'tms.unit.extradata', 'unit_id', 'Extra Data')
-    unit_expiry_ids = fields.One2many(
-        'tms.unit.expiry', 'unit_id', 'Expiry Extra Data')
+    unit_extradata = fields.One2many(
+        'tms.extradata', 'vehicle_id',
+        string='Extra Data Fields',
+        readonly=False)

@@ -51,35 +51,13 @@
                     <notebook>
                         <page string="Extra Data">
                             <group>
-                                <field name="unit_extradata_ids" nolabel="1" widget="one2many_list">
-                                    <tree editable="bottom" string="Extra Data">
-                                        <field context="{'default_type':'extra_data'}" name="extra_data_id"/>
-                                        <field name="extra_value"/>
-                                    </tree>
-                                    <form string="Extra Data">
-                                        <group colspan="4">
-                                            <field context="{'default_type':'extra_data'}" name="extra_data_id"/>
-                                            <field name="extra_value"/>
-                                        </group>
-                                    </form>
-                                </field>
-                            </group>
-                        </page>
-                        <page string="Expiry Data">
-                            <group>
-                                <field name="unit_expiry_ids" nolabel="1">
-                                    <tree editable="bottom" string="Expiry Data">
-                                        <field context="{'default_type':'expiry'}" name="expiry_id"/>
-                                        <field name="extra_value" on_change="on_change_extra_value(extra_value)"/>
-                                        <field invisible="1" name="name"/>
-                                    </tree>
-                                    <form string="Extra Data">
-                                        <group colspan="4">
-                                            <field context="{'default_type':'expiry'}" name="expiry_id"/>
-                                            <field name="extra_value"/>
-                                        </group>
-                                    </form>
-                                </field>
+                                <field colspan="4" context="{'default_vehicle_id': active_id}" name="unit_extradata" nolabel="1">
+                                        <tree string="Extra Fields">
+                                            <field name="type"/>
+                                            <field name="name"/>
+                                            <field name="value_extra"/>
+                                        </tree>
+                                    </field>
                             </group>
                         </page>
                     </notebook>
