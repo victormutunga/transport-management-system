@@ -62,6 +62,7 @@
         'wizards/tms_fuelvoucher_invoice_view.xml',
         'wizards/tms_expense_payment_view.xml',
         'report/waybill_report.xml',
+        'data/ir_config_parameter.xml',
     ],
     "demo": [
         'demo/fleet_vehicle_engine.xml',

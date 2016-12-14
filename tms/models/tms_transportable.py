@@ -24,7 +24,7 @@ class TmsTransportable(models.Model):
     def copy(self, default=None):
         default = dict(default or {})
         copied_count = self.search_count(
-            [('name', '=like', "Copy of %s%" % self.name)])
+            [('name', '=like', "Copy of %s" % self.name)])
         if not copied_count:
             new_name = "Copy of %s" % self.name
         else:

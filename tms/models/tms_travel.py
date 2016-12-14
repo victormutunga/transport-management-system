@@ -191,6 +191,7 @@ class TmsTravel(models.Model):
     @api.multi
     def action_progress(self):
         for rec in self:
+            rec.validate_driver_license()
             travels = rec.search(
                 [('state', '=', 'progress'), '|',
                  ('employee_id', '=', rec.employee_id.id),
@@ -286,3 +287,18 @@ class TmsTravel(models.Model):
                 rec.framework = 'single'
             else:
                 rec.framework = 'unit'
+
+    @api.multi
+    def validate_driver_license(self):
+        val = self.env['ir.config_parameter'].get_param(
+            'driver_license_security_days')
+        days = int(val) or 0
+        for rec in self:
+            if rec.employee_id.days_to_expire <= days:
+                raise ValidationError(
+                    _("You can not Dispatch this Travel because %s "
+                      "Driver's License Validity (%s) is expired or"
+                      " about to expire in next %s day(s)") % (
+                        rec.employee_id.name,
+                        rec.employee_id.license_expiration, val))
+        return True

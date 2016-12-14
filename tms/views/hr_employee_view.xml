@@ -13,8 +13,17 @@
                             <field name="driver"/>
                         </group>
                         <group col="4">
-                            <field attrs="{'required':[('driver','=',True)], 'invisible':[('driver','=',False)] }" name="tms_advance_account_id"/>
-                            <field attrs="{'required':[('driver','=',True)], 'invisible':[('driver','=',False)] }" name="tms_expense_negative_account_id"/>
+                            <field name="tms_advance_account_id" attrs="{'required':[('driver','=',True)], 'invisible':[('driver','=',False)] }"/>
+                            <field name="tms_expense_negative_account_id" attrs="{'required':[('driver','=',True)], 'invisible':[('driver','=',False)] }"/>
+                            <label for="driver_license" attrs="{'invisible': [('driver','=',False)]}"/>
+                            <div>
+                                <field name="driver_license" attrs="{'invisible': [('driver','=',False)]}"/>
+                                <button name="get_driver_license_info" type="object" string="Get Licence Info" attrs="{'invisible': [('driver','=',False)]}" class="oe_link"/>
+                            </div>
+                            <field name="license_type" attrs="{'invisible': [('driver','=',False)]}"/>
+                            <field name="license_valid_from" attrs="{'invisible': [('driver','=',False)]}"/>
+                            <field name="license_expiration" attrs="{'invisible': [('driver','=',False)]}"/>
+                            <field name="days_to_expire" attrs="{'invisible': [('driver','=',False)]}"/>
                         </group>
                     </page>
                 </notebook>
@@ -32,7 +41,7 @@
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">Click to add a new driver.
               </p>
-                <p>With just a quick glance on the OpenERP driver screen, you
+                <p>With just a quick glance on Odoo driver screen, you
                 can easily find all the information you need for each person;
                 contact data, job position, availability, etc.
               </p>
