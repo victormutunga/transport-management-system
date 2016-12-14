@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-# © <2012> <Israel Cruz Argil, Argil Consulting>
-# © <2016> <Jarsa Sistemas, S.A. de C.V.>
+# Copyright 2012, Israel Cruz Argil, Argil Consulting
+# Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+
+from __future__ import division
 
 from openerp import _, api, fields, models
 from openerp.exceptions import ValidationError
@@ -88,7 +90,7 @@ class TmsFactor(models.Model):
                     elif rec.range_start == 0 and rec.range_end == 0:
                         amount += rec.factor * value
             if rec.mixed:
-                    amount += rec.fixed_amount
+                amount += rec.fixed_amount
         if amount == 0.0:
             raise ValidationError(
                 _('the amount isnt between of any ranges'))

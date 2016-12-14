@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# © <2012> <Israel Cruz Argil, Argil Consulting>
-# © <2016> <Jarsa Sistemas, S.A. de C.V.>
+# Copyright 2012, Israel Cruz Argil, Argil Consulting
+# Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 {
@@ -53,6 +53,7 @@
         'views/tms_route_tollstation_view.xml',
         'views/fleet_vehicle_engine_view.xml',
         'views/tms_factor_special_view.xml',
+        'views/tms_route_note_view.xml',
         'data/product_product_data.xml',
         'data/ir_sequence_data.xml',
         'data/tms_base_data.xml',
@@ -62,6 +63,7 @@
         'wizards/tms_expense_payment_view.xml',
         'report/waybill_report.xml',
         'report/expense_report.xml',
+        'data/ir_config_parameter.xml',
     ],
     "demo": [
         'demo/fleet_vehicle_engine.xml',

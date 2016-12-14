@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# © <2012> <Israel Cruz Argil, Argil Consulting>
-# © <2016> <Jarsa Sistemas, S.A. de C.V.>
+# Copyright 2012, Israel Cruz Argil, Argil Consulting
+# Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 
@@ -73,7 +73,7 @@ class TmsExpensePayment(models.TransientModel):
                 'default_partner_id': old_partner,
                 'default_amount': total,
                 'default_name': expense_names,
-                'default_expense_ids': [id for id in active_ids.ids],
+                'default_expense_ids': [x for x in active_ids.ids],
                 'default_payment_type': 'outbound',
                 'close_after_process': False,
                 'default_type': 'payment',
