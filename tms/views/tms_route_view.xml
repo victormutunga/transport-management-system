@@ -85,6 +85,13 @@
                             <page string="Driver Factor">
                                 <field name="driver_factor_ids" context="{'default_category': 'driver'}"/>
                             </page>
+                            <page string="Notes">
+                                <field name="note_ids">
+                                    <tree>
+                                        <field name="partner_id"/>
+                                    </tree>
+                                </field>
+                            </page>
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">

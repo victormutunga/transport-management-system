@@ -1,4 +1,4 @@
-<openerp>
+<odoo>
 <data>
 
 
@@ -108,5 +108,5 @@ It's declared in a NOUPDATE block so users can freely customize -->
     </data>
     
     
-</openerp>
+</odoo>
 

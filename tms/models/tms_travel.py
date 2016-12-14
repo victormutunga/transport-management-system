@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-# © <2012> <Israel Cruz Argil, Argil Consulting>
-# © <2016> <Jarsa Sistemas, S.A. de C.V.>
+# Copyright 2012, Israel Cruz Argil, Argil Consulting
+# Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+
+from __future__ import division
 
 from datetime import datetime, timedelta
 from openerp import _, api, fields, models
@@ -189,6 +191,7 @@ class TmsTravel(models.Model):
     @api.multi
     def action_progress(self):
         for rec in self:
+            rec.validate_driver_license()
             travels = rec.search(
                 [('state', '=', 'progress'), '|',
                  ('employee_id', '=', rec.employee_id.id),
@@ -284,3 +287,18 @@ class TmsTravel(models.Model):
                 rec.framework = 'single'
             else:
                 rec.framework = 'unit'
+
+    @api.multi
+    def validate_driver_license(self):
+        val = self.env['ir.config_parameter'].get_param(
+            'driver_license_security_days')
+        days = int(val) or 0
+        for rec in self:
+            if rec.employee_id.days_to_expire <= days:
+                raise ValidationError(
+                    _("You can not Dispatch this Travel because %s "
+                      "Driver's License Validity (%s) is expired or"
+                      " about to expire in next %s day(s)") % (
+                        rec.employee_id.name,
+                        rec.employee_id.license_expiration, val))
+        return True

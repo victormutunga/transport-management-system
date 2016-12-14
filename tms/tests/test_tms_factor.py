@@ -1,26 +1,17 @@
 # -*- coding: utf-8 -*-
-# © <2016> <Jarsa Sistemas, S.A. de C.V.>
+# Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp.tests.common import TransactionCase
 
 
 class TestTmsFactor(TransactionCase):
-    """
-    This will test model tms_factor
-    """
 
     def setUp(self):
-        """
-        Define global variables
-        """
         super(TestTmsFactor, self).setUp()
         self.factor = self.env['tms.factor']
 
     def test_10_tms_factor_onchange_factor_type(self):
-        '''
-        This test check that method on change factor type.
-        '''
         factor_type_list = [
             ['', 'name'],
             ['distance', 'Distance Route (Km/Mi)'],

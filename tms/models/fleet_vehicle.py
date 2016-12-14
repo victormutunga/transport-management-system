@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# © <2012> <Israel Cruz Argil, Argil Consulting>
-# © <2016> <Jarsa Sistemas, S.A. de C.V.>
+# Copyright 2012, Israel Cruz Argil, Argil Consulting
+# Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp import fields, models
@@ -8,8 +8,7 @@ from openerp.osv import fields as old_fields
 
 
 class OldFleetVehicle(models.Model):
-    """
-    This ugly code is needed to override fields.function from old api.
+    """ This ugly code is needed to override fields.function from old api.
     See https://github.com/odoo/odoo/issues/3922
     """
     _name = 'fleet.vehicle'
