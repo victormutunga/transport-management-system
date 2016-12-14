@@ -8,8 +8,7 @@ from openerp.osv import fields as old_fields
 
 
 class OldFleetVehicle(models.Model):
-    """
-    This ugly code is needed to override fields.function from old api.
+    """ This ugly code is needed to override fields.function from old api.
     See https://github.com/odoo/odoo/issues/3922
     """
     _name = 'fleet.vehicle'

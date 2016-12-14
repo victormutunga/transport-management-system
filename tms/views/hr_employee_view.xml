@@ -14,7 +14,7 @@
                         </group>
                         <group col="4">
                             <field attrs="{'required':[('driver','=',True)], 'invisible':[('driver','=',False)] }" name="tms_advance_account_id"/>
-                            <field attrs="{'required':[('driver','=',True)], 'invisible':[('driver','=',False)] }" name="tms_expense_negative_balance_account_id"/>
+                            <field attrs="{'required':[('driver','=',True)], 'invisible':[('driver','=',False)] }" name="tms_expense_negative_account_id"/>
                         </group>
                     </page>
                 </notebook>

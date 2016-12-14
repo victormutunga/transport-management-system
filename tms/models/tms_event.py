@@ -53,7 +53,6 @@ class TmsEvent(models.Model):
 
     @api.multi
     def action_confirm(self):
-        "Action for Approve"
         for rec in self:
             message = _('<b>Event Confirmed.</b></br><ul>'
                         '<li><b>Approved by: </b>%s</li>'
@@ -64,7 +63,6 @@ class TmsEvent(models.Model):
 
     @api.multi
     def action_cancel(self):
-        "Action for Cancel"
         for rec in self:
             message = _('<b>Event Cancelled.</b></br><ul>'
                         '<li><b>Cancelled by: </b>%s</li>'
@@ -77,7 +75,6 @@ class TmsEvent(models.Model):
 
     @api.multi
     def set_2_draft(self):
-        "Back to Draft"
         for rec in self:
             message = _(
                 '<b>Event Draft.</b></br><ul>'

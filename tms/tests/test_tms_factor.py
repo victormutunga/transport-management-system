@@ -6,21 +6,12 @@ from openerp.tests.common import TransactionCase
 
 
 class TestTmsFactor(TransactionCase):
-    """
-    This will test model tms_factor
-    """
 
     def setUp(self):
-        """
-        Define global variables
-        """
         super(TestTmsFactor, self).setUp()
         self.factor = self.env['tms.factor']
 
     def test_10_tms_factor_onchange_factor_type(self):
-        '''
-        This test check that method on change factor type.
-        '''
         factor_type_list = [
             ['', 'name'],
             ['distance', 'Distance Route (Km/Mi)'],
