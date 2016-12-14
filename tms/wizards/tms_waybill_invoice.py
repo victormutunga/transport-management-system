@@ -52,6 +52,22 @@ class TmsWaybillInvoice(models.TransientModel):
         return invoice_id
 
     @api.multi
+    def same_partner_validation(self, control, partner_ids):
+        for partner_id in partner_ids:
+            if control == 0:
+                old_partner = partner_id
+                current_partner = partner_id
+                control = 1
+            else:
+                current_partner = partner_id
+            if old_partner != current_partner:
+                raise exceptions.ValidationError(
+                    _('The waybills must be of the same customer. '
+                      'Please check it.'))
+            else:
+                old_partner = partner_id
+
+    @api.multi
     def make_waybill_invoices(self):
         partner_ids = []
         waybill_names = []
@@ -102,19 +118,7 @@ class TmsWaybillInvoice(models.TransientModel):
                             (0, 0, self.prepare_lines
                                 (product, fpos_tax_ids, account)))
 
-        for partner_id in partner_ids:
-            if control == 0:
-                old_partner = partner_id
-                current_partner = partner_id
-                control = 1
-            else:
-                current_partner = partner_id
-            if old_partner != current_partner:
-                raise exceptions.ValidationError(
-                    _('The waybills must be of the same customer. '
-                      'Please check it.'))
-            else:
-                old_partner = partner_id
+        self.same_partner_validation(control, partner_ids)
 
         for currency in currency_ids:
             if control_c == 0:

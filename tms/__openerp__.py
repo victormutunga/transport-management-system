@@ -55,6 +55,8 @@
         'views/fleet_vehicle_engine_view.xml',
         'views/tms_factor_special_view.xml',
         'views/tms_route_note_view.xml',
+        'views/tms_custom_house_view.xml',
+        'views/tms_custom_view.xml',
         'data/product_product_data.xml',
         'data/ir_sequence_data.xml',
         'data/tms_base_data.xml',
@@ -63,6 +65,7 @@
         'wizards/tms_fuelvoucher_invoice_view.xml',
         'wizards/tms_expense_payment_view.xml',
         'report/waybill_report.xml',
+        'report/notes_report.xml'
     ],
     "demo": [
         'demo/fleet_vehicle_engine.xml',
