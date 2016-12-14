@@ -9,9 +9,6 @@ from openerp.tools import mute_logger
 
 
 class TestTmsTransportable(TransactionCase):
-    """
-        Test tms transportable product
-    """
 
     def setUp(self):
         super(TestTmsTransportable, self).setUp()
@@ -26,8 +23,3 @@ class TestTmsTransportable(TransactionCase):
                 '"tms_transportable_name_unique"'):
             self.transportable.create({'name': 'Test', 'uom_id': self.ton.id})
             self.transportable.create({'name': 'Test', 'uom_id': self.ton.id})
-
-    # def test_20_duplicate_transportable(self):
-    #     transportable = self.env.ref('tms.tms_transportable_01')
-    #     transportable.copy()
-    #     transportable.copy()

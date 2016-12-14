@@ -3,6 +3,8 @@
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
+from __future__ import division
+
 import logging
 
 from openerp import _, api, exceptions, fields, models
@@ -333,7 +335,7 @@ class TmsWaybill(models.Model):
             for line in waybill.waybill_line_ids:
                 if (line.product_id.tms_product_category ==
                         category):
-                        field += line.price_subtotal
+                    field += line.price_subtotal
             return field
 
     @api.depends('waybill_line_ids')

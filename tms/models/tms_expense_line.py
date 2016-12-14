@@ -85,7 +85,7 @@ class TmsExpenseLine(models.Model):
     def _onchange_product_id(self):
         if self.line_type not in [
                 'salary', 'salary_retention', 'salary_discount']:
-                self.tax_ids = self.product_id.supplier_taxes_id
+            self.tax_ids = self.product_id.supplier_taxes_id
 
         self.product_uom_id = self.product_id.uom_id.id
         self.name = self.product_id.name

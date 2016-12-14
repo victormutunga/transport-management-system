@@ -2120,7 +2120,7 @@ msgid "Negative Balance"
 msgstr "Balance Negativo"
 
 #. module: tms
-#: model:ir.model.fields,field_description:tms.field_hr_employee_tms_expense_negative_balance_account_id
+#: model:ir.model.fields,field_description:tms.field_hr_employee_tms_expense_negative_account_id
 msgid "Negative Balance Account"
 msgstr "Cuenta de Balance Negativo"
 
