@@ -9,6 +9,7 @@
                     <group>
                         <field name='partner_id'/>
                         <field name='notes'/>
+                        <field name='rules'/>
                     </group>
                 </form>
             </field>

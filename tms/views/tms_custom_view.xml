@@ -3,13 +3,13 @@
     <data>
         <record model='ir.ui.view' id='tms_custom_form_view'>
             <field name='name'>tms.custom.form</field>
-            <field name='model'>tms.pediments</field>
+            <field name='model'>tms.customs</field>
             <field name='arch' type='xml'>
                 <form string='description'>
                     <sheet>
                     <group>
-                        <field name="waybill_id"/>
                         <field name="customs"/>
+                        <field name="custom_house_id"/>
                         <field name="datetime"/>
                         <field name="return_datetime"/>
                         <field name="returned_datetime"/>
@@ -20,11 +20,11 @@
         </record>
         <record model='ir.ui.view' id='tms_custom_tree_view'>
             <field name='name'>Customs</field>
-            <field name='model'>tms.pediments</field>
+            <field name='model'>tms.customs</field>
             <field name='arch' type='xml'>
                 <tree string='description' editable="bottom">
-                    <field name="waybill_id"/>
                     <field name="customs"/>
+                    <field name="custom_house_id"/>
                     <field name="datetime"/>
                     <field name="return_datetime"/>
                     <field name="returned_datetime"/>
@@ -33,10 +33,9 @@
         </record>
         <record id='action_tms_customs' model='ir.actions.act_window'>
             <field name='name'>Customs</field>
-            <field name='res_model'>tms.pediments</field>
+            <field name='res_model'>tms.customs</field>
             <field name='view_type'>form</field>
             <field name='view_mode'>tree,form</field>
         </record>
-        <menuitem action="action_tms_customs" id="tms_customs" parent="tms.menu_tms_settings" name="Customs" sequence="60"/>
     </data>
 </odoo>

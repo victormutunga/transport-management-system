@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>
+		<record id="userprueba" model="res.partner">
+			<field name="name">Miguel Ruiz</field>
+			<field name="notify_email">always</field>
+			<field name="property_account_payable_id"/>
+			<field name="property_account_receivable_id"/>
+		</record>
+	</data>
+</odoo>

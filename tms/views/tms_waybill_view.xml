@@ -116,28 +116,12 @@
                                 <group col="4" colspan="4">
                                     <field name="waybill_type"/>
                                     <newline/>
-                                    <field colspan="4" context="{'default_waybill_id': active_id, 'default_mandatory': 1}" name="waybill_extradata" nolabel="1">
+                                    <field colspan="4" context="{'default_waybill_id': active_id}" name="waybill_extradata" nolabel="1">
                                         <tree string="Extra Fields">
-                                            <field name="mandatory"/>
-                                            <field name="type_extra"/>
+                                            <field name="type"/>
                                             <field name="name"/>
                                             <field name="value_extra"/>
-                                            <field name="sequence"/>
                                         </tree>
-                                        <form string="Extra Fields">
-                                            <field colspan="4" name="name" required="1"/>
-                                            <field name="type_extra"/>
-                                            <newline/>
-                                            <field invisible="1" name="mandatory"/>
-                                            <field invisible="1" name="value_extra"/>
-                                            <field attrs="{'invisible':[('type_extra','!=','char')],'required':[('type_extra','=','char'),('mandatory','=',1)]}" colspan="4" name="value_char"/>
-                                            <field attrs="{'invisible':[('type_extra','!=','text')],'required':[('type_extra','=','text'),('mandatory','=',1)]}" colspan="4" name="value_text"/>
-                                            <field attrs="{'invisible':[('type_extra','!=','integer')],'required':[('type_extra','=','integer'),('mandatory','=',1)]}" colspan="4" name="value_integer"/>
-                                            <field attrs="{'invisible':[('type_extra','!=','float')],'required':[('type_extra','=','float'),('mandatory','=',1)]}" colspan="4" name="value_float"/>
-                                            <field attrs="{'invisible':[('type_extra','!=','date')],'required':[('type_extra','=','date'),('mandatory','=',1)]}" colspan="4" name="value_date"/>
-                                            <field attrs="{'invisible':[('type_extra','!=','datetime')],'required':[('type_extra','=','datetime'),('mandatory','=',1)]}" colspan="4" name="value_datetime"/>
-                                            <field name="sequence"/>
-                                        </form>
                                     </field>
                                 </group>
                             </page>
@@ -198,6 +182,10 @@
                                     </group>
                                     <field name="move_id"/>
                                 </group>
+                            </page>
+                            <page string="Customs">
+                                <separator coslpan="4" string="Customs"/>
+                                <field name="custom_ids" nolabel="1"/>
                             </page>
                         </notebook>
                     </sheet>

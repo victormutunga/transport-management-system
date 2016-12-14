@@ -6,7 +6,6 @@
 from __future__ import division
 
 from datetime import datetime, timedelta
-
 from openerp import _, api, fields, models
 from openerp.exceptions import ValidationError
 
