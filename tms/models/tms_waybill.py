@@ -322,7 +322,7 @@ class TmsWaybill(models.Model):
                         waybill.product_weight, waybill.distance_route,
                         waybill.distance_real, waybill.product_qty,
                         waybill.product_volume, waybill.amount_total)
-                    total = (total + total_get_amount) * qty
+                    total = (total + total_get_amount)
                     for product in waybill.waybill_line_ids:
                         if (product.product_id.tms_product_category ==
                                 'freight'):
