@@ -18,8 +18,6 @@ except ImportError:
 
 
 class HrEmployee(models.Model):
-    _description = 'Employees'
-    _name = 'hr.employee'
     _inherit = 'hr.employee'
 
     driver = fields.Boolean(

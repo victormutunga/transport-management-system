@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <!--  Make Payment Expense-->
-        <record id="tms_view_advance_payment" model="ir.ui.view">
+        <record id="tms_view_expense_payment" model="ir.ui.view">
             <field name="name">Make Payment Expense</field>
             <field name="model">tms.expense.payment</field>
             <field name="arch" type="xml">
@@ -14,9 +14,8 @@
                 </form>
             </field>
         </record>
-        
         <act_window 
-            id="action_view_advance_payment" 
+            id="action_view_expense_payment" 
             key2="client_action_multi" 
             name="Make Driver Expense Payment." 
             res_model="tms.expense.payment" 

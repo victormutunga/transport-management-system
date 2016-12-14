@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <!--  Make Payment-->
         <record id="tms_view_advance_payment" model="ir.ui.view">
             <field name="name">Make Payment</field>
             <field name="model">tms.advance.payment</field>
@@ -14,11 +13,10 @@
                 </form>
             </field>
         </record>
-        
         <act_window 
             id="action_view_advance_payment" 
             key2="client_action_multi" 
-            name="Make Driver Advance Payment" 
+            name="Make Driver Advance Payment." 
             res_model="tms.advance.payment" 
             src_model="tms.advance" 
             target="new" 

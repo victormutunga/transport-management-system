@@ -49,5 +49,13 @@
             <field name="padding">4</field>
             <field name="number_increment">1</field>
         </record>
+        <record model="ir.sequence" id="txt_sequence">
+            <field name="name">Txt</field>
+            <field name="implementation">no_gap</field>
+            <field name="code">Txt</field>
+            <field name="prefix">Txt</field>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+        </record>
     </data>
 </odoo>

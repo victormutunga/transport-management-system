@@ -214,7 +214,7 @@ class TmsWaybill(models.Model):
         "is confirmed but waiting for the scheduler to run on "
         "the date 'Ordered Date'.", select=True, default='manual')
     waybill_extradata = fields.One2many(
-        'tms.waybill.extradata', 'waybill_id',
+        'tms.extradata', 'waybill_id',
         string='Extra Data Fields',
         readonly=False, states={'confirmed': [('readonly', True)]})
 
@@ -468,20 +468,6 @@ class TmsWaybill(models.Model):
         for rec in self:
             paid = (rec.invoice_id and rec.invoice_id.state == 'paid')
             self.supplier_invoice_paid = paid
-
-    @api.multi
-    def waybill_print(self):
-        for rec in self:
-            context = dict(
-                self.env.context or {},
-                active_ids=[rec.id],
-                active_model='tms.waybill')
-            return {
-                'type': 'ir.actions.report.xml',
-                'report_name': 'tms.waybill_report',
-                'context': context,
-                'docs': rec.id,
-            }
 
     @api.multi
     def _amount_to_text(self, amount_total, currency, partner_lang='es_MX'):

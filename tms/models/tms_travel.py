@@ -6,7 +6,6 @@
 from __future__ import division
 
 from datetime import datetime, timedelta
-
 from openerp import _, api, fields, models
 from openerp.exceptions import ValidationError
 
@@ -16,6 +15,7 @@ class TmsTravel(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = 'Travel'
     _order = "date desc"
+
     waybill_ids = fields.Many2many(
         'tms.waybill', string='Waybills')
     driver_factor_ids = fields.One2many(
