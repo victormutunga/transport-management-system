@@ -47,6 +47,7 @@ class TmsRoute(models.Model):
         string='Places')
     tollstation_ids = fields.Many2many(
         'tms.route.tollstation', string="Toll Station")
+    note_ids = fields.One2many('tms.route.note', 'route_id', string='Notes')
 
     @api.depends('distance_empty', 'distance')
     @api.onchange('distance_empty')
