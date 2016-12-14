@@ -16,7 +16,7 @@
         "purchase",
         "sale",
         "base_geoengine",
-        "account_operating_unit",
+        "account_operating_unit"
     ],
     'external_dependencies': {
         'python': [
@@ -27,6 +27,7 @@
     "summary": "Management System for Carriers, Trucking and other companies",
     "license": "AGPL-3",
     "data": [
+        'security/security.xml',
         'security/ir.model.access.csv',
         'views/tms_view.xml',
         'data/account_journal_data.xml',
@@ -54,6 +55,8 @@
         'views/fleet_vehicle_engine_view.xml',
         'views/tms_factor_special_view.xml',
         'views/tms_route_note_view.xml',
+        'views/tms_custom_house_view.xml',
+        'views/tms_custom_view.xml',
         'data/product_product_data.xml',
         'data/ir_sequence_data.xml',
         'data/tms_base_data.xml',
@@ -62,6 +65,7 @@
         'wizards/tms_fuelvoucher_invoice_view.xml',
         'wizards/tms_expense_payment_view.xml',
         'report/waybill_report.xml',
+        'report/notes_report.xml',
         'report/expense_report.xml',
         'data/ir_config_parameter.xml',
     ],

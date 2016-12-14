@@ -14,3 +14,4 @@ class TmsRouteNote(models.Model):
     partner_id = fields.Many2one(
         'res.partner', string='Partner', required=True)
     notes = fields.Html(required=True)
+    rules = fields.Html(required=True)

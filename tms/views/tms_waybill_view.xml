@@ -184,6 +184,10 @@
                                     <field name="move_id"/>
                                 </group>
                             </page>
+                            <page string="Customs">
+                                <separator coslpan="4" string="Customs"/>
+                                <field name="custom_ids" nolabel="1"/>
+                            </page>
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">

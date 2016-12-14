@@ -1,3 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_tms_pediments,access_tms_pediments,model_tms_pediments,,1,1,1,1
-access_tms_waybill,access_tms_waybill,model_tms_waybill,,1,1,1,1

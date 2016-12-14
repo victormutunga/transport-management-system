@@ -217,6 +217,10 @@ class TmsWaybill(models.Model):
         'tms.extradata', 'waybill_id',
         string='Extra Data Fields',
         readonly=False, states={'confirmed': [('readonly', True)]})
+    custom_ids = fields.One2many(
+        'tms.customs',
+        'waybill_id',
+        string="Customs")
 
     @api.model
     def create(self, values):
