@@ -28,13 +28,10 @@ from . import tms_route_tollstation
 from . import tms_route_tollstation_costperaxis
 from . import tms_transportable
 from . import tms_travel
-from . import tms_unit_expiry
-from . import tms_unit_extradata
 from . import tms_unit_kit
 from . import tms_waybill
 from . import tms_custom_house
 from . import tms_customs
-from . import tms_waybill_extradata
 from . import tms_waybill_line
 from . import tms_waybill_taxes
 from . import tms_route_place
