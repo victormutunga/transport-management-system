@@ -399,7 +399,7 @@ class TmsExpense(models.Model):
                 )
             negative_balance_account = (
                 rec.employee_id.
-                tms_expense_negative_balance_account_id.id
+                tms_expense_negative_account_id.id
                 )
             driver_account_payable = (
                 rec.employee_id.
@@ -572,7 +572,7 @@ class TmsExpense(models.Model):
             move_id = move_obj.create(move)
             if not move_id:
                 raise ValidationError(
-                    -('An error has occurred in the creation'
+                    _('An error has occurred in the creation'
                         ' of the accounting move. '))
             else:
                 # Here we reconcile the invoices with the corresponding

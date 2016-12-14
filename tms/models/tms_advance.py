@@ -179,7 +179,7 @@ class TmsAdvance(models.Model):
                     move_id = obj_account_move.create(move)
                     if not move_id:
                         raise exceptions.ValidationError(
-                            -('An error has occurred in the creation'
+                            _('An error has occurred in the creation'
                                 ' of the accounting move. '))
                     else:
                         self.write(

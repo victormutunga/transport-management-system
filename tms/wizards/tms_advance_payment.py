@@ -75,7 +75,7 @@ class TmsAdvancePayment(models.TransientModel):
                 'default_partner_id': old_partner,
                 'default_amount': total,
                 'default_name': advance_names,
-                'default_advance_ids': [id for id in active_ids.ids],
+                'default_advance_ids': [x for x in active_ids.ids],
                 'default_payment_type': 'outbound',
                 'default_operating_unit_id': operating_unit_id,
                 'close_after_process': False,
