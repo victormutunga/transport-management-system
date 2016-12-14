@@ -49,7 +49,7 @@
         'views/tms_travel_view.xml',
         'views/tms_unit_kit_view.xml',
         'views/tms_waybill_view.xml',
-        'views/tms_waybill_extradata_view.xml',
+        'views/tms_extradata_view.xml',
         'views/account_invoice_view.xml',
         'views/tms_route_tollstation_view.xml',
         'views/fleet_vehicle_engine_view.xml',
@@ -66,6 +66,8 @@
         'wizards/tms_expense_payment_view.xml',
         'report/waybill_report.xml',
         'report/notes_report.xml'
+        'report/expense_report.xml',
+        'data/ir_config_parameter.xml',
     ],
     "demo": [
         'demo/fleet_vehicle_engine.xml',

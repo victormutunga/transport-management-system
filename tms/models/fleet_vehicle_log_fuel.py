@@ -143,7 +143,7 @@ class FleetVehicleLogFuel(models.Model):
             raise ValidationError(_(
                 'You need to define the sequence for fuel logs in base %s' %
                 res.operating_unit_id.name
-                ))
+            ))
         sequence = res.operating_unit_id.fuel_log_sequence_id
         res.name = sequence.next_by_id()
         return res

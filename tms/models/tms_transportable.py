@@ -13,22 +13,18 @@ class TmsTransportable(models.Model):
     name = fields.Char(required=True)
     uom_id = fields.Many2one(
         'product.uom', 'Unit of Measure ', required=True)
-    factor_type = fields.Selection([
-        ('distance', 'Distance Route (Km/Mi)'),
-        ('distance_real', 'Distance Real (Km/Mi)'),
-        ('weight', 'Weight'),
-        ('volume', 'Volume'),
-        ], required=True,)
 
     @api.multi
     def copy(self, default=None):
         default = dict(default or {})
         copied_count = self.search_count(
-            [('name', '=like', "Copy of %s%" % self.name)])
+            [('name', '=like', u"Copy of [%(values)s]" % dict(
+                values=self.name))])
         if not copied_count:
-            new_name = "Copy of %s" % self.name
+            new_name = u"Copy of [%(values)s]" % dict(values=self.name)
         else:
-            new_name = "Copy of %s (%s)" % (self.name, copied_count)
+            new_name = u"Copy of [%(values)s]" % dict(
+                values=", ".join(self.name, copied_count))
 
         default['name'] = new_name
         return super(TmsTransportable, self).copy(default)
