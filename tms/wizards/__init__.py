@@ -7,4 +7,3 @@ from . import tms_advance_payment
 from . import tms_waybill_invoice
 from . import tms_fuelvoucher_invoice
 from . import tms_expense_payment
-from . import tms_txt_wizard
