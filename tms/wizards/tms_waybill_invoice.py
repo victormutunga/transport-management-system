@@ -39,15 +39,15 @@ class TmsWaybillInvoice(models.TransientModel):
     @api.multi
     def create_waybill_invoices(self, waybill, fpos, waybill_names, lines):
         invoice_id = self.env['account.invoice'].create({
-                'partner_id': waybill.partner_id.id,
-                'fiscal_position_id': fpos.id,
-                'reference': "Invoice of: " + ', '.join(waybill_names),
-                'journal_id': waybill.operating_unit_id.sale_journal_id.id,
-                'currency_id': waybill.currency_id.id,
-                'account_id': (
-                    waybill.partner_id.property_account_payable_id.id),
-                'type': 'out_invoice',
-                'invoice_line_ids': [line for line in lines],
+            'partner_id': waybill.partner_id.id,
+            'fiscal_position_id': fpos.id,
+            'reference': "Invoice of: " + ', '.join(waybill_names),
+            'journal_id': waybill.operating_unit_id.sale_journal_id.id,
+            'currency_id': waybill.currency_id.id,
+            'account_id': (
+                waybill.partner_id.property_account_payable_id.id),
+            'type': 'out_invoice',
+            'invoice_line_ids': [line for line in lines],
             })
         return invoice_id
 

@@ -10,7 +10,8 @@ class TmsCustoms(models.Model):
 
     waybill_id = fields.Many2one('tms.waybill')
     customs = fields.Char()
-    custom_house_id = fields.Many2one('tms.custom.house', string="Custom House")
+    custom_house_id = fields.Many2one(
+        'tms.custom.house', string="Custom House")
     datetime = fields.Datetime(default=fields.Datetime.now)
     return_datetime = fields.Datetime(string="Date of Return")
     returned_datetime = fields.Datetime(string="Date of Returned")
