@@ -81,8 +81,8 @@ class TmsFactor(models.Model):
                 amount += rec.fixed_amount
             elif rec.factor_type == 'percent':
                 amount += income * (rec.factor / 100)
-            elif rec.factor_type == 'special':
-                exec(rec.factor_special_id.python_code)
+            # elif rec.factor_type == 'special':
+            #     exec(rec.factor_special_id.python_code)
             for key, value in factor_list.items():
                 if rec.factor_type == key:
                     if rec.range_start <= value <= rec.range_end:
