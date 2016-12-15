@@ -192,6 +192,7 @@ class TmsTravel(models.Model):
     def action_progress(self):
         for rec in self:
             rec.validate_driver_license()
+            rec.validate_vehicle_insurance()
             travels = rec.search(
                 [('state', '=', 'progress'), '|',
                  ('employee_id', '=', rec.employee_id.id),
@@ -302,3 +303,23 @@ class TmsTravel(models.Model):
                         rec.employee_id.name,
                         rec.employee_id.license_expiration, val))
         return True
+
+    @api.multi
+    def validate_vehicle_insurance(self):
+        val = self.env['ir.config_parameter'].get_param(
+            'tms_vehicle_insurance_security_days')
+        xdays = int(val) or 0
+        date = datetime.now() + timedelta(days=xdays)
+        for rec in self:
+            units = [
+                rec.unit_id, rec.trailer1_id, rec.dolly_id, rec.trailer2_id]
+            for unit in units:
+                if (unit and unit.insurance_expiration and
+                        unit.insurance_expiration <= date.strftime(
+                            '%Y-%m-%d')):
+                    raise ValidationError(_(
+                        "You can not Dispatch this Travel because this Vehicle"
+                        "(%s) Insurance (%s) is expired or about to expire in "
+                        "next %s day(s)") % (
+                        rec.unit_id.name, rec.unit_id.insurance_expiration,
+                        val))

@@ -3,8 +3,11 @@
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import fields, models
+from datetime import datetime
+
+from openerp import _, api, fields, models
 from openerp.osv import fields as old_fields
+from openerp.exceptions import ValidationError
 
 
 class OldFleetVehicle(models.Model):
@@ -48,3 +51,25 @@ class FleetVehicle(models.Model):
         'tms.extradata', 'vehicle_id',
         string='Extra Data Fields',
         readonly=False)
+    insurance_policy = fields.Char(string='Insurance Policy')
+    insurance_policy_data = fields.Char()
+    insurance_expiration = fields.Date(string='Insurance Policy Expiration')
+    insurance_supplier_id = fields.Many2one(
+        'res.partner', string='Insurance Supplier')
+    insurance_days_to_expire = fields.Integer(
+        compute='_compute_insurance_days_to_expire', string='Days to expire')
+
+    @api.depends('insurance_expiration')
+    def _compute_insurance_days_to_expire(self):
+        for rec in self:
+            now = datetime.now()
+            date_expire = datetime.strptime(
+                rec.insurance_expiration,
+                '%Y-%m-%d') if rec.insurance_expiration else datetime.now()
+            delta = date_expire - now
+            if delta.days >= -1:
+                rec.insurance_days_to_expire = delta.days + 1
+            else:
+                rec.insurance_days_to_expire = 0
+                raise ValidationError(
+                    _('The date of the insurance policy is expired'))
