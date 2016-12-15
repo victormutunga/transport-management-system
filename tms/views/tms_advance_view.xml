@@ -79,6 +79,7 @@
                         </group>
                         <group>
                             <group>
+                                <field name="product_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                                 <field name="amount" options="{'currency_field': 'currency_id'}" widget="monetary" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                             </group>
                         </group>
