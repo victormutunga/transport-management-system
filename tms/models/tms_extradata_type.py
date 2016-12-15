@@ -3,7 +3,7 @@
 # © <2016> <Jarsa Sistemas, S.A. de C.V.>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import fields, models
+from openerp import api, fields, models
 
 
 class TmsExtradataType(models.Model):
@@ -21,5 +21,16 @@ class TmsExtradataType(models.Model):
     )
     apply_on = fields.Selection([
         ('waybill', 'Waybill'),
-        ('unit', 'Unit'), ], required=True
+        ('unit', 'Unit'), ], required=True, readonly=True
     )
+
+    @api.model
+    def default_get(self, fields):
+        res = super(TmsExtradataType, self).default_get(
+            fields)
+        active_model = self.env.context['active_model']
+        if active_model == 'fleet.vehicle':
+            res['apply_on'] = 'unit'
+        elif active_model == 'tms.waybill':
+            res['apply_on'] = 'waybill'
+        return res

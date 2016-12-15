@@ -31,14 +31,14 @@
                     <header>
                         <button icon="fa-times" name="action_cancel" states="draft,approved,confirmed" string="Cancel" type="object"/>
                         <button icon="fa-reply" name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
-                        <button class="oe_highlight" name="waybill_print" string="Print" type="object" states="confirmed"/>
+                        <button class="oe_highlight" name="waybill_print" states="confirmed" string="Print" type="object"/>
                         <button class="oe_highlight" icon="fa-thumbs-up" name="action_approve" states="draft" string="Approve" type="object"/>
                         <button class="oe_highlight" icon="fa-check-square-o" name="action_confirm" states="approved" string="Confirm" type="object"/>
                         <field name="state" statusbar_visible="draft,approved,confirmed" widget="statusbar"/>
                     </header>
                     <sheet>
                         <h1>
-                            <label class="oe_inline" style="font-size:30px;" string="Waybill - " attrs="{'invisible':[('name','=', False)]}"/>
+                            <label attrs="{'invisible':[('name','=', False)]}" class="oe_inline" string="Waybill - " style="font-size:30px;"/>
                             <field class="oe_inline" name="name" readonly="1"/>
                         </h1>
                         <group col="4">
@@ -117,10 +117,9 @@
                                 <group col="4" colspan="4">
                                     <field name="waybill_type"/>
                                     <newline/>
-                                    <field colspan="4" context="{'default_waybill_id': active_id}" name="waybill_extradata" nolabel="1">
+                                    <field colspan="4" context="{'default_waybill_id': active_id, 'active_model_base': active_model}" name="waybill_extradata" nolabel="1">
                                         <tree string="Extra Fields">
                                             <field name="type"/>
-                                            <field name="name"/>
                                             <field name="value_extra"/>
                                         </tree>
                                     </field>
