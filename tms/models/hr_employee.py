@@ -58,7 +58,8 @@ class HrEmployee(models.Model):
                 license_expiration = datetime.strptime(
                     driver_license[0]['fecha_fin_vigencia'],
                     '%Y-%m-%dT%H:%M:%S.%f')
-                rec.license_type = driver_license[0]['categoria_de_la_licencia']
+                rec.license_type = driver_license[0][
+                    'categoria_de_la_licencia']
                 rec.license_valid_from = license_valid_from
                 rec.license_expiration = license_expiration
                 client.close()
