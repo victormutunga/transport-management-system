@@ -60,6 +60,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="open_view_tms_factor_special_form" id="menu_tms_factor_special_form" name="Special Factors" parent="menu_tms_settings" sequence="99"/>
+        <menuitem action="open_view_tms_factor_special_form" id="menu_tms_factor_special_form" name="Special Factors" parent="menu_tms_settings" sequence="99" groups="tms.group_traffic"/>
     </data>
 </odoo>
