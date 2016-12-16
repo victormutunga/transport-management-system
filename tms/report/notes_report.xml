@@ -4,30 +4,45 @@
         <template id="header_super">
             <div class="row">
                 <div class="col-xs-12">
-                    <div class="panel" style="border-color: #333 !important;">
+                    <div class="panel">
                     <t t-as="doc" t-foreach="docs">
                         <div class="panel-heading" t-att-style="Panel_Header">
-                            <p style="color:#E0FFFF !important; text-align:center; font-size:38px; font-family: sans-serif; font-weight:bold; color:#333 !important; ">LETTER OF INSTRUCTIONS: <span t-field="doc.route_id.note_ids.partner_id"/> </p>
+                            <p style="margin-top: 4%; color:#E0FFFF !important; text-align:center; font-size:38px; font-family: monospace; font-weight:bold; color:#333 !important; ">LETTER OF INSTRUCTIONS: <span t-field="doc.route_id.note_ids.partner_id"/> </p>
                         </div>
+                        <style>
+                            .sangria{
+                             margin-left: 65px;
+                            }
+                        </style>
                         <div class="panel-body" t-att-style="Panel">
-                            <p style="font-size:14px; font-family: sans-serif;">
-                                <strong> Departure Date: <span t-field="doc.date_start"/></strong>
-                            </p>
-                             <p style="font-size:14px; font-family: sans-serif; ">
-                                <strong> Deliver Date: <span t-field="doc.travel_duration"/> Hrs</strong>
-                            </p><br/>
-                            <p style="font-size:14px; font-family: sans-serif; ">
-                                <strong> Waybill: <span t-field="doc.waybill_ids.name"/></strong>
-                            </p>
-                            <p style="font-size:14px; font-family: sans-serif; ">
-                                <strong> Unit: <span t-field="doc.unit_id"/></strong>
-                            </p>
-                            <p style="font-size:14px; font-family: sans-serif; ">
-                                <strong> Trailer: <span t-field="doc.trailer1_id"/></strong>
-                            </p>
-                            <p style="font-size:14px; font-family: sans-serif; ">
-                                <strong> Driver: <span t-field="doc.employee_id"/></strong>
-                            </p>
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Departure Date:</th>
+                                        <th><span t-field="doc.date_start"/></th>
+                                    </tr>
+                                    <tr>
+                                        <th><label style="margin-left:25px;">Deliver Date:</label></th>
+                                        <th><span t-field="doc.travel_duration"/> Hrs</th>
+                                    </tr>
+                                    <tr>
+                                        <th><label class="sangria">Waybill:</label></th>
+                                        <th> <span t-field="doc.waybill_ids.name"/></th>
+                                    </tr>
+                                    <tr>
+                                        <th><label style="margin-left: 85px">Unit:</label></th>
+                                        <th><span t-field="doc.unit_id"/></th>
+                                    </tr>
+                                    <tr>
+                                        <th><label class="sangria">Trailer:</label></th>
+                                        <th><span t-field="doc.trailer1_id"/></th>
+                                    </tr>
+                                    <tr>
+                                        <th><label class="sangria">Driver:</label></th>
+                                        <th><span t-field="doc.employee_id"/></th>
+                                    </tr>
+                                </thead>
+                            </table>
                         </div>
                     </t>
                     </div>
@@ -35,30 +50,6 @@
             </div>
         </template>
         <template id="notes_report">
-            <t t-as="doc" t-foreach="docs">
-                <div class="page">
-                    <t t-call="tms.header_super"/>
-                    <br/>
-                    <div class="row">
-                        <div class="col-xs-3">
-                            <p style="font-size:12px; font-family: sans-serif; ">
-                              <t-row>
-                                  <span t-field="doc.route_id.note_ids.notes"/>
-                              </t-row>
-                            </p>
-                            <p style="font-size:18px; font-family: sans-serif; ">
-                                <strong>Transito: <span t-field="doc.route_id.name"/></strong>
-                            </p>
-                            <p style="font-size:12px; font-family: sans-serif; ">
-                              <t-row>
-                                  <span t-field="doc.route_id.note_ids.rules"/>
-                              </t-row>
-                            </p>
-                        </div>
-                    </div>
-                    <br/>
-                </div>
-            </t>
         </template>
         <record id="paperformat_94_152" model="report.paperformat">
             <field name="name">US Letter</field>

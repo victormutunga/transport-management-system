@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data>
+    <data noupdate="1">
         <record id="driver_license_security_days" model="ir.config_parameter">
             <field name="key">driver_license_security_days</field>
             <field name="value">5</field>
