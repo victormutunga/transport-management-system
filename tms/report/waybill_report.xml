@@ -209,7 +209,7 @@
                             <div class="col-xs-5">
                                 <strong>PEDIMENTOS</strong>
                                 <br/>
-                                <t t-as="customs" t-foreach="doc.customs_ids">
+                                <t t-as="customs" t-foreach="doc.custom_ids">
                                     <span t-field="customs.customs"/>
                                 </t>
                                 <br/>
