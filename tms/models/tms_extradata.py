@@ -4,6 +4,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp import api, fields, models
+from lxml import etree
 
 
 class TmsExtradata(models.Model):
@@ -12,7 +13,6 @@ class TmsExtradata(models.Model):
 
     type_id = fields.Many2one(
         'tms.extradata.type', string="Type", required="True")
-    name = fields.Char(required=True)
     type = fields.Selection(related="type_id.type")
     value_char = fields.Char('Value')
     value_integer = fields.Integer('Value')
@@ -41,3 +41,19 @@ class TmsExtradata(models.Model):
             if self.type == value[0]:
                 self.value_extra = value[1]
                 return self.value_extra
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form',
+                        toolbar=False, submenu=False):
+        res = super(TmsExtradata, self).fields_view_get(
+            view_id=view_id, view_type=view_type,
+            toolbar=toolbar, submenu=submenu)
+        doc = etree.XML(res['arch'])
+        active_model = self._context['active_model_base']
+        for node in doc.xpath("//field[@name='type_id']"):
+            if active_model == 'fleet.vehicle':
+                node.set('domain', "[('apply_on', '=', 'unit')]")
+            elif active_model == 'tms.waybill':
+                node.set('domain', "[('apply_on', '=', 'waybill')]")
+        res['arch'] = etree.tostring(doc)
+        return res

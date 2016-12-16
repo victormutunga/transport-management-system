@@ -37,7 +37,7 @@
                     </header>
                     <sheet>
                         <h1>
-                            <label class="oe_inline" style="font-size:30px;" string="Waybill - " attrs="{'invisible':[('name','=', False)]}"/>
+                            <label attrs="{'invisible':[('name','=', False)]}" class="oe_inline" string="Waybill - " style="font-size:30px;"/>
                             <field class="oe_inline" name="name" readonly="1"/>
                         </h1>
                         <group col="4">
@@ -116,10 +116,9 @@
                                 <group col="4" colspan="4">
                                     <field name="waybill_type"/>
                                     <newline/>
-                                    <field colspan="4" context="{'default_waybill_id': active_id}" name="waybill_extradata" nolabel="1">
+                                    <field colspan="4" context="{'default_waybill_id': active_id, 'active_model_base': active_model}" name="waybill_extradata" nolabel="1">
                                         <tree string="Extra Fields">
                                             <field name="type"/>
-                                            <field name="name"/>
                                             <field name="value_extra"/>
                                         </tree>
                                     </field>
