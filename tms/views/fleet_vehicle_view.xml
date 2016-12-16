@@ -38,22 +38,48 @@
                     <field name="operating_unit_id" required="1"/>
                     <field name="fleet_type" required="1"/>
                 </field>
-                <field name="vin_sn" position="after">
-                    <field name="serial_number"/>
-                    <field name="registration"/>
-                    <field name="supplier_unit"/>
-                    <field name="insurance_policy"/>
-                    <field name="insurance_policy_data"/>
-                    <field name="insurance_expiration"/>
-                    <field name="insurance_supplier_id"/>
-                    <field name="insurance_days_to_expire"/>
-                </field>
                 <field name="car_value" position="after">
                     <field name="year_model"/>
                     <field name="active"/>
                 </field>
-                <xpath expr="//sheet/group[2]" position="after">
+                <xpath expr="//sheet/group[2]" position="replace">
                     <notebook>
+                        <page string="General Information">
+                            <group>
+                                <field name="serial_number"/>
+                                <field name="registration"/>
+                                <field name="supplier_unit"/>
+                                <field name="insurance_policy"/>
+                                <field name="insurance_policy_data"/>
+                                <field name="insurance_expiration"/>
+                                <field name="insurance_supplier_id"/>
+                                <field name="insurance_days_to_expire"/>
+                            </group>
+                            <group string="Additional Properties">
+                                <field name="seats"/>
+                                <field name="doors"/>
+                                <field name="color"/>
+                            </group>
+                        </page>
+                        <page string="Engine Options">
+                            <group string="Engine Options">
+                                <field name="transmission"/>
+                                <field name="engine_id"/>
+                                <field name="fuel_type"/>
+                                <label for="co2"/>
+                                <div class="o_row">
+                                    <field name="co2"/>
+                                    <span>g/km</span>
+                                </div>
+                                <field name="horsepower"/>
+                                <field name="horsepower_tax"/>
+                                <label for="power"/>
+                                <div class="o_row">
+                                    <field name="power"/>
+                                    <span>kW</span>
+                                </div>
+                            </group>
+                        </page>
                         <page string="Extra Data">
                             <group>
                                 <field colspan="4" context="{'default_vehicle_id': active_id, 'active_model_base': active_model}" name="unit_extradata" nolabel="1">
@@ -71,9 +97,6 @@
                         </group>
                     </group>
                 </xpath>
-                <field name="transmission" position="before">
-                    <field name="engine_id"/>
-                </field>
             </field>
         </record>
         <record id="fleet.fleet_vehicle_tree" model="ir.ui.view">
