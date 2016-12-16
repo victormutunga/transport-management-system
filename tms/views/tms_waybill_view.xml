@@ -31,7 +31,6 @@
                     <header>
                         <button icon="fa-times" name="action_cancel" states="draft,approved,confirmed" string="Cancel" type="object"/>
                         <button icon="fa-reply" name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
-                        <button class="oe_highlight" name="waybill_print" states="confirmed" string="Print" type="object"/>
                         <button class="oe_highlight" icon="fa-thumbs-up" name="action_approve" states="draft" string="Approve" type="object"/>
                         <button class="oe_highlight" icon="fa-check-square-o" name="action_confirm" states="approved" string="Confirm" type="object"/>
                         <field name="state" statusbar_visible="draft,approved,confirmed" widget="statusbar"/>
@@ -268,6 +267,6 @@
             <field name="key">action</field>
             <field name="model">tms.waybill</field>
         </record>
-        <menuitem action="action_tms_waybill_form" id="menu_tms_waybill" parent="menu_tms_travels" sequence="2"/>
+        <menuitem action="action_tms_waybill_form" id="menu_tms_waybill" parent="menu_tms_travels" sequence="2" groups="tms.group_traffic,tms.group_expenses,tms.group_supervisor_traffic"/>
     </data>
 </odoo>
