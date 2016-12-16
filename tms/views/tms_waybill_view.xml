@@ -267,6 +267,6 @@
             <field name="key">action</field>
             <field name="model">tms.waybill</field>
         </record>
-        <menuitem action="action_tms_waybill_form" id="menu_tms_waybill" parent="menu_tms_travels" sequence="2" groups="tms.group_traffic,tms.group_expenses,tms.group_supervisor_traffic"/>
+        <menuitem action="action_tms_waybill_form" id="menu_tms_waybill" parent="menu_tms_travels" sequence="2" groups="tms.group_traffic,tms.group_expenses,tms.group_supervisor_traffic,base.group_system"/>
     </data>
 </odoo>

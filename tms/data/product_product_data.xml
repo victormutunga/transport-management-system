@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data>
+    <data noupdate="1">
         <record id="product_freight" model="product.product">
             <field name="name">Freight</field>
             <field name="type">service</field>

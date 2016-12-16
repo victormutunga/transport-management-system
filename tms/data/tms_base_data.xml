@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data>
+    <data noupdate="1">
         <record model="operating.unit" id="tms_operating_unit_1">
             <field name="name">TMS</field>
             <field name="code">TMS</field>
