@@ -60,7 +60,7 @@
                 </div>
             </t>
         </template>
-        <record id="paperformat_94_150" model="report.paperformat">
+        <record id="paperformat_94_152" model="report.paperformat">
             <field name="name">US Letter</field>
             <field eval="True" name="default"/>
             <field name="format">Letter</field>
@@ -84,7 +84,7 @@
         </template>
         <report file="tms.notes_report" id="print_notes_report" model="tms.travel" name="tms.notes_report" report_type="qweb-pdf" string="Letter of Instructions"/>
         <record id="print_notes_report" model="ir.actions.report.xml">
-            <field name="paperformat_id" ref="paperformat_94_150"/>
+            <field name="paperformat_id" ref="paperformat_94_152"/>
         </record>
     </data>
 </odoo>

@@ -1,9 +1,0 @@
-access_res_partner,access_res_partner,base.model_res_partner,tms.group_traffic,1,0,0,0
-access_tms_unit_kit,access_tms_unit_kit,model_tms_unit_kit,tms.group_traffic,1,0,0,0
-access_tms_route,access_tms_route,model_tms_route,tms.group_traffic,1,0,0,0
-access_tms_place,access_tms_place,model_tms_place,tms.group_traffic,1,0,0,0
-access_hr_employee,access_hr_employee,model_hr_employee,tms.group_traffic,1,0,0,0
-access_tms_advance,access_tms_advance,model_tms_advance,tms.group_traffic,1,0,0,0
-access_tms_travel,access_tms_travel,model_tms_travel,tms.group_traffic,1,0,0,0
-access_tms_pediments,access_tms_pediments,pediments.model_tms_pediments,tms.group_traffic,1,0,0,0
-access_tms_expense,access_tms_expense,model_tms_expense,tms.group_traffic,1,0,0,0

@@ -639,20 +639,12 @@ class TmsExpense(models.Model):
                             advance.name))
                     else:
                         if advance.auto_expense:
-                            product_id = self.env['product.product'].search(
-                                [('tms_product_category',
-                                    '=', 'real_expense')])
-                            if not product_id:
-                                raise ValidationError(_(
-                                    'Oops! You must create a product for the'
-                                    ' Real Expense with the Real Expense TMS '
-                                    'product_category'))
                             rec.expense_line_ids.create({
                                 'name': _("Advance: ") + str(advance.name),
                                 'travel_id': travel.id,
                                 'expense_id': rec.id,
                                 'line_type': "real_expense",
-                                'product_id': product_id.id,
+                                'product_id': advance.product_id.id,
                                 'product_qty': 1.0,
                                 'unit_price': advance.amount,
                                 'control': True
@@ -669,11 +661,6 @@ class TmsExpense(models.Model):
                             fuel_log.name +
                             '\n State: ' + fuel_log.state))
                     else:
-                        if not fuel_log.product_id:
-                            raise ValidationError(_(
-                                'Oops! You must create a product for the'
-                                ' Fuel Vouchers with the fuel TMS '
-                                'Product Category'))
                         rec.expense_line_ids.create({
                             'name': _("Fuel voucher: ") + str(fuel_log.name),
                             'travel_id': travel.id,

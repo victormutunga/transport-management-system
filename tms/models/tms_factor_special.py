@@ -3,10 +3,7 @@
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-import time
-
 from openerp import fields, models
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
 class TmsFactorSpecial(models.Model):
@@ -17,7 +14,7 @@ class TmsFactorSpecial(models.Model):
     name = fields.Char('Special Name', size=200, required=True)
     active = fields.Boolean('Active', default=True)
     date = fields.Date('Date', required=True,
-                       default=time.strftime(DEFAULT_SERVER_DATE_FORMAT))
+                       default=fields.Date.today())
     description = fields.Text('Description')
     python_code = fields.Text('Python Code', required=True)
     factor_ids = fields.One2many('tms.factor', 'factor_special_id', 'Factor')

@@ -13,18 +13,15 @@ class TmsAdvance(models.Model):
     _order = "name desc, date desc"
 
     operating_unit_id = fields.Many2one(
-        'operating.unit', string='Operating Unit', required=True
-    )
-    name = fields.Char(
-        'Advance Number',
-    )
+        'operating.unit', string='Operating Unit', required=True)
+    name = fields.Char(string='Advance Number')
     state = fields.Selection(
         [('draft', 'Draft'),
          ('approved', 'Approved'),
          ('confirmed', 'Confirmed'),
          ('closed', 'Closed'),
          ('cancel', 'Cancelled')],
-        'State',
+        string='State',
         readonly=True,
         default='draft')
     date = fields.Date(
@@ -34,18 +31,15 @@ class TmsAdvance(models.Model):
     travel_id = fields.Many2one(
         'tms.travel',
         string='Travel',
-        required=True
-    )
+        required=True)
     unit_id = fields.Many2one(
         'fleet.vehicle',
         string='Unit',
-        related='travel_id.unit_id',
-    )
+        related='travel_id.unit_id')
     employee_id = fields.Many2one(
         'hr.employee',
         string='Driver',
-        related='travel_id.employee_id',
-    )
+        related='travel_id.employee_id')
     amount = fields.Monetary(required=True)
     notes = fields.Text()
     move_id = fields.Many2one(
@@ -55,8 +49,7 @@ class TmsAdvance(models.Model):
         readonly=True)
     paid = fields.Boolean(
         compute='_compute_paid',
-        readonly=True
-    )
+        readonly=True)
     payment_id = fields.Many2one(
         'account.payment',
         string="Payment Reference",
@@ -70,9 +63,10 @@ class TmsAdvance(models.Model):
         help="Check this if you want this product and amount to be "
         "automatically created when Travel Expense Record is created.")
     expense_id = fields.Many2one(
-        'tms.expense',
-        'Expense Record',
-        readonly=True)
+        'tms.expense', 'Expense Record', readonly=True)
+    product_id = fields.Many2one(
+        'product.product', string='Product', required=True,
+        domain=[('tms_product_category', '=', 'real_expense')])
 
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'Advance number must be unique !'),
