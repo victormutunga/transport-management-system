@@ -71,7 +71,9 @@ class TmsExpenseLine(models.Model):
         help="Check this if you want to create Fuel Vouchers for "
         "this line")
     is_invoice = fields.Boolean(string='Is Invoice?')
-    partner_id = fields.Many2one('res.partner', string='Supplier')
+    partner_id = fields.Many2one(
+        'res.partner', string='Supplier',
+        domain=[('company_type', '=', 'company')])
     invoice_date = fields.Date('Date')
     invoice_number = fields.Char()
     invoice_id = fields.Many2one(
