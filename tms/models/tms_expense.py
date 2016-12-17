@@ -728,7 +728,7 @@ class TmsExpense(models.Model):
             'origin': line.expense_id.name,
             'type': 'in_invoice',
             'journal_id': journal_id,
-            'reference': line.expense_id.name,
+            'reference': line.invoice_number,
             'account_id': partner_account,
             'partner_id': line.partner_id.id,
             'invoice_line_ids': [invoice_line],
