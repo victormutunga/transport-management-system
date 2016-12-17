@@ -31,7 +31,7 @@
                             <group>
                                 <field name="date" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                                 <field name="inv_ref" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
-                                <field name="currency_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                <field name="currency_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" groups="base.group_multi_currency"/>
                             </group>
                         </group>
                         <group>
