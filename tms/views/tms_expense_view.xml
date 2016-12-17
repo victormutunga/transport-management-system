@@ -51,7 +51,7 @@
                             <field name="operating_unit_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                             <field name="date" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                             <field name="unit_id" domain="[('operating_unit_id', '=', operating_unit_id),('fleet_type', '=', 'tractor')]" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
-                            <field name="employee_id" domain="[('operating_unit_id','=',operating_unit_id)]" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                            <field name="employee_id" domain="[('operating_unit_id','=',operating_unit_id),('driver', '=', True)]" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                             <field name="currency_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                         </group>
                         <notebook>

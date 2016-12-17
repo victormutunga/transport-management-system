@@ -17,14 +17,12 @@ class TmsExpense(models.Model):
     operating_unit_id = fields.Many2one(
         'operating.unit', string='Operating Unit', required=True)
     employee_id = fields.Many2one(
-        'hr.employee', 'Driver', required=True,
-        domain=[('driver', '=', True)])
+        'hr.employee', 'Driver', required=True)
     travel_ids = fields.Many2many(
         'tms.travel',
         string='Travels')
     unit_id = fields.Many2one(
-        'fleet.vehicle', 'Unit', required=True,
-        domain=[('fleet_type', '=', 'tractor')])
+        'fleet.vehicle', 'Unit', required=True)
     currency_id = fields.Many2one(
         'res.currency', 'Currency', required=True,
         default=lambda self: self.env.user.company_id.currency_id)

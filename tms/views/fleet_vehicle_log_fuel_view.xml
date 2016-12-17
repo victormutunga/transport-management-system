@@ -26,12 +26,12 @@
                                 <field name="vendor_id" domain="[('company_type', '=', 'company'), ('supplier', '=', True)]" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" context="{'default_supplier': True, 'default_customer':False}"/>
                                 <field name="no_travel" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                                 <field name="travel_id" attrs="{'invisible':[('no_travel', '=', True)], 'readonly':[('state','in',('confirmed','cancel','closed'))]}" domain="[('state','!=','cancel'),('state','!=','closed'),('operating_unit_id', '=', operating_unit_id)]"/>
-                                <field name="vehicle_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                <field name="vehicle_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" domain="[('operating_unit_id', '=', operating_unit_id)]"/>
                             </group>
                             <group>
                                 <field name="date" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                                 <field name="inv_ref" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
-                                <field name="currency_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                <field name="currency_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" groups="base.group_multi_currency"/>
                             </group>
                         </group>
                         <group>
