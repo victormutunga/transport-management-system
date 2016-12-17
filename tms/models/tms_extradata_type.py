@@ -25,9 +25,9 @@ class TmsExtradataType(models.Model):
     )
 
     @api.model
-    def default_get(self, fields):
+    def default_get(self, field):
         res = super(TmsExtradataType, self).default_get(
-            fields)
+            field)
         active_model = self.env.context['active_model']
         if active_model == 'fleet.vehicle':
             res['apply_on'] = 'unit'

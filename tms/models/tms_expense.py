@@ -17,14 +17,12 @@ class TmsExpense(models.Model):
     operating_unit_id = fields.Many2one(
         'operating.unit', string='Operating Unit', required=True)
     employee_id = fields.Many2one(
-        'hr.employee', 'Driver', required=True,
-        domain=[('driver', '=', True)])
+        'hr.employee', 'Driver', required=True)
     travel_ids = fields.Many2many(
         'tms.travel',
         string='Travels')
     unit_id = fields.Many2one(
-        'fleet.vehicle', 'Unit', required=True,
-        domain=[('fleet_type', '=', 'tractor')])
+        'fleet.vehicle', 'Unit', required=True)
     currency_id = fields.Many2one(
         'res.currency', 'Currency', required=True,
         default=lambda self: self.env.user.company_id.currency_id)
@@ -392,20 +390,20 @@ class TmsExpense(models.Model):
     def action_confirm(self):
         for rec in self:
             move_obj = self.env['account.move']
-            expense_journal_id = rec.operating_unit_id.expense_journal_id.id
+            journal_id = rec.operating_unit_id.expense_journal_id.id
             advance_account_id = (
                 rec.employee_id.
                 tms_advance_account_id.id
             )
-            negative_balance_account = (
+            negative_account = (
                 rec.employee_id.
-                tms_expense_negative_balance_account_id.id
+                tms_expense_negative_account_id.id
             )
             driver_account_payable = (
                 rec.employee_id.
                 address_home_id.property_account_payable_id.id
             )
-            if not expense_journal_id:
+            if not journal_id:
                 raise ValidationError(
                     _('Warning! The expense does not have a journal'
                       ' assigned. \nCheck if you already set the '
@@ -430,7 +428,7 @@ class TmsExpense(models.Model):
                     'narration': rec.name,
                     'debit': 0.0,
                     'credit': rec.amount_advance,
-                    'journal_id': negative_balance_account,
+                    'journal_id': journal_id,
                     'partner_id': rec.employee_id.address_home_id.id,
                     'operating_unit_id': rec.operating_unit_id.id,
                 })
@@ -442,7 +440,7 @@ class TmsExpense(models.Model):
                 # made up expenses
                 if line.line_type not in ('madeup_expense', 'fuel'):
                     product_account = (
-                        negative_balance_account
+                        negative_account
                         if (line.product_id.
                             tms_product_category == 'negative_balance')
                         else (line.product_id.
@@ -480,7 +478,7 @@ class TmsExpense(models.Model):
                             'credit': (
                                 line.price_total if line.price_total <= 0.0
                                 else 0.0),
-                            'journal_id': expense_journal_id,
+                            'journal_id': journal_id,
                             'partner_id': line.partner_id.id,
                             'operating_unit_id': rec.operating_unit_id.id,
                         })
@@ -500,7 +498,7 @@ class TmsExpense(models.Model):
                                 line.price_subtotal * - 1.0
                                 if line.price_subtotal <= 0.0
                                 else 0.0),
-                            'journal_id': expense_journal_id,
+                            'journal_id': journal_id,
                             'partner_id': rec.employee_id.address_home_id.id,
                             'operating_unit_id': rec.operating_unit_id.id,
                         })
@@ -527,7 +525,7 @@ class TmsExpense(models.Model):
                                 'credit': (
                                     tax_amount if tax_amount <= 0.0
                                     else 0.0),
-                                'journal_id': expense_journal_id,
+                                'journal_id': journal_id,
                                 'partner_id': (
                                     rec.employee_id.address_home_id.id),
                                 'operating_unit_id': rec.operating_unit_id.id,
@@ -539,10 +537,10 @@ class TmsExpense(models.Model):
                 move_line = (0, 0, {
                     'name': _('Negative Balance'),
                     'ref': rec.name,
-                    'account_id': negative_balance_account,
+                    'account_id': negative_account,
                     'debit': rec.amount_balance * -1.0,
                     'credit': 0.0,
-                    'journal_id': expense_journal_id,
+                    'journal_id': journal_id,
                     'partner_id':
                     rec.employee_id.address_home_id.id,
                     'operating_unit_id': rec.operating_unit_id.id,
@@ -555,7 +553,7 @@ class TmsExpense(models.Model):
                     'account_id': driver_account_payable,
                     'debit': 0.0,
                     'credit': rec.amount_balance,
-                    'journal_id': expense_journal_id,
+                    'journal_id': journal_id,
                     'partner_id':
                     rec.employee_id.address_home_id.id,
                     'operating_unit_id': rec.operating_unit_id.id,
@@ -563,7 +561,7 @@ class TmsExpense(models.Model):
                 move_lines.append(move_line)
             move = {
                 'date': fields.Date.today(),
-                'journal_id': expense_journal_id,
+                'journal_id': journal_id,
                 'name': rec.name,
                 'line_ids': [line for line in move_lines],
                 'partner_id': self.env.user.company_id.id,
@@ -574,19 +572,14 @@ class TmsExpense(models.Model):
                 raise ValidationError(
                     _('An error has occurred in the creation'
                         ' of the accounting move. '))
-            else:
-                # Here we reconcile the invoices with the corresponding
-                # move line
-                self.reconcile_supplier_invoices(invoices, move_id)
-                rec.write(
-                    {
-                        'move_id': move_id.id,
-                        'state': 'confirmed'
-                    })
-            for advance in rec.advance_ids:
-                advance.state = 'closed'
-            for fuel_log in rec.fuel_log_ids:
-                fuel_log.state = 'closed'
+            # Here we reconcile the invoices with the corresponding
+            # move line
+            self.reconcile_supplier_invoices(invoices, move_id)
+            rec.write(
+                {
+                    'move_id': move_id.id,
+                    'state': 'confirmed'
+                })
             message = _('<b>Expense Confirmed.</b></br><ul>'
                         '<li><b>Confirmed by: </b>%s</li>'
                         '<li><b>Confirmed at: </b>%s</li>'
@@ -733,7 +726,7 @@ class TmsExpense(models.Model):
             'origin': line.expense_id.name,
             'type': 'in_invoice',
             'journal_id': journal_id,
-            'reference': line.expense_id.name,
+            'reference': line.invoice_number,
             'account_id': partner_account,
             'partner_id': line.partner_id.id,
             'invoice_line_ids': [invoice_line],
