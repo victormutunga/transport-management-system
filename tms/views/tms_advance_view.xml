@@ -68,12 +68,12 @@
                             <group>
                                 <field name="operating_unit_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                                 <field name="travel_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" domain="[('state','!=','cancel'),('state','!=','closed'),('operating_unit_id', '=', operating_unit_id)]" />
-                                <field name="unit_id" readonly="1"/>
-                                <field name="employee_id" readonly="1"/>
+                                <field name="unit_id" readonly="1" domain="[('operating_unit_id', '=', operating_unit_id)]"/>
+                                <field name="employee_id" readonly="1" domain="[('operating_unit_id', '=', operating_unit_id)]"/>
                             </group>
                             <group>
                                 <field name="date" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
-                                <field name="currency_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                <field name="currency_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" groups="base.group_multi_currency"/>
                                 <field name="auto_expense" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" />
                             </group>
                         </group>

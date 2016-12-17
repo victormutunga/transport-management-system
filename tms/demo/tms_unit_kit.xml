@@ -11,6 +11,7 @@
             <field name="date_start" eval="datetime.now()"/>
             <field name="date_end" eval="datetime.now()+timedelta(days=30)"/>
             <field name="active" eval="True"/>
+            <field name="operating_unit_id" ref="tms.tms_operating_unit_1"/>
         </record>
         <record id="tms_unit_kit_02" model="tms.unit.kit">
             <field name="name">Kit2</field>
@@ -22,6 +23,7 @@
             <field name="date_start" eval="datetime.now()"/>
             <field name="date_end" eval="datetime.now()+timedelta(days=5)"/>
             <field name="active" eval="True"/>
+            <field name="operating_unit_id" ref="tms.tms_operating_unit_1"/>
         </record>
     </data>
 </odoo>

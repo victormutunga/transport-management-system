@@ -137,6 +137,8 @@ class TmsWizardInvoice(models.TransientModel):
             record.invoice_id = invoice_id.id
         return {
             'name': 'Customer Invoice',
+            'view_id': self.env.ref(
+                'account.invoice_form').id,
             'view_type': 'form',
             'view_mode': 'form',
             'target': 'current',

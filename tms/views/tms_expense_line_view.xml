@@ -31,13 +31,13 @@
                     <sheet>
                         <h2>Travel Expenses Line </h2>
                         <group>
-                            <field domain="[('expense_id', '=', expense_id)]" name="travel_id"/>
+                            <field name="travel_id" domain="[('expense_id', '=', expense_id)]"/>
                             <field name="line_type" required='1'/>
                             <field name="product_id" required='1' domain="[('tms_product_category', '=', line_type)]"/>
                             <field name="name"/>
                             <field name="product_uom_id" required='1'/>
                             <field name="product_qty" required='1'/>
-                            <field invisible="1" name="expense_id"/>
+                            <field name="expense_id" invisible="1"/>
                             <field name='unit_price' required='1'/>
                             <field name='tax_ids' widget='many2many_tags' attrs="{'invisible':[('line_type','in', ['salary_discount', 'salary', 'salary_retention'])]}"/>
                             <field name="price_subtotal" required="1"/>
@@ -45,9 +45,10 @@
                             <field name="price_total" required='1'/>
                         </group>
                         <group string="Supplier Details">
-                            <field attrs="{'invisible':[('line_type','!=','real_expense')]}" name="is_invoice"/>
-                            <field attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}" name="partner_id"/>
-                            <field attrs="{'invisible':['|', ('is_invoice', '=', False), ('invoice_id', '=', False)]}" domain="[('partner_id', '=', partner_id),('state', 'not in', ['paid'])]" name="invoice_id" readonly="1"/>
+                            <field name="is_invoice" attrs="{'invisible':[('line_type','!=','real_expense')]}"/>
+                            <field name="partner_id" attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}"/>
+                            <field name="invoice_number" attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}"/>
+                            <field name="invoice_id" attrs="{'invisible':['|', ('is_invoice', '=', False), ('invoice_id', '=', False)]}" domain="[('partner_id', '=', partner_id),('state', 'not in', ['paid'])]" readonly="1"/>
                         </group>
                     </sheet>
                 </form>
