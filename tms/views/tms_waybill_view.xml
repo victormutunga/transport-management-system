@@ -57,7 +57,7 @@
                             <page string="Lines">
                                 <group>
                                     <separator coslpan="4" string="Travels"/>
-                                    <field attrs="{'readonly':[('state','in',('confirmed'))]}" colspan="4" domain="[('state','not in',('cancel','closed'))]" name="travel_ids" nolabel="1"/>
+                                    <field attrs="{'readonly':[('state','in',('confirmed'))]}" colspan="4" domain="[('state','not in',('cancel','closed')),('operating_unit_id', '=', operating_unit_id)]" name="travel_ids" nolabel="1"/>
                                     <separator coslpan="4" string="Waybill Factor Client"/>
                                     <field attrs="{'readonly':[('state','in',('confirmed'))]}" colspan="4" context="{'default_category': 'customer'}" name="customer_factor_ids" nolabel="1"/>
                                     <separator coslpan="4" string="Transportable"/>
