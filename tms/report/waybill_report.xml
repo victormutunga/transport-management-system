@@ -4,9 +4,7 @@
         <template id="header_super">
             <div class="row">
                 <p class="text-center">
-                    <span t-field="doc.company_id.name"/>
-                    <br/>
-                    <span t-field="doc.company_id.email"/>
+                    <span>SERVICIO PUBLICO FEDERAL DE CARGA EN GENERAL Y ESPECIALIZADO</span>
                 </p>
             </div>
             <br/>
@@ -23,10 +21,12 @@
                     <div class="panel" style="border-color: #333 !important;">
                         <div class="panel-heading" t-att-style="Panel_Header">
                             <p style="color:#E0FFFF !important; text-align:center; font-size:12px; font-weight:bold; color:#333 !important; ">CARTA PORTE -TRASLADO/BILL OF LADING: </p>
+                            <span t-field="doc.name"/>
                         </div>
                         <div class="panel-body" t-att-style="Panel">
                             <p style="font-size:10px ">
                                 <strong>DATE:</strong>
+                                <span t-field="doc.date_order"/>
                             </p>
                         </div>
                     </div>
@@ -50,9 +50,15 @@
                             </div>
                             <div class="col-xs-3">
                                 <strong>NATIONAL TRAFFIC</strong>
+                                <br/>
+                                <span>logistica@superexpressgonzalez.com
+                                    <br/>
+                                    trafico@superexpressgonzalez.com</span>
                             </div>
                             <div class="col-xs-3">
                                 <strong>INTERNATIONAL TRAFFIC</strong>
+                                <br/>
+                                <span>teatelogistics@superexpressgonzalez.com</span>
                             </div>
                         </div>
                         <br/>
@@ -112,7 +118,16 @@
                                                 <span t-field="line.transportable_id.name"/>
                                             </td>
                                             <td>
-                                                <span t-esc="line.name"/>
+                                                <t t-set="extradata" t-value="doc.waybill_extradata"/>
+                                                <t t-if="extradata">
+                                                    <t t-as="extra" t-foreach="extradata">
+                                                        <span t-field="extra.type_id.name"/>: 
+                                                        <span t-field="extra.value_extra"/><br/>
+                                                    </t>
+                                                </t>
+                                                <t t-if="not extradata">
+                                                    <span t-esc="line.name"/>
+                                                </t>
                                             </td>
                                             <td>
                                                 <span t-esc="line.quantity"/>
@@ -220,11 +235,13 @@
                                             <span>CARRO/TRUCKS: </span>
                                             <span t-field="unit.unit_id.name"/>/
                                             
+                                            
                                             <span t-field="unit.unit_id.license_plate"/>
                                             <br/>
                                             <span>REMOLQUE/TRAILER: </span>
                                             <span t-field="unit.trailer1_id.name"/>
                                             /
+                                            
                                             
                                             <span t-field="unit.trailer1_id.license_plate"/>
                                             <br/>
