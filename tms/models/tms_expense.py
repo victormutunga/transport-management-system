@@ -766,3 +766,19 @@ class TmsExpense(models.Model):
             reconcile_ids = move_line_obj.browse(move_ids)
             reconcile_ids.reconcile()
         return True
+
+    @api.onchange('operating_unit_id', 'unit_id')
+    def _onchange_operating_unit_id(self):
+        travels = self.env['tms.travel'].search([
+            ('operating_unit_id', '=', self.operating_unit_id.id),
+            ('state', '=', 'done'),
+            ('unit_id', '=', self.unit_id.id)])
+        self.employee_id = False
+        return {
+            'domain': {
+                'employee_id': [
+                    ('id', 'in', [x.employee_id.id for x in travels]),
+                    ('driver', '=', True)
+                ]
+            }
+        }
