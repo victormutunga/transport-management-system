@@ -178,13 +178,13 @@ class TmsExpense(models.Model):
                     if len(travel.waybill_ids.driver_factor_ids) > 0:
                         for factor in waybill.driver_factor_ids:
                             driver_salary += factor.get_amount(
-                                    weight=waybill.product_weight,
-                                    distance=waybill.distance_route,
-                                    distance_real=waybill.distance_real,
-                                    qty=waybill.product_qty,
-                                    volume=waybill.product_volume,
-                                    income=waybill.amount_total,
-                                    employee=rec.employee_id)
+                                weight=waybill.product_weight,
+                                distance=waybill.distance_route,
+                                distance_real=waybill.distance_real,
+                                qty=waybill.product_qty,
+                                volume=waybill.product_volume,
+                                income=waybill.amount_total,
+                                employee=rec.employee_id)
                     elif len(travel.driver_factor_ids) > 0:
                         for factor in travel.driver_factor_ids:
                             driver_salary += factor.get_amount(
