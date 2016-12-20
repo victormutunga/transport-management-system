@@ -176,16 +176,15 @@ class TmsExpense(models.Model):
             for travel in rec.travel_ids:
                 for waybill in travel.waybill_ids:
                     if len(travel.waybill_ids.driver_factor_ids) > 0:
-                        for waybill_factor in (
-                                waybill.driver_factor_ids):
-                            driver_salary += (
-                                waybill_factor.get_amount(
-                                    weight=waybill.product_weight,
-                                    distance=waybill.distance_route,
-                                    distance_real=waybill.distance_real,
-                                    qty=waybill.product_qty,
-                                    volume=waybill.product_volume,
-                                    income=waybill.amount_total))
+                        for factor in waybill.driver_factor_ids:
+                            driver_salary += factor.get_amount(
+                                weight=waybill.product_weight,
+                                distance=waybill.distance_route,
+                                distance_real=waybill.distance_real,
+                                qty=waybill.product_qty,
+                                volume=waybill.product_volume,
+                                income=waybill.amount_total,
+                                employee=rec.employee_id)
                     elif len(travel.driver_factor_ids) > 0:
                         for factor in travel.driver_factor_ids:
                             driver_salary += factor.get_amount(
@@ -194,7 +193,8 @@ class TmsExpense(models.Model):
                                 distance_real=waybill.distance_real,
                                 qty=waybill.product_qty,
                                 volume=waybill.product_volume,
-                                income=waybill.amount_total)
+                                income=waybill.amount_total,
+                                employee=rec.employee_id)
                     else:
                         raise ValidationError(_(
                             'Oops! You have not defined a Driver factor in '
@@ -766,3 +766,19 @@ class TmsExpense(models.Model):
             reconcile_ids = move_line_obj.browse(move_ids)
             reconcile_ids.reconcile()
         return True
+
+    @api.onchange('operating_unit_id', 'unit_id')
+    def _onchange_operating_unit_id(self):
+        travels = self.env['tms.travel'].search([
+            ('operating_unit_id', '=', self.operating_unit_id.id),
+            ('state', '=', 'done'),
+            ('unit_id', '=', self.unit_id.id)])
+        self.employee_id = False
+        return {
+            'domain': {
+                'employee_id': [
+                    ('id', 'in', [x.employee_id.id for x in travels]),
+                    ('driver', '=', True)
+                ]
+            }
+        }

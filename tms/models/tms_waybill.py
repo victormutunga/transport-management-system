@@ -318,7 +318,7 @@ class TmsWaybill(models.Model):
                     waybill.distance_real = distance_real
                     if factor.factor_type != control and (
                         factor.factor_type not in [
-                            'travel', 'percent', 'qty', 'special']):
+                            'travel', 'percent', 'qty', 'percent_driver']):
                         raise exceptions.ValidationError(
                             _('Check the type of customer factor for the '
                               'product to be transported.'))
