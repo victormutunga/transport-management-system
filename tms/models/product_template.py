@@ -34,7 +34,6 @@ class ProductTemplate(models.Model):
                 ['tolls', 'Highway Tolls'],
                 ['made_up_expense', 'Made up Expense'],
                 ['salary', 'Salary'],
-                ['salary_discount', 'Salary Discount'],
                 ['negative_balance', 'Negative Balance'],
                 ['fuel', 'Fuel'],
                 ['indirect_expense', 'Indirect Expense']
