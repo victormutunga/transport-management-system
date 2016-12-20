@@ -176,16 +176,15 @@ class TmsExpense(models.Model):
             for travel in rec.travel_ids:
                 for waybill in travel.waybill_ids:
                     if len(travel.waybill_ids.driver_factor_ids) > 0:
-                        for waybill_factor in (
-                                waybill.driver_factor_ids):
-                            driver_salary += (
-                                waybill_factor.get_amount(
+                        for factor in waybill.driver_factor_ids:
+                            driver_salary += factor.get_amount(
                                     weight=waybill.product_weight,
                                     distance=waybill.distance_route,
                                     distance_real=waybill.distance_real,
                                     qty=waybill.product_qty,
                                     volume=waybill.product_volume,
-                                    income=waybill.amount_total))
+                                    income=waybill.amount_total,
+                                    employee=rec.employee_id)
                     elif len(travel.driver_factor_ids) > 0:
                         for factor in travel.driver_factor_ids:
                             driver_salary += factor.get_amount(
@@ -194,7 +193,8 @@ class TmsExpense(models.Model):
                                 distance_real=waybill.distance_real,
                                 qty=waybill.product_qty,
                                 volume=waybill.product_volume,
-                                income=waybill.amount_total)
+                                income=waybill.amount_total,
+                                employee=rec.employee_id)
                     else:
                         raise ValidationError(_(
                             'Oops! You have not defined a Driver factor in '

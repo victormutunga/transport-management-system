@@ -53,7 +53,6 @@
         'views/account_invoice_view.xml',
         'views/tms_route_tollstation_view.xml',
         'views/fleet_vehicle_engine_view.xml',
-        'views/tms_factor_special_view.xml',
         'views/tms_route_note_view.xml',
         'views/tms_custom_house_view.xml',
         'views/tms_custom_view.xml',

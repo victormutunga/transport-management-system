@@ -3,8 +3,6 @@
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from __future__ import division
-
 from openerp import _, api, fields, models
 from openerp.exceptions import ValidationError
 
@@ -24,7 +22,6 @@ class TmsFactor(models.Model):
         ('driver', 'Driver'),
         ('customer', 'Customer'),
         ('supplier', 'Supplier')], 'Type', required=True)
-    factor_special_id = fields.Many2one('tms.factor.special', 'Special')
     factor_type = fields.Selection([
         ('distance', 'Distance Route (Km/Mi)'),
         ('distance_real', 'Distance Real (Km/Mi)'),
@@ -33,13 +30,13 @@ class TmsFactor(models.Model):
         ('qty', 'Quantity'),
         ('volume', 'Volume'),
         ('percent', 'Income Percent'),
-        ('special', 'Special')], string='Factor Type', required=True,
+        ('percent_driver', 'Income Percent per Driver')], string='Factor Type',
+        required=True,
         help='For next options you have to type Ranges or Fixed Amount\n - '
              'Distance Route (Km/mi)\n - Distance Real (Km/Mi)\n - Weight\n'
              ' - Quantity\n - Volume\nFor next option you only have to type'
              ' Fixed Amount:\n - Travel\nFor next option you only have to type'
-             ' Factor like 10.5 for 10.50%:\n - Income Percent\nFor next '
-             ' option you only have to type Special Python Code:\n - Special')
+             ' Factor like 10.5 for 10.50%:\n - Income Percent')
     range_start = fields.Float()
     range_end = fields.Float()
     factor = fields.Float()
@@ -62,7 +59,7 @@ class TmsFactor(models.Model):
             'qty': _('Quantity'),
             'volume': _('Volume'),
             'percent': _('Income Percent'),
-            'special': _('Special')
+            'percent_driver': _('Income Percent per Driver'),
         }
         if not self.factor_type:
             self.name = 'name'
@@ -71,7 +68,7 @@ class TmsFactor(models.Model):
 
     @api.multi
     def get_amount(self, weight=0.0, distance=0.0, distance_real=0.0, qty=0.0,
-                   volume=0.0, income=0.0):
+                   volume=0.0, income=0.0, employee=False):
         factor_list = {'weight': weight, 'distance': distance,
                        'distance_real': distance_real, 'qty': qty,
                        'volume': volume}
@@ -81,14 +78,20 @@ class TmsFactor(models.Model):
                 amount += rec.fixed_amount
             elif rec.factor_type == 'percent':
                 amount += income * (rec.factor / 100)
-            # elif rec.factor_type == 'special':
-            #     exec(rec.factor_special_id.python_code)
-            for key, value in factor_list.items():
-                if rec.factor_type == key:
-                    if rec.range_start <= value <= rec.range_end:
-                        amount += rec.factor * value
-                    elif rec.range_start == 0 and rec.range_end == 0:
-                        amount += rec.factor * value
+            elif rec.factor_type == 'percent_driver':
+                if employee:
+                    amount += income * (employee.income_percentage / 100)
+                else:
+                    raise ValidationError(
+                        _('Invalid parameter you can use this factor only with'
+                          ' drivers'))
+            else:
+                for key, value in factor_list.items():
+                    if rec.factor_type == key:
+                        if rec.range_start <= value <= rec.range_end:
+                            amount += rec.factor * value
+                        elif rec.range_start == 0 and rec.range_end == 0:
+                            amount += rec.factor * value
             if rec.mixed:
                 amount += rec.fixed_amount
         if amount == 0.0:

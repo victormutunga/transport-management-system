@@ -25,14 +25,13 @@ class ProductTemplate(models.Model):
         string='TMS Product Category')
 
     @api.constrains('tms_product_category')
-    def departure_arrival(self):
+    def unique_product_per_category(self):
         for rec in self:
             categorys = [
                 ['freight', 'Freight (Waybill)'],
                 ['move', 'Moves (Waybill)'],
                 ['insurance', 'Insurance'],
                 ['tolls', 'Highway Tolls'],
-                ['other', 'Other'],
                 ['made_up_expense', 'Made up Expense'],
                 ['salary', 'Salary'],
                 ['salary_discount', 'Salary Discount'],
