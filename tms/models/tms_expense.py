@@ -670,6 +670,10 @@ class TmsExpense(models.Model):
         for rec in self:
             driver_salary = 0.0
             for waybill in travel.waybill_ids:
+                income = 0.0
+                for line in waybill.waybill_line_ids:
+                    if line.product_id.apply_for_salary:
+                        income += line.price_subtotal
                 if len(travel.waybill_ids.driver_factor_ids) > 0:
                     for factor in waybill.driver_factor_ids:
                         driver_salary += factor.get_amount(
@@ -678,7 +682,7 @@ class TmsExpense(models.Model):
                             distance_real=waybill.distance_real,
                             qty=waybill.product_qty,
                             volume=waybill.product_volume,
-                            income=waybill.amount_total,
+                            income=income,
                             employee=rec.employee_id)
                 elif len(travel.driver_factor_ids) > 0:
                     for factor in travel.driver_factor_ids:
@@ -688,7 +692,7 @@ class TmsExpense(models.Model):
                             distance_real=waybill.distance_real,
                             qty=waybill.product_qty,
                             volume=waybill.product_volume,
-                            income=waybill.amount_total,
+                            income=income,
                             employee=rec.employee_id)
                 else:
                     raise ValidationError(_(
