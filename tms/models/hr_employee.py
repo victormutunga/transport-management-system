@@ -31,6 +31,7 @@ class HrEmployee(models.Model):
     driver_license = fields.Char(string="License ID")
     license_type = fields.Char(string="License Type")
     days_to_expire = fields.Integer(compute='_compute_days_to_expire')
+    income_percentage = fields.Float()
     license_valid_from = fields.Date()
     license_expiration = fields.Date()
 

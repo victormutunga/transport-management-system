@@ -30,15 +30,14 @@
                             <field invisible="True" name="category"/>
                             <field name="name"/>
                             <newline/>
-                            <field attrs="{'invisible' :[('factor_type','in',('special','travel'))],'required': [('factor_type','in',('distance','weight','qty','volume','percent'))]}" name="factor"/>
+                            <field attrs="{'invisible' :[('factor_type','in',('percent_driver','travel'))],'required': [('factor_type','in',('distance','weight','qty','volume','percent'))]}" name="factor"/>
                             <newline/>
-                            <field attrs="{'invisible': [('factor_type', 'in', ('special', 'travel', 'percent'))], 'required': [('factor_type', 'in', ('distance','weight','qty','volume'))]}" name="range_start"/>
-                            <field attrs="{'invisible': [('factor_type', 'in', ('special', 'travel', 'percent'))], 'required': [('factor_type', 'in', ('distance', 'weight', 'qty', 'volume'))]}" name="range_end"/>
+                            <field attrs="{'invisible': [('factor_type', 'in', ('percent_driver', 'travel', 'percent'))], 'required': [('factor_type', 'in', ('distance','weight','qty','volume'))]}" name="range_start"/>
+                            <field attrs="{'invisible': [('factor_type', 'in', ('percent_driver', 'travel', 'percent'))], 'required': [('factor_type', 'in', ('distance', 'weight', 'qty', 'volume'))]}" name="range_end"/>
                             <field attrs="{'invisible' :[('factor_type','=','travel')]}" name="mixed"/>
                             <newline/>
                             <field name="fixed_amount" required="1"/>
                             <newline/>
-                            <field attrs="{'invisible':[('factor_type','!=','special')],'required':[('factor_type','=','special')]}" colspan="4" name="factor_special_id"/>
                             <field name="sequence"/>
                             <field colspan="4" name="notes"/>
                         </group>
