@@ -82,7 +82,12 @@ class TmsFactor(models.Model):
                 amount += income * (rec.factor / 100)
             elif rec.factor_type == 'percent_driver':
                 if employee:
-                    amount += income * (employee.income_percentage / 100)
+                    if employee.income_percentage == 0.0:
+                        raise ValidationError(
+                            _('The employee must have a income percentage '
+                              'value'))
+                    else:
+                        amount += income * (employee.income_percentage / 100)
                 else:
                     raise ValidationError(
                         _('Invalid parameter you can use this factor only with'
