@@ -57,7 +57,8 @@
                         <button name="action_cancel" icon="fa-times" states="draft,approved,confirmed" string="Cancel" type="object"/>
                         <button name="action_approve" icon="fa-thumbs-up" class="oe_highlight" states="draft" string="Approve" type="object"/>
                         <button name="action_confirm" icon="fa-check-square-o" class="oe_highlight" states="approved" string="Confirm" type="object"/>
-                        <field name="state" statusbar_visible="draft,approved,confirmed,cancel,closed" widget="statusbar"/>
+                        <button name="action_authorized" icon="fa-key" string="To authorize advance" type="object" groups="base.group_no_one" class="oe_highlight" states="authorized"/>
+                        <field name="state" statusbar_visible="draft,approved,authorized,confirmed,cancel,closed" widget="statusbar"/>
                     </header>
                     <sheet>
                         <h1>

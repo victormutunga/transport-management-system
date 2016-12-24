@@ -17,10 +17,11 @@ class TmsAdvance(models.Model):
     name = fields.Char(string='Advance Number')
     state = fields.Selection(
         [('draft', 'Draft'),
+         ('authorized', 'Waiting for authorization'),
          ('approved', 'Approved'),
          ('confirmed', 'Confirmed'),
          ('closed', 'Closed'),
-         ('cancel', 'Cancelled')],
+         ('cancel', 'Cancelled'), ],
         string='State',
         readonly=True,
         default='draft')
@@ -95,13 +96,22 @@ class TmsAdvance(models.Model):
                 advance.paid = True
 
     @api.multi
+    def action_authorized(self):
+        for rec in self:
+            rec.state = 'approved'
+
+    @api.multi
     def action_approve(self):
-        self.state = 'approved'
-        self.message_post(_(
-            '<strong>Advance approved.</strong><ul>'
-            '<li><strong>Approved by: </strong>%s</li>'
-            '<li><strong>Approved at: </strong>%s</li>'
-            '</ul>') % (self.env.user.name, fields.Datetime.now()))
+        for rec in self:
+            if rec.amount > rec.operating_unit_id.credit_limit:
+                rec.state = "authorized"
+            else:
+                rec.state = 'approved'
+                rec.message_post(_(
+                    '<strong>Advance approved.</strong><ul>'
+                    '<li><strong>Approved by: </strong>%s</li>'
+                    '<li><strong>Approved at: </strong>%s</li>'
+                    '</ul>') % (rec.env.user.name, fields.Datetime.now()))
 
     @api.multi
     def action_confirm(self):

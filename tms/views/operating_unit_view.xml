@@ -7,6 +7,9 @@
             <field name="inherit_id" ref="operating_unit.view_operating_unit_form"/>
             <field name="arch" type="xml">
                 <field name="partner_id" position="after">
+                    <group>
+                        <field name="credit_limit"/>
+                    </group>
                     <group string="Sequences for TMS">
                         <field name="travel_sequence_id"/>
                         <field name="expense_sequence_id"/>
