@@ -46,40 +46,37 @@
             <t t-as="doc" t-foreach="docs">
                 <div class="page">
                     <t t-call="tms.header_super_notes"/>
-                    <table class="table table-condensed" style="margin-top:20%;">
-                        <tbody>
-                            <tr>
-                                <td><label>Notes:</label></td>
-                                <td><span t-field="doc.route_id.note_ids.notes"/></td>
-                            </tr>
-                             <tr>
-                                <td><label>Transito</label></td>
-                                <td><span t-field="doc.route_id.name"/></td>
-                            </tr>
-                             <tr>
-                                <td><label>Rules:</label></td>
-                                <td><span t-field="doc.route_id.note_ids.rules"/></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <t t-set="waybills" t-value="doc.waybill_ids"/>
+                    <t t-set="notes" t-value="doc.route_id.note_ids"/>
+                    <t t-as="partner_waybill" t-foreach="waybills">
+                        <t t-as="partner_note" t-foreach="notes">
+                        <t t-set="partner_way" t-value="partner_waybill.partner_id"/>
+                        <t t-set="partner_not" t-value="partner_note.partner_id"/>
+                        <t t-if="partner_not == partner_way">
+                            <table class="table-condensed">
+                                <tr>
+                                        <td>
+                                            <label>Notes:</label>
+                                        </td>
+                                        <td>
+                                            <span t-field="partner_note.notes"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Rules:</label>
+                                        </td>
+                                        <td>
+                                            <span t-field="partner_note.rules"/>
+                                        </td>
+                                    </tr>
+                            </table>
+                        </t>
+                    </t>
+                    </t>
                 </div>
             </t>
         </template>
-        <record id="paperformat_94_152" model="report.paperformat">
-            <field name="name">US Letter</field>
-            <field eval="True" name="default"/>
-            <field name="format">Letter</field>
-            <field name="page_height">0</field>
-            <field name="page_width">0</field>
-            <field name="orientation">Portrait</field>
-            <field name="margin_top">5</field>
-            <field name="margin_bottom">20</field>
-            <field name="margin_left">7</field>
-            <field name="margin_right">7</field>
-            <field eval="False" name="header_line"/>
-            <field name="header_spacing">35</field>
-            <field name="dpi">90</field>
-        </record>
         <template id="notes_report_translate">
             <t t-call="report.html_container">
                 <t t-as="doc_id" t-foreach="doc_ids">
@@ -88,8 +85,5 @@
             </t>
         </template>
         <report file="tms.notes_report" id="print_notes_report" model="tms.travel" name="tms.notes_report" report_type="qweb-pdf" string="Letter of Instructions"/>
-        <record id="print_notes_report" model="ir.actions.report.xml">
-            <field name="paperformat_id" ref="paperformat_94_152"/>
-        </record>
     </data>
 </odoo>
