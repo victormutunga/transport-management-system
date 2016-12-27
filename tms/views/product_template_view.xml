@@ -9,6 +9,7 @@
                 <field name="invoice_policy" position="after">
                     <group colspan="4" string="">
                         <field name="tms_product_category" groups="base.group_no_one"/>
+                        <field name="apply_for_salary" groups="base.group_no_one" attrs="{'invisible': ['|', ('tms_product_category', 'in', ('real_expense', 'made_up_expense', 'salary', 'salary_retention', 'salary_discount', 'fuel', 'indirect_expense')), ('tms_product_category', '=', False)]}"/>
                     </group>
                 </field>
             </field>

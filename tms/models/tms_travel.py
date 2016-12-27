@@ -120,6 +120,21 @@ class TmsTravel(models.Model):
         ('single', 'Single'),
         ('double', 'Double')],
         compute='_compute_framework')
+    partner_id = fields.Many2one(
+        'res.partner', string='Customer', compute='_compute_partner_id')
+
+    @api.depends('waybill_ids')
+    def _compute_partner_id(self):
+        for rec in self:
+            partner_ids = []
+            for waybill in rec.waybill_ids:
+                partner_ids.append(waybill.partner_id.id)
+            if len(set(partner_ids)) == 1:
+                rec.partner_id = partner_ids[0]
+            else:
+                raise ValidationError(_(
+                    'The waybills of the traver are not from the same '
+                    'customer'))
 
     @api.depends('fuel_efficiency_expected', 'fuel_efficiency_travel')
     def _compute_fuel_efficiency_extraction(self):

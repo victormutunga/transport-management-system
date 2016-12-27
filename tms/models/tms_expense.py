@@ -169,38 +169,13 @@ class TmsExpense(models.Model):
                     line.price_subtotal +
                     line.special_tax_amount)
 
-    @api.depends('travel_ids')
+    @api.depends('expense_line_ids')
     def _compute_amount_salary(self):
         for rec in self:
-            driver_salary = 0.0
-            for travel in rec.travel_ids:
-                for waybill in travel.waybill_ids:
-                    if len(travel.waybill_ids.driver_factor_ids) > 0:
-                        for factor in waybill.driver_factor_ids:
-                            driver_salary += factor.get_amount(
-                                weight=waybill.product_weight,
-                                distance=waybill.distance_route,
-                                distance_real=waybill.distance_real,
-                                qty=waybill.product_qty,
-                                volume=waybill.product_volume,
-                                income=waybill.amount_total,
-                                employee=rec.employee_id)
-                    elif len(travel.driver_factor_ids) > 0:
-                        for factor in travel.driver_factor_ids:
-                            driver_salary += factor.get_amount(
-                                weight=waybill.product_weight,
-                                distance=waybill.distance_route,
-                                distance_real=waybill.distance_real,
-                                qty=waybill.product_qty,
-                                volume=waybill.product_volume,
-                                income=waybill.amount_total,
-                                employee=rec.employee_id)
-                    else:
-                        raise ValidationError(_(
-                            'Oops! You have not defined a Driver factor in '
-                            'the Travel or the Waybill\nTravel: %s' %
-                            travel.name))
-            rec.amount_salary = driver_salary
+            rec.amount_salary = 0.0
+            for line in rec.expense_line_ids:
+                if line.line_type == 'salary':
+                    rec.amount_salary += line.price_total
 
     @api.depends('expense_line_ids')
     def _compute_amount_salary_discount(self):
@@ -686,9 +661,45 @@ class TmsExpense(models.Model):
                     'product_qty': 1.0,
                     'product_uom_id': product_id.uom_id.id,
                     'product_id': product_id.id,
-                    'unit_price': rec.amount_salary,
+                    'unit_price': rec.get_driver_salary(travel),
                     'control': True
                 })
+
+    @api.depends('travel_ids')
+    def get_driver_salary(self, travel):
+        for rec in self:
+            driver_salary = 0.0
+            for waybill in travel.waybill_ids:
+                income = 0.0
+                for line in waybill.waybill_line_ids:
+                    if line.product_id.apply_for_salary:
+                        income += line.price_subtotal
+                if len(travel.waybill_ids.driver_factor_ids) > 0:
+                    for factor in waybill.driver_factor_ids:
+                        driver_salary += factor.get_amount(
+                            weight=waybill.product_weight,
+                            distance=waybill.distance_route,
+                            distance_real=waybill.distance_real,
+                            qty=waybill.product_qty,
+                            volume=waybill.product_volume,
+                            income=income,
+                            employee=rec.employee_id)
+                elif len(travel.driver_factor_ids) > 0:
+                    for factor in travel.driver_factor_ids:
+                        driver_salary += factor.get_amount(
+                            weight=waybill.product_weight,
+                            distance=waybill.distance_route,
+                            distance_real=waybill.distance_real,
+                            qty=waybill.product_qty,
+                            volume=waybill.product_volume,
+                            income=income,
+                            employee=rec.employee_id)
+                else:
+                    raise ValidationError(_(
+                        'Oops! You have not defined a Driver factor in '
+                        'the Travel or the Waybill\nTravel: %s' %
+                        travel.name))
+            return driver_salary
 
     @api.multi
     def create_supplier_invoice(self, line):

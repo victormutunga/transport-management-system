@@ -23,6 +23,7 @@ class ProductTemplate(models.Model):
         ('fuel', 'Fuel'),
         ('indirect_expense', 'Indirect Expense')],
         string='TMS Product Category')
+    apply_for_salary = fields.Boolean()
 
     @api.constrains('tms_product_category')
     def unique_product_per_category(self):

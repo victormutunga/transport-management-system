@@ -82,7 +82,12 @@ class TmsFactor(models.Model):
                 amount += income * (rec.factor / 100)
             elif rec.factor_type == 'percent_driver':
                 if employee:
-                    amount += income * (employee.income_percentage / 100)
+                    if employee.income_percentage == 0.0:
+                        raise ValidationError(
+                            _('The employee must have a income percentage '
+                              'value'))
+                    else:
+                        amount += income * (employee.income_percentage / 100)
                 else:
                     raise ValidationError(
                         _('Invalid parameter you can use this factor only with'
@@ -94,9 +99,9 @@ class TmsFactor(models.Model):
                             amount += rec.factor * value
                         elif rec.range_start == 0 and rec.range_end == 0:
                             amount += rec.factor * value
+                if amount == 0.0:
+                    raise ValidationError(
+                        _('the amount isnt between of any ranges'))
             if rec.mixed:
                 amount += rec.fixed_amount
-        if amount == 0.0:
-            raise ValidationError(
-                _('the amount isnt between of any ranges'))
         return amount

@@ -73,7 +73,7 @@
                                     <separator colspan="4" string="Waybill Lines"/>
                                     <field attrs="{'readonly':[('state','in',('confirmed'))]}" colspan="4" name="waybill_line_ids" nolabel="1">
                                         <tree editable="bottom" string="Waybill Lines">
-                                            <field name="product_id"/>
+                                            <field name="product_id" domain="[('tms_product_category', 'in', ('freight', 'move', 'insurance', 'tolls', 'other'))]"/>
                                             <field name="name"/>
                                             <field name="product_qty"/>
                                             <field name="unit_price"/>
