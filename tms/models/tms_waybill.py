@@ -96,7 +96,7 @@ class TmsWaybill(models.Model):
     invoice_id = fields.Many2one(
         'account.invoice', 'Invoice', readonly=True)
     invoice_paid = fields.Boolean(
-        compute="_compute_invoice_paid", required=True)
+        compute="_compute_invoice_paid")
     supplier_invoice_id = fields.Many2one(
         'account.invoice', string='Supplier Invoice', readonly=True)
     supplier_invoice_paid = fields.Boolean(
