@@ -58,6 +58,10 @@ class TmsExpense(models.Model):
         compute='_compute_amount_fuel_cash',
         string='Fuel in Cash',
         store=True)
+    amount_refund = fields.Float(
+        compute='_compute_amount_refund',
+        string='Refund',
+        store=True)
     amount_other_income = fields.Float(
         compute='_compute_amount_other_income',
         string='Other Income',
@@ -188,7 +192,15 @@ class TmsExpense(models.Model):
                         line.special_tax_amount)
 
     @api.depends('expense_line_ids')
-    def _compute_amount_fuel_cash(self):
+    def _compute_amount_refund(self):
+        for rec in self:
+            rec.amount_refund = 0.0
+            for line in rec.expense_line_ids:
+                if line.line_type == 'refund':
+                    rec.amount_refund += line.price_total
+
+    @api.depends('expense_line_ids')
+    def _compute_amount_other_income(self):
         for rec in self:
             rec.amount_other_income = 0.0
             for line in rec.expense_line_ids:
@@ -234,7 +246,10 @@ class TmsExpense(models.Model):
                 rec.amount_salary +
                 rec.amount_salary_discount +
                 rec.amount_real_expense +
-                rec.amount_salary_retention)
+                rec.amount_salary_retention +
+                rec.amount_refund +
+                rec.amount_fuel_cash +
+                rec.amount_other_income)
 
     @api.depends('travel_ids', 'expense_line_ids')
     def _compute_amount_total_real(self):

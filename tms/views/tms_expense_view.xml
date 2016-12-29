@@ -61,6 +61,8 @@
                                         <group>
                                             <separator colspan="2" string="Resumen de Gastos"/>
                                             <field name="amount_salary"/>
+                                            <field name="amount_other_income"/>
+                                            <field name="amount_refund"/>
                                             <field name="amount_salary_discount"/>
                                             <field name="amount_salary_retention"/>
                                             <field name="amount_real_expense"/>

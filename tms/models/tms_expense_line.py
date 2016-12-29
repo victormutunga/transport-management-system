@@ -35,7 +35,7 @@ class TmsExpenseLine(models.Model):
          ('other_income', 'Other Income'),
          ('fuel', 'Fuel'),
          ('fuel_cash', 'Fuel in Cash'),
-         ('refund', 'Refund')
+         ('refund', 'Refund'),
          ('salary_retention', 'Salary Retention'),
          ('salary_discount', 'Salary Discount')],
         default='real_expense')
