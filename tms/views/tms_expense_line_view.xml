@@ -42,9 +42,10 @@
                             <field name='tax_ids' widget='many2many_tags' attrs="{'invisible':[('line_type','in', ['salary_discount', 'salary', 'salary_retention'])]}"/>
                             <field name="price_subtotal" required="1"/>
                             <field name="tax_amount" attrs="{'invisible':[('line_type','in', ['salary_discount', 'salary', 'salary_retention'])]}"/>
+                            <field name='special_tax_amount' widget='many2many_tags' attrs="{'invisible':[('line_type','in', ['real_expense', 'madeup_expense', 'other_income', 'salary_discount', 'salary', 'salary_retention'])]}"/>
                             <field name="price_total" required='1'/>
                         </group>
-                        <group string="Supplier Details">
+                        <group string="Supplier Details" attrs="{'invisible':[('line_type','!=','real_expense')]}">
                             <field name="is_invoice" attrs="{'invisible':[('line_type','!=','real_expense')]}"/>
                             <field name="partner_id" attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}"/>
                             <field name="invoice_number" attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}"/>

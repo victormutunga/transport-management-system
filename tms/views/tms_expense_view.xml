@@ -64,6 +64,7 @@
                                             <field name="amount_salary_discount"/>
                                             <field name="amount_salary_retention"/>
                                             <field name="amount_real_expense"/>
+                                            <field name="amount_fuel_cash"/>
                                             <field name="amount_subtotal_real"/>
                                             <field name="amount_tax_real"/>
                                             <field name="amount_total_real"/>

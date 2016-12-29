@@ -54,6 +54,14 @@ class TmsExpense(models.Model):
         compute='_compute_amount_fuel',
         string='Cost of Fuel',
         store=True)
+    amount_fuel_cash = fields.Float(
+        compute='_compute_amount_fuel_cash',
+        string='Fuel in Cash',
+        store=True)
+    amount_other_income = fields.Float(
+        compute='_compute_amount_other_income',
+        string='Other Income',
+        store=True)
     amount_salary = fields.Float(
         compute='_compute_amount_salary',
         string='Salary',
@@ -168,6 +176,24 @@ class TmsExpense(models.Model):
                 rec.amount_fuel += (
                     line.price_subtotal +
                     line.special_tax_amount)
+
+    @api.depends('expense_line_ids')
+    def _compute_amount_fuel_cash(self):
+        for rec in self:
+            rec.amount_fuel_cash = 0.0
+            for line in rec.expense_line_ids:
+                if line.line_type == 'fuel_cash':
+                    rec.amount_fuel_cash += (
+                        line.price_subtotal +
+                        line.special_tax_amount)
+
+    @api.depends('expense_line_ids')
+    def _compute_amount_fuel_cash(self):
+        for rec in self:
+            rec.amount_other_income = 0.0
+            for line in rec.expense_line_ids:
+                if line.line_type == 'other_income':
+                    rec.amount_other_income += line.price_total
 
     @api.depends('expense_line_ids')
     def _compute_amount_salary(self):

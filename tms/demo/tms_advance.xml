@@ -16,6 +16,7 @@
             <field name="currency_id" ref="base.MXN"/>
             <field name="product_id" ref="tms.product_real_expense"/>
             <field name="amount">500</field>
+            <field name="auto_expense" eval="True"/>
         </record>
         <record id="tms_advance_03" model="tms.advance">
             <field name="operating_unit_id" ref="tms.tms_operating_unit_1"/>

@@ -32,7 +32,10 @@ class TmsExpenseLine(models.Model):
         [('real_expense', 'Real Expense'),
          ('madeup_expense', 'Made-up Expense'),
          ('salary', 'Salary'),
+         ('other_income', 'Other Income'),
          ('fuel', 'Fuel'),
+         ('fuel_cash', 'Fuel in Cash'),
+         ('refund', 'Refund')
          ('salary_retention', 'Salary Retention'),
          ('salary_discount', 'Salary Discount')],
         default='real_expense')
@@ -62,14 +65,10 @@ class TmsExpenseLine(models.Model):
         string='Driver')
     date = fields.Date(readonly=True)
     state = fields.Char(readonly=True)
-    fuel_voucher = fields.Boolean()
     control = fields.Boolean('Control')
     automatic = fields.Boolean(
         help="Check this if you want to create Advances and/or "
         "Fuel Vouchers for this line automatically")
-    credit = fields.Boolean(
-        help="Check this if you want to create Fuel Vouchers for "
-        "this line")
     is_invoice = fields.Boolean(string='Is Invoice?')
     partner_id = fields.Many2one(
         'res.partner', string='Supplier',
