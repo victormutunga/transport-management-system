@@ -111,6 +111,7 @@
                                     </group>
                                     <group col="2" colspan="2" string="Fuel">
                                         <field name="fuel_qty"/>
+                                        <field name="fuel_efficiency"/>
                                     </group>
                                 </group>
                             </page>

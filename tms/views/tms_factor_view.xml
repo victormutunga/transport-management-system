@@ -15,7 +15,6 @@
                     <field name="range_end"/>
                     <field name="fixed_amount"/>
                     <field name="mixed"/>
-                    <field name="sequence"/>
                 </tree>
             </field>
         </record>

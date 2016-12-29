@@ -11,7 +11,6 @@
                     <field name="date_order"/>
                     <field name="client_order_ref"/>
                     <field name="partner_id"/>
-                    <field name="product_qty"/>
                     <field name="amount_untaxed" sum="Amount Untaxed"/>
                     <field name="amount_tax"/>
                     <field name="amount_total"/>

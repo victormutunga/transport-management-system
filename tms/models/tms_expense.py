@@ -135,6 +135,10 @@ class TmsExpense(models.Model):
     paid = fields.Boolean(
         compute='_compute_paid',
         readonly=True)
+    payment_id = fields.Many2one(
+        'account.payment',
+        string="Payment Reference",
+        readonly=True)
     advance_ids = fields.One2many(
         'tms.advance', 'expense_id', string='Advances', readonly=True)
     fuel_qty_real = fields.Float(
@@ -159,12 +163,21 @@ class TmsExpense(models.Model):
     end_date = fields.Datetime(
         string="End Date", compute="_compute_calculate_date",
         readonly=True)
+    fuel_efficiency = fields.Float(
+        string="Fuel Efficiency", readonly=True,
+        compute="_compute_fuel_efficiency")
+
+    @api.depends('fuel_qty', 'distance_real')
+    def _compute_fuel_efficiency(self):
+        for rec in self:
+            if rec.distance_real and rec.fuel_qty:
+                rec.fuel_efficiency = rec.distance_real / rec.fuel_qty
 
     @api.multi
     def _compute_paid(self):
-        for advance in self:
-            if advance.payment_id.id:
-                advance.paid = True
+        for expense in self:
+            if expense.payment_id.id:
+                expense.paid = True
 
     @api.depends('travel_ids')
     def _compute_calculate_date(self):

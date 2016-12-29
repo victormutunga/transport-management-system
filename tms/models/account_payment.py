@@ -13,3 +13,7 @@ class AccountPayment(models.Model):
         'tms.advance',
         'payment_id',
         string='Advances')
+    expense_ids = fields.One2many(
+        'tms.expense',
+        'payment_id',
+        string='Expense')
