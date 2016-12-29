@@ -93,7 +93,7 @@
                                 <page string="Log Info">
                                     <group col="4" colspan="4">
                                         <field name="move_id" readonly="1"/>
-                                        <field name="paid" readonly="1"/>
+                                        <field name="paid"/>
                                         <field name="expense_id" readonly="1" />
                                         <field name="payment_id" readonly="1"/>
                                     </group>

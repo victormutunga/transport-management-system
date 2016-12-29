@@ -45,8 +45,7 @@ class TmsAdvance(models.Model):
         "is only for Travel Expense Records with balance < 0.0",
         readonly=True)
     paid = fields.Boolean(
-        compute='_compute_paid',
-        readonly=True)
+        compute='_compute_paid')
     payment_id = fields.Many2one(
         'account.payment',
         string="Payment Reference",
