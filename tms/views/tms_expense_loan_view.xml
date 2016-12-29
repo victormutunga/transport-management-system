@@ -150,6 +150,6 @@
             <field name="search_view_id" ref="view_tms_expense_loan_filter"/>
             <field name="help">Driver Loans</field>
         </record>
-        <menuitem action="action_tms_expense_loan_form" id="tms_expense_loan" name="Expense Loan" parent="menu_tms_travels" sequence="200"/>
+        <menuitem action="action_tms_expense_loan_form" id="tms_expense_loan" name="Expense Loan" parent="menu_tms_travels" sequence="200" groups="tms.group_traffic,tms.group_expenses,tms.group_supervisor_traffic,base.group_system"/>
     </data>
 </odoo>
