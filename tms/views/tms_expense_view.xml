@@ -55,9 +55,12 @@
                                         <group>
                                             <separator colspan="2" string="Expense Summary"/>
                                             <field name="amount_salary"/>
+                                            <field name="amount_other_income"/>
+                                            <field name="amount_refund"/>
                                             <field name="amount_salary_discount"/>
                                             <field name="amount_salary_retention"/>
                                             <field name="amount_real_expense"/>
+                                            <field name="amount_fuel_cash"/>
                                             <field name="amount_subtotal_real"/>
                                             <field name="amount_tax_real"/>
                                             <field name="amount_total_real"/>
@@ -137,9 +140,13 @@
                             <page string="Notes">
                                 <group>
                                     <field colspan="4" name="notes" nolabel="1"/>
-                                </group>
-                                <group>
-                                    <field name="move_id" readonly="1"/>
+                                    <group>
+                                        <field name='move_id'/>
+                                    </group>
+                                    <group>
+                                        <field name='paid'/>
+                                        <field name='payment_move_id'/>
+                                    </group>
                                 </group>
                             </page>
                         </notebook>

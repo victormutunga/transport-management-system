@@ -55,6 +55,18 @@ class TmsExpense(models.Model):
         compute='_compute_amount_fuel',
         string='Cost of Fuel',
         store=True)
+    amount_fuel_cash = fields.Float(
+        compute='_compute_amount_fuel_cash',
+        string='Fuel in Cash',
+        store=True)
+    amount_refund = fields.Float(
+        compute='_compute_amount_refund',
+        string='Refund',
+        store=True)
+    amount_other_income = fields.Float(
+        compute='_compute_amount_other_income',
+        string='Other Income',
+        store=True)
     amount_salary = fields.Float(
         compute='_compute_amount_salary',
         string='Salary',
@@ -166,18 +178,20 @@ class TmsExpense(models.Model):
     fuel_efficiency = fields.Float(
         string="Fuel Efficiency", readonly=True,
         compute="_compute_fuel_efficiency")
+    payment_move_id = fields.Many2one(
+        'account.move', string='Payment Entry', readonly=True)
+
+    @api.depends('payment_move_id')
+    def _compute_paid(self):
+        for rec in self:
+            if rec.payment_move_id:
+                rec.paid = True
 
     @api.depends('fuel_qty', 'distance_real')
     def _compute_fuel_efficiency(self):
         for rec in self:
             if rec.distance_real and rec.fuel_qty:
                 rec.fuel_efficiency = rec.distance_real / rec.fuel_qty
-
-    @api.multi
-    def _compute_paid(self):
-        for expense in self:
-            if expense.payment_id.id:
-                expense.paid = True
 
     @api.depends('travel_ids')
     def _compute_calculate_date(self):
@@ -218,6 +232,32 @@ class TmsExpense(models.Model):
                     line.special_tax_amount)
 
     @api.depends('expense_line_ids')
+    def _compute_amount_fuel_cash(self):
+        for rec in self:
+            rec.amount_fuel_cash = 0.0
+            for line in rec.expense_line_ids:
+                if line.line_type == 'fuel_cash':
+                    rec.amount_fuel_cash += (
+                        line.price_subtotal +
+                        line.special_tax_amount)
+
+    @api.depends('expense_line_ids')
+    def _compute_amount_refund(self):
+        for rec in self:
+            rec.amount_refund = 0.0
+            for line in rec.expense_line_ids:
+                if line.line_type == 'refund':
+                    rec.amount_refund += line.price_total
+
+    @api.depends('expense_line_ids')
+    def _compute_amount_other_income(self):
+        for rec in self:
+            rec.amount_other_income = 0.0
+            for line in rec.expense_line_ids:
+                if line.line_type == 'other_income':
+                    rec.amount_other_income += line.price_total
+
+    @api.depends('expense_line_ids')
     def _compute_amount_salary(self):
         for rec in self:
             rec.amount_salary = 0.0
@@ -256,7 +296,10 @@ class TmsExpense(models.Model):
                 rec.amount_salary +
                 rec.amount_salary_discount +
                 rec.amount_real_expense +
-                rec.amount_salary_retention)
+                rec.amount_salary_retention +
+                rec.amount_refund +
+                rec.amount_fuel_cash +
+                rec.amount_other_income)
 
     @api.depends('travel_ids', 'expense_line_ids')
     def _compute_amount_total_real(self):
@@ -355,6 +398,7 @@ class TmsExpense(models.Model):
         for rec in self:
             res = super(TmsExpense, self).write(values)
             rec.get_travel_info()
+            rec.get_ispt()
             return res
 
     @api.multi
@@ -712,6 +756,28 @@ class TmsExpense(models.Model):
                     'unit_price': rec.get_driver_salary(travel),
                     'control': True
                 })
+
+    @api.multi
+    def get_ispt(self):
+        for rec in self:
+            ispt = 0
+            product = self.env['product.product'].search(
+                [('name', '=', 'ISPT')], limit=1)
+            if not product:
+                raise ValidationError(_('You must have a product called ISPT'))
+            for line in rec.expense_line_ids:
+                if line.line_type in ['salary', 'other_income']:
+                    ispt += line.price_total
+            rec.expense_line_ids.create({
+                'name': _("ISPT"),
+                'expense_id': rec.id,
+                'line_type': "salary_retention",
+                'product_qty': 1.0,
+                'product_uom_id': product.uom_id.id,
+                'product_id': product.id,
+                'unit_price': ispt * 0.075,
+                'control': True
+            })
 
     @api.depends('travel_ids')
     def get_driver_salary(self, travel):
