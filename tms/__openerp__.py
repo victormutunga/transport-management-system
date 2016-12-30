@@ -60,7 +60,7 @@
         'data/product_product_data.xml',
         'data/ir_sequence_data.xml',
         'data/tms_base_data.xml',
-        'wizards/tms_advance_payment_view.xml',
+        'wizards/tms_wizard_payment_view.xml',
         'wizards/tms_wizard_invoice_view.xml',
         'wizards/tms_expense_payment_view.xml',
         'report/waybill_report.xml',

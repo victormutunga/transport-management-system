@@ -4,15 +4,32 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 
-from openerp import _, api, exceptions, models
+from openerp import _, api, exceptions, fields, models
 
 
-class TmsAdvancePayment(models.TransientModel):
+class TmsWizardPayment(models.TransientModel):
+    _name = 'tms.wizard.payment'
 
-    """ To create payment for Advance"""
+    journal_id = fields.Many2one(
+        'account.journal', string='Bank Account',
+        domain="[('type', '=', 'bank')]")
+    amount_total = fields.Float(compute='_compute_amount_total')
 
-    _name = 'tms.advance.payment'
-    _description = 'Make Payment for Advances'
+    @api.depends('journal_id')
+    def _compute_amount_total(self):
+        for rec in self:
+            amount_total = 0
+            currency = rec.journal_id.currency_id or self.env.user.currency_id
+            active_ids = self.env[self._context.get('active_model')].browse(
+                self._context.get('active_ids'))
+            for obj in active_ids:
+                if self._context.get('active_model') == 'tms.advance':
+                    amount_total += currency.compute(
+                        obj.amount, self.env.user.currency_id)
+                elif self._context.get('active_model') == 'tms.expense':
+                    amount_total += currency.compute(
+                        obj.amount_balance, self.env.user.currency_id)
+            rec.amount_total = amount_total
 
     @api.multi
     def make_payment(self):
