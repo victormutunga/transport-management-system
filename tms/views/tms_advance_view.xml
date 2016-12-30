@@ -40,7 +40,6 @@
                     <field name="amount" widget='monetary'/>
                     <field name="auto_expense"/>
                     <field name="paid"/>
-                    <field name="payment_id"/>
                     <field name="state"/>
                     <button groups="tms.group_advance_approve" icon="gtk-go-forward" name="action_approve" states="draft" string="Approve" type="object"/>
                     <button groups="tms.group_advance_confirm" icon="gtk-goto-last" name="action_confirm" states="approved" string="Confirm" type="object"/>
@@ -95,7 +94,7 @@
                                         <field name="move_id" readonly="1"/>
                                         <field name="paid" readonly="1"/>
                                         <field name="expense_id" readonly="1" />
-                                        <field name="payment_id" readonly="1"/>
+                                        <field name="payment_move_id" readonly="1"/>
                                     </group>
                                 </page>
                             </notebook>
