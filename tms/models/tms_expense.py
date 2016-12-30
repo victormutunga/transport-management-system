@@ -132,7 +132,8 @@ class TmsExpense(models.Model):
         'account.move', 'Journal Entry', readonly=True,
         help="Link to the automatically generated Journal Items.")
     paid = fields.Boolean(
-        # compute=_paid
+        compute='_compute_paid',
+        readonly=True,
     )
     advance_ids = fields.One2many(
         'tms.advance', 'expense_id', string='Advances', readonly=True)
@@ -152,6 +153,14 @@ class TmsExpense(models.Model):
         string='Global Fuel Efficiency Real')
     fuel_log_ids = fields.One2many(
         'fleet.vehicle.log.fuel', 'expense_id', string='Fuel Vouchers')
+    payment_move_id = fields.Many2one(
+        'account.move', string='Payment Entry', readonly=True)
+
+    @api.depends('payment_move_id')
+    def _compute_paid(self):
+        for rec in self:
+            if rec.payment_move_id:
+                rec.paid = True
 
     @api.depends('expense_line_ids')
     def _compute_fuel_qty(self):

@@ -4,7 +4,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 
-from openerp import _, api, exceptions, fields, models
+from openerp import _, api, fields, models
+from openerp.exceptions import ValidationError
 
 
 class TmsWizardPayment(models.TransientModel):
@@ -33,71 +34,86 @@ class TmsWizardPayment(models.TransientModel):
 
     @api.multi
     def make_payment(self):
-        active_ids = self.env['tms.advance'].browse(
-            self._context.get('active_ids'))
-        if not active_ids:
-            return {}
-
-        partner_ids = []
-        total = 0.0
-        advance_names = ''
-        control = 0
-        operating_unit_id = False
-        for advance in active_ids:
-            if advance.state in ('confirmed', 'closed') and not advance.paid:
-                if not advance.employee_id.address_home_id.id:
-                    raise exceptions.ValidationError(
-                        _('You must configure the home address for the'
-                            ' driver.'))
-                partner_ids.append(advance.employee_id.address_home_id.id)
-                currency = advance.currency_id
-                total += currency.compute(advance.amount,
-                                          self.env.user.currency_id)
-                advance_names += ' ' + advance.name + ', '
-                operating_unit_id = advance.operating_unit_id.id
-            else:
-                raise exceptions.ValidationError(
-                    _('The advances must be in confirmed / closed state'
-                      ' and unpaid.'))
-
-        for partner_id in partner_ids:
-            if control == 0:
-                old_partner = partner_id
-                current_partner = partner_id
-                control = 1
-            else:
-                current_partner = partner_id
-            if old_partner != current_partner:
-                raise exceptions.ValidationError(
-                    _('The advances must be of the same driver. '
-                        'Please check it.'))
-            else:
-                old_partner = partner_id
-
-        res = {
-            'name': _('Driver Advance Payment'),
-            'view_mode': 'form',
-            'view_id': self.env.ref(
-                'account.view_account_payment_form').id,
-            'view_type': 'form',
-            'res_model': 'account.payment',
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'new',
-            'domain': '[]',
-            'context': {
-                'default_communication': _(
-                    'Advance(s): ' + advance_names + ' payment.'),
-                'default_currency_id': self.env.user.currency_id.id,
-                'default_partner_id': old_partner,
-                'default_amount': total,
-                'default_name': advance_names,
-                'default_advance_ids': [x for x in active_ids.ids],
-                'default_payment_type': 'outbound',
-                'default_operating_unit_id': operating_unit_id,
-                'close_after_process': False,
-                'default_type': 'payment',
-                'type': 'payment'
-            }
-        }
-        return res
+        for rec in self:
+            active_ids = self.env[self._context.get('active_model')].browse(
+                self._context.get('active_ids'))
+            bank_account_id = rec.journal_id.default_debit_account_id.id
+            currency = rec.journal_id.currency_id or self.env.user.currency_id
+            for obj in active_ids:
+                if obj.state != 'confirmed' or obj.paid:
+                    raise ValidationError(
+                        _('The document %s must be confirmed and '
+                          'unpaid.') % obj.name)
+                move_lines = []
+                move_line = {
+                    'name': _('Payment'),
+                    'ref': obj.name,
+                    'account_id': bank_account_id,
+                    'debit': 0.0,
+                    'journal_id': rec.journal_id.id,
+                    'partner_id': obj.employee_id.address_home_id.id,
+                    'operating_unit_id': obj.operating_unit_id.id,
+                }
+                counterpart_move_line = {
+                    'name': _('Payment'),
+                    'ref': obj.name,
+                    'account_id': (
+                        obj.employee_id.address_home_id.
+                        property_account_payable_id.id),
+                    'credit': 0.0,
+                    'journal_id': rec.journal_id.id,
+                    'partner_id': obj.employee_id.address_home_id.id,
+                    'operating_unit_id': obj.operating_unit_id.id,
+                }
+                if self._context.get('active_model') == 'tms.advance':
+                    if currency.id != obj.currency_id.id:
+                        move_line['amount_currency'] = obj.amount * -1
+                        move_line['currency_id'] = currency.id
+                        move_line['credit'] = currency.compute(
+                            obj.amount, self.env.user.currency_id)
+                        counterpart_move_line['amount_currency'] = obj.amount
+                        counterpart_move_line['currency_id'] = currency.id
+                        counterpart_move_line['debit'] = currency.compute(
+                            obj.amount, self.env.user.currency_id)
+                    else:
+                        move_line['credit'] = obj.amount
+                        counterpart_move_line['debit'] = obj.amount
+                elif self._context.get('active_model') == 'tms.expense':
+                    if obj.amount_balance < 0.0:
+                        raise ValidationError(
+                            _('You cannot pay the expense %s because the '
+                              'balance is negative') % obj.name)
+                    if currency.id != obj.currency_id.id:
+                        move_line['amount_currency'] = obj.amount_balance * -1
+                        move_line['currency_id'] = currency.id
+                        move_line['credit'] = currency.compute(
+                            obj.amount_balance, self.env.user.currency_id)
+                        counterpart_move_line['amount_currency'] = (
+                            obj.amount_balance)
+                        counterpart_move_line['currency_id'] = currency.id
+                        counterpart_move_line['debit'] = currency.compute(
+                            obj.amount_balance, self.env.user.currency_id)
+                    else:
+                        move_line['credit'] = obj.amount_balance
+                        counterpart_move_line['debit'] = obj.amount_balance
+                move_lines.append((0, 0, move_line))
+                move_lines.append((0, 0, counterpart_move_line))
+                move = {
+                    'date': fields.Date.today(),
+                    'journal_id': rec.journal_id.id,
+                    'ref': obj.name,
+                    'line_ids': [line for line in move_lines],
+                    'operating_unit_id': obj.operating_unit_id.id
+                }
+                move_id = self.env['account.move'].create(move)
+                move_ids = []
+                for move_line in move_id.line_ids:
+                    if move_line.account_id.internal_type == 'payable':
+                        move_ids.append(move_line.id)
+                for move_line in obj.move_id.line_ids:
+                    if (move_line.account_id.internal_type == 'payable' and
+                            'Positive Balance' in move_line.name):
+                        move_ids.append(move_line.id)
+                reconcile_ids = self.env['account.move.line'].browse(move_ids)
+                reconcile_ids.reconcile()
+                obj.payment_move_id = move_id

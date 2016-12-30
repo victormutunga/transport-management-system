@@ -62,7 +62,6 @@
         'data/tms_base_data.xml',
         'wizards/tms_wizard_payment_view.xml',
         'wizards/tms_wizard_invoice_view.xml',
-        'wizards/tms_expense_payment_view.xml',
         'report/waybill_report.xml',
         'report/notes_report.xml',
         'report/expense_report.xml',

@@ -50,9 +50,9 @@ class TmsAdvance(models.Model):
     paid = fields.Boolean(
         compute='_compute_paid',
         readonly=True)
-    payment_id = fields.Many2one(
-        'account.payment',
-        string="Payment Reference",
+    payment_move_id = fields.Many2one(
+        'account.move',
+        string="Payment Entry",
         readonly=True)
     currency_id = fields.Many2one(
         'res.currency',
@@ -91,7 +91,7 @@ class TmsAdvance(models.Model):
     @api.multi
     def _compute_paid(self):
         for advance in self:
-            if advance.payment_id.id:
+            if advance.payment_move_id:
                 advance.paid = True
 
     @api.multi
@@ -155,6 +155,8 @@ class TmsAdvance(models.Model):
                     for name, account in accounts.items():
                         move_line = (0, 0, {
                             'name': advance.name,
+                            'partner_id': (
+                                advance.employee_id.address_home_id.id),
                             'account_id': account,
                             'narration': notes,
                             'debit': (total if name == 'debit' else 0.0),
