@@ -13,8 +13,7 @@ class TmsExpenseLine(models.Model):
 
     travel_id = fields.Many2one(
         'tms.travel',
-        string='Travel',
-        required=True)
+        string='Travel')
     expense_id = fields.Many2one(
         'tms.expense',
         string='Expense',
