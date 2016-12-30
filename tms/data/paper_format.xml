@@ -2,7 +2,7 @@
 <odoo>
 	<data>
         <record id="paperformat_94_151" model="report.paperformat">
-            <field name="name">US Letter</field>
+            <field name="name">US Letter TMS</field>
             <field eval="True" name="default"/>
             <field name="format">Letter</field>
             <field name="page_height">0</field>

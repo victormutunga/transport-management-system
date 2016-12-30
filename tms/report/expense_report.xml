@@ -123,9 +123,20 @@
                             <th>Weight</th>
                             <th>Price</th>
                             <th>I.V.A.</th>
-                            <th>Retention</th>
                             <th>Total</th>
                             <th>Base</th>
+                        </tr>
+                        <t t-set="coun" t-value="0"/>
+                        <tr t-as="line" t-foreach="doc.expense_line_ids">
+                            <td><span t-esc="coun + 1"/><span>.-</span></td>
+                            <td><span t-field="line.name"/></td>
+                            <td><span t-field="doc.name"/></td>
+                            <td><span t-field="line.travel_id.unit_id"/></td>
+                            <td><span t-field="line.product_qty"/></td>
+                            <td><span t-field="line.unit_price"/></td>
+                            <td><span t-field="line.tax_amount"/></td>
+                            <td><span t-field="line.price_total"/></td>
+                            <td><span t-field="doc.operating_unit_id"/></td>
                         </tr>
                     </table>
                     <div class="row">
