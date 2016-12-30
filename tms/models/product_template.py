@@ -21,6 +21,9 @@ class ProductTemplate(models.Model):
         ('salary_retention', 'Salary Retention'),
         ('salary_discount', 'Salary Discount'),
         ('fuel', 'Fuel'),
+        ('other_income', 'Other Income'),
+        ('refund', 'Refund'),
+        ('fuel_cash', 'Fuel in Cash'),
         ('indirect_expense', 'Indirect Expense')],
         string='TMS Product Category')
     apply_for_salary = fields.Boolean()
