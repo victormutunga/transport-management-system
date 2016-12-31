@@ -6,3 +6,4 @@
 from . import tms_advance_payment
 from . import tms_wizard_invoice
 from . import tms_expense_payment
+from . import tms_toll_import
