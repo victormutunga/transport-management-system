@@ -3,6 +3,7 @@
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
+from __future__ import division
 
 from openerp import _, api, fields, models
 from openerp.exceptions import ValidationError
@@ -207,5 +208,6 @@ class FleetVehicleLogFuel(models.Model):
     def _amount_to_text(self, amount_total, currency, partner_lang='es_MX'):
         total = str(float(amount_total)).split('.')[0]
         decimals = str(float(amount_total)).split('.')[1]
+        total = num2words(float(amount_total)).upper()
         return '%s %s %s/100' % (
             total, currency, decimals or 0.0)
