@@ -5,6 +5,7 @@
 
 from openerp import _, api, fields, models
 from openerp.exceptions import ValidationError
+import datetime
 
 
 class TmsExpense(models.Model):
@@ -145,8 +146,7 @@ class TmsExpense(models.Model):
         help="Link to the automatically generated Journal Items.")
     paid = fields.Boolean(
         compute='_compute_paid',
-        readonly=True,
-    )
+        readonly=True)
     advance_ids = fields.One2many(
         'tms.advance', 'expense_id', string='Advances', readonly=True)
     fuel_qty_real = fields.Float(
@@ -165,6 +165,15 @@ class TmsExpense(models.Model):
         string='Global Fuel Efficiency Real')
     fuel_log_ids = fields.One2many(
         'fleet.vehicle.log.fuel', 'expense_id', string='Fuel Vouchers')
+    start_date = fields.Datetime(
+        string="Start Date", compute="_compute_calculate_date",
+        readonly=True)
+    end_date = fields.Datetime(
+        string="End Date", compute="_compute_calculate_date",
+        readonly=True)
+    fuel_efficiency = fields.Float(
+        string="Fuel Efficiency", readonly=True,
+        compute="_compute_fuel_efficiency")
     payment_move_id = fields.Many2one(
         'account.move', string='Payment Entry', readonly=True)
 
@@ -173,6 +182,34 @@ class TmsExpense(models.Model):
         for rec in self:
             if rec.payment_move_id:
                 rec.paid = True
+
+    @api.depends('fuel_qty', 'distance_real')
+    def _compute_fuel_efficiency(self):
+        for rec in self:
+            if rec.distance_real and rec.fuel_qty:
+                rec.fuel_efficiency = rec.distance_real / rec.fuel_qty
+
+    @api.depends('travel_ids')
+    def _compute_calculate_date(self):
+        for rec in self:
+            start_dates = []
+            end_dates = []
+            if rec.travel_ids:
+                if len(rec.travel_ids) > 1:
+                    for travel in rec.travel_ids:
+                        start_dates.append(datetime.datetime.strptime(
+                            travel.date_start_real, "%Y-%m-%d %H:%M:%S"))
+                        end_dates.append(datetime.datetime.strptime(
+                            travel.date_end_real, "%Y-%m-%d %H:%M:%S"))
+                    start_dates.sort()
+                    end_dates.sort(reverse=True)
+                    rec.start_date = start_dates[0].strftime(
+                        "%Y-%m-%d %H:%M:%S")
+                    rec.end_date = end_dates[0].strftime(
+                        "%Y-%m-%d %H:%M:%S")
+                else:
+                    rec.start_date = rec.travel_ids.date_start_real
+                    rec.end_date = rec.travel_ids.date_end_real
 
     @api.depends('expense_line_ids')
     def _compute_fuel_qty(self):

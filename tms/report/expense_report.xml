@@ -123,9 +123,20 @@
                             <th>Weight</th>
                             <th>Price</th>
                             <th>I.V.A.</th>
-                            <th>Retention</th>
                             <th>Total</th>
                             <th>Base</th>
+                        </tr>
+                        <t t-set="coun" t-value="0"/>
+                        <tr t-as="line" t-foreach="doc.expense_line_ids">
+                            <td><span t-esc="coun + 1"/><span>.-</span></td>
+                            <td><span t-field="line.name"/></td>
+                            <td><span t-field="doc.name"/></td>
+                            <td><span t-field="line.travel_id.unit_id"/></td>
+                            <td><span t-field="line.product_qty"/></td>
+                            <td><span t-field="line.unit_price"/></td>
+                            <td><span t-field="line.tax_amount"/></td>
+                            <td><span t-field="line.price_total"/></td>
+                            <td><span t-field="doc.operating_unit_id"/></td>
                         </tr>
                     </table>
                     <div class="row">
@@ -225,21 +236,6 @@
             </t>
             <t t-set="Panel_Header" t-value="'color:#000000; text-align:left;font-size:10px;background-color:#f0f0f0;border-color: #333; padding-left:5; padding-right:0; padding-top:5; padding-bottom:0;'"/>
         </template>
-        <record id="paperformat_94_151" model="report.paperformat">
-            <field name="name">US Letter</field>
-            <field eval="True" name="default"/>
-            <field name="format">Letter</field>
-            <field name="page_height">0</field>
-            <field name="page_width">0</field>
-            <field name="orientation">Portrait</field>
-            <field name="margin_top">20</field>
-            <field name="margin_bottom">20</field>
-            <field name="margin_left">7</field>
-            <field name="margin_right">7</field>
-            <field eval="False" name="header_line"/>
-            <field name="header_spacing">35</field>
-            <field name="dpi">90</field>
-        </record>
         <template id="expense_report_translate">
             <t t-call="report.html_container">
                 <t t-as="doc_id" t-foreach="doc_ids">
@@ -249,7 +245,7 @@
         </template>
         <report file="tms.expense_report" id="print_expense_report" model="tms.expense" name="tms.expense_report" report_type="qweb-pdf" string="Expense Report"/>
         <record id="print_expense_report" model="ir.actions.report.xml">
-            <field name="paperformat_id" ref="paperformat_94_151"/>
+            <field name="paperformat_id" ref="tms.paperformat_94_151_tms"/>
         </record>
     </data>
 </odoo>

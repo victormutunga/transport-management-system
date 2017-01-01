@@ -31,12 +31,12 @@ class TmsExpenseLine(models.Model):
         [('real_expense', 'Real Expense'),
          ('madeup_expense', 'Made-up Expense'),
          ('salary', 'Salary'),
-         ('other_income', 'Other Income'),
          ('fuel', 'Fuel'),
          ('fuel_cash', 'Fuel in Cash'),
          ('refund', 'Refund'),
          ('salary_retention', 'Salary Retention'),
-         ('salary_discount', 'Salary Discount')],
+         ('salary_discount', 'Salary Discount'),
+         ('other_income', 'Other Income')],
         default='real_expense')
     name = fields.Char(
         'Description',

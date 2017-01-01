@@ -85,5 +85,8 @@
             </t>
         </template>
         <report file="tms.notes_report" id="print_notes_report" model="tms.travel" name="tms.notes_report" report_type="qweb-pdf" string="Letter of Instructions"/>
+        <record id="print_notes_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="tms.paperformat_94_151_tms"/>
+        </record>
     </data>
 </odoo>
