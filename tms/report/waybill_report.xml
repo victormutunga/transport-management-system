@@ -1,38 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="header_super">
-            <div class="row">
-                <p class="text-center">
-                    <span>SERVICIO PUBLICO FEDERAL DE CARGA EN GENERAL Y ESPECIALIZADO</span>
-                </p>
-            </div>
-            <br/>
-            <div class="row">
-                <div class="col-xs-4">
-                    <img style="max-height:104px;" t-att-src="'data:image/png;base64,%s' % doc.company_id.logo" t-if="doc.company_id.logo"/>
-                </div>
-                <div class="col-xs-4 text-center">
-                    <strong>
-                        <span t-field="doc.company_id.partner_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;, &quot;fax&quot;], &quot;no_marker&quot;: true, &quot;phone_icons&quot;: true}"/>
-                    </strong>
-                </div>
-                <div class="col-xs-4">
-                    <div class="panel" style="border-color: #333 !important;">
-                        <div class="panel-heading" t-att-style="Panel_Header">
-                            <p style="color:#E0FFFF !important; text-align:center; font-size:12px; font-weight:bold; color:#333 !important; ">CARTA PORTE -TRASLADO/BILL OF LADING: </p>
-                            <span t-field="doc.name"/>
-                        </div>
-                        <div class="panel-body" t-att-style="Panel">
-                            <p style="font-size:10px ">
-                                <strong>DATE:</strong>
-                                <span t-field="doc.date_order"/>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </template>
         <template id="waybill_report">
             <t t-as="doc" t-foreach="docs">
                 <div class="page">

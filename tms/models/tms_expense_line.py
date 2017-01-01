@@ -80,10 +80,6 @@ class TmsExpenseLine(models.Model):
     product_id = fields.Many2one(
         'product.product',
         string='Product')
-    loan_id = fields.Many2one(
-        'tms.expense.loan',
-        string='Expense Loan',
-    )
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
