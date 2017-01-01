@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 	<data>
-        <record id="paperformat_94_151" model="report.paperformat">
+        <record id="paperformat_94_151_tms" model="report.paperformat">
             <field name="name">US Letter TMS</field>
             <field eval="True" name="default"/>
             <field name="format">Letter</field>

@@ -398,7 +398,6 @@ class TmsExpense(models.Model):
         for rec in self:
             res = super(TmsExpense, self).write(values)
             rec.get_travel_info()
-            rec.get_ispt()
             return res
 
     @api.multi
@@ -756,28 +755,6 @@ class TmsExpense(models.Model):
                     'unit_price': rec.get_driver_salary(travel),
                     'control': True
                 })
-
-    @api.multi
-    def get_ispt(self):
-        for rec in self:
-            ispt = 0
-            product = self.env['product.product'].search(
-                [('name', '=', 'ISPT')], limit=1)
-            if not product:
-                raise ValidationError(_('You must have a product called ISPT'))
-            for line in rec.expense_line_ids:
-                if line.line_type in ['salary', 'other_income']:
-                    ispt += line.price_total
-            rec.expense_line_ids.create({
-                'name': _("ISPT"),
-                'expense_id': rec.id,
-                'line_type': "salary_retention",
-                'product_qty': 1.0,
-                'product_uom_id': product.uom_id.id,
-                'product_id': product.id,
-                'unit_price': ispt * 0.075,
-                'control': True
-            })
 
     @api.depends('travel_ids')
     def get_driver_salary(self, travel):

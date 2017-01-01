@@ -35,4 +35,3 @@ from . import tms_waybill
 from . import tms_waybill_line
 from . import tms_waybill_taxes
 from . import tms_waybill_transportable_line
-from . import tms_expense_loan
