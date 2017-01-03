@@ -44,7 +44,7 @@
                         <group col="4">
                             <field attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="operating_unit_id"/>
                             <field attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="date"/>
-                            <field attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" domain="[('operating_unit_id', '=', operating_unit_id),('fleet_type', '=', 'tractor')]" name="unit_id"/>
+                            <field attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" domain="[('fleet_type', '=', 'tractor')]" name="unit_id"/>
                             <field attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="employee_id"/>
                             <field attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="currency_id"/>
                         </group>
