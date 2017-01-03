@@ -498,6 +498,22 @@ class TmsExpense(models.Model):
             invoices = []
 
             for line in rec.expense_line_ids:
+                if line.line_type == 'fuel' and not line.control:
+                    self.env['fleet.vehicle.log.fuel'].create({
+                        'operating_unit_id': rec.operating_unit_id.id,
+                        'travel_id': line.travel_id.id,
+                        'vehicle_id': line.travel_id.unit_id.id,
+                        'product_id': line.product_id.id,
+                        'price_unit': line.unit_price,
+                        'price_subtotal': line.price_subtotal,
+                        'vendor_id': line.partner_id.id,
+                        'product_qty': line.product_qty,
+                        'tax_amount': line.tax_amount,
+                        'state': 'closed',
+                        'employee_id':  rec.employee.id,
+                        'price_total': line.price_total,
+                        'date': str(fields.Date.today()),
+                        })
                 # We only need all the lines except the fuel and the
                 # made up expenses
                 if line.line_type not in ('madeup_expense', 'fuel'):
@@ -657,6 +673,13 @@ class TmsExpense(models.Model):
     @api.multi
     def get_travel_info(self):
         for rec in self:
+            advance = self.env['tms.advance'].search([
+                ('unit_id', '=', rec.unit_id.id),
+                ('employee_id', '=', rec.employee_id.id)])
+            if len(advance) >= 1:
+                if not advance.travel_id:
+                    raise ValidationError(
+                        _('This employee has an advance without travel'))
             rec.expense_line_ids.search([
                 ('expense_id', '=', rec.id),
                 ('travel_id', 'not in', rec.travel_ids.ids)]).unlink()
@@ -709,7 +732,8 @@ class TmsExpense(models.Model):
                             'expense_id': rec.id
                         })
                 for fuel_log in travel.fuel_log_ids:
-                    if fuel_log.state != 'confirmed':
+                    if (fuel_log.state != 'confirmed' and
+                            fuel_log.state != 'closed'):
                         raise ValidationError(_(
                             'Oops! All the voucher must be confirmed'
                             '\n Name of voucher not confirmed: ' +
