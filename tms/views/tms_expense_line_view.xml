@@ -48,7 +48,7 @@
                         </group>
                         <group string="Supplier Details" attrs="{'invisible':[('line_type','!=','real_expense')]}">
                             <field name="is_invoice" attrs="{'invisible':[('line_type','!=','real_expense')]}"/>
-                            <field name="partner_id" attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}" domain="[('supplier', '=', True), ('company_type', '=', 'company')]"/>
+                            <field name="partner_id" attrs="{'invisible':[('is_invoice', '=', False), ('line_type', '!=', 'fuel')],'required':[('is_invoice', '=', True)]}" domain="[('supplier', '=', True), ('company_type', '=', 'company')]"/>
                             <field name="invoice_number" attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}"/>
                             <field name="invoice_id" attrs="{'invisible':['|', ('is_invoice', '=', False), ('invoice_id', '=', False)]}" domain="[('partner_id', '=', partner_id),('state', 'not in', ['paid'])]" readonly="1"/>
                         </group>

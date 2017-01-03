@@ -31,16 +31,13 @@ class TmsAdvance(models.Model):
         default=fields.Date.today)
     travel_id = fields.Many2one(
         'tms.travel',
-        string='Travel',
-        required=True)
+        string='Travel')
     unit_id = fields.Many2one(
         'fleet.vehicle',
-        string='Unit',
-        related='travel_id.unit_id')
+        string='Unit')
     employee_id = fields.Many2one(
         'hr.employee',
-        string='Driver',
-        related='travel_id.employee_id')
+        string='Driver')
     amount = fields.Monetary(required=True)
     notes = fields.Text()
     move_id = fields.Many2one(
@@ -143,8 +140,8 @@ class TmsAdvance(models.Model):
                           'home address for the employee.'))
                 if not advance_debit_account_id:
                     raise exceptions.ValidationError(
-                        _('Warning! You must have configured the accounts'
-                            'of the tms'))
+                        _('Warning! You must have configured the accounts '
+                          'of the tms'))
                 move_lines = []
                 notes = _('* Base: %s \n'
                           '* Advance: %s \n'

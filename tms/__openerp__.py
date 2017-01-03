@@ -61,6 +61,7 @@
         'data/tms_base_data.xml',
         'data/paper_format.xml',
         'wizards/tms_wizard_payment_view.xml',
+        'wizards/tms_toll_import.xml',
         'wizards/tms_wizard_invoice_view.xml',
         'report/notes_report.xml',
         'report/expense_report.xml',

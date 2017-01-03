@@ -28,6 +28,7 @@ from . import tms_route_note
 from . import tms_route_place
 from . import tms_route_tollstation
 from . import tms_route_tollstation_costperaxis
+from . import tms_toll_data
 from . import tms_transportable
 from . import tms_travel
 from . import tms_unit_kit
