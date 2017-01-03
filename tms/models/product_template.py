@@ -37,7 +37,6 @@ class ProductTemplate(models.Model):
                 ['insurance', 'Insurance'],
                 ['salary', 'Salary'],
                 ['negative_balance', 'Negative Balance'],
-                ['fuel', 'Fuel'],
                 ['indirect_expense', 'Indirect Expense']
             ]
             for category in categorys:
