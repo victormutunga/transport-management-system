@@ -498,9 +498,7 @@ class TmsExpense(models.Model):
             invoices = []
 
             for line in rec.expense_line_ids:
-                # We only need all the lines except the fuel and the
-                # made up expenses
-                if line.line_type == 'fuel':
+                if line.line_type == 'fuel' and not line.control:
                     self.env['fleet.vehicle.log.fuel'].create({
                         'operating_unit_id': rec.operating_unit_id.id,
                         'travel_id': line.travel_id.id,
@@ -516,7 +514,8 @@ class TmsExpense(models.Model):
                         'price_total': line.price_total,
                         'date': str(fields.Date.today()),
                         })
-
+                # We only need all the lines except the fuel and the
+                # made up expenses
                 if line.line_type not in ('madeup_expense', 'fuel'):
                     product_account = (
                         negative_account

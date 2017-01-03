@@ -23,6 +23,7 @@ class ProductTemplate(models.Model):
         ('fuel', 'Fuel'),
         ('other_income', 'Other Income'),
         ('refund', 'Refund'),
+        ('negative_balance', 'Negative Balance'),
         ('fuel_cash', 'Fuel in Cash')],
         string='TMS Product Category')
     apply_for_salary = fields.Boolean()
