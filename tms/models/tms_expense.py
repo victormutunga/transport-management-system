@@ -880,3 +880,21 @@ class TmsExpense(models.Model):
                 ]
             }
         }
+
+    @api.multi
+    def get_amount_total(self):
+        for rec in self:
+            amount_subtotal = 0.0
+            for line in rec.expense_line_ids:
+                if line.line_type in ['real_expense', 'fuel', 'fuel_cash']:
+                    amount_subtotal += line.price_subtotal
+            return amount_subtotal
+
+    @api.multi
+    def get_amount_tax(self):
+        for rec in self:
+            tax_amount = 0.0
+            for line in rec.expense_line_ids:
+                if line.line_type in ['real_expense', 'fuel', 'fuel_cash']:
+                    tax_amount += line.tax_amount
+            return tax_amount
