@@ -50,6 +50,7 @@
                             <field name="is_invoice" attrs="{'invisible':['|', ('line_type','=', False), ('line_type','in',['salary','salary_retention','salary_discount','other_income','refund', 'fuel',])]}"/>
                             <field name="partner_id" attrs="{'invisible':[('is_invoice', '=', False), ('line_type', '!=', 'fuel')],'required':['|', ('is_invoice', '=', True),('line_type', 'in', ['fuel', 'fuel_cash'])]}" domain="[('supplier', '=', True), ('company_type', '=', 'company')]"/>
                             <field name="invoice_number" attrs="{'invisible':[('is_invoice', '=', False), ('line_type', '!=', 'fuel')],'required':['|', ('is_invoice', '=', True),('line_type', 'in', ['fuel', 'fuel_cash'])]}"/>
+                            <field name="date" attrs="{'invisible':[('is_invoice', '=', False), ('line_type', '!=', 'fuel')],'required':['|', ('is_invoice', '=', True),('line_type', 'in', ['fuel', 'fuel_cash'])]}"/>
                             <field name="invoice_id" attrs="{'invisible':['|', ('is_invoice', '=', False), ('invoice_id', '=', False)]}" domain="[('partner_id', '=', partner_id),('state', 'not in', ['paid'])]" readonly="1"/>
                         </group>
                     </sheet>

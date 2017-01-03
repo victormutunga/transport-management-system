@@ -62,7 +62,7 @@ class TmsExpenseLine(models.Model):
     employee_id = fields.Many2one(
         'hr.employee',
         string='Driver')
-    date = fields.Date(readonly=True)
+    date = fields.Date()
     state = fields.Char(readonly=True)
     control = fields.Boolean('Control')
     automatic = fields.Boolean(
