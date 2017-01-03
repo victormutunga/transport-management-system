@@ -43,6 +43,7 @@ traffic_tms_advance,access_tms_advance,model_tms_advance,group_traffic,1,1,1,0
 traffic_fleet_vehicle_log_fuel,access_fleet_vehicle_log_fuel,model_fleet_vehicle_log_fuel,group_traffic,1,1,1,0
 traffic_tms_route_fuelefficiency,access_tms_route_fuelefficiency,model_tms_route_fuelefficiency,group_traffic,1,1,1,0
 traffic_hr_employee,access_hr_employee,model_hr_employee,group_traffic,1,1,1,0
+traffic_tms_place,traffic_tms_place,model_tms_place,group_traffic,1,1,1,0
 traffic_tms_route,access_tms_route,model_tms_route,group_traffic,1,1,1,0
 traffic_tms_route_place,access_tms_route_place,model_tms_route_place,group_traffic,1,1,1,0
 traffic_tms_route_tollstation,access_tms_route_tollstation,model_tms_route_tollstation,group_traffic,1,1,1,0
