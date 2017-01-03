@@ -29,7 +29,7 @@ class TmsExpenseLine(models.Model):
         string='Unit of Measure')
     line_type = fields.Selection(
         [('real_expense', 'Real Expense'),
-         ('madeup_expense', 'Made-up Expense'),
+         ('made_up_expense', 'Made-up Expense'),
          ('salary', 'Salary'),
          ('fuel', 'Fuel'),
          ('fuel_cash', 'Fuel in Cash'),
