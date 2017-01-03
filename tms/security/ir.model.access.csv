@@ -1,9 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_tms_place,access_tms_place,model_tms_place,,1,1,1,1
-access_tms_route,access_tms_route,model_tms_route,,1,1,1,1
 access_tms_factor,access_tms_factor,model_tms_factor,,1,1,1,1
-access_tms_transportable,access_tms_transportable,model_tms_transportable,,1,1,1,1
-access_tms_expense_line,access_tms_expense_line,model_tms_expense_line,,1,1,1,1
 access_tms_waybill,access_tms_waybill,model_tms_waybill,,1,1,1,1
 access_tms_waybill_line,access_tms_waybill_line,model_tms_waybill_line,,1,1,1,1
 access_tms_waybill_taxes,access_tms_waybill_taxes,model_tms_waybill_taxes,,1,1,1,1
@@ -97,6 +93,6 @@ expenses_fleet_vehicle_cost,access_fleet_vehicle_cost,fleet.model_fleet_vehicle_
 expenses_fleet_vehicle_tag,access_fleet_vehicle_tag,fleet.model_fleet_vehicle_tag,group_expenses,1,0,0,0
 expenses_fleet_vehicle_state,access_fleet_vehicle_state,fleet.model_fleet_vehicle_state,group_expenses,1,0,0,0
 expenses_tms_expense,access_tms_expense,model_tms_expense,group_expenses,1,1,1,0
-expenses_tms_expense_line,access_tms_expense_line,model_tms_expense_line,group_expenses,1,1,1,0
+expenses_tms_expense_line,access_tms_expense_line,model_tms_expense_line,group_expenses,1,1,1,1
 expenses_tms_transportable,access_tms_transportable,model_tms_transportable,group_expenses,1,0,0,0
 
