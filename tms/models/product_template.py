@@ -35,8 +35,6 @@ class ProductTemplate(models.Model):
                 ['freight', 'Freight (Waybill)'],
                 ['move', 'Moves (Waybill)'],
                 ['insurance', 'Insurance'],
-                ['tolls', 'Highway Tolls'],
-                ['made_up_expense', 'Made up Expense'],
                 ['salary', 'Salary'],
                 ['negative_balance', 'Negative Balance'],
                 ['fuel', 'Fuel'],
