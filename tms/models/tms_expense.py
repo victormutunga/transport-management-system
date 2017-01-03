@@ -673,13 +673,6 @@ class TmsExpense(models.Model):
     @api.multi
     def get_travel_info(self):
         for rec in self:
-            advance = self.env['tms.advance'].search([
-                ('unit_id', '=', rec.unit_id.id),
-                ('employee_id', '=', rec.employee_id.id)])
-            if len(advance) >= 1:
-                if not advance.travel_id:
-                    raise ValidationError(
-                        _('This employee has an advance without travel'))
             rec.expense_line_ids.search([
                 ('expense_id', '=', rec.id),
                 ('travel_id', 'not in', rec.travel_ids.ids)]).unlink()
