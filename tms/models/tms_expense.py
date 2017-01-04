@@ -680,9 +680,6 @@ class TmsExpense(models.Model):
                 if not advance.travel_id:
                     raise ValidationError(
                         _('This employee has an advance without travel'))
-            rec.expense_line_ids.search([
-                ('expense_id', '=', rec.id),
-                ('control', '=', True)]).unlink()
             travels = self.env['tms.travel'].search(
                 [('expense_id', '=', rec.id)])
             travels.write({'expense_id': False, 'state': 'done'})
