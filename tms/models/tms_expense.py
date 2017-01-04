@@ -510,7 +510,7 @@ class TmsExpense(models.Model):
                         'product_qty': line.product_qty,
                         'tax_amount': line.tax_amount,
                         'state': 'closed',
-                        'employee_id':  rec.employee.id,
+                        'employee_id':  rec.employee_id.id,
                         'price_total': line.price_total,
                         'date': str(fields.Date.today()),
                         })
