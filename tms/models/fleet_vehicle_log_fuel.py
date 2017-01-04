@@ -8,6 +8,13 @@ from __future__ import division
 from openerp import _, api, fields, models
 from openerp.exceptions import ValidationError
 
+import logging
+_logger = logging.getLogger(__name__)
+try:
+    from num2words import num2words
+except ImportError:
+    _logger.debug('Cannot `import num2words`.')
+
 
 class FleetVehicleLogFuel(models.Model):
     _name = 'fleet.vehicle.log.fuel'
@@ -86,6 +93,9 @@ class FleetVehicleLogFuel(models.Model):
         string='Product',
         required=True,
         domain=[('tms_product_category', '=', 'fuel')])
+    currency_id = fields.Many2one(
+        'res.currency', 'Currency', required=True,
+        default=lambda self: self.env.user.company_id.currency_id)
 
     @api.multi
     @api.depends('tax_amount')
@@ -193,3 +203,11 @@ class FleetVehicleLogFuel(models.Model):
         if self.no_travel:
             self.travel_id = False
             self.vehicle_id = False
+
+    @api.multi
+    def _amount_to_text(self, amount_total, currency, partner_lang='es_MX'):
+        total = str(float(amount_total)).split('.')[0]
+        decimals = str(float(amount_total)).split('.')[1]
+        total = num2words(float(amount_total)).upper()
+        return '%s %s %s/100' % (
+            total, currency, decimals or 0.0)

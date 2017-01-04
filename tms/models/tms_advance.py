@@ -17,10 +17,11 @@ class TmsAdvance(models.Model):
     name = fields.Char(string='Advance Number')
     state = fields.Selection(
         [('draft', 'Draft'),
+         ('authorized', 'Waiting for authorization'),
          ('approved', 'Approved'),
          ('confirmed', 'Confirmed'),
          ('closed', 'Closed'),
-         ('cancel', 'Cancelled')],
+         ('cancel', 'Cancelled'), ],
         string='State',
         readonly=True,
         default='draft')
@@ -45,10 +46,11 @@ class TmsAdvance(models.Model):
         "is only for Travel Expense Records with balance < 0.0",
         readonly=True)
     paid = fields.Boolean(
-        compute='_compute_paid')
-    payment_id = fields.Many2one(
-        'account.payment',
-        string="Payment Reference",
+        compute='_compute_paid',
+        readonly=True)
+    payment_move_id = fields.Many2one(
+        'account.move',
+        string="Payment Entry",
         readonly=True)
     currency_id = fields.Many2one(
         'res.currency',
@@ -87,17 +89,26 @@ class TmsAdvance(models.Model):
     @api.multi
     def _compute_paid(self):
         for advance in self:
-            if advance.payment_id.id:
+            if advance.payment_move_id:
                 advance.paid = True
 
     @api.multi
+    def action_authorized(self):
+        for rec in self:
+            rec.state = 'approved'
+
+    @api.multi
     def action_approve(self):
-        self.state = 'approved'
-        self.message_post(_(
-            '<strong>Advance approved.</strong><ul>'
-            '<li><strong>Approved by: </strong>%s</li>'
-            '<li><strong>Approved at: </strong>%s</li>'
-            '</ul>') % (self.env.user.name, fields.Datetime.now()))
+        for rec in self:
+            if rec.amount > rec.operating_unit_id.credit_limit:
+                rec.state = "authorized"
+            else:
+                rec.state = 'approved'
+                rec.message_post(_(
+                    '<strong>Advance approved.</strong><ul>'
+                    '<li><strong>Approved by: </strong>%s</li>'
+                    '<li><strong>Approved at: </strong>%s</li>'
+                    '</ul>') % (rec.env.user.name, fields.Datetime.now()))
 
     @api.multi
     def action_confirm(self):
@@ -130,7 +141,7 @@ class TmsAdvance(models.Model):
                 if not advance_debit_account_id:
                     raise exceptions.ValidationError(
                         _('Warning! You must have configured the accounts '
-                            'of the tms'))
+                          'of the tms'))
                 move_lines = []
                 notes = _('* Base: %s \n'
                           '* Advance: %s \n'
@@ -151,6 +162,8 @@ class TmsAdvance(models.Model):
                     for name, account in accounts.items():
                         move_line = (0, 0, {
                             'name': advance.name,
+                            'partner_id': (
+                                advance.employee_id.address_home_id.id),
                             'account_id': account,
                             'narration': notes,
                             'debit': (total if name == 'debit' else 0.0),

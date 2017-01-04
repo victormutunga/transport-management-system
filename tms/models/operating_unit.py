@@ -34,3 +34,4 @@ class OperatingUnit(models.Model):
         string='Purchase Journal', required=True)
     ieps_product_id = fields.Many2one(
         'product.product', string='IEPS Product', required=True)
+    credit_limit = fields.Float(string="Credict Limit")
