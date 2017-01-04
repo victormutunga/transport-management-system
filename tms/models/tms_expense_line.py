@@ -13,8 +13,7 @@ class TmsExpenseLine(models.Model):
 
     travel_id = fields.Many2one(
         'tms.travel',
-        string='Travel',
-        required=True)
+        string='Travel')
     expense_id = fields.Many2one(
         'tms.expense',
         string='Expense',
@@ -30,13 +29,16 @@ class TmsExpenseLine(models.Model):
         string='Unit of Measure')
     line_type = fields.Selection(
         [('real_expense', 'Real Expense'),
-         ('madeup_expense', 'Made-up Expense'),
+         ('made_up_expense', 'Made-up Expense'),
          ('salary', 'Salary'),
          ('fuel', 'Fuel'),
+         ('fuel_cash', 'Fuel in Cash'),
+         ('refund', 'Refund'),
          ('salary_retention', 'Salary Retention'),
          ('salary_discount', 'Salary Discount'),
-         ('tolls', 'Highway tolls')],
-        default='real_expense')
+         ('tolls', 'Highway tolls'),
+         ('other_income', 'Other Income')],
+        default='real_expense', readonly=True)
     name = fields.Char(
         'Description',
         required=True)
@@ -61,16 +63,12 @@ class TmsExpenseLine(models.Model):
     employee_id = fields.Many2one(
         'hr.employee',
         string='Driver')
-    date = fields.Date(readonly=True)
+    date = fields.Date()
     state = fields.Char(readonly=True)
-    fuel_voucher = fields.Boolean()
     control = fields.Boolean('Control')
     automatic = fields.Boolean(
         help="Check this if you want to create Advances and/or "
         "Fuel Vouchers for this line automatically")
-    credit = fields.Boolean(
-        help="Check this if you want to create Fuel Vouchers for "
-        "this line")
     is_invoice = fields.Boolean(string='Is Invoice?')
     partner_id = fields.Many2one(
         'res.partner', string='Supplier',
@@ -83,23 +81,15 @@ class TmsExpenseLine(models.Model):
     product_id = fields.Many2one(
         'product.product',
         string='Product')
-    loan_id = fields.Many2one(
-        'tms.expense.loan',
-        string='Expense Loan',
-    )
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.line_type not in [
                 'salary', 'salary_retention', 'salary_discount']:
             self.tax_ids = self.product_id.supplier_taxes_id
-
+        self.line_type = self.product_id.tms_product_category
         self.product_uom_id = self.product_id.uom_id.id
         self.name = self.product_id.name
-
-    @api.onchange('line_type')
-    def _onchange_line_type(self):
-        self.product_id = False
 
     @api.depends('tax_ids', 'product_qty', 'unit_price')
     def _compute_tax_amount(self):

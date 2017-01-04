@@ -21,7 +21,10 @@ class ProductTemplate(models.Model):
         ('salary_retention', 'Salary Retention'),
         ('salary_discount', 'Salary Discount'),
         ('fuel', 'Fuel'),
-        ('indirect_expense', 'Indirect Expense')],
+        ('other_income', 'Other Income'),
+        ('refund', 'Refund'),
+        ('negative_balance', 'Negative Balance'),
+        ('fuel_cash', 'Fuel in Cash')],
         string='TMS Product Category')
     apply_for_salary = fields.Boolean()
 
@@ -32,11 +35,8 @@ class ProductTemplate(models.Model):
                 ['freight', 'Freight (Waybill)'],
                 ['move', 'Moves (Waybill)'],
                 ['insurance', 'Insurance'],
-                ['tolls', 'Highway Tolls'],
-                ['made_up_expense', 'Made up Expense'],
                 ['salary', 'Salary'],
                 ['negative_balance', 'Negative Balance'],
-                ['fuel', 'Fuel'],
                 ['indirect_expense', 'Indirect Expense']
             ]
             for category in categorys:

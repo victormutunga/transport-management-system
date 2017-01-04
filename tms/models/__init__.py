@@ -4,7 +4,6 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from . import account_invoice
-from . import account_payment
 from . import fleet_vehicle
 from . import fleet_vehicle_engine
 from . import fleet_vehicle_log_fuel
@@ -29,6 +28,7 @@ from . import tms_route_note
 from . import tms_route_place
 from . import tms_route_tollstation
 from . import tms_route_tollstation_costperaxis
+from . import tms_toll_data
 from . import tms_transportable
 from . import tms_travel
 from . import tms_unit_kit
@@ -36,5 +36,3 @@ from . import tms_waybill
 from . import tms_waybill_line
 from . import tms_waybill_taxes
 from . import tms_waybill_transportable_line
-from . import tms_expense_loan
-from . import tms_toll_data

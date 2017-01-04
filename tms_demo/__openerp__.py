@@ -17,8 +17,8 @@
         'demo/res_partner.xml',
         'demo/hr_employee.xml',
         'demo/product_product.xml',
+        'demo/tms_advance.xml',
     ],
-    "application": True,
     "installable": True,
     "auto-install": True,
 }

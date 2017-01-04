@@ -32,8 +32,8 @@
             <field name="address_home_id" ref="tms_demo.res_partner_06"/>
         </record>
         <record id="tms.tms_hr_employee_07" model="hr.employee">
-            <field name="tms_advance_account_id" ref="tms_demo.account_employee_06"/>
-            <field name="tms_expense_negative_account_id" ref="tms_demo.account_employee_06"/>
+            <field name="tms_advance_account_id" ref="tms_demo.account_employee_07"/>
+            <field name="tms_expense_negative_account_id" ref="tms_demo.account_employee_07"/>
             <field name="address_home_id" ref="tms_demo.res_partner_07"/>
         </record>
     </data>
