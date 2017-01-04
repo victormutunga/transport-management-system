@@ -5,6 +5,7 @@
 
 from openerp import _, api, fields, models
 from openerp.exceptions import ValidationError
+import datetime
 
 
 class TmsExpense(models.Model):
@@ -53,6 +54,18 @@ class TmsExpense(models.Model):
     amount_fuel = fields.Float(
         compute='_compute_amount_fuel',
         string='Cost of Fuel',
+        store=True)
+    amount_fuel_cash = fields.Float(
+        compute='_compute_amount_fuel_cash',
+        string='Fuel in Cash',
+        store=True)
+    amount_refund = fields.Float(
+        compute='_compute_amount_refund',
+        string='Refund',
+        store=True)
+    amount_other_income = fields.Float(
+        compute='_compute_amount_other_income',
+        string='Other Income',
         store=True)
     amount_salary = fields.Float(
         compute='_compute_amount_salary',
@@ -132,8 +145,8 @@ class TmsExpense(models.Model):
         'account.move', 'Journal Entry', readonly=True,
         help="Link to the automatically generated Journal Items.")
     paid = fields.Boolean(
-        # compute=_paid
-    )
+        compute='_compute_paid',
+        readonly=True)
     advance_ids = fields.One2many(
         'tms.advance', 'expense_id', string='Advances', readonly=True)
     fuel_qty_real = fields.Float(
@@ -152,6 +165,51 @@ class TmsExpense(models.Model):
         string='Global Fuel Efficiency Real')
     fuel_log_ids = fields.One2many(
         'fleet.vehicle.log.fuel', 'expense_id', string='Fuel Vouchers')
+    start_date = fields.Datetime(
+        string="Start Date", compute="_compute_calculate_date",
+        readonly=True)
+    end_date = fields.Datetime(
+        string="End Date", compute="_compute_calculate_date",
+        readonly=True)
+    fuel_efficiency = fields.Float(
+        string="Fuel Efficiency", readonly=True,
+        compute="_compute_fuel_efficiency")
+    payment_move_id = fields.Many2one(
+        'account.move', string='Payment Entry', readonly=True)
+
+    @api.depends('payment_move_id')
+    def _compute_paid(self):
+        for rec in self:
+            if rec.payment_move_id:
+                rec.paid = True
+
+    @api.depends('fuel_qty', 'distance_real')
+    def _compute_fuel_efficiency(self):
+        for rec in self:
+            if rec.distance_real and rec.fuel_qty:
+                rec.fuel_efficiency = rec.distance_real / rec.fuel_qty
+
+    @api.depends('travel_ids')
+    def _compute_calculate_date(self):
+        for rec in self:
+            start_dates = []
+            end_dates = []
+            if rec.travel_ids:
+                if len(rec.travel_ids) > 1:
+                    for travel in rec.travel_ids:
+                        start_dates.append(datetime.datetime.strptime(
+                            travel.date_start_real, "%Y-%m-%d %H:%M:%S"))
+                        end_dates.append(datetime.datetime.strptime(
+                            travel.date_end_real, "%Y-%m-%d %H:%M:%S"))
+                    start_dates.sort()
+                    end_dates.sort(reverse=True)
+                    rec.start_date = start_dates[0].strftime(
+                        "%Y-%m-%d %H:%M:%S")
+                    rec.end_date = end_dates[0].strftime(
+                        "%Y-%m-%d %H:%M:%S")
+                else:
+                    rec.start_date = rec.travel_ids.date_start_real
+                    rec.end_date = rec.travel_ids.date_end_real
 
     @api.depends('expense_line_ids')
     def _compute_fuel_qty(self):
@@ -168,6 +226,32 @@ class TmsExpense(models.Model):
                 rec.amount_fuel += (
                     line.price_subtotal +
                     line.special_tax_amount)
+
+    @api.depends('expense_line_ids')
+    def _compute_amount_fuel_cash(self):
+        for rec in self:
+            rec.amount_fuel_cash = 0.0
+            for line in rec.expense_line_ids:
+                if line.line_type == 'fuel_cash':
+                    rec.amount_fuel_cash += (
+                        line.price_subtotal +
+                        line.special_tax_amount)
+
+    @api.depends('expense_line_ids')
+    def _compute_amount_refund(self):
+        for rec in self:
+            rec.amount_refund = 0.0
+            for line in rec.expense_line_ids:
+                if line.line_type == 'refund':
+                    rec.amount_refund += line.price_total
+
+    @api.depends('expense_line_ids')
+    def _compute_amount_other_income(self):
+        for rec in self:
+            rec.amount_other_income = 0.0
+            for line in rec.expense_line_ids:
+                if line.line_type == 'other_income':
+                    rec.amount_other_income += line.price_total
 
     @api.depends('expense_line_ids')
     def _compute_amount_salary(self):
@@ -208,7 +292,10 @@ class TmsExpense(models.Model):
                 rec.amount_salary +
                 rec.amount_salary_discount +
                 rec.amount_real_expense +
-                rec.amount_salary_retention)
+                rec.amount_salary_retention +
+                rec.amount_refund +
+                rec.amount_fuel_cash +
+                rec.amount_other_income)
 
     @api.depends('travel_ids', 'expense_line_ids')
     def _compute_amount_total_real(self):
@@ -411,9 +498,7 @@ class TmsExpense(models.Model):
             invoices = []
 
             for line in rec.expense_line_ids:
-                # We only need all the lines except the fuel and the
-                # made up expenses
-                if line.line_type == 'fuel':
+                if line.line_type == 'fuel' and not line.control:
                     self.env['fleet.vehicle.log.fuel'].create({
                         'operating_unit_id': rec.operating_unit_id.id,
                         'travel_id': line.travel_id.id,
@@ -429,7 +514,8 @@ class TmsExpense(models.Model):
                         'price_total': line.price_total,
                         'date': str(fields.Date.today()),
                         })
-
+                # We only need all the lines except the fuel and the
+                # made up expenses
                 if line.line_type not in ('madeup_expense', 'fuel'):
                     product_account = (
                         negative_account

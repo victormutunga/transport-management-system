@@ -50,6 +50,13 @@
             <field eval="False" name="sale_ok"/>
             <field name="tms_product_category">fuel</field>
         </record>
+        <record id="product_fuel_cash" model="product.product">
+            <field name="name">Fuel in Cash</field>
+            <field name="type">service</field>
+            <field eval="True" name="purchase_ok"/>
+            <field eval="False" name="sale_ok"/>
+            <field name="tms_product_category">fuel_cash</field>
+        </record>
         <record id="product_salary" model="product.product">
             <field name="name">Salary</field>
             <field name="type">service</field>
@@ -77,6 +84,13 @@
             <field eval="True" name="purchase_ok"/>
             <field eval="False" name="sale_ok"/>
             <field name="tms_product_category">made_up_expense</field>
+        </record>
+        <record id="product_other_income" model="product.product">
+            <field name="name">Other Income</field>
+            <field name="type">service</field>
+            <field eval="True" name="purchase_ok"/>
+            <field eval="False" name="sale_ok"/>
+            <field name="tms_product_category">other_income</field>
         </record>
         <record id="product_ieps" model="product.product">
             <field name="name">IEPS</field>

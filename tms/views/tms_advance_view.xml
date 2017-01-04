@@ -40,7 +40,6 @@
                     <field name="amount" widget='monetary'/>
                     <field name="auto_expense"/>
                     <field name="paid"/>
-                    <field name="payment_id"/>
                     <field name="state"/>
                     <button groups="tms.group_advance_approve" icon="gtk-go-forward" name="action_approve" states="draft" string="Approve" type="object"/>
                     <button groups="tms.group_advance_confirm" icon="gtk-goto-last" name="action_confirm" states="approved" string="Confirm" type="object"/>
@@ -57,7 +56,8 @@
                         <button name="action_cancel" icon="fa-times" states="draft,approved,confirmed" string="Cancel" type="object"/>
                         <button name="action_approve" icon="fa-thumbs-up" class="oe_highlight" states="draft" string="Approve" type="object"/>
                         <button name="action_confirm" icon="fa-check-square-o" class="oe_highlight" states="approved" string="Confirm" type="object"/>
-                        <field name="state" statusbar_visible="draft,approved,confirmed,cancel,closed" widget="statusbar"/>
+                        <button name="action_authorized" icon="fa-key" string="To authorize advance" type="object" groups="base.group_no_one" class="oe_highlight" states="authorized"/>
+                        <field name="state" statusbar_visible="draft,approved,authorized,confirmed,cancel,closed" widget="statusbar"/>
                     </header>
                     <sheet>
                         <h1>
@@ -92,10 +92,10 @@
                                 </page>
                                 <page string="Log Info">
                                     <group col="4" colspan="4">
-                                        <field name="move_id" readonly="1"/>
+                                        <field name="move_id"/>
                                         <field name="paid"/>
-                                        <field name="expense_id" readonly="1" />
-                                        <field name="payment_id" readonly="1"/>
+                                        <field name="expense_id"/>
+                                        <field name="payment_move_id"/>
                                     </group>
                                 </page>
                             </notebook>

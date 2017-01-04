@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <function model="tms.advance" name="action_confirm" eval="[ref('tms.tms_advance_01')]"/>
+        <function model="tms.advance" name="action_confirm" eval="[ref('tms.tms_advance_02')]"/>
+    </data>
+</odoo>
