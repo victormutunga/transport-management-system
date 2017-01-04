@@ -175,6 +175,7 @@
                     <filter context="{'group_by':'state'}" string="State"/>
                     <filter context="{'group_by':'date'}" string="Period"/>
                     <filter context="{'group_by':'paid'}" string="Paid"/>
+                    <filter name="operating_unit_group_by" context="{'group_by':'operating_unit_id'}" string="Operating Unit"/>
                 </search>
             </field>
         </record>
@@ -204,6 +205,7 @@
             <field name="res_model">tms.expense</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="context">{'search_default_operating_unit_group_by': 1}</field>
             <field name="search_view_id" ref="view_tms_expense_filter"/>
             <field name="help">TMS Travel Expenses</field>
         </record>

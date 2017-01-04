@@ -205,20 +205,30 @@
                     <field name="name" select="1"/>
                     <field name="client_order_ref"/>
                     <field name="user_id" select="1"/>
-                    <filter domain="[('state','=','draft')]" string="Pending"/>
-                    <filter domain="[('state','=','approved')]" string="Approved"/>
-                    <filter domain="[('state','=','confirmed')]" string="Confirmed"/>
-                    <filter domain="[('invoice_id','!=', False)]" string="Invoiced"/>
-                    <filter domain="[('invoice_id','=', False)]" string="Not Invoiced"/>
-                    <filter domain="[('state','!=','cancel')]" string="Not Cancelled"/>
-                    <filter domain="[('date_order','&gt;=', time.strftime('%Y-%m-01'))]" string="From this month"/>
-                    <filter domain="[('user_id','=',uid)]" string="My Waybills"/>
-                    <filter context="{'group_by':'partner_id'}" string="Customer"/>
-                    <filter context="{'group_by':'operating_unit_id'}" string="Operating Unit"/>
-                    <filter context="{'group_by':'state'}" string="State"/>
-                    <filter context="{'group_by':'date_order'}" string="Order Date"/>
-                    <filter context="{'group_by':'user_id'}" string="Salesman"/>
-                    <filter context="{'group_by' : 'date_order'}" string="Period"/>
+                    <separator/>
+                    <filter domain="[('state','=','draft')]" icon="terp-gtk-media-pause" string="Pending"/>
+                    <filter domain="[('state','=','approved')]" icon="terp-gtk-jump-to-ltr" string="Approved"/>
+                    <filter domain="[('state','=','confirmed')]" icon="terp-check" string="Confirmed"/>
+                    <separator/>
+                    <filter domain="[('invoice_id','!=', False)]" icon="terp-stock_symbol-selection" string="Invoiced"/>
+                    <filter domain="[('invoice_id','=', False)]" icon="terp-dialog-close" string="Not Invoiced"/>
+                    <filter domain="[('state','!=','cancel')]" icon="terp-stock_symbol-selection" name="not_cancelled" string="Not Cancelled"/>
+                    <filter domain="[('date_order','&gt;=', time.strftime('%Y-%m-01'))]" icon="terp-check" name="this_month" string="From this month"/>
+                    <newline/>
+                    <filter domain="[('user_id','=',uid)]" help="My Waybills"/>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter context="{'group_by':'partner_id'}" string="Customer"/>
+                        <filter string="Waybill Category"/>
+                        <separator orientation="vertical"/>
+                        <filter context="{'group_by':'state'}" string="State"/>
+                        <separator orientation="vertical"/>
+                        <filter context="{'group_by':'date_order'}" string="Order Date"/>
+                        <filter string="Invoice"/>
+                        <filter context="{'group_by':'user_id'}" string="Salesman"/>
+                        <filter context="{'group_by' : 'date_order'}" string="Period"/>
+                        <filter name="operating_unit_group_by" context="{'group_by':'operating_unit_id'}" string="Operating Unit"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -249,7 +259,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="search_view_id" ref="view_tms_waybill_filter"/>
-            <field name="context">{&quot;search_default_user_id&quot;:uid, 'search_default_this_month': 1}</field>
+            <field name="context">{&quot;search_default_user_id&quot;:uid, 'search_default_this_month': 1, 'search_default_operating_unit_group_by': 1}</field>
             <field name="help">Waybills</field>
         </record>
         <record id="action_tms_invoice" model="ir.values">

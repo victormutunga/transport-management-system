@@ -5,8 +5,7 @@
 from openerp import fields, models
 
 
-class TmsConfigSettings(models.TransientModel):
-    _name = "tms.config.settings"
-    _inherit = "res.config.settings"
+class ResCompany(models.Model):
+    _inherit = "res.company"
 
-    _default_expense_currency_rate = fields.Float()
+    expense_currency_rate = fields.Float()
