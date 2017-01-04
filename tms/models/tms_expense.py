@@ -617,6 +617,22 @@ class TmsExpense(models.Model):
             })
             for travel in rec.travel_ids:
                 travel.write({'state': 'closed', 'expense_id': rec.id})
+                tolls = self.env['tms.toll.data'].search([
+                    ('num_tag', '=', travel.unit_id.tag_iave)])
+                for toll in tolls:
+                    if (travel.date_start_real <=
+                            toll.date <= travel.date_end_real):
+                        rec.expense_line_ids.create({
+                                'name': (_("Toll station: ") +
+                                    str(toll.station)),
+                                'travel_id': travel.id,
+                                'expense_id': rec.id,
+                                'line_type': "tolls",
+                                'product_id': False,
+                                'product_qty': 1.0,
+                                'unit_price': toll.import_rate,
+                                'control': True
+                            })
                 for advance in travel.advance_ids:
                     if advance.state != 'confirmed':
                         raise ValidationError(_(
