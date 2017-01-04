@@ -680,7 +680,6 @@ class TmsExpense(models.Model):
                 if not advance.travel_id:
                     raise ValidationError(
                         _('This employee has an advance without travel'))
-            import ipdb; ipdb.set_trace()
             rec.expense_line_ids.search([
                 ('expense_id', '=', rec.id),
                 ('control', '=', True)]).unlink()
