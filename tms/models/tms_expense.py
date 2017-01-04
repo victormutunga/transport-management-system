@@ -322,7 +322,7 @@ class TmsExpense(models.Model):
                 if line.line_type == 'salary_retention':
                     rec.amount_salary_retention += line.price_total
 
-    @api.depends('travel_ids')
+    @api.depends('travel_ids', 'expense_line_ids')
     def _compute_amount_advance(self):
         for rec in self:
             rec.amount_advance = 0
