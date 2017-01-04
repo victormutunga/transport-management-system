@@ -43,6 +43,7 @@
                             <field attrs="{'readonly':[('state','in',('confirmed'))]}" name="operating_unit_id"/>
                             <field attrs="{'readonly':[('state','in',('confirmed'))]}" name="date_order"/>
                             <field attrs="{'readonly':[('state','in',('confirmed'))]}" groups="base.group_multi_currency" name="currency_id"/>
+                            <field name='rate' invisible="1"/>
                             <separator colspan="4" string="·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·" style="text-align: center;"/>
                             <field attrs="{'readonly':[('state','in',('confirmed'))]}" colspan="4" domain="[('customer','=',True), ('is_company', '=', True)]" name="partner_id"/>
                             <field attrs="{'readonly':[('state','in',('confirmed'))]}" context="{'search_default_customer':1, 'show_address': 1}" domain="[('parent_id','=',partner_id)]" name="partner_order_id" options="{&quot;always_reload&quot;: True}"/>

@@ -147,7 +147,7 @@ class TmsWaybill(models.Model):
         help="Route obtained by electronic reading")
     distance_route = fields.Float(
         'Distance Route')
-    notes = fields.Text()
+    notes = fields.Html()
     date_start = fields.Datetime(
         'Load Date Sched', help="Date Start time for Load",
         default=fields.Datetime.now)
@@ -221,6 +221,16 @@ class TmsWaybill(models.Model):
         'tms.customs',
         'waybill_id',
         string="Customs")
+    rate = fields.Float(compute="_compute_rate")
+
+    @api.depends('date_order')
+    def _compute_rate(self):
+        """Get the exchange rate in the invoice date to set in the XML."""
+        currency_mxn = self.env.ref('base.MXN')
+        for record in self.filtered(lambda r: r.date_order):
+            currency = record.currency_id.with_context(
+                date=record.date_order)
+            record.rate = currency.compute(1, currency_mxn)
 
     @api.model
     def create(self, values):
