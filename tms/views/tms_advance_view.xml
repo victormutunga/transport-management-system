@@ -11,9 +11,8 @@
                     <filter domain="[('state','=','confirmed')]" string="Confirmed"/>
                     <filter domain="[('state','=','closed')]" string="Closed"/>
                     <filter domain="[('state','=','cancel')]" string="Cancelled"/>
-                    <newline/>
+                    <filter domain="[('paid','=', True)]" string="Paid"/>
                     <filter domain="[('date','&gt;=', time.strftime('%Y-%m-01'))]" string="From this month" name="this_month"/>
-                    <newline/>
                     <field name="date"/>
                     <field name="name"/>
                     <field name="employee_id"/>
