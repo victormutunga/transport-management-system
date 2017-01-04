@@ -47,7 +47,7 @@ class TmsAdvance(models.Model):
         readonly=True)
     paid = fields.Boolean(
         compute='_compute_paid',
-        readonly=True)
+        readonly=True, store=True)
     payment_move_id = fields.Many2one(
         'account.move',
         string="Payment Entry",
