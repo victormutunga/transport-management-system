@@ -778,6 +778,9 @@ class TmsExpense(models.Model):
                 for line in waybill.waybill_line_ids:
                     if line.product_id.apply_for_salary:
                         income += line.price_subtotal
+                if waybill.currency_id.name == 'USD':
+                    income = (income *
+                              self.env.user.company_id.expense_currency_rate)
                 if len(travel.waybill_ids.driver_factor_ids) > 0:
                     for factor in waybill.driver_factor_ids:
                         driver_salary += factor.get_amount(
