@@ -673,9 +673,13 @@ class TmsExpense(models.Model):
     @api.multi
     def get_travel_info(self):
         for rec in self:
+            exp_no_travel = rec.expense_line_ids.search([
+                ('expense_id', '=', rec.id),
+                ('travel_id', '=', False)]).ids
             rec.expense_line_ids.search([
                 ('expense_id', '=', rec.id),
-                ('travel_id', 'not in', rec.travel_ids.ids)]).unlink()
+                ('travel_id', 'not in', rec.travel_ids.ids),
+                ('id', 'not in', exp_no_travel)]).unlink()
             rec.expense_line_ids.search([
                 ('expense_id', '=', rec.id),
                 ('control', '=', True)]).unlink()
