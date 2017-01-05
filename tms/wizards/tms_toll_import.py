@@ -20,23 +20,30 @@ class TmsTollImport(models.TransientModel):
         lines = document.split('\n')
         lines.remove('')
         for line in lines:
-            split_line = line.split('|')
-            flag = split_line[0].split('\t')
-            if len(flag) == 2:
-                split_line[0] = flag[1]
-            if split_line[5][-1] == '.':
-                split_line[5] = split_line[5].replace('.', '')
-            datetime = str(split_line[2] + ' ' + split_line[3])
-            num_tag = split_line[0].replace('.', '')
-            exists = self.env['tms.toll.data'].search([
-                ('date', '=', datetime),
-                ('num_tag', '=', num_tag)])
-            if not exists:
-                self.env['tms.toll.data'].create({
-                    'num_tag': num_tag,
-                    'economic_number': split_line[1],
-                    'date': datetime,
-                    'station': split_line[4],
-                    'import_rate': split_line[5],
-                    'product_id': 1,
-                    })
+                split_line = line.split('|')
+                flag = split_line[0].split('\t')
+                if len(flag) == 2:
+                    split_line[0] = flag[1]
+                if split_line[5][-1] == '.':
+                    split_line[5].remove('.')
+                datetime = str(split_line[2] + ' ' + split_line[3])
+                num_tag = split_line[0].replace('.', '')
+                exists = self.env['tms.toll.data'].search([
+                    ('date', '=', datetime),
+                    ('num_tag', '=', num_tag)])
+                if not exists:
+                    self.env['tms.toll.data'].create({
+                        'num_tag': num_tag,
+                        'economic_number': split_line[1],
+                        'date': datetime,
+                        'toll_station': split_line[4],
+                        'import_rate': split_line[5],
+                        })
+        return {
+            'name': 'Toll station data',
+            'view_type': 'form',
+            'view_mode': 'tree',
+            'target': 'current',
+            'res_model': 'tms.toll.data',
+            'type': 'ir.actions.act_window'
+        }

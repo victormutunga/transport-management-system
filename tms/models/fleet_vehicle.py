@@ -53,7 +53,6 @@ class FleetVehicle(models.Model):
         'res.partner', string='Insurance Supplier')
     insurance_days_to_expire = fields.Integer(
         compute='_compute_insurance_days_to_expire', string='Days to expire')
-    tag_iave = fields.Char(string='TAG')
 
     @api.depends('insurance_expiration')
     def _compute_insurance_days_to_expire(self):

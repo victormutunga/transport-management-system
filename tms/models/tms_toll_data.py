@@ -12,8 +12,5 @@ class TmsTollData(models.Model):
     date = fields.Datetime()
     num_tag = fields.Char(string='Tag number')
     economic_number = fields.Char()
-    station = fields.Char()
+    toll_station = fields.Char()
     import_rate = fields.Float()
-    product_id = fields.Many2one(
-        'product.product', string='Product', required=True,
-        domain=[('tms_product_category', '=', 'tolls')])
