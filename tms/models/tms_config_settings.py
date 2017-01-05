@@ -9,4 +9,8 @@ class TmsConfigSettings(models.TransientModel):
     _name = "tms.config.settings"
     _inherit = "res.config.settings"
 
-    _default_expense_currency_rate = fields.Float()
+    company_id = fields.Many2one(
+        'res.company', default=lambda self: self.env.user.company_id)
+    _default_expense_currency_rate = fields.Float(
+        related='company_id.expense_currency_rate',
+    )
