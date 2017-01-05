@@ -39,24 +39,26 @@ class TmsWizardPayment(models.TransientModel):
                 self._context.get('active_ids'))
             bank_account_id = rec.journal_id.default_debit_account_id.id
             currency = rec.journal_id.currency_id or self.env.user.currency_id
+            currency_id = set([x.currency_id.id for x in active_ids])
+            if len(currency_id) > 1:
+                raise ValidationError(
+                    _('You cannot pay documents for different currency'))
+            elif currency.id != list(currency_id)[0]:
+                raise ValidationError(
+                    _('You cannot pay documents in different currency of the '
+                      'bank (%s)' % rec.journal_id.currency_id.name))
+            move_lines = []
+            amount_bank = 0.0
+            amount_currency = 0.0
+            name = 'Payment of'
             for obj in active_ids:
+                name = name + ' / ' + obj.name
                 if obj.state != 'confirmed' or obj.paid:
                     raise ValidationError(
                         _('The document %s must be confirmed and '
                           'unpaid.') % obj.name)
-                move_lines = []
-                move_line = {
-                    'name': _('Payment'),
-                    'ref': obj.name,
-                    'account_id': bank_account_id,
-                    'debit': 0.0,
-                    'journal_id': rec.journal_id.id,
-                    'partner_id': obj.employee_id.address_home_id.id,
-                    'operating_unit_id': obj.operating_unit_id.id,
-                }
                 counterpart_move_line = {
-                    'name': _('Payment'),
-                    'ref': obj.name,
+                    'name': obj.name,
                     'account_id': (
                         obj.employee_id.address_home_id.
                         property_account_payable_id.id),
@@ -67,16 +69,15 @@ class TmsWizardPayment(models.TransientModel):
                 }
                 if self._context.get('active_model') == 'tms.advance':
                     if currency.id != obj.currency_id.id:
-                        move_line['amount_currency'] = obj.amount * -1
-                        move_line['currency_id'] = currency.id
-                        move_line['credit'] = currency.compute(
+                        amount_currency += obj.amount * -1
+                        amount_bank += currency.compute(
                             obj.amount, self.env.user.currency_id)
                         counterpart_move_line['amount_currency'] = obj.amount
                         counterpart_move_line['currency_id'] = currency.id
                         counterpart_move_line['debit'] = currency.compute(
                             obj.amount, self.env.user.currency_id)
                     else:
-                        move_line['credit'] = obj.amount
+                        amount_bank += obj.amount
                         counterpart_move_line['debit'] = obj.amount
                 elif self._context.get('active_model') == 'tms.expense':
                     if obj.amount_balance < 0.0:
@@ -84,9 +85,8 @@ class TmsWizardPayment(models.TransientModel):
                             _('You cannot pay the expense %s because the '
                               'balance is negative') % obj.name)
                     if currency.id != obj.currency_id.id:
-                        move_line['amount_currency'] = obj.amount_balance * -1
-                        move_line['currency_id'] = currency.id
-                        move_line['credit'] = currency.compute(
+                        amount_currency += obj.amount_balance * -1
+                        amount_bank += currency.compute(
                             obj.amount_balance, self.env.user.currency_id)
                         counterpart_move_line['amount_currency'] = (
                             obj.amount_balance)
@@ -94,26 +94,38 @@ class TmsWizardPayment(models.TransientModel):
                         counterpart_move_line['debit'] = currency.compute(
                             obj.amount_balance, self.env.user.currency_id)
                     else:
-                        move_line['credit'] = obj.amount_balance
+                        amount_bank += obj.amount_balance
                         counterpart_move_line['debit'] = obj.amount_balance
-                move_lines.append((0, 0, move_line))
                 move_lines.append((0, 0, counterpart_move_line))
-                move = {
-                    'date': fields.Date.today(),
+            bank_line = {
+                    'name': name,
+                    'account_id': bank_account_id,
+                    'debit': 0.0,
+                    'credit': amount_bank,
                     'journal_id': rec.journal_id.id,
-                    'ref': obj.name,
-                    'line_ids': [line for line in move_lines],
-                    'operating_unit_id': obj.operating_unit_id.id
                 }
-                move_id = self.env['account.move'].create(move)
+            if amount_currency > 0.0:
+                bank_line['amount_currency'] = amount_currency
+                bank_line['currency_id'] = currency.id
+            move_lines.append((0, 0, bank_line))
+            move = {
+                'date': fields.Date.today(),
+                'journal_id': rec.journal_id.id,
+                'ref': name,
+                'line_ids': [line for line in move_lines],
+            }
+            move_id = self.env['account.move'].create(move)
+            for move_line in move_id.line_ids:
                 move_ids = []
-                for move_line in move_id.line_ids:
-                    if move_line.account_id.internal_type == 'payable':
-                        move_ids.append(move_line.id)
-                for move_line in obj.move_id.line_ids:
-                    if (move_line.account_id.internal_type == 'payable' and
-                            'Positive Balance' in move_line.name):
-                        move_ids.append(move_line.id)
-                reconcile_ids = self.env['account.move.line'].browse(move_ids)
-                reconcile_ids.reconcile()
+                if move_line.account_id.internal_type == 'payable':
+                    line = self.env['account.move.line'].search([
+                        ('name', '=', move_line.name),
+                        ('account_id.internal_type', '=', 'payable'),
+                        ('move_id', '!=', move_id.id)])
+                    move_ids.append(line.id)
+                    move_ids.append(move_line.id)
+                    reconcile_ids = self.env['account.move.line'].browse(
+                        move_ids)
+                    reconcile_ids.reconcile()
+            for obj in active_ids:
                 obj.payment_move_id = move_id

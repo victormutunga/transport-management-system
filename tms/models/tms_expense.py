@@ -626,8 +626,7 @@ class TmsExpense(models.Model):
                 move_lines.append(move_line)
             else:
                 move_line = (0, 0, {
-                    'name': _('Positive Balance'),
-                    'ref': rec.name,
+                    'name': rec.name,
                     'account_id': driver_account_payable,
                     'debit': 0.0,
                     'credit': rec.amount_balance,
