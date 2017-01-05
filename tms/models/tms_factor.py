@@ -63,6 +63,7 @@ class TmsFactor(models.Model):
             'volume': _('Volume'),
             'percent': _('Income Percent'),
             'percent_driver': _('Income Percent per Driver'),
+            'amount_driver': _('Amount Percent per Driver'),
         }
         if not self.factor_type:
             self.name = 'name'
