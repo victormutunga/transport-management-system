@@ -116,4 +116,6 @@ class TmsWizardPayment(models.TransientModel):
                         move_ids.append(move_line.id)
                 reconcile_ids = self.env['account.move.line'].browse(move_ids)
                 reconcile_ids.reconcile()
-                obj.payment_move_id = move_id
+                obj.write({
+                    'payment_move_id': move_id.id
+                })
