@@ -86,6 +86,11 @@ class TmsAdvance(models.Model):
             else:
                 return advance
 
+    @api.onchange('travel_id')
+    def _onchange_travel_id(self):
+        self. unit_id = self.travel_id.unit_id.id
+        self.employee_id = self.travel_id.employee_id.id
+
     @api.multi
     def _compute_paid(self):
         for advance in self:

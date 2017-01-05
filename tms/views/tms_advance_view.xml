@@ -55,7 +55,7 @@
                         <button name="action_cancel" icon="fa-times" states="draft,approved,confirmed" string="Cancel" type="object"/>
                         <button name="action_approve" icon="fa-thumbs-up" class="oe_highlight" states="draft" string="Approve" type="object"/>
                         <button name="action_confirm" icon="fa-check-square-o" class="oe_highlight" states="approved" string="Confirm" type="object"/>
-                        <button name="action_authorized" icon="fa-key" string="To authorize advance" type="object" groups="base.group_no_one" class="oe_highlight" states="authorized"/>
+                        <button name="action_authorized" icon="fa-key" string="To authorize advance" type="object" class="oe_highlight" states="authorized"/>
                         <field name="state" statusbar_visible="draft,approved,authorized,confirmed,cancel,closed" widget="statusbar"/>
                     </header>
                     <sheet>
@@ -66,9 +66,9 @@
                         <group>
                             <group>
                                 <field name="operating_unit_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
-                                <field name="travel_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" domain="[('state','!=','cancel'),('state','!=','closed'),('operating_unit_id', '=', operating_unit_id)]" />
-                                <field name="unit_id"/>
-                                <field name="employee_id"/>
+                                <field name="travel_id" attrs="{'readonly':[('state','in',('cancel','closed'))]}" domain="[('state','!=','cancel'),('state','!=','closed'),('operating_unit_id', '=', operating_unit_id)]" />
+                                <field name="unit_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                <field name="employee_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                             </group>
                             <group>
                                 <field name="date" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
