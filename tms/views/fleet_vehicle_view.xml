@@ -84,8 +84,8 @@
                             <group>
                                 <field colspan="4" context="{'default_vehicle_id': active_id, 'active_model_base': active_model}" name="unit_extradata" nolabel="1">
                                     <tree string="Extra Fields">
-                                        <field name="type"/>
-                                        <field name="value_extra"/>
+                                        <field name="type_id" string="Name"/>
+                                        <field name="value_extra" string="Value"/>
                                     </tree>
                                 </field>
                             </group>

@@ -117,8 +117,8 @@
                                     <newline/>
                                     <field colspan="4" context="{'default_waybill_id': active_id, 'active_model_base': active_model}" name="waybill_extradata" nolabel="1">
                                         <tree string="Extra Fields">
-                                            <field name="type_id"/>
-                                            <field name="value_extra"/>
+                                            <field name="type_id" string="Name"/>
+                                            <field name="value_extra" string="Value"/>
                                         </tree>
                                     </field>
                                 </group>
