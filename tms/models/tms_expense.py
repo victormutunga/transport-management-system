@@ -673,12 +673,13 @@ class TmsExpense(models.Model):
     @api.multi
     def get_travel_info(self):
         for rec in self:
-            rec.expense_line_ids.search([
-                ('expense_id', '=', rec.id),
-                ('travel_id', 'not in', rec.travel_ids.ids)]).unlink()
-            rec.expense_line_ids.search([
-                ('expense_id', '=', rec.id),
-                ('control', '=', True)]).unlink()
+            advance = self.env['tms.advance'].search([
+                ('unit_id', '=', rec.unit_id.id),
+                ('employee_id', '=', rec.employee_id.id)])
+            if len(advance) >= 1:
+                if not advance.travel_id:
+                    raise ValidationError(
+                        _('This employee has an advance without travel'))
             travels = self.env['tms.travel'].search(
                 [('expense_id', '=', rec.id)])
             travels.write({'expense_id': False, 'state': 'done'})
@@ -696,6 +697,22 @@ class TmsExpense(models.Model):
             })
             for travel in rec.travel_ids:
                 travel.write({'state': 'closed', 'expense_id': rec.id})
+                tolls = self.env['tms.toll.data'].search([
+                    ('num_tag', '=', travel.unit_id.tag_iave)])
+                for toll in tolls:
+                    if (travel.date_start_real <=
+                            toll.date <= travel.date_end_real):
+                        rec.expense_line_ids.create({
+                                'name': (_("Toll station: ") +
+                                    str(toll.station)),
+                                'travel_id': travel.id,
+                                'expense_id': rec.id,
+                                'line_type': "tolls",
+                                'product_id': False,
+                                'product_qty': 1.0,
+                                'unit_price': toll.import_rate,
+                                'control': True
+                            })
                 for advance in travel.advance_ids:
                     if advance.state != 'confirmed':
                         raise ValidationError(_(
@@ -897,3 +914,21 @@ class TmsExpense(models.Model):
                 ]
             }
         }
+
+    @api.multi
+    def get_amount_total(self):
+        for rec in self:
+            amount_subtotal = 0.0
+            for line in rec.expense_line_ids:
+                if line.line_type in ['real_expense', 'fuel', 'fuel_cash']:
+                    amount_subtotal += line.price_subtotal
+            return amount_subtotal
+
+    @api.multi
+    def get_amount_tax(self):
+        for rec in self:
+            tax_amount = 0.0
+            for line in rec.expense_line_ids:
+                if line.line_type in ['real_expense', 'fuel', 'fuel_cash']:
+                    tax_amount += line.tax_amount
+            return tax_amount

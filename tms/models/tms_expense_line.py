@@ -36,6 +36,7 @@ class TmsExpenseLine(models.Model):
          ('refund', 'Refund'),
          ('salary_retention', 'Salary Retention'),
          ('salary_discount', 'Salary Discount'),
+         ('tolls', 'Highway tolls'),
          ('other_income', 'Other Income')],
         compute='_compute_line_type',
         store=True, readonly=True)
