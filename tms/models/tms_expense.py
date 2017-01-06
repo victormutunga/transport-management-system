@@ -322,7 +322,7 @@ class TmsExpense(models.Model):
                 if line.line_type == 'salary_retention':
                     rec.amount_salary_retention += line.price_total
 
-    @api.depends('travel_ids')
+    @api.depends('travel_ids', 'expense_line_ids')
     def _compute_amount_advance(self):
         for rec in self:
             rec.amount_advance = 0
@@ -510,7 +510,7 @@ class TmsExpense(models.Model):
                         'product_qty': line.product_qty,
                         'tax_amount': line.tax_amount,
                         'state': 'closed',
-                        'employee_id':  rec.employee.id,
+                        'employee_id':  rec.employee_id.id,
                         'price_total': line.price_total,
                         'date': str(fields.Date.today()),
                         })
@@ -626,8 +626,7 @@ class TmsExpense(models.Model):
                 move_lines.append(move_line)
             else:
                 move_line = (0, 0, {
-                    'name': _('Positive Balance'),
-                    'ref': rec.name,
+                    'name': rec.name,
                     'account_id': driver_account_payable,
                     'debit': 0.0,
                     'credit': rec.amount_balance,
@@ -673,16 +672,13 @@ class TmsExpense(models.Model):
     @api.multi
     def get_travel_info(self):
         for rec in self:
-            advance = self.env['tms.advance'].search([
-                ('unit_id', '=', rec.unit_id.id),
-                ('employee_id', '=', rec.employee_id.id)])
-            if len(advance) >= 1:
-                if not advance.travel_id:
-                    raise ValidationError(
-                        _('This employee has an advance without travel'))
+            exp_no_travel = rec.expense_line_ids.search([
+                ('expense_id', '=', rec.id),
+                ('travel_id', '=', False)]).ids
             rec.expense_line_ids.search([
                 ('expense_id', '=', rec.id),
-                ('travel_id', 'not in', rec.travel_ids.ids)]).unlink()
+                ('travel_id', 'not in', rec.travel_ids.ids),
+                ('id', 'not in', exp_no_travel)]).unlink()
             rec.expense_line_ids.search([
                 ('expense_id', '=', rec.id),
                 ('control', '=', True)]).unlink()
@@ -785,6 +781,9 @@ class TmsExpense(models.Model):
                 for line in waybill.waybill_line_ids:
                     if line.product_id.apply_for_salary:
                         income += line.price_subtotal
+                if waybill.currency_id.name == 'USD':
+                    income = (income *
+                              self.env.user.company_id.expense_currency_rate)
                 if len(travel.waybill_ids.driver_factor_ids) > 0:
                     for factor in waybill.driver_factor_ids:
                         driver_salary += factor.get_amount(
@@ -904,3 +903,21 @@ class TmsExpense(models.Model):
                 ]
             }
         }
+
+    @api.multi
+    def get_amount_total(self):
+        for rec in self:
+            amount_subtotal = 0.0
+            for line in rec.expense_line_ids:
+                if line.line_type in ['real_expense', 'fuel', 'fuel_cash']:
+                    amount_subtotal += line.price_subtotal
+            return amount_subtotal
+
+    @api.multi
+    def get_amount_tax(self):
+        for rec in self:
+            tax_amount = 0.0
+            for line in rec.expense_line_ids:
+                if line.line_type in ['real_expense', 'fuel', 'fuel_cash']:
+                    tax_amount += line.tax_amount
+            return tax_amount

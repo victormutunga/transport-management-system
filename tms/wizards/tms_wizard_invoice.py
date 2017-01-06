@@ -16,6 +16,7 @@ class TmsWizardInvoice(models.TransientModel):
             'product_id': product.id,
             'quantity': quantity,
             'price_unit': price_unit,
+            'uom_id': product.uom_id.id,
             'invoice_line_tax_ids': [(6, 0, [x.id for x in tax])],
             'name': product.name,
             'account_id': account.id,

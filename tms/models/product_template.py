@@ -34,7 +34,6 @@ class ProductTemplate(models.Model):
             categorys = [
                 ['freight', 'Freight (Waybill)'],
                 ['move', 'Moves (Waybill)'],
-                ['insurance', 'Insurance'],
                 ['salary', 'Salary'],
                 ['negative_balance', 'Negative Balance'],
                 ['indirect_expense', 'Indirect Expense']

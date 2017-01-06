@@ -32,7 +32,8 @@ class TmsFactor(models.Model):
         ('qty', 'Quantity'),
         ('volume', 'Volume'),
         ('percent', 'Income Percent'),
-        ('percent_driver', 'Income Percent per Driver')], string='Factor Type',
+        ('percent_driver', 'Income Percent per Driver'),
+        ('amount_driver', 'Amount Percent per Driver')], string='Factor Type',
         required=True,
         help='For next options you have to type Ranges or Fixed Amount\n - '
              'Distance Route (Km/mi)\n - Distance Real (Km/Mi)\n - Weight\n'
@@ -62,6 +63,7 @@ class TmsFactor(models.Model):
             'volume': _('Volume'),
             'percent': _('Income Percent'),
             'percent_driver': _('Income Percent per Driver'),
+            'amount_driver': _('Amount Percent per Driver'),
         }
         if not self.factor_type:
             self.name = 'name'
@@ -92,6 +94,15 @@ class TmsFactor(models.Model):
                     raise ValidationError(
                         _('Invalid parameter you can use this factor only with'
                           ' drivers'))
+            elif rec.factor_type == 'amount_driver':
+                if employee:
+                    if employee.income_percentage == 0.0:
+                        raise ValidationError(
+                            _('The employee must have a income percentage '
+                              'value'))
+                    else:
+                        amount += rec.fixed_amount * (
+                            employee.income_percentage / 100)
             else:
                 for key, value in factor_list.items():
                     if rec.factor_type == key:

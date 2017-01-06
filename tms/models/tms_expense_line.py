@@ -37,7 +37,8 @@ class TmsExpenseLine(models.Model):
          ('salary_retention', 'Salary Retention'),
          ('salary_discount', 'Salary Discount'),
          ('other_income', 'Other Income')],
-        default='real_expense', readonly=True)
+        compute='_compute_line_type',
+        store=True, readonly=True)
     name = fields.Char(
         'Description',
         required=True)
@@ -89,6 +90,11 @@ class TmsExpenseLine(models.Model):
         self.line_type = self.product_id.tms_product_category
         self.product_uom_id = self.product_id.uom_id.id
         self.name = self.product_id.name
+
+    @api.depends('product_id')
+    def _compute_line_type(self):
+        for rec in self:
+            rec.line_type = rec.product_id.tms_product_category
 
     @api.depends('tax_ids', 'product_qty', 'unit_price')
     def _compute_tax_amount(self):

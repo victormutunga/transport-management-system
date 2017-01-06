@@ -47,7 +47,7 @@ class TmsAdvance(models.Model):
         readonly=True)
     paid = fields.Boolean(
         compute='_compute_paid',
-        readonly=True)
+        readonly=True, store=True)
     payment_move_id = fields.Many2one(
         'account.move',
         string="Payment Entry",
@@ -86,11 +86,16 @@ class TmsAdvance(models.Model):
             else:
                 return advance
 
-    @api.multi
+    @api.onchange('travel_id')
+    def _onchange_travel_id(self):
+        self. unit_id = self.travel_id.unit_id.id
+        self.employee_id = self.travel_id.employee_id.id
+
+    @api.depends('payment_move_id')
     def _compute_paid(self):
-        for advance in self:
-            if advance.payment_move_id:
-                advance.paid = True
+        for rec in self:
+            if rec.payment_move_id:
+                rec.paid = True
 
     @api.multi
     def action_authorized(self):

@@ -20,9 +20,7 @@ class TmsTravel(models.Model):
         'tms.waybill', string='Waybills')
     driver_factor_ids = fields.One2many(
         'tms.factor', 'travel_id', string='Travel Driver Payment Factors',
-        domain=[('category', '=', 'driver')],
-        states={'cancel': [('readonly', True)],
-                'done': [('readonly', True)]})
+        domain=[('category', '=', 'driver')])
     name = fields.Char('Travel Number')
     state = fields.Selection(
         [('draft', 'Pending'), ('progress', 'In Progress'), ('done', 'Done'),
