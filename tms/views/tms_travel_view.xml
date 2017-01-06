@@ -50,6 +50,8 @@
                     <field name="dolly_id"/>
                     <field name="trailer2_id"/>
                     <field name="employee_id"/>
+                    <field name="partner_ids" widget="many2many_tags"/>
+                    <field name="waybill_ids" widget="many2many_tags"/>
                     <field name="route_id"/>
                     <field name="state"/>
                     <button groups="tms.group_travel_dispatch" icon="fa-thumbs-up" name="action_dispatch" states="draft" string="Dispatch Travel" type="object"/>
