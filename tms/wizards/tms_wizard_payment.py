@@ -98,12 +98,12 @@ class TmsWizardPayment(models.TransientModel):
                         counterpart_move_line['debit'] = obj.amount_balance
                 move_lines.append((0, 0, counterpart_move_line))
             bank_line = {
-                    'name': name,
-                    'account_id': bank_account_id,
-                    'debit': 0.0,
-                    'credit': amount_bank,
-                    'journal_id': rec.journal_id.id,
-                }
+                'name': name,
+                'account_id': bank_account_id,
+                'debit': 0.0,
+                'credit': amount_bank,
+                'journal_id': rec.journal_id.id,
+            }
             if amount_currency > 0.0:
                 bank_line['amount_currency'] = amount_currency
                 bank_line['currency_id'] = currency.id
@@ -117,20 +117,6 @@ class TmsWizardPayment(models.TransientModel):
             move_id = self.env['account.move'].create(move)
             for move_line in move_id.line_ids:
                 move_ids = []
-<<<<<<< HEAD
-                for move_line in move_id.line_ids:
-                    if move_line.account_id.internal_type == 'payable':
-                        move_ids.append(move_line.id)
-                for move_line in obj.move_id.line_ids:
-                    if (move_line.account_id.internal_type == 'payable' and
-                            'Positive Balance' in move_line.name):
-                        move_ids.append(move_line.id)
-                reconcile_ids = self.env['account.move.line'].browse(move_ids)
-                reconcile_ids.reconcile()
-                obj.write({
-                    'payment_move_id': move_id.id
-                })
-=======
                 if move_line.account_id.internal_type == 'payable':
                     line = self.env['account.move.line'].search([
                         ('name', '=', move_line.name),
@@ -143,4 +129,3 @@ class TmsWizardPayment(models.TransientModel):
                     reconcile_ids.reconcile()
             for obj in active_ids:
                 obj.payment_move_id = move_id
->>>>>>> 79c3f7faaaef5fd4bf71ead24c87f7e64dcea370
