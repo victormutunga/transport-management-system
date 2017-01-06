@@ -78,6 +78,17 @@
                 </form>
             </field>
         </record>
+        <record id="view_tms_vehicle_log_fuel_filter" model="ir.ui.view">
+            <field name="name">tms.waybill.list.select</field>
+            <field name="model">tms.waybill</field>
+            <field name="arch" type="xml">
+                <search string="Search Waybills">
+                    <group expand="0" string="Group By...">
+                        <filter name="operating_unit_group_by" context="{'group_by':'operating_unit_id'}" string="Operating Unit"/>
+                    </group>
+                </search>
+            </field>
+        </record>
         <record id="fleet_vehicle_log_fuel_tree" model="ir.ui.view">
             <field name="name">tms.fleet.vehicle.log.fuel.tree</field>
             <field name="model">fleet.vehicle.log.fuel</field>

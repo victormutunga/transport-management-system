@@ -14,24 +14,18 @@
                                 <tr>
                                     <th><label>Departure Date:</label></th>
                                     <th> <span t-field="doc.date_start"/></th>
-                                </tr>
-                                <tr>
                                     <th><label>Deliver Date:</label></th>
                                     <th><span t-field="doc.travel_duration"/> Hrs</th>
                                 </tr>
                                 <tr>
                                     <th><label>Waybill:</label></th>
                                     <th><span t-field="doc.waybill_ids.name"/></th>
-                                </tr>
-                                <tr>
                                     <th><label>Unit:</label></th>
                                     <th><span t-field="doc.unit_id"/></th>
                                 </tr>
                                 <tr>
                                     <th><label>Trailer:</label></th>
                                     <th><span t-field="doc.trailer1_id"/></th>
-                                </tr>
-                                <tr>
                                     <th><label>Driver:</label></th>
                                     <th><span t-field="doc.employee_id"/></th>
                                 </tr>

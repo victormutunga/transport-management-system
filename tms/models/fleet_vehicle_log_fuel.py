@@ -205,9 +205,9 @@ class FleetVehicleLogFuel(models.Model):
             self.vehicle_id = False
 
     @api.multi
-    def _amount_to_text(self, amount_total, currency, partner_lang='es_MX'):
-        total = str(float(amount_total)).split('.')[0]
-        decimals = str(float(amount_total)).split('.')[1]
-        total = num2words(float(amount_total)).upper()
-        return '%s %s %s/100' % (
-            total, currency, decimals or 0.0)
+    def _amount_to_text(self, product_qty):
+        total = str(float(product_qty)).split('.')[0]
+        decimals = str(float(product_qty)).split('.')[1]
+        total = num2words(float(total)).upper()
+        decimals = num2words(float(decimals)).upper()
+        return '%s POINT %s' % (total, decimals or 0.0)

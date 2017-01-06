@@ -11,65 +11,9 @@
                         
                         <button class="oe_link" name="cancel" string="Cancel" type="object"/></header>
                     <group id="tms" string="TMS">
-                        <label for="id" string="Agreements"/>
+                        <label for="id" string="Expense Currency Rate"/>
                         <div>
-                            <field class="oe_inline" name="module_tms_agreement"/>
-                            <label for="module_tms_agreement"/>
-                        </div>
-                        <label for="id" string="Business Inteligence"/> 
-                        <div>
-                            <field class="oe_inline" name="module_tms_analysis"/>
-                            <label for="module_tms_analysis"/>
-                        </div>
-                        <label for="id" string="Driver License"/>
-                        <div>
-                            <field class="oe_inline" name="module_tms_driver_license"/>
-                            <label for="module_tms_driver_license"/>
-                        </div>
-                        <label for="id" string="Maintenance"/>
-                        <div>
-                            <field class="oe_inline" name="module_tms_maintenance"/>
-                            <label for="module_tms_maintenance"/>
-                        </div>
-                        <label for="id" string="Vehicle Insurance"/>
-                        <div>
-                            <field class="oe_inline" name="module_tms_vehicle_insurance"/>
-                            <label for="module_tms_vehicle_insurance"/>
-                        </div>
-                        <label for="id" string="Events"/>
-                        <div>
-                            <field class="oe_inline" name="module_tms_event"/>
-                            <label for="module_tms_event"/>
-                        </div>
-                        <label for="id" string="Operating Units"/>
-                        <div>
-                            <field class="oe_inline" name="module_tms_operating_unit"/>
-                            <label for="module_tms_operating_unit"/>
-                        </div>
-                        <label for="id" string="Driver Loan"/>
-                        <div>
-                            <field class="oe_inline" name="module_tms_driver_loan"/>
-                            <label for="module_tms_driver_loan"/>
-                        </div>
-                        <label for="id" string="Internal Fuel"/>
-                        <div>
-                            <field class="oe_inline" name="module_tms_internal_fuel"/>
-                            <label for="module_tms_internal_fuel"/>
-                        </div>
-                        <label for="id" string="Operations"/>
-                        <div>
-                            <field class="oe_inline" name="module_tms_operations"/>
-                            <label for="module_tms_operations"/>
-                        </div>
-                        <label for="id" string="Second Driver"/>
-                        <div>
-                            <field class="oe_inline" name="module_tms_second_driver"/>
-                            <label for="module_tms_second_driver"/>
-                        </div>
-                        <label for="id" string="Toll stations"/>
-                        <div>
-                            <field class="oe_inline" name="module_tms_toll_stations"/>
-                            <label for="module_tms_toll_stations"/>
+                            <field class="oe_inline" name="_default_expense_currency_rate"/>
                         </div>
                     </group>
                 </form>
@@ -82,5 +26,7 @@
             <field name="view_mode">form</field>
             <field name="target">inline</field>
         </record>
+        <menuitem id="menu_custom_config" name="Settings" parent="tms.menu_tms_settings"
+        sequence="1" action="action_tms_config"/>
     </data>
 </odoo>

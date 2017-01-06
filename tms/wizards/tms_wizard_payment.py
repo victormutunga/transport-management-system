@@ -98,12 +98,12 @@ class TmsWizardPayment(models.TransientModel):
                         counterpart_move_line['debit'] = obj.amount_balance
                 move_lines.append((0, 0, counterpart_move_line))
             bank_line = {
-                    'name': name,
-                    'account_id': bank_account_id,
-                    'debit': 0.0,
-                    'credit': amount_bank,
-                    'journal_id': rec.journal_id.id,
-                }
+                'name': name,
+                'account_id': bank_account_id,
+                'debit': 0.0,
+                'credit': amount_bank,
+                'journal_id': rec.journal_id.id,
+            }
             if amount_currency > 0.0:
                 bank_line['amount_currency'] = amount_currency
                 bank_line['currency_id'] = currency.id
