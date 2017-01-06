@@ -498,11 +498,3 @@ class TmsWaybill(models.Model):
             currency = 'PESOS'
         return '%s %s %s/100 %s' % (
             total, currency, decimals or 0.0, currency_type)
-
-    @api.constrains('departure_address_id', 'arrival_address_id')
-    def departure_arrival(self):
-        for rec in self:
-            if rec.departure_address_id == rec.arrival_address_id:
-                raise exceptions.ValidationError(
-                    _('The Departure Address and the Arrival'
-                      ' Address cannot be the same'))
