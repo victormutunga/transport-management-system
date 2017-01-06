@@ -397,11 +397,7 @@ class TmsWaybill(models.Model):
     @api.multi
     def action_confirm(self):
         for waybill in self:
-            if waybill.amount_untaxed <= 0.0:
-                raise exceptions.ValidationError(
-                    _('Could not confirm Waybill !\n'
-                      'Total Amount must be greater than zero.'))
-            elif not waybill.travel_ids:
+            if not waybill.travel_ids:
                 raise exceptions.ValidationError(
                     _('Could not confirm Waybill !\n'
                       'Waybill must be assigned to a Travel before '
