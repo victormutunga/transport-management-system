@@ -122,6 +122,10 @@ class TmsWizardPayment(models.TransientModel):
                         ('name', '=', move_line.name),
                         ('account_id.internal_type', '=', 'payable'),
                         ('move_id', '!=', move_id.id)])
+                    if len(line) > 1:
+                        raise ValidationError(
+                            'The driver advance account is defined as '
+                            'payable. %s ' % line[0].name)
                     move_ids.append(line.id)
                     move_ids.append(move_line.id)
                     reconcile_ids = self.env['account.move.line'].browse(
