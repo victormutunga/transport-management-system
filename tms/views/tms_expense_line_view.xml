@@ -34,6 +34,7 @@
                             <field name="product_uom_id" invisible="1"/>
                             <field name="expense_id" invisible="1"/>
                             <field name="travel_id" domain="[('expense_id', '=', expense_id),('expense_id', '!=', False)]" options="{'no_create': True}"/>
+                            <field name='route_id'/>
                             <field name="line_type" required='1'/>
                             <field name="product_id" required='1' domain="[('tms_product_category', 'in', ['real_expense','made_up_expense','salary','salary_retention','salary_discount','fuel','other_income','refund','fuel_cash'])]" options="{'no_create': True}"/>
                             <field name="name"/>

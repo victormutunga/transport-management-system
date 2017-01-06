@@ -81,6 +81,8 @@ class TmsExpenseLine(models.Model):
     product_id = fields.Many2one(
         'product.product',
         string='Product')
+    route_id = fields.Many2one(
+        'tms.route', related='travel_id.route_id', string='Route', readonly=True)
 
     @api.onchange('product_id')
     def _onchange_product_id(self):

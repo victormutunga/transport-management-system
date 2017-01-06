@@ -784,7 +784,7 @@ class TmsExpense(models.Model):
                 if waybill.currency_id.name == 'USD':
                     income = (income *
                               self.env.user.company_id.expense_currency_rate)
-                if len(travel.waybill_ids.driver_factor_ids) > 0:
+                if len(waybill.driver_factor_ids) > 0:
                     for factor in waybill.driver_factor_ids:
                         driver_salary += factor.get_amount(
                             weight=waybill.product_weight,
