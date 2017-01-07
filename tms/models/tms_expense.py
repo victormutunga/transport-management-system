@@ -43,8 +43,8 @@ class TmsExpense(models.Model):
         compute='_compute_amount_real_expense',
         string='Expenses',
         store=True)
-    amount_madeup_expense = fields.Float(
-        compute='_compute_amount_madeup_expense',
+    amount_made_up_expense = fields.Float(
+        compute='_compute_amount_made_up_expense',
         string='Fake Expenses',
         store=True)
     fuel_qty = fields.Float(
@@ -270,12 +270,12 @@ class TmsExpense(models.Model):
                     rec.amount_salary_discount += line.price_total
 
     @api.depends('expense_line_ids')
-    def _compute_amount_madeup_expense(self):
+    def _compute_amount_made_up_expense(self):
         for rec in self:
-            rec.amount_madeup_expense = 0
+            rec.amount_made_up_expense = 0
             for line in rec.expense_line_ids:
-                if line.line_type == 'madeup_expense':
-                    rec.amount_madeup_expense += line.price_total
+                if line.line_type == 'made_up_expense':
+                    rec.amount_made_up_expense += line.price_total
 
     @api.depends('expense_line_ids')
     def _compute_amount_real_expense(self):
@@ -370,7 +370,8 @@ class TmsExpense(models.Model):
     def _compute_amount_total_total(self):
         for rec in self:
             rec.amount_total_total = (
-                rec.amount_subtotal_total + rec.amount_tax_total)
+                rec.amount_subtotal_total + rec.amount_tax_total +
+                rec.amount_made_up_expense)
 
     @api.depends('travel_ids')
     def _compute_distance_routes(self):
@@ -516,7 +517,7 @@ class TmsExpense(models.Model):
                         })
                 # We only need all the lines except the fuel and the
                 # made up expenses
-                if line.line_type not in ('madeup_expense', 'fuel'):
+                if line.line_type not in ('made_up_expense', 'fuel'):
                     product_account = (
                         negative_account
                         if (line.product_id.
