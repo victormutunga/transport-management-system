@@ -73,7 +73,7 @@
                                             <field name="amount_tax_total"/>
                                             <field name="amount_total_total"/>
                                             <separator colspan="2" string="· · · · · · · · · ·" style="text-align: center;"/>
-                                            <field name="amount_madeup_expense"/>
+                                            <field name="amount_made_up_expense"/>
                                         </group>
                                     </div>
                                     <div/>
