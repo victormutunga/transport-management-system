@@ -31,12 +31,17 @@ class TmsAdvance(models.Model):
         default=fields.Date.today)
     travel_id = fields.Many2one(
         'tms.travel',
+        required=True,
         string='Travel')
     unit_id = fields.Many2one(
         'fleet.vehicle',
+        related='travel_id.unit_id',
+        readonly=True,
         string='Unit')
     employee_id = fields.Many2one(
         'hr.employee',
+        related='travel_id.employee_id',
+        readonly=True,
         string='Driver')
     amount = fields.Monetary(required=True)
     notes = fields.Text()
