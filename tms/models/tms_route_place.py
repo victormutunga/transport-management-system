@@ -12,6 +12,7 @@ class TmsRoutePlace(models.Model):
 
     route_id = fields.Many2one(
         'tms.route',
+        required=True,
         string="Route")
     sequence = fields.Integer(default=10)
     place_id = fields.Many2one('tms.place', string="Place")
