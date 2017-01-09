@@ -69,8 +69,8 @@
                             <group>
                                 <field name="operating_unit_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                                 <field name="travel_id" attrs="{'readonly':[('state','in',('cancel','closed'))]}" domain="[('state','!=','cancel'),('state','!=','closed'),('operating_unit_id', '=', operating_unit_id)]" />
-                                <field name="unit_id" readonly="1" domain="[('operating_unit_id', '=', operating_unit_id)]" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
-                                <field name="employee_id" readonly="1" domain="[('operating_unit_id', '=', operating_unit_id)]" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                <field name="unit_id" domain="[('operating_unit_id', '=', operating_unit_id)]" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                <field name="employee_id" domain="[('operating_unit_id', '=', operating_unit_id)]" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                             </group>
                             <group>
                                 <field name="date" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
