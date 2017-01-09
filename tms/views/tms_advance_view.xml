@@ -34,7 +34,7 @@
                 <tree colors="gray:state=='cancel';red:state=='draft';green:state=='approved';blue:state=='confirmed';" string="Advances">
                     <field name="name"/>
                     <field name="date"/>
-                    <field name="travel_id"/>
+                    <field name="travel_id" required='1'/>
                     <field name="unit_id"/>
                     <field name="employee_id"/>
                     <field name="currency_id" invisible="1"/>
@@ -69,8 +69,8 @@
                             <group>
                                 <field name="operating_unit_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                                 <field name="travel_id" attrs="{'readonly':[('state','in',('cancel','closed'))]}" domain="[('state','!=','cancel'),('state','!=','closed'),('operating_unit_id', '=', operating_unit_id)]" />
-                                <field name="unit_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
-                                <field name="employee_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                <field name="unit_id" readonly="1" domain="[('operating_unit_id', '=', operating_unit_id)]" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                <field name="employee_id" readonly="1" domain="[('operating_unit_id', '=', operating_unit_id)]" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                             </group>
                             <group>
                                 <field name="date" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
