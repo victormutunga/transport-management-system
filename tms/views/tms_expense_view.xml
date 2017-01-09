@@ -103,6 +103,9 @@
                                     <group col="2" colspan="2">
                                         <field name='end_date' attrs="{'invisible':[('end_date','=',False)]}"/>
                                     </group>
+                                    <group col="2" colspan="2">
+                                        <field name='travel_days'/>
+                                    </group>
                                 </group>
                                 <newline/>
                                 <separator colspan="4" string="Global Performance"/>

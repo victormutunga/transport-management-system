@@ -176,6 +176,35 @@ class TmsExpense(models.Model):
         compute="_compute_fuel_efficiency")
     payment_move_id = fields.Many2one(
         'account.move', string='Payment Entry', readonly=True)
+    travel_days = fields.Char(
+        string='Travel Days',
+        compute='_compute_travel_days',
+    )
+
+    @api.depends('start_date', 'end_date')
+    def _compute_travel_days(self):
+        for rec in self:
+            if rec.start_date and rec.end_date:
+                strp_start_date = datetime.datetime.strptime(
+                    rec.start_date, "%Y-%m-%d %H:%M:%S")
+                strp_end_date = datetime.datetime.strptime(
+                    rec.end_date, "%Y-%m-%d %H:%M:%S")
+                difference = strp_end_date - strp_start_date
+                hours = int(difference.seconds / 3600)
+                mins = int((difference.seconds - (hours * 3600))/60)
+                seconds = difference.seconds - ((hours * 3600) + (mins * 60))
+                if hours < 10:
+                    hours = '0' + str(hours)
+                if mins < 10:
+                    mins = '0' + str(mins)
+                if seconds < 10:
+                    seconds = '0' + str(seconds)
+                total_string = (
+                    str(difference.days) + _('Day(s), ') +
+                    str(hours) + ':' +
+                    str(mins) + ':' +
+                    str(seconds))
+                rec.travel_days = total_string
 
     @api.depends('payment_move_id')
     def _compute_paid(self):
