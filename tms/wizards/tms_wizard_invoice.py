@@ -26,6 +26,7 @@ class TmsWizardInvoice(models.TransientModel):
     def compute_waybill(self, record, lines):
         res = {}
         res['invoice_type'] = 'out_invoice'
+        res['operating_unit_id'] = record.operating_unit_id
         partner_id = record.partner_invoice_id
         res['partner_id'] = partner_id
         fpos = partner_id.property_account_position_id
@@ -59,6 +60,7 @@ class TmsWizardInvoice(models.TransientModel):
     def compute_fuel_log(self, record, lines):
         res = {}
         res['invoice_type'] = 'in_invoice'
+        res['operating_unit_id'] = record.operating_unit_id
         partner_id = record.vendor_id
         res['partner_id'] = partner_id
         fpos = partner_id.property_account_position_id
@@ -125,6 +127,7 @@ class TmsWizardInvoice(models.TransientModel):
 
         invoice_id = self.env['account.invoice'].create({
             'partner_id': res['partner_id'].id,
+            'operating_unit_id': res['operating_unit_id'].id,
             'fiscal_position_id': res['fpos'].id,
             'reference': "Invoice of: " + ', '.join(record_names),
             'journal_id': journal_id,
