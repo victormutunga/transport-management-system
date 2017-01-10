@@ -229,11 +229,13 @@ class TmsTravel(models.Model):
     @api.multi
     def action_cancel(self):
         for rec in self:
-            advances = rec.search([
-                '|',
-                ('fuel_log_ids', '!=', 'cancel'),
-                ('advance_ids', '!=', 'cancel')])
-            if len(advances) >= 1:
+            advances = rec.advance_ids.search([
+                ('state', '!=', 'cancel'),
+                ('travel_id', '=', rec.id)])
+            fuel_log = rec.fuel_log_ids.search([
+                ('state', '!=', 'cancel'),
+                ('travel_id', '=', rec.id)])
+            if len(advances) >= 1 or len(fuel_log) >= 1:
                 raise ValidationError(
                     _('If you want to cancel this travel,'
                       ' you must cancel the fuel logs or the advances '
