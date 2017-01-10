@@ -68,6 +68,9 @@ traffic_tms_resource_resource,traffic_tms_resource_resource,resource.model_resou
 traffic_tms_fleet_vehicle_model,traffic_tms_fleet_vehicle_model,fleet.model_fleet_vehicle_model,group_traffic,1,1,1,0
 traffic_tms_fleet_vehicle_model_brand,traffic_tms_fleet_vehicle_model_brand,fleet.model_fleet_vehicle_model_brand,group_traffic,1,1,1,0
 traffic_tms_waybill_transportable_line,traffic_tms_waybill_transportable_line,model_tms_waybill_transportable_line,group_traffic,1,1,1,1
+traffic_tms_event,access_tms_event,model_tms_event,group_traffic,1,1,1,1
+
+
 
 
 
