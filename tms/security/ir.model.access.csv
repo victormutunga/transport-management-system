@@ -45,7 +45,7 @@ traffic_tms_route_fuelefficiency,access_tms_route_fuelefficiency,model_tms_route
 traffic_hr_employee,traffic_hr_employee,model_hr_employee,group_traffic,1,1,0,0
 traffic_tms_place,traffic_tms_place,model_tms_place,group_traffic,1,1,1,0
 traffic_tms_route,access_tms_route,model_tms_route,group_traffic,1,1,1,0
-traffic_tms_route_place,access_tms_route_place,model_tms_route_place,group_traffic,1,1,1,0
+traffic_tms_route_place,access_tms_route_place,model_tms_route_place,group_traffic,1,1,1,1
 traffic_tms_route_tollstation,access_tms_route_tollstation,model_tms_route_tollstation,group_traffic,1,1,1,0
 traffic_tms_route_tollstation_costperaxis,access_tms_route_tollstation_costperaxis,model_tms_route_tollstation_costperaxis,group_traffic,1,1,1,0
 traffic_tms_transportable,access_tms_transportable,model_tms_transportable,group_traffic,1,1,1,0
