@@ -58,9 +58,9 @@ class TmsWaybill(models.Model):
         ('cancel', 'Cancelled')], 'State', readonly=True,
         help="Gives the state of the Waybill.",
         default='draft')
-    date_order = fields.Date(
+    date_order = fields.Datetime(
         'Date', required=True,
-        default=fields.Date.today)
+        default=fields.Datetime.now)
     user_id = fields.Many2one(
         'res.users', 'Salesman',
         default=(lambda self: self.env.user))
