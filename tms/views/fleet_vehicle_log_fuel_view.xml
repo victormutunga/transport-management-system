@@ -78,14 +78,20 @@
                 </form>
             </field>
         </record>
-        <record id="view_tms_vehicle_log_fuel_filter" model="ir.ui.view">
-            <field name="name">tms.waybill.list.select</field>
-            <field name="model">tms.waybill</field>
+        <record id="fleet_vehicle_log_fuel_filter_search" model="ir.ui.view">
+            <field name="name">Search view for Fuel Logs</field>
+            <field name="model">fleet.vehicle.log.fuel</field>
             <field name="arch" type="xml">
-                <search string="Search Waybills">
-                    <group expand="0" string="Group By...">
-                        <filter name="operating_unit_group_by" context="{'group_by':'operating_unit_id'}" string="Operating Unit"/>
-                    </group>
+                <search>
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="travel_id"/>
+                    <field name="vehicle_id"/>
+                    <filter name="operating_unit_group_by" context="{'group_by':'operating_unit_id'}" string="Operating Unit"/>
+                    <filter name="vendor_id_group_by" context="{'group_by':'vendor_id'}" string="Supplier"/>
+                    <filter name="vehicle_id_group_by" context="{'group_by':'vehicle_id'}" string="Vehicle"/>
+                    <filter name="employee_id_group_by" context="{'group_by':'employee_id'}" string="Driver"/>
+                    <filter name="travel_id_group_by" context="{'group_by':'travel_id'}" string="Travel"/>
                 </search>
             </field>
         </record>
@@ -105,6 +111,9 @@
                     <field name="state"/>
                 </field>
             </field>
+        </record>
+        <record id='fleet.fleet_vehicle_log_fuel_act' model='ir.actions.act_window'>
+            <field name="context">{}</field>
         </record>
         <menuitem action="fleet.fleet_vehicle_log_fuel_act" id="fuel_vehicle_log_menu" name="Fuel Voucher" parent="tms.menu_tms_travels" sequence="10"/>
     </data>

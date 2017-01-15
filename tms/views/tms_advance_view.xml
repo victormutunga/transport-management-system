@@ -112,7 +112,7 @@
         <record id="open_view_tms_advance_form" model="ir.actions.act_window">
             <field name="name">Advances</field>
             <field name="res_model">tms.advance</field>
-            <field name="context">{'search_default_this_month': 1, 'search_default_operating_unit_group_by': 1}</field>
+            <field name="context">{}</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
