@@ -41,6 +41,7 @@
         <record id="view_tms_travel_tree" model="ir.ui.view">
             <field name="name">tms.travel.tree</field>
             <field name="model">tms.travel</field>
+            <field name="priority">1</field>
             <field name="arch" type="xml">
                 <tree colors="gray:state=='cancel';red:state=='draft';green:state=='progress';blue:state=='done';" string="Travels">
                     <field name="name"/>
@@ -55,6 +56,26 @@
                     <field name="state"/>
                     <button groups="tms.group_travel_dispatch" icon="fa-thumbs-up" name="action_dispatch" states="draft" string="Dispatch Travel" type="object"/>
                     <button groups="tms.group_travel_end" icon="fa-check-square" name="action_end" states="progress" string="End Travel" type="object"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_tms_travel_tree_customer" model="ir.ui.view">
+            <field name="name">tms.travel.tree</field>
+            <field name="model">tms.travel</field>
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <tree colors="gray:state=='cancel';red:state=='draft';green:state=='progress';blue:state=='done';" string="Travels">
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="unit_id" string="Unit"/>
+                    <field name="trailer1_id"/>
+                    <field name="dolly_id"/>
+                    <field name="trailer2_id"/>
+                    <field name="employee_id"/>
+                    <field name="partner_ids" widget="many2many_tags"/>
+                    <field name="waybill_ids" widget="many2many_tags"/>
+                    <field name="route_id"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>

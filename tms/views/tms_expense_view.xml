@@ -81,7 +81,7 @@
                             </page>
                             <page string="Travels">
                                 <separator colspan="4" string="Travels for Driver"/>
-                                <field attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" colspan="4" domain="[('employee_id','=', employee_id), ('state','=', 'done'), ('state','!=','cancel'), ('unit_id', '=', unit_id)]" name="travel_ids" nolabel="1">
+                                <field attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" colspan="4" domain="[('employee_id','=', employee_id), ('state','=', 'done'), ('state','!=','cancel'), ('unit_id', '=', unit_id)]" context="{'tree_view_ref' : 'tms.view_tms_travel_tree_customer'}" name="travel_ids" nolabel="1">
                                     <tree default_order="name" string="">
                                         <field invisible="1" name="state"/>
                                         <field name="name"/>
