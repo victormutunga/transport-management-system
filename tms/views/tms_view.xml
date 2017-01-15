@@ -8,8 +8,8 @@
         <menuitem id="menu_tms_settings" name="Configuration" parent="menu_tms" sequence="99"/>
         <menuitem id="menu_tms_settings_unit" name="Units" parent="menu_tms_settings" sequence="30"/>
         <menuitem id="menu_tms_settings_routes" name="Routes" parent="menu_tms_settings" sequence="40"/>
-        <menuitem action="fleet.fleet_vehicle_state_act" groups="fleet.group_fleet_manager" id="tms_fleet_vehicle_state_menu" parent="menu_tms_settings_unit" sequence="13"/>
-        <menuitem action="fleet.fleet_vehicle_model_act" groups="fleet.group_fleet_manager" id="tms_fleet_vehicle_model" parent="menu_tms_settings_unit" sequence="14"/>
-        <menuitem action="fleet.fleet_vehicle_model_brand_act" groups="fleet.group_fleet_manager" id="tms_fleet_vehicle_make" parent="menu_tms_settings_unit" sequence="15"/>
+        <menuitem action="fleet.fleet_vehicle_state_act" id="tms_fleet_vehicle_state_menu" parent="menu_tms_settings_unit" sequence="13"/>
+        <menuitem action="fleet.fleet_vehicle_model_act" id="tms_fleet_vehicle_model" parent="menu_tms_settings_unit" sequence="14"/>
+        <menuitem action="fleet.fleet_vehicle_model_brand_act" id="tms_fleet_vehicle_make" parent="menu_tms_settings_unit" sequence="15"/>
     </data>
 </odoo>
