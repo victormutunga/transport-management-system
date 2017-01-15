@@ -175,10 +175,12 @@
                     <filter domain="[('state','=','confirmed')]" string="Confirmed"/>
                     <filter domain="[('paid','=',0)]" string="Not Paid"/>
                     <filter domain="[('paid','=',1)]" string="Paid"/>
+                    <field name="name"/>
                     <field name="employee_id"/>
+                    <field name="unit_id"/>
                     <field name="date" string="Expense date"/>
-                    <field name="name" select="1"/>
                     <filter context="{'group_by':'employee_id'}" string="Driver"/>
+                    <filter context="{'group_by':'unit_id'}" string="Unit"/>
                     <filter context="{'group_by':'state'}" string="State"/>
                     <filter context="{'group_by':'date'}" string="Period"/>
                     <filter context="{'group_by':'paid'}" string="Paid"/>

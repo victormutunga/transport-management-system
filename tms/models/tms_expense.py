@@ -146,6 +146,7 @@ class TmsExpense(models.Model):
         help="Link to the automatically generated Journal Items.")
     paid = fields.Boolean(
         compute='_compute_paid',
+        store=True,
         readonly=True)
     advance_ids = fields.One2many(
         'tms.advance', 'expense_id', string='Advances', readonly=True)
