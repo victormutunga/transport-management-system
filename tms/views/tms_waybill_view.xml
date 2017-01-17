@@ -200,12 +200,12 @@
             <field name="model">tms.waybill</field>
             <field name="arch" type="xml">
                 <search string="Search Waybills">
+                    <field name="name"/>
                     <field name="partner_id"/>
                     <field name="operating_unit_id"/>
                     <field name="date_order" string="Waybill date"/>
-                    <field name="name" select="1"/>
                     <field name="client_order_ref"/>
-                    <field name="user_id" select="1"/>
+                    <field name="user_id"/>
                     <separator/>
                     <filter domain="[('state','=','draft')]" icon="terp-gtk-media-pause" string="Pending"/>
                     <filter domain="[('state','=','approved')]" icon="terp-gtk-jump-to-ltr" string="Approved"/>
