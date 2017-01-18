@@ -101,6 +101,8 @@ class TmsAdvance(models.Model):
         for rec in self:
             if rec.payment_move_id:
                 rec.paid = True
+            else:
+                rec.paid = False
 
     @api.multi
     def action_authorized(self):
