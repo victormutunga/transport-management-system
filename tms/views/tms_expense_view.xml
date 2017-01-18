@@ -31,9 +31,10 @@
             <field name="arch" type="xml">
                 <form string="Travel Expenses">
                     <header>
-                        <button icon="fa-reply" name="action_draft" states="approved" string="Reset to draft" type="object"/>
+                        <button icon="fa-reply" name="action_draft" states="approved,cancel" string="Reset to draft" type="object"/>
                         <button class="oe_highlight" icon="fa-thumbs-up" name="action_approved" states="draft" string="Approve" type="object"/>
                         <button class="oe_highlight" confirm="Are you sure to confirm this expense? This action can't be changed." icon="fa-check-square-o" name="action_confirm" states="approved" string="Confirm" type="object"/>
+                        <button name="action_cancel" states="approved,confirmed" string="Cancel" type="object"/>
                         <button name="get_travel_info" states="approved,draft" string="Update Expense" type="object"/>
                         <field name="state" widget="statusbar"/>
                     </header>

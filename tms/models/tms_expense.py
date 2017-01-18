@@ -680,6 +680,7 @@ class TmsExpense(models.Model):
                 raise ValidationError(
                     _('An error has occurred in the creation'
                         ' of the accounting move. '))
+            move_id.post()
             # Here we reconcile the invoices with the corresponding
             # move line
             self.reconcile_supplier_invoices(invoices, move_id)
@@ -698,7 +699,28 @@ class TmsExpense(models.Model):
 
     @api.multi
     def action_cancel(self):
-        self.state = 'cancel'
+        for rec in self:
+            if rec.paid:
+                raise ValidationError(
+                    _('You cannot cancel an expense that is paid.'))
+            if rec.state == 'confirmed':
+                for line in rec.expense_line_ids:
+                    if line.invoice_id and line.line_type != 'fuel':
+                        for move_line in line.invoice_id.move_id.line_ids:
+                            if move_line.account_id.reconcile:
+                                move_line.remove_move_reconcile()
+                        line.invoice_id.write({
+                            # TODO Make a separate module to delete oml data
+                            'cfdi_fiscal_folio': False,
+                            'xml_signed': False,
+                            'reference': False,
+                            })
+                        line.invoice_id.signal_workflow('invoice_cancel')
+                        line.invoice_id = False
+                if rec.move_id.state == 'posted':
+                    rec.move_id.button_cancel()
+                rec.move_id.unlink()
+            rec.state = 'cancel'
 
     @api.multi
     def get_travel_info(self):
