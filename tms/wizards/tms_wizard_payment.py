@@ -115,6 +115,7 @@ class TmsWizardPayment(models.TransientModel):
                 'line_ids': [line for line in move_lines],
             }
             move_id = self.env['account.move'].create(move)
+            move_id.post()
             for move_line in move_id.line_ids:
                 move_ids = []
                 if move_line.account_id.internal_type == 'payable':

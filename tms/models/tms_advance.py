@@ -195,6 +195,7 @@ class TmsAdvance(models.Model):
                             _('An error has occurred in the creation'
                                 ' of the accounting move. '))
                     else:
+                        move_id.post()
                         self.write(
                             {
                                 'move_id': move_id.id,
@@ -216,6 +217,8 @@ class TmsAdvance(models.Model):
                         ' the advance is already paid. '
                         'Please cancel the payment first.'))
             else:
+                if rec.move_id.state == 'posted':
+                    rec.move_id.button_cancel()
                 rec.move_id.unlink()
                 rec.state = 'cancel'
                 rec.message_post(_(
