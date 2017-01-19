@@ -457,6 +457,11 @@ class TmsWaybill(models.Model):
                 raise exceptions.ValidationError(
                     _('Could not cancel this waybill because'
                       'the waybill is already paid.'))
+            elif waybill.invoice_id.state != 'cancel':
+                raise exceptions.ValidationError(
+                    _('You cannot unlink the invoice of this waybill'
+                        ' because the invoice is still valid, '
+                        'please check it.'))
             else:
                 move_obj = self.env['account.move']
                 move_id = (move_obj.search(
@@ -466,6 +471,7 @@ class TmsWaybill(models.Model):
                 if move_count > 0:
                     move_id.unlink()
 
+                waybill.invoice_id = False
                 waybill.state = 'cancel'
                 waybill.message_post(body=_(
                     "<h5><strong>Cancelled</strong></h5>"
