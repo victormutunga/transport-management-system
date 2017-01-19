@@ -90,6 +90,11 @@
                                 </field>
                             </group>
                         </page>
+                        <page string='Iave data'>
+                            <group>
+                                <field name="iave_tag"/>
+                            </group>
+                        </page>
                     </notebook>
                     <group>
                         <group string="Notes">
