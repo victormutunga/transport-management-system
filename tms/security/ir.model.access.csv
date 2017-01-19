@@ -54,7 +54,7 @@ traffic_res_partner,access_res_partner,base.model_res_partner,group_traffic,1,1,
 traffic_fleet_vehicle_engine,access_fleet_vehicle_engine,model_fleet_vehicle_engine,group_traffic,1,1,1,0
 traffic_fleet_vehicle_odometer,access_fleet_vehicle_odometer,model_fleet_vehicle_odometer,group_traffic,1,1,1,0
 traffic_fleet_vehicle,access_fleet_vehicle,model_fleet_vehicle,group_traffic,1,1,1,0
-traffic_tms_extradata,access_tms_extradata,model_tms_extradata,group_traffic,1,1,1,0
+traffic_tms_extradata,access_tms_extradata,model_tms_extradata,group_traffic,1,1,1,1
 traffic_tms_extradata_type,traffic_tms_extradata_type,model_tms_extradata_type,group_traffic,1,1,1,0
 traffic_fleet_vehicle_log_services,access_fleet_vehicle_log_services,fleet.model_fleet_vehicle_log_services,group_traffic,1,1,1,0w
 traffic_fleet_vehicle_log_contract,access_fleet_vehicle_log_contract,fleet.model_fleet_vehicle_log_contract,group_traffic,1,1,1,0
@@ -68,6 +68,9 @@ traffic_tms_resource_resource,traffic_tms_resource_resource,resource.model_resou
 traffic_tms_fleet_vehicle_model,traffic_tms_fleet_vehicle_model,fleet.model_fleet_vehicle_model,group_traffic,1,1,1,0
 traffic_tms_fleet_vehicle_model_brand,traffic_tms_fleet_vehicle_model_brand,fleet.model_fleet_vehicle_model_brand,group_traffic,1,1,1,0
 traffic_tms_waybill_transportable_line,traffic_tms_waybill_transportable_line,model_tms_waybill_transportable_line,group_traffic,1,1,1,1
+traffic_tms_event,access_tms_event,model_tms_event,group_traffic,1,1,1,1
+
+
 
 
 

@@ -122,7 +122,9 @@ class TmsExpense(models.Model):
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle')
     last_odometer = fields.Float('Last Read')
     vehicle_odometer = fields.Float('Vehicle Odometer')
-    current_odometer = fields.Float('Current Read')
+    current_odometer = fields.Float(
+        string='Current Real',
+        compute='_compute_current_odometer')
     distance_routes = fields.Float(
         compute='_compute_distance_routes',
         string='Distance from routes',
@@ -405,8 +407,16 @@ class TmsExpense(models.Model):
 
     @api.depends('travel_ids')
     def _compute_distance_routes(self):
+        distance = 0.0
         for rec in self:
-            rec.distance_routes = 1.0
+            for travel in rec.travel_ids:
+                distance += travel.route_id.distance
+            rec.distance_routes = distance
+
+    @api.depends('travel_ids')
+    def _compute_current_odometer(self):
+        for rec in self:
+            rec.current_odometer = rec.unit_id.odometer
 
     @api.depends('travel_ids')
     def _compute_distance_real(self):
