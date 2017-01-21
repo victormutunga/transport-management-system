@@ -457,7 +457,7 @@ class TmsWaybill(models.Model):
                 raise exceptions.ValidationError(
                     _('Could not cancel this waybill because'
                       'the waybill is already paid.'))
-            elif waybill.invoice_id.state != 'cancel':
+            elif waybill.invoice_id and waybill.invoice_id.state != 'cancel':
                 raise exceptions.ValidationError(
                     _('You cannot unlink the invoice of this waybill'
                         ' because the invoice is still valid, '
