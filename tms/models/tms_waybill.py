@@ -448,11 +448,6 @@ class TmsWaybill(models.Model):
     @api.multi
     def action_cancel(self):
         for waybill in self:
-            for travel in waybill.travel_ids:
-                if travel.state == 'done':
-                    raise exceptions.ValidationError(
-                        _('Could not cancel this waybill because'
-                          'the waybill is already linked to a travel.'))
             if waybill.invoice_paid:
                 raise exceptions.ValidationError(
                     _('Could not cancel this waybill because'
