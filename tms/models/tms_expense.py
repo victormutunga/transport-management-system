@@ -169,11 +169,9 @@ class TmsExpense(models.Model):
     fuel_log_ids = fields.One2many(
         'fleet.vehicle.log.fuel', 'expense_id', string='Fuel Vouchers')
     start_date = fields.Datetime(
-        string="Start Date", compute="_compute_calculate_date",
-        readonly=True)
+        string="Start Date",)
     end_date = fields.Datetime(
-        string="End Date", compute="_compute_calculate_date",
-        readonly=True)
+        string="End Date",)
     fuel_efficiency = fields.Float(
         string="Fuel Efficiency", readonly=True,
         compute="_compute_fuel_efficiency")
@@ -221,27 +219,6 @@ class TmsExpense(models.Model):
             if rec.distance_real and rec.fuel_qty:
                 rec.fuel_efficiency = rec.distance_real / rec.fuel_qty
 
-    @api.depends('travel_ids')
-    def _compute_calculate_date(self):
-        for rec in self:
-            start_dates = []
-            end_dates = []
-            if rec.travel_ids:
-                if len(rec.travel_ids) > 1:
-                    for travel in rec.travel_ids:
-                        start_dates.append(datetime.datetime.strptime(
-                            travel.date_start_real, "%Y-%m-%d %H:%M:%S"))
-                        end_dates.append(datetime.datetime.strptime(
-                            travel.date_end_real, "%Y-%m-%d %H:%M:%S"))
-                    start_dates.sort()
-                    end_dates.sort(reverse=True)
-                    rec.start_date = start_dates[0].strftime(
-                        "%Y-%m-%d %H:%M:%S")
-                    rec.end_date = end_dates[0].strftime(
-                        "%Y-%m-%d %H:%M:%S")
-                else:
-                    rec.start_date = rec.travel_ids.date_start_real
-                    rec.end_date = rec.travel_ids.date_end_real
 
     @api.depends('expense_line_ids')
     def _compute_fuel_qty(self):
@@ -984,3 +961,12 @@ class TmsExpense(models.Model):
                 if line.line_type in ['real_expense', 'fuel', 'fuel_cash']:
                     tax_amount += line.tax_amount
             return tax_amount
+
+    @api.multi
+    def get_value(self, type_line):
+        for rec in self:
+            value = 0.0
+            for line in rec.expense_line_ids:
+                if line.line_type == type_line:
+                    value += line.price_total
+        return value

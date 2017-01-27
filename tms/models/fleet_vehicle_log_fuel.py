@@ -32,7 +32,8 @@ class FleetVehicleLogFuel(models.Model):
         'hr.employee',
         string='Driver',
         domain=[('driver', '=', True)],
-        related='vehicle_id.employee_id',)
+        compute='_compute_employee_id',
+        store=True,)
     odometer = fields.Float(related='vehicle_id.odometer',)
     product_uom_id = fields.Many2one(
         'product.uom',
@@ -96,6 +97,12 @@ class FleetVehicleLogFuel(models.Model):
     currency_id = fields.Many2one(
         'res.currency', 'Currency', required=True,
         default=lambda self: self.env.user.company_id.currency_id)
+
+    @api.multi
+    @api.depends('vehicle_id')
+    def _compute_employee_id(self):
+        for rec in self:
+            rec.employee_id = rec.vehicle_id.employee_id.id
 
     @api.multi
     @api.depends('tax_amount')
