@@ -244,6 +244,69 @@
                 </form>
             </field>
         </record>
+        <record id="view_tms_travel_form_expense" model="ir.ui.view">
+            <field name="name">tms.travel.form</field>
+            <field name="model">tms.travel</field>
+            <field name="arch" type="xml">
+                <form string="Travels">
+                    <header>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <label class="oe_inline" style="font-size:30px;" string="Travel - " attrs="{'invisible':[('name','=', False)]}"/>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="operating_unit_id" attrs="{'readonly':[('state','in',('progress','done', 'closed'))]}"/>
+                                <field name="kit_id" attrs="{'readonly':[('state','in',('progress','done','closed'))]}"/>
+                                <field name="unit_id" attrs="{'readonly':[('state','in',('progress','done', 'closed'))]}" domain="[('fleet_type', '=', 'tractor')]"/>
+                                <field name="trailer1_id" attrs="{'required':['|', ('dolly_id','!=',False),('trailer2_id','!=',False)], 'readonly':[('state','in',('progress','done', 'closed'))]}" context="{'default_fleet_type': 'trailer'}" domain="[('fleet_type', '=', 'trailer'),('id','!=',trailer2_id)]"/>
+                                <field name="dolly_id" attrs="{'required':[('trailer2_id','!=',False)],'readonly':[('state','in',('progress','done', 'closed'))]}" context="{'default_fleet_type': 'dolly'}" domain="[('fleet_type', '=', 'dolly')]"/>
+                                <field name="trailer2_id" attrs="{'required':[('dolly_id','!=',False)],'readonly':[('state','in',('progress','done', 'closed'))]}" context="{'default_fleet_type': 'trailer'}" domain="[('fleet_type', '=', 'trailer'),('id','!=',trailer1_id)]"/>
+                            </group>
+                            <group>  
+                                <field name="date" attrs="{'readonly':[('state','in',('progress','done', 'closed'))]}"/>
+                                <field name="user_id" attrs="{'readonly':[('state','in',('progress','done', 'closed'))]}"/>
+                                <field name="employee_id" attrs="{'readonly':[('state','in',('progress','done', 'closed'))]}"/>
+                                <field name="framework"/>
+                            </group>
+                            <group colspan="4">
+                                <field name="route_id" attrs="{'readonly':[('state','in',('progress','done', 'closed'))]}"/>
+                            </group>
+                            <group>
+                                <field name='departure_id'/>
+                            </group>
+                            <group>
+                                <field name="arrival_id"/>
+                            </group>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Expense driver factor">
+                                <field name="driver_factor_ids" context="{'default_category': 'driver'}"/>
+                            </page>
+                            <page string="Waybills">
+                                <group>
+                                    <field name="waybill_ids" nolabel="1" context="{'form_view_ref': 'tms.view_tms_waybill_form_expense'}">
+                                        <tree create="false">
+                                            <field name="name"/>
+                                            <field name="date_order"/>
+                                            <field name="partner_id"/>
+                                            <field name="amount_untaxed"/>
+                                            <field name="amount_tax"/>
+                                            <field name="amount_total"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
         <record id="view_tms_travel_gantt" model="ir.ui.view">
             <field name="name">tms.travel.gantt</field>
             <field name="model">tms.travel</field>

@@ -195,6 +195,43 @@
                 </form>
             </field>
         </record>
+        <record id="view_tms_waybill_form_expense" model="ir.ui.view">
+            <field name="name">tms.waybill.form</field>
+            <field name="model">tms.waybill</field>
+            <field name="arch" type="xml">
+                <form string="Waybill">
+                    <sheet>
+                        <header>
+                            <field name="state" statusbar_visible="draft,approved,confirmed" widget="statusbar"/>
+                        </header>
+                        <h1>
+                            <label attrs="{'invisible':[('name','=', False)]}" class="oe_inline" string="Waybill - " style="font-size:30px;"/>
+                            <field class="oe_inline" name="name" readonly="1"/>
+                        </h1>
+                        <group col="4">
+                            <field attrs="{'readonly':[('state','in',('confirmed'))]}" name="operating_unit_id"/>
+                            <field attrs="{'readonly':[('state','in',('confirmed'))]}" name="date_order"/>
+                            <field attrs="{'readonly':[('state','in',('confirmed'))]}" groups="base.group_multi_currency" name="currency_id"/>
+                            <field name='rate' invisible="1"/>
+                            <separator colspan="4" string="·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·" style="text-align: center;"/>
+                            <field attrs="{'readonly':[('state','in',('confirmed'))]}" colspan="4" domain="[('customer','=',True), ('is_company', '=', True)]" name="partner_id"/>
+                            <field attrs="{'readonly':[('state','in',('confirmed'))]}" context="{'search_default_customer':1, 'show_address': 1}" domain="[('parent_id','=',partner_id)]" name="partner_order_id" options="{&quot;always_reload&quot;: True}"/>
+                            <field attrs="{'readonly':[('state','in',('confirmed'))]}" context="{'search_default_customer':1, 'show_address': 1}" domain="[('parent_id','=',partner_id)]" name="partner_invoice_id" options="{&quot;always_reload&quot;: True}"/>
+                            <field attrs="{'readonly':[('state','in',('confirmed'))]}" context="{'search_default_customer':1, 'show_address': 1}" name="departure_address_id" options="{&quot;always_reload&quot;: True}"/>
+                            <field attrs="{'readonly':[('state','in',('confirmed'))]}" context="{'search_default_customer':1, 'show_address': 1}" name="arrival_address_id" options="{&quot;always_reload&quot;: True}"/>
+                            <field attrs="{'readonly':[('state','in',('confirmed'))]}" name="upload_point"/>
+                            <field attrs="{'readonly':[('state','in',('confirmed'))]}" name="download_point"/>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Factor Driver">
+                                <separator colspan="4" string="Driver Salary Factors"/>
+                                <field colspan="4" context="{'default_category': 'driver'}" name="driver_factor_ids" nolabel="1"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
         <record id="view_tms_waybill_filter" model="ir.ui.view">
             <field name="name">tms.waybill.list.select</field>
             <field name="model">tms.waybill</field>
