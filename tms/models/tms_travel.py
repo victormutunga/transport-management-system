@@ -90,7 +90,9 @@ class TmsTravel(models.Model):
         string='Fuel Efficiency Extraction')
     departure_id = fields.Many2one(
         'tms.place',
-        related='route_id.departure_id',
+        string='Departure',
+        compute='_compute_departure_id',
+        store=True,
         readonly=True)
     fuel_log_ids = fields.One2many(
         'fleet.vehicle.log.fuel', 'travel_id', string='Fuel Vouchers')
@@ -98,7 +100,9 @@ class TmsTravel(models.Model):
         'tms.advance', 'travel_id', string='Advances')
     arrival_id = fields.Many2one(
         'tms.place',
-        related='route_id.arrival_id',
+        string='Arrival',
+        compute='_compute_arrival_id',
+        store=True,
         readonly=True)
     notes = fields.Text(
         'Description')
@@ -119,7 +123,8 @@ class TmsTravel(models.Model):
         ('double', 'Double')],
         compute='_compute_framework')
     partner_ids = fields.Many2many(
-        'res.partner', string='Customer', compute='_compute_partner_ids')
+        'res.partner', string='Customer', compute='_compute_partner_ids',
+        store=True)
 
     @api.depends('waybill_ids')
     def _compute_partner_ids(self):
@@ -128,6 +133,16 @@ class TmsTravel(models.Model):
             for waybill in rec.waybill_ids:
                 partner_ids.append(waybill.partner_id.id)
             rec.partner_ids = partner_ids
+
+    @api.depends('route_id')
+    def _compute_departure_id(self):
+        for rec in self:
+            rec.departure_id = rec.route_id.departure_id
+
+    @api.depends('route_id')
+    def _compute_arrival_id(self):
+        for rec in self:
+            rec.arrival_id = rec.route_id.arrival_id
 
     @api.depends('fuel_efficiency_expected', 'fuel_efficiency_travel')
     def _compute_fuel_efficiency_extraction(self):

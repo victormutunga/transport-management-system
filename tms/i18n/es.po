@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-21 22:16+0000\n"
-"PO-Revision-Date: 2017-01-21 17:04-0600\n"
+"POT-Creation-Date: 2017-01-27 04:31+0000\n"
+"PO-Revision-Date: 2017-01-26 22:38-0600\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgid "%s (TMS Expense Record %s)"
 msgstr "%s (TMS Liquidación %s)"
 
 #. module: tms
-#: code:addons/tms/models/tms_advance.py:158
+#: code:addons/tms/models/tms_advance.py:163
 #, python-format
 msgid ""
 "* Base: %s \n"
@@ -174,7 +174,7 @@ msgid "<h5><strong>Cancel to Draft</strong></h5><p><strong>by: </strong> %s <br>
 msgstr "<h5><strong>Cancelada a Borrador</strong></h5><p><strong>por: </strong> %s <br><strong>el: </strong> %s</p>"
 
 #. module: tms
-#: code:addons/tms/models/tms_waybill.py:476
+#: code:addons/tms/models/tms_waybill.py:471
 #, python-format
 msgid "<h5><strong>Cancelled</strong></h5><p><strong>Cancelled by: </strong> %s <br><strong>Cancelled at: </strong> %s</p"
 msgstr "<h5><strong>Cancelado</strong></h5><p><strong>Cancelado por: </strong> %s <br><strong>Cancelado el: </strong> %s</p"
@@ -260,25 +260,25 @@ msgid "<span>kW</span>"
 msgstr "<span>kW</span>"
 
 #. module: tms
-#: code:addons/tms/models/tms_advance.py:119
+#: code:addons/tms/models/tms_advance.py:124
 #, python-format
 msgid "<strong>Advance approved.</strong><ul><li><strong>Approved by: </strong>%s</li><li><strong>Approved at: </strong>%s</li></ul>"
 msgstr "<strong>Anticipo aprobado.</strong><ul><li><strong>Aprobado por: </strong>%s</li><li><strong>Aprobado el: </strong>%s</li></ul>"
 
 #. module: tms
-#: code:addons/tms/models/tms_advance.py:226
+#: code:addons/tms/models/tms_advance.py:231
 #, python-format
 msgid "<strong>Advance cancelled.</strong><ul><li><strong>Cancelled by: </strong>%s</li><li><strong>Cancelled at: </strong>%s</li></ul>"
 msgstr "<strong>Anticipo cancelado.</strong><ul><li><strong>Cancelado por: </strong>%s</li><li><strong>Cancelado el: </strong>%s</li></ul>"
 
 #. module: tms
-#: code:addons/tms/models/tms_advance.py:206
+#: code:addons/tms/models/tms_advance.py:211
 #, python-format
 msgid "<strong>Advance confirmed.</strong><ul><li><strong>Confirmed by: </strong>%s</li><li><strong>Confirmed at: </strong>%s</li></ul>"
 msgstr "<strong>Anticipo confirmado.</strong><ul><li><strong>Confirmado por: </strong>%s</li><li><strong>Confirmado el: </strong>%s</li></ul>"
 
 #. module: tms
-#: code:addons/tms/models/tms_advance.py:241
+#: code:addons/tms/models/tms_advance.py:246
 #, python-format
 msgid "<strong>Advance drafted.</strong><ul><li><strong>Drafted by: </strong>%s</li><li><strong>Drafted at: </strong>%s</li></ul>"
 msgstr "<strong>Anticipo en estado Borrador.</strong><ul><li><strong>Hecho Borrador por: </strong>%s</li><li><strong>Hecho Borrador  el: </strong>%s</li></ul>"
@@ -472,7 +472,7 @@ msgid "Advance: "
 msgstr "Anticipo: "
 
 #. module: tms
-#: code:addons/tms/models/tms_advance.py:190
+#: code:addons/tms/models/tms_advance.py:195
 #, python-format
 msgid "Advance: %s"
 msgstr "Anticipo: %s"
@@ -525,7 +525,7 @@ msgid "Amount total"
 msgstr "Monto total"
 
 #. module: tms
-#: code:addons/tms/models/tms_advance.py:197
+#: code:addons/tms/models/tms_advance.py:202
 #: code:addons/tms/models/tms_expense.py:691
 #, python-format
 msgid "An error has occurred in the creation of the accounting move. "
@@ -728,11 +728,6 @@ msgid "Company"
 msgstr "Compañía"
 
 #. module: tms
-#: model:ir.model.fields,field_description:tms.field_tms_config_settings_company_id
-msgid "Company id"
-msgstr "Compañía"
-
-#. module: tms
 #: model:ir.model.fields,field_description:tms.field_tms_place_complete_name
 msgid "Complete name"
 msgstr "Nombre completo"
@@ -812,19 +807,13 @@ msgid "Could not cancel Fuel Voucher !This Fuel Voucher is already linked to Tra
 msgstr "¡No se puede cancelar el Vale de Combustible! Ya se encuentra vinculado a una Liquidación."
 
 #. module: tms
-#: code:addons/tms/models/tms_advance.py:218
+#: code:addons/tms/models/tms_advance.py:223
 #, python-format
 msgid "Could not cancel this advance because the advance is already paid. Please cancel the payment first."
 msgstr "No puede cancelar este anticipo por que ya está pagado. Primero cancela el pago."
 
 #. module: tms
-#: code:addons/tms/models/tms_waybill.py:454
-#, python-format
-msgid "Could not cancel this waybill becausethe waybill is already linked to a travel."
-msgstr "No se puede cancelar la carta porte"
-
-#. module: tms
-#: code:addons/tms/models/tms_waybill.py:458
+#: code:addons/tms/models/tms_waybill.py:453
 #, python-format
 msgid "Could not cancel this waybill becausethe waybill is already paid."
 msgstr "No se puede cancelar la carta porte porque ya está pagada."
@@ -840,7 +829,7 @@ msgstr ""
 "Debe tener al menos un viaje asignado antes de ser confirmada."
 
 #. module: tms
-#: code:addons/tms/models/tms_advance.py:237
+#: code:addons/tms/models/tms_advance.py:242
 #, python-format
 msgid "Could not set this advance to draft because the travel is cancelled."
 msgstr "No se puede poner el anticipo en borrador ya que el viaje se encuentra cancelado."
@@ -1074,6 +1063,16 @@ msgid "Datetime"
 msgstr "Fecha y Hora"
 
 #. module: tms
+#: model:ir.ui.view,arch_db:tms.view_tms_travel_search
+msgid "Day Dispatched"
+msgstr "Día Despachado"
+
+#. module: tms
+#: model:ir.ui.view,arch_db:tms.view_tms_travel_search
+msgid "Day Finished"
+msgstr "Día Finalizado"
+
+#. module: tms
 #: code:addons/tms/models/tms_expense.py:206
 #, python-format
 msgid "Day(s), "
@@ -1093,7 +1092,7 @@ msgstr "Eliminar"
 #. module: tms
 #: model:ir.ui.view,arch_db:tms.header_super_notes
 msgid "Deliver Date:"
-msgstr "Deliver Date:"
+msgstr "Fecha de Entrega:"
 
 #. module: tms
 #: model:ir.model.fields,field_description:tms.field_tms_route_departure_id
@@ -1126,11 +1125,6 @@ msgstr "Dirección de salida de la carta porte actual."
 #: model:ir.model.fields,field_description:tms.field_tms_waybill_transportable_line_name
 msgid "Description"
 msgstr "Descripción"
-
-#. module: tms
-#: model:ir.ui.view,arch_db:tms.view_tms_travel_search
-msgid "Destination"
-msgstr "Destino"
 
 #. module: tms
 #: model:ir.model.fields,field_description:tms.field_tms_waybill_line_discount
@@ -1337,7 +1331,7 @@ msgstr "Borrador"
 #: model:ir.ui.view,arch_db:tms.view_tms_unit_kit_search
 #: selection:tms.factor,category:0
 msgid "Driver"
-msgstr "Operador"
+msgstr "Conductor"
 
 #. module: tms
 #: model:ir.ui.view,arch_db:tms.view_tms_travel_search
@@ -1437,7 +1431,7 @@ msgid "Error ! Move line was not found, please check your data."
 msgstr "¡Error! La póliza contable no fue encontrada, por favor revisa tus datos."
 
 #. module: tms
-#: code:addons/tms/models/tms_advance.py:89
+#: code:addons/tms/models/tms_advance.py:94
 #, python-format
 msgid "Error you need define an advance sequence in the base."
 msgstr "Error. Necesita definir una secuencia para los anticipos en la configuración de la base."
@@ -1797,7 +1791,7 @@ msgstr "Vales de Combustible"
 #. module: tms
 #: model:ir.model,name:tms.model_fleet_vehicle_log_fuel
 msgid "Fuel log for vehicles"
-msgstr "Vales de Combustible para las Unidades"
+msgstr "Registro de combustible para los vehículos"
 
 #. module: tms
 #: code:addons/tms/models/tms_expense.py:803
@@ -1955,7 +1949,7 @@ msgid "I.V.A."
 msgstr "I.V.A."
 
 #. module: tms
-#: model:ir.model.fields,field_description:tms.field_fleet_vehicle_engine_id_5487
+#: model:ir.model.fields,field_description:tms.field_fleet_vehicle_engine_id_5486
 #: model:ir.model.fields,field_description:tms.field_tms_advance_id
 #: model:ir.model.fields,field_description:tms.field_tms_config_settings_id
 #: model:ir.model.fields,field_description:tms.field_tms_custom_house_id
@@ -1964,7 +1958,7 @@ msgstr "I.V.A."
 #: model:ir.model.fields,field_description:tms.field_tms_expense_id
 #: model:ir.model.fields,field_description:tms.field_tms_expense_line_id
 #: model:ir.model.fields,field_description:tms.field_tms_extradata_id
-#: model:ir.model.fields,field_description:tms.field_tms_extradata_type_id_5762
+#: model:ir.model.fields,field_description:tms.field_tms_extradata_type_id_5761
 #: model:ir.model.fields,field_description:tms.field_tms_factor_id
 #: model:ir.model.fields,field_description:tms.field_tms_place_id
 #: model:ir.model.fields,field_description:tms.field_tms_route_fuelefficiency_id
@@ -1985,7 +1979,7 @@ msgstr "I.V.A."
 #: model:ir.model.fields,field_description:tms.field_tms_wizard_invoice_id
 #: model:ir.model.fields,field_description:tms.field_tms_wizard_payment_id
 msgid "ID"
-msgstr "ID (identificación)"
+msgstr "ID"
 
 #. module: tms
 #: model:ir.model.fields,field_description:tms.field_fleet_vehicle_log_fuel_special_tax_amount
@@ -1998,11 +1992,6 @@ msgstr "IEPS"
 #: model:ir.model.fields,field_description:tms.field_operating_unit_ieps_product_id
 msgid "IEPS Product"
 msgstr "Producto IEPS"
-
-#. module: tms
-#: model:ir.model.fields,field_description:tms.field_fleet_vehicle_iave_tag
-msgid "Iave tag"
-msgstr "Iave tag"
 
 #. module: tms
 #: model:ir.model.fields,help:tms.field_fleet_vehicle_log_fuel_message_unread
@@ -2029,7 +2018,7 @@ msgid "If checked, new messages require your attention."
 msgstr "Si está marcado, hay nuevos mensajes que requieren su atención."
 
 #. module: tms
-#: code:addons/tms/models/tms_travel.py:240
+#: code:addons/tms/models/tms_travel.py:255
 #, python-format
 msgid "If you want to cancel this travel, you must cancel the fuel logs or the advances attached to this travel"
 msgstr "Si quiere cancelar el viaje debe cancelar antes todos los vales de combustible y los anticipos relacionados a este viaje."
@@ -2090,7 +2079,7 @@ msgstr "Porcentaje de Ingreso"
 #. module: tms
 #: model:ir.model,name:tms.model_fleet_vehicle
 msgid "Information on a vehicle"
-msgstr "Información de la Unidad "
+msgstr "Información en un vehículo"
 
 #. module: tms
 #: model:ir.model.fields,field_description:tms.field_tms_waybill_amount_insurance
@@ -2261,7 +2250,7 @@ msgstr "Fecha del último mensaje"
 #: model:ir.model.fields,field_description:tms.field_tms_wizard_invoice___last_update
 #: model:ir.model.fields,field_description:tms.field_tms_wizard_payment___last_update
 msgid "Last Modified on"
-msgstr "Última modificación en"
+msgstr "Última Modifiación en"
 
 #. module: tms
 #: model:ir.model.fields,field_description:tms.field_fleet_vehicle_odometer_last_odometer
@@ -2699,7 +2688,7 @@ msgstr "Registro de Odómetro"
 #. module: tms
 #: model:ir.model,name:tms.model_fleet_vehicle_odometer
 msgid "Odometer log for a vehicle"
-msgstr "Registro del odómetro para la unidad"
+msgstr "Registro del odómetro para un vehículo"
 
 #. module: tms
 #: code:addons/tms/models/product_template.py:46
@@ -3419,6 +3408,7 @@ msgstr "Rutas"
 
 #. module: tms
 #: model:ir.actions.act_window,name:tms.open_view_tms_travel_form
+#: model:ir.actions.act_window,name:tms.open_view_tms_travel_report
 msgid "TMS Travel"
 msgstr "Viajes"
 
@@ -3504,8 +3494,8 @@ msgid "Text"
 msgstr "Texto"
 
 #. module: tms
-#: code:addons/tms/models/tms_advance.py:84
-#: code:addons/tms/models/tms_advance.py:130
+#: code:addons/tms/models/tms_advance.py:89
+#: code:addons/tms/models/tms_advance.py:135
 #, python-format
 msgid "The amount must be greater than zero."
 msgstr "El monto debe ser mayor a cero"
@@ -3577,7 +3567,7 @@ msgid "The records must be of the same partner."
 msgstr "Los registros deben ser del mismo socio."
 
 #. module: tms
-#: code:addons/tms/models/tms_travel.py:208
+#: code:addons/tms/models/tms_travel.py:223
 #, python-format
 msgid "The unit or driver are already in use!"
 msgstr "La unidad o el conductor ya se encuentra asignado a un viaje"
@@ -3828,6 +3818,7 @@ msgstr "Viaje:"
 #: model:ir.model.fields,field_description:tms.field_tms_expense_travel_ids
 #: model:ir.model.fields,field_description:tms.field_tms_waybill_travel_ids
 #: model:ir.ui.menu,name:tms.menu_tms_travel_form
+#: model:ir.ui.menu,name:tms.menu_tms_travel_report
 #: model:ir.ui.view,arch_db:tms.view_tms_expense_form
 #: model:ir.ui.view,arch_db:tms.view_tms_travel_calendar
 #: model:ir.ui.view,arch_db:tms.view_tms_travel_form
@@ -3835,6 +3826,7 @@ msgstr "Viaje:"
 #: model:ir.ui.view,arch_db:tms.view_tms_travel_graph
 #: model:ir.ui.view,arch_db:tms.view_tms_travel_tree
 #: model:ir.ui.view,arch_db:tms.view_tms_travel_tree_customer
+#: model:ir.ui.view,arch_db:tms.view_tms_travel_tree_report
 #: model:ir.ui.view,arch_db:tms.view_tms_waybill_form
 msgid "Travels"
 msgstr "Viajes"
@@ -3863,6 +3855,7 @@ msgstr "Tipo"
 #: model:ir.ui.view,arch_db:tms.view_tms_travel_search
 #: model:ir.ui.view,arch_db:tms.view_tms_travel_tree
 #: model:ir.ui.view,arch_db:tms.view_tms_travel_tree_customer
+#: model:ir.ui.view,arch_db:tms.view_tms_travel_tree_report
 #: model:ir.ui.view,arch_db:tms.view_tms_unit_kit_search
 #: selection:tms.extradata.type,apply_on:0
 #: selection:tms.route.fuelefficiency,type:0 selection:tms.travel,framework:0
@@ -4027,7 +4020,7 @@ msgstr "Valor"
 #: model:ir.ui.view,arch_db:tms.fleet_vehicle_log_fuel_filter_search
 #: model:ir.ui.view,arch_db:tms.fleet_vehicle_search_inherit_tms
 msgid "Vehicle"
-msgstr "Unidad"
+msgstr "Vehículo"
 
 #. module: tms
 #: model:ir.ui.menu,name:tms.tms_fleet_vehicle_model
@@ -4080,7 +4073,7 @@ msgid "Warning ! Expense Account is not defined for product %s"
 msgstr "¡Alerta! La cuenta de gastos no está definida para este producto %s"
 
 #. module: tms
-#: code:addons/tms/models/tms_advance.py:145
+#: code:addons/tms/models/tms_advance.py:150
 #, python-format
 msgid ""
 "Warning! The advance does not have a journal assigned. \n"
@@ -4090,7 +4083,7 @@ msgstr ""
 "Compruebe que tenga configurado uno en la configuración de la base."
 
 #. module: tms
-#: code:addons/tms/models/tms_advance.py:150
+#: code:addons/tms/models/tms_advance.py:155
 #: code:addons/tms/models/tms_expense.py:516
 #, python-format
 msgid ""
@@ -4109,7 +4102,7 @@ msgid ""
 msgstr "¡Alerta! La unidad operativa no tiene asignado un diario de liquidaciones."
 
 #. module: tms
-#: code:addons/tms/models/tms_advance.py:155
+#: code:addons/tms/models/tms_advance.py:160
 #, python-format
 msgid "Warning! You must have configured the accounts of the tms"
 msgstr "¡Alerta! Debe tener configurado los datos contables de TMS"
@@ -4244,13 +4237,13 @@ msgid "Year Model"
 msgstr "Modelo año "
 
 #. module: tms
-#: code:addons/tms/models/tms_travel.py:308
+#: code:addons/tms/models/tms_travel.py:323
 #, python-format
 msgid "You can not Dispatch this Travel because %s Driver's License Validity (%s) is expired or about to expire in next %s day(s)"
 msgstr "No puedes Despachar este VIaje por que expiró la licencia de %s validez (%s) o expira en los siguientes %s día(s)"
 
 #. module: tms
-#: code:addons/tms/models/tms_travel.py:328
+#: code:addons/tms/models/tms_travel.py:343
 #, python-format
 msgid "You can not Dispatch this Travel because this Vehicle(%s) Insurance (%s) is expired or about to expire in next %s day(s)"
 msgstr "No puedes Despachar el viaje por que el seguro del vehículo (%s) (%s) está expirado o por expirar en los siguientes %s día(s)"
@@ -4286,7 +4279,7 @@ msgid "You cannot pay the expense %s because the balance is negative"
 msgstr "No puedes pagar la liquidación %s por que tiene balance negativo."
 
 #. module: tms
-#: code:addons/tms/models/tms_waybill.py:462
+#: code:addons/tms/models/tms_waybill.py:457
 #, python-format
 msgid "You cannot unlink the invoice of this waybill because the invoice is still valid, please check it."
 msgstr "No puedes borrar la factura de esta carta porte por que sigue activa, favor de validar."

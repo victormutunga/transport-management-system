@@ -71,7 +71,7 @@ class TmsWaybill(models.Model):
         'res.currency', 'Currency', required=True,
         default=lambda self: self.env.user.company_id.currency_id)
     company_id = fields.Many2one(
-        'res.company', 'Currency', required=True,
+        'res.company', string='Company', required=True,
         default=lambda self: self.env.user.company_id)
     partner_invoice_id = fields.Many2one(
         'res.partner', 'Invoice Address', required=True,

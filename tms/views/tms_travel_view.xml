@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <search string="TMS Travels">
                     <filter domain="[('state','=','draft')]" string="Pending"/>
-                    <filter domain="[('state','=','progress')]" string="In Progress"/>
+                    <filter domain="[('state','=','progress')]" name="progress" string="In Progress"/>
                     <filter domain="[('state','=','done')]" string="Done"/>
                     <filter domain="[('state','=','closed')]" string="Closed"/>
                     <filter domain="[('state','=','cancel')]" string="Cancelled"/>
@@ -27,13 +27,14 @@
                     <filter context="{'group_by' : 'unit_id'}" string="Unit"/>
                     <filter context="{'group_by' : 'employee_id'}" string="Driver 1"/>
                     <filter context="{'group_by' : 'partner_id'}" string="Customer"/>
-                    <filter context="{'group_by' : 'arrival_address_id'}" string="Destination"/>
                     <filter context="{'group_by' : 'departure_id'}" string="Departure"/>
                     <filter context="{'group_by' : 'arrival_id'}" string="Arrival"/>
                     <filter context="{'group_by' : 'company_id'}" string="Company"/>
                     <filter context="{'group_by' : 'operating_unit_id'}" string="Base"/>
                     <filter context="{'group_by' : 'state'}" string="State"/>
                     <filter context="{'group_by' : 'date'}" string="Date"/>
+                    <filter context="{'group_by' : 'date_start_real:day'}" name="date_dispatched" string="Day Dispatched"/>
+                    <filter context="{'group_by' : 'date_end_real:day'}" string="Day Finished"/>
                     <filter name="operating_unit_group_by" context="{'group_by':'operating_unit_id'}" string="Operating Unit"/>
                 </search>
             </field>
@@ -54,8 +55,29 @@
                     <field name="waybill_ids" widget="many2many_tags"/>
                     <field name="route_id"/>
                     <field name="state"/>
-                    <button groups="tms.group_travel_dispatch" icon="fa-thumbs-up" name="action_dispatch" states="draft" string="Dispatch Travel" type="object"/>
-                    <button groups="tms.group_travel_end" icon="fa-check-square" name="action_end" states="progress" string="End Travel" type="object"/>
+                    <button groups="tms.group_traffic" icon="fa-thumbs-up" name="action_dispatch" states="draft" string="Dispatch Travel" type="object"/>
+                    <button groups="tms.group_traffic" icon="fa-check-square" name="action_end" states="progress" string="End Travel" type="object"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_tms_travel_tree_report" model="ir.ui.view">
+            <field name="name">tms.travel.tree</field>
+            <field name="model">tms.travel</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <tree colors="gray:state=='cancel';red:state=='draft';green:state=='progress';blue:state=='done';" string="Travels">
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="unit_id" string="Unit"/>
+                    <field name="trailer1_id"/>
+                    <field name="dolly_id"/>
+                    <field name="trailer2_id"/>
+                    <field name="employee_id"/>
+                    <field name="partner_ids" widget="many2many_tags"/>
+                    <field name="waybill_ids" widget="many2many_tags"/>
+                    <field name="departure_id"/>
+                    <field name="arrival_id"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -306,10 +328,19 @@
             <field name="name">TMS Travel</field>
             <field name="res_model">tms.travel</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,kanban,calendar,gantt</field>
+            <field name="view_mode">tree,form,kanban,calendar,graph,gantt</field>
             <field name="context">{}</field>
+        </record>
+        <record id="open_view_tms_travel_report" model="ir.actions.act_window">
+            <field name="name">TMS Travel</field>
+            <field name="res_model">tms.travel</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,gantt</field>
+            <field name="view_id" ref="view_tms_travel_tree_report"/>
+            <field name="context">{&quot;search_default_progress&quot;:1, 'search_default_date_dispatched': 1}</field>
         </record>
         <!-- Menu for tms.travel -->
         <menuitem action="open_view_tms_travel_form" id="menu_tms_travel_form" name="Travels" parent="menu_tms_travels" sequence="4"/>
+        <menuitem action="open_view_tms_travel_report" id="menu_tms_travel_report" name="Travels" parent="menu_tms_reports" sequence="1"/>
     </data>
 </odoo>
