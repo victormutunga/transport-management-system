@@ -35,9 +35,9 @@ class TmsAdvance(models.Model):
         string='Travel')
     unit_id = fields.Many2one(
         'fleet.vehicle',
-        related='travel_id.unit_id',
-        readonly=True,
-        string='Unit')
+        compute='_compute_unit_id',
+        string='Unit',
+        store=True,)
     employee_id = fields.Many2one(
         'hr.employee',
         compute='_compute_employee_id',
@@ -74,6 +74,12 @@ class TmsAdvance(models.Model):
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'Advance number must be unique !'),
     ]
+
+    @api.multi
+    @api.depends('travel_id')
+    def _compute_unit_id(self):
+        for rec in self:
+            rec.unit_id = rec.travel_id.unit_id.id
 
     @api.depends('travel_id')
     def _compute_employee_id(self):

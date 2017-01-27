@@ -117,15 +117,15 @@
                 <form string="Travels">
                     <header>
                         <button name="action_progress" icon="fa-thumbs-up" type="object"
-                                string="Dispatch" states="draft"
+                                string="Dispatch" states="draft" groups="tms.group_traffic"
                                 class="oe_highlight"/>
                         <button name="action_done" icon="fa-check-square" type="object"
-                                string="Finish" states="progress"
+                                string="Finish" states="progress" groups="tms.group_traffic"
                                 class="oe_highlight"/>
                         <button name="action_cancel" icon="fa-times" type="object"
-                                string="Cancel" states="draft,progress"/>
+                                string="Cancel" states="draft,progress" groups="tms.group_traffic"/>
                         <button name="action_draft" icon="fa-reply" type="object"
-                                string="Set to draft" states="done,cancel"/>
+                                string="Set to draft" states="done,cancel" groups="tms.group_traffic"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>

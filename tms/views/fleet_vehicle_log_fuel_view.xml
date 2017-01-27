@@ -64,6 +64,9 @@
                                         <field name="invoice_id" readonly='1'/>
                                         <field name="invoice_paid" readonly='1'/>
                                     </group>
+                                    <group>
+                                        <field name="expense_id" readonly="1" attrs="{'invisible': [('expense_id', '=', False)]}"/>
+                                    </group>
                                 </page>
                             </notebook>
                             <group colspan="4" string='Notes'>
@@ -92,6 +95,8 @@
                     <filter name="vehicle_id_group_by" context="{'group_by':'vehicle_id'}" string="Vehicle"/>
                     <filter name="employee_id_group_by" context="{'group_by':'employee_id'}" string="Driver"/>
                     <filter name="travel_id_group_by" context="{'group_by':'travel_id'}" string="Travel"/>
+                    <filter name="state_group_by" context="{'group_by': 'state'}" string="State"/>
+                    <filter name="expense_id" context="{'group_by': 'expense_id'}" string="Expense Record"/>
                 </search>
             </field>
         </record>
@@ -113,7 +118,13 @@
             </field>
         </record>
         <record id='fleet.fleet_vehicle_log_fuel_act' model='ir.actions.act_window'>
+            <field name="name">Fuel Log</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">fleet.vehicle.log.fuel</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
             <field name="context">{}</field>
+            <field name="search_view_id" ref="fleet_vehicle_log_fuel_filter_search"/>
         </record>
         <menuitem action="fleet.fleet_vehicle_log_fuel_act" id="fuel_vehicle_log_menu" name="Fuel Voucher" parent="tms.menu_tms_travels" sequence="10"/>
     </data>
