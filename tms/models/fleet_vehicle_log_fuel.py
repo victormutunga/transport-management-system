@@ -97,6 +97,9 @@ class FleetVehicleLogFuel(models.Model):
     currency_id = fields.Many2one(
         'res.currency', 'Currency', required=True,
         default=lambda self: self.env.user.company_id.currency_id)
+    expense_control = fields.Boolean(
+        readonly=True,
+    )
 
     @api.multi
     @api.depends('vehicle_id')

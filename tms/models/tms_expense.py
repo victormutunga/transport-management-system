@@ -219,7 +219,6 @@ class TmsExpense(models.Model):
             if rec.distance_real and rec.fuel_qty:
                 rec.fuel_efficiency = rec.distance_real / rec.fuel_qty
 
-
     @api.depends('expense_line_ids')
     def _compute_fuel_qty(self):
         for rec in self:
@@ -531,7 +530,10 @@ class TmsExpense(models.Model):
                         'employee_id':  rec.employee_id.id,
                         'price_total': line.price_total,
                         'date': str(fields.Date.today()),
+                        'expense_control': True,
+                        'expense_id': rec.id,
                         })
+                    line.control = True
                 # We only need all the lines except the fuel and the
                 # made up expenses
                 if line.line_type not in ('made_up_expense', 'fuel'):
@@ -776,19 +778,22 @@ class TmsExpense(models.Model):
                             fuel_log.name +
                             '\n State: ' + fuel_log.state))
                     else:
-                        rec.expense_line_ids.create({
-                            'name': _("Fuel voucher: ") + str(fuel_log.name),
-                            'travel_id': travel.id,
-                            'expense_id': rec.id,
-                            'line_type': 'fuel',
-                            'product_id': fuel_log.product_id.id,
-                            'product_qty': fuel_log.product_qty,
-                            'product_uom_id': fuel_log.product_id.uom_id.id,
-                            'unit_price': fuel_log.price_total,
-                            'is_invoice': fuel_log.invoice_paid,
-                            'invoice_id': fuel_log.invoice_id.id,
-                            'control': True
-                        })
+                        if not fuel_log.expense_control:
+                            rec.expense_line_ids.create({
+                                'name': _(
+                                    "Fuel voucher: ") + str(fuel_log.name),
+                                'travel_id': travel.id,
+                                'expense_id': rec.id,
+                                'line_type': 'fuel',
+                                'product_id': fuel_log.product_id.id,
+                                'product_qty': fuel_log.product_qty,
+                                'product_uom_id': (
+                                    fuel_log.product_id.uom_id.id),
+                                'unit_price': fuel_log.price_total,
+                                'is_invoice': fuel_log.invoice_paid,
+                                'invoice_id': fuel_log.invoice_id.id,
+                                'control': True,
+                            })
                         fuel_log.write({
                             'state': 'closed',
                             'expense_id': rec.id
