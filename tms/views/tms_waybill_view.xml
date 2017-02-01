@@ -227,6 +227,58 @@
                                 <separator colspan="4" string="Driver Salary Factors"/>
                                 <field colspan="4" context="{'default_category': 'driver'}" name="driver_factor_ids" nolabel="1"/>
                             </page>
+                            <page string="Details">
+                               <separator coslpan="4" string="Transportable"/>
+                                <field attrs="{'readonly':[('state','in',('confirmed'))]}" colspan="4" name="transportable_line_ids" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="transportable_id"/>
+                                        <field name="name"/>
+                                        <field name="transportable_uom_id"/>
+                                        <field name="quantity"/>
+                                        <field name="notes"/>
+                                    </tree>
+                                </field>
+                                <separator colspan="4" string="Waybill Lines"/>
+                                <field attrs="{'readonly':[('state','in',('confirmed'))]}" colspan="4" name="waybill_line_ids" nolabel="1">
+                                    <tree editable="bottom" string="Waybill Lines">
+                                        <field name="product_id" domain="[('tms_product_category', 'in', ('freight', 'move', 'insurance', 'tolls', 'other'))]"/>
+                                        <field name="name"/>
+                                        <field name="product_qty"/>
+                                        <field name="unit_price"/>
+                                        <field name="discount"/>
+                                        <field name="tax_ids" widget="many2many_tags"/>
+                                        <field name="price_subtotal"/>
+                                        <field invisible="1" name="tax_amount"/>
+                                    </tree>
+                                </field>
+                                <group col="4" colspan="4">
+                                    <group colspan="2">
+                                        <field attrs="{'readonly':[('state','in',('confirmed'))]}" name="tax_line_ids" nolabel="1">
+                                            <tree create="false" delete="false">
+                                                <field name="tax_id"/>
+                                                <field name="base"/>
+                                                <field name="tax_amount" sum="Impuestos"/>
+                                            </tree>
+                                        </field>
+                                    </group>
+                                    <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                        <field name="amount_freight" options="{'currency_field': 'currency_id'}" widget="monetary"/>
+                                        <field name="amount_move" options="{'currency_field': 'currency_id'}" widget="monetary"/>
+                                        <field name="amount_highway_tolls" options="{'currency_field': 'currency_id'}" widget="monetary"/>
+                                        <field name="amount_insurance" options="{'currency_field': 'currency_id'}" widget="monetary"/>
+                                        <field name="amount_other" options="{'currency_field': 'currency_id'}" widget="monetary"/>
+                                        <div class="oe_subtotal_footer_separator oe_inline">
+                                            <label for="amount_untaxed"/>
+                                        </div>
+                                        <field class="oe_subtotal_footer_separator" name="amount_untaxed" nolabel="1" options="{'currency_field': 'currency_id'}" widget="monetary"/>
+                                        <field name="amount_tax" options="{'currency_field': 'currency_id'}" widget="monetary"/>
+                                        <div class="oe_subtotal_footer_separator oe_inline">
+                                            <label for="amount_total"/>
+                                        </div>
+                                        <field class="oe_subtotal_footer_separator" name="amount_total" nolabel="1" options="{'currency_field': 'currency_id'}" widget="monetary"/>
+                                    </group>
+                                </group>
+                            </page>
                         </notebook>
                     </sheet>
                 </form>
