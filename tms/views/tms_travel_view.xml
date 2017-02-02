@@ -55,8 +55,8 @@
                     <field name="waybill_ids" widget="many2many_tags"/>
                     <field name="route_id"/>
                     <field name="state"/>
-                    <button groups="tms.group_traffic" icon="fa-thumbs-up" name="action_dispatch" states="draft" string="Dispatch Travel" type="object"/>
-                    <button groups="tms.group_traffic" icon="fa-check-square" name="action_end" states="progress" string="End Travel" type="object"/>
+                    <button groups="tms.group_traffic,tms.group_expenses" icon="fa-thumbs-up" name="action_dispatch" states="draft" string="Dispatch Travel" type="object"/>
+                    <button groups="tms.group_traffic,tms.group_expenses" icon="fa-check-square" name="action_end" states="progress" string="End Travel" type="object"/>
                 </tree>
             </field>
         </record>
@@ -117,15 +117,15 @@
                 <form string="Travels">
                     <header>
                         <button name="action_progress" icon="fa-thumbs-up" type="object"
-                                string="Dispatch" states="draft" groups="tms.group_traffic"
+                                string="Dispatch" states="draft" groups="tms.group_traffic,tms.group_expenses"
                                 class="oe_highlight"/>
                         <button name="action_done" icon="fa-check-square" type="object"
-                                string="Finish" states="progress" groups="tms.group_traffic"
+                                string="Finish" states="progress" groups="tms.group_traffic,tms.group_expenses"
                                 class="oe_highlight"/>
                         <button name="action_cancel" icon="fa-times" type="object"
-                                string="Cancel" states="draft,progress" groups="tms.group_traffic"/>
+                                string="Cancel" states="draft,progress" groups="tms.group_traffic,tms.group_expenses"/>
                         <button name="action_draft" icon="fa-reply" type="object"
-                                string="Set to draft" states="done,cancel" groups="tms.group_traffic"/>
+                                string="Set to draft" states="done,cancel" groups="tms.group_traffic,tms.group_expenses"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
