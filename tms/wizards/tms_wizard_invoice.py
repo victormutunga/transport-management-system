@@ -4,7 +4,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 
-from openerp import _, api, exceptions, models
+from openerp import _, api, fields, exceptions, models
 
 
 class TmsWizardInvoice(models.TransientModel):
@@ -115,6 +115,7 @@ class TmsWizardInvoice(models.TransientModel):
             journal_id = record.operating_unit_id.sale_journal_id.id
             if active_model == 'tms.waybill':
                 res = self.compute_waybill(record, lines)
+
             if active_model == 'fleet.vehicle.log.fuel':
                 res = self.compute_fuel_log(record, lines)
             partner_ids.append(res['partner_id'].id)
@@ -124,7 +125,6 @@ class TmsWizardInvoice(models.TransientModel):
         if len(set(currency_ids)) > 1:
             raise exceptions.ValidationError(
                 _('The records must be of the same currency.'))
-
         invoice_id = self.env['account.invoice'].create({
             'partner_id': res['partner_id'].id,
             'operating_unit_id': res['operating_unit_id'].id,
@@ -136,6 +136,13 @@ class TmsWizardInvoice(models.TransientModel):
             'type': res['invoice_type'],
             'invoice_line_ids': [line for line in lines],
         })
+
+        message = _(
+            '<strong>Invoice of:</strong> %s </b>'
+            '<strong>Create by: </strong>%s </b>'
+            '<strong>Date: </strong>%s') % (
+            ', '.join(record_names), self.env.user.name, fields.Datetime.now())
+        invoice_id.message_post(body=message)
 
         for record in records:
             record.invoice_id = invoice_id.id
