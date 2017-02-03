@@ -100,6 +100,8 @@ class FleetVehicleLogFuel(models.Model):
     expense_control = fields.Boolean(
         readonly=True,
     )
+    ticket_number = fields.Char(
+        string='Ticket Number',)
 
     @api.multi
     @api.depends('vehicle_id')

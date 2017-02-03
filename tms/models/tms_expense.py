@@ -532,6 +532,7 @@ class TmsExpense(models.Model):
                         'date': str(fields.Date.today()),
                         'expense_control': True,
                         'expense_id': rec.id,
+                        'ticket_number': line.invoice_number,
                         })
                     line.control = True
                 # We only need all the lines except the fuel and the
