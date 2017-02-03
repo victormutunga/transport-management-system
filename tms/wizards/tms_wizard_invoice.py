@@ -138,8 +138,8 @@ class TmsWizardInvoice(models.TransientModel):
         })
 
         message = _(
-            '<strong>Invoice of:</strong> %s </b>'
-            '<strong>Create by: </strong>%s </b>'
+            '<strong>Invoice of:</strong> %s </br>'
+            '<strong>Created by: </strong>%s </br>'
             '<strong>Date: </strong>%s') % (
             ', '.join(record_names), self.env.user.name, fields.Datetime.now())
         invoice_id.message_post(body=message)
