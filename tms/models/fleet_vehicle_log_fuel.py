@@ -222,4 +222,4 @@ class FleetVehicleLogFuel(models.Model):
         decimals = str(float(product_qty)).split('.')[1]
         total = num2words(float(total)).upper()
         decimals = num2words(float(decimals)).upper()
-        return '%s POINT %s' % (total, decimals or 0.0)
+        return '%s' % (total)
