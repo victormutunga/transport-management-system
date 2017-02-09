@@ -129,7 +129,6 @@ class TmsWizardInvoice(models.TransientModel):
             'partner_id': res['partner_id'].id,
             'operating_unit_id': res['operating_unit_id'].id,
             'fiscal_position_id': res['fpos'].id,
-            'origin': "Invoice of: " + ', '.join(record_names),
             'journal_id': journal_id,
             'currency_id': currency_id,
             'account_id': res['invoice_account'].id,
