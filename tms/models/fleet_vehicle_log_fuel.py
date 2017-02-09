@@ -219,7 +219,5 @@ class FleetVehicleLogFuel(models.Model):
     @api.multi
     def _amount_to_text(self, product_qty):
         total = str(float(product_qty)).split('.')[0]
-        decimals = str(float(product_qty)).split('.')[1]
-        total = num2words(float(total)).upper()
-        decimals = num2words(float(decimals)).upper()
+        total = num2words(float(total), lang='es').upper()
         return '%s' % (total)
