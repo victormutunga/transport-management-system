@@ -20,6 +20,7 @@ from . import tms_customs
 from . import tms_event
 from . import tms_expense
 from . import tms_expense_line
+from . import tms_expense_loan
 from . import tms_extradata
 from . import tms_extradata_type
 from . import tms_factor

@@ -42,6 +42,7 @@
         'views/tms_event_view.xml',
         'views/tms_expense_view.xml',
         'views/tms_expense_line_view.xml',
+        'views/tms_expense_loan_view.xml',
         'views/tms_factor_view.xml',
         'views/tms_place_view.xml',
         'views/tms_route_view.xml',
