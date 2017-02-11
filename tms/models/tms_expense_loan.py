@@ -4,13 +4,15 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 
-from openerp import fields, models
+from openerp import api, fields, models
 
 
 class TmsExpenseLoan(models.Model):
     _name = "tms.expense.loan"
     _description = "Tms Expense Loan"
 
+    operating_unit_id = fields.Many2one(
+        'operating.unit', string='Operating Unit', required=True)
     name = fields.Char()
     description = fields.Char(required=True)
     date = fields.Datetime(
@@ -43,3 +45,10 @@ class TmsExpenseLoan(models.Model):
     product_id = fields.Many2one(
         'product.product', 'Discount Product',
         required=True)
+
+    @api.model
+    def create(self, values):
+        loan = super(TmsExpenseLoan, self).create(values)
+        sequence = loan.operating_unit_id.loan_sequence_id
+        loan.name = sequence.next_by_id()
+        return loan

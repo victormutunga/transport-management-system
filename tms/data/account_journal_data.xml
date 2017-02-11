@@ -25,5 +25,11 @@
             <field name='code'>EXP</field>
             <field name='show_on_dashboard' eval="False"/>
         </record>
+        <record id="tms_account_journal_loan" model="account.journal">
+            <field name='name'>Loan Journal</field>
+            <field name='type'>general</field>
+            <field name='code'>LOA</field>
+            <field name='show_on_dashboard' eval="False"/>
+        </record>
     </data>
 </odoo>

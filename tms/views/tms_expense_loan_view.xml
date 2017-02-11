@@ -33,10 +33,11 @@
                 </header>
                 <sheet>
                 <h1>
-                    <label string="Loan"/>
+                    <label class="oe_inline" style="font-size:30px;" string="Loan - " attrs="{'invisible':[('name','=', False)]}"/>
                     <field name="name" class="oe_inline" readonly="1"/>
                 </h1>
                 <group col="4">
+                    <field name="operating_unit_id" required="1"/>
                     <field name="date"/>
                     <field name="origin"/>
                 </group>

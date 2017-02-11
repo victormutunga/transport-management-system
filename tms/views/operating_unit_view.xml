@@ -16,12 +16,14 @@
                         <field name="waybill_sequence_id"/>
                         <field name="advance_sequence_id"/>
                         <field name="fuel_log_sequence_id"/>
+                        <field name="loan_sequence_id"/>
                     </group>
                     <group string="Journals for TMS">
                         <field name="advance_journal_id"/>
                         <field name="expense_journal_id"/>
                         <field name="sale_journal_id"/>
                         <field name="purchase_journal_id"/>
+                        <field name="loan_journal_id"/>
                     </group>
                     <group string="Products for TMS">
                         <field name="ieps_product_id"/>

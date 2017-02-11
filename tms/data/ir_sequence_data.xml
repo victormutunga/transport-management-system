@@ -41,5 +41,13 @@
             <field name="padding">4</field>
             <field name="number_increment">1</field>
         </record>
+        <record model="ir.sequence" id="loan_sequence">
+            <field name="name">Loan Sequence</field>
+            <field name="implementation">no_gap</field>
+            <field name="code">PR</field>
+            <field name="prefix">PR</field>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+        </record>
     </data>
 </odoo>
