@@ -744,19 +744,21 @@ class TmsExpense(models.Model):
             for travel in rec.travel_ids:
                 travel.write({'state': 'closed', 'expense_id': rec.id})
                 for advance in travel.advance_ids:
-                    if advance.state != 'confirmed':
+                    if advance.state not in ('confirmed', 'cancel'):
                         raise ValidationError(_(
                             'Oops! All the advances must be confirmed'
-                            '\n Name of advance not confirmed: ' +
+                            ' or cancelled \n '
+                            'Name of advance not confirmed or cancelled: ' +
                             advance.name +
                             '\n State: ' + advance.state))
-                    elif not advance.paid:
+                    elif not advance.paid and advance.state == 'confirmed':
                         raise ValidationError(_(
                             'Oops! All the advances must be paid'
                             '\n Name of advance not paid: ' +
                             advance.name))
                     else:
-                        if advance.auto_expense:
+                        if (advance.auto_expense and
+                                advance.state == 'confirmed'):
                             rec.expense_line_ids.create({
                                 'name': _("Advance: ") + str(advance.name),
                                 'travel_id': travel.id,
