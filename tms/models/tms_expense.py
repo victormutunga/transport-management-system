@@ -560,7 +560,7 @@ class TmsExpense(models.Model):
                     # and make the move line based in the total with taxes
                     if line.is_invoice:
                         inv_id = self.create_supplier_invoice(line)
-                        line.write({'invoice_id': inv_id.id})
+                        inv_id.signal_workflow('invoice_open')
                         invoices.append(inv_id)
                         move_line = (0, 0, {
                             'name': (
@@ -912,7 +912,7 @@ class TmsExpense(models.Model):
             'operating_unit_id': line.expense_id.operating_unit_id.id,
         }
         invoice_id = self.env['account.invoice'].create(invoice)
-        invoice_id.signal_workflow('invoice_open')
+        line.write({'invoice_id': invoice_id.id})
         return invoice_id
 
     @api.multi
