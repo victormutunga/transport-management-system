@@ -9,5 +9,5 @@ from openerp import fields, models
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    waybill_ids = fields.One2many(
+    waybill_ids = fields.Many2many(
         'tms.waybill', 'invoice_id', string="Waybills", readonly=True)
