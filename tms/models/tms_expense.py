@@ -751,7 +751,8 @@ class TmsExpense(models.Model):
                             'Name of advance not confirmed or cancelled: ' +
                             advance.name +
                             '\n State: ' + advance.state))
-                    elif not advance.paid and advance.state == 'confirmed':
+                    elif not advance.paid and advance.state in (
+                            'confirmed', 'closed'):
                         raise ValidationError(_(
                             'Oops! All the advances must be paid'
                             '\n Name of advance not paid: ' +
