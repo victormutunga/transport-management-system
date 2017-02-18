@@ -731,10 +731,10 @@ class TmsExpense(models.Model):
             travels.write({'expense_id': False, 'state': 'done'})
             advances = self.env['tms.advance'].search(
                 [('expense_id', '=', rec.id)])
-            advances.write({
-                'expense_id': False,
-                'state': 'confirmed'
-            })
+            for adv in advances:
+                if adv.state != 'cancel':
+                    adv.state = 'confirmed'
+                adv.expense_id = False
             fuel_logs = self.env['fleet.vehicle.log.fuel'].search(
                 [('expense_id', '=', rec.id)])
             fuel_logs.write({
@@ -751,8 +751,7 @@ class TmsExpense(models.Model):
                             'Name of advance not confirmed or cancelled: ' +
                             advance.name +
                             '\n State: ' + advance.state))
-                    elif not advance.paid and advance.state in (
-                            'confirmed', 'closed'):
+                    elif not advance.paid and advance.state == 'confirmed':
                         raise ValidationError(_(
                             'Oops! All the advances must be paid'
                             '\n Name of advance not paid: ' +
@@ -770,10 +769,11 @@ class TmsExpense(models.Model):
                                 'unit_price': advance.amount,
                                 'control': True
                             })
-                        advance.write({
-                            'state': 'closed',
-                            'expense_id': rec.id
-                        })
+                        if advance.state != 'cancel':
+                            advance.write({
+                                'state': 'closed',
+                                'expense_id': rec.id
+                            })
                 for fuel_log in travel.fuel_log_ids:
                     if (fuel_log.state != 'confirmed' and
                             fuel_log.state != 'closed'):
