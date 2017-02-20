@@ -142,8 +142,9 @@ class TmsWizardInvoice(models.TransientModel):
             '<strong>Date: </strong>%s') % (
             ', '.join(record_names), self.env.user.name, fields.Datetime.now())
         invoice_id.message_post(body=message)
+
         for record in records:
-            invoice_id.waybill_ids += record
+            record.invoice_id = invoice_id.id
 
         return {
             'name': 'Customer Invoice',
