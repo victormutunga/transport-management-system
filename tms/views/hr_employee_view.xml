@@ -14,6 +14,7 @@
                         </group>
                         <group col="4">
                             <field name="tms_advance_account_id" attrs="{'required':[('driver','=',True)], 'invisible':[('driver','=',False)] }"/>
+                            <field name="tms_loan_account_id" attrs="{'required':[('driver','=',True)], 'invisible':[('driver','=',False)] }"/>
                             <field name="tms_expense_negative_account_id" attrs="{'required':[('driver','=',True)], 'invisible':[('driver','=',False)] }"/>
                             <field name="income_percentage" attrs="{'required':[('driver','=',True)], 'invisible':[('driver','=',False)] }"/>
                             <label for="driver_license" attrs="{'invisible': [('driver','=',False)]}"/>

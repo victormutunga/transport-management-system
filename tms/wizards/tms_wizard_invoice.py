@@ -47,7 +47,7 @@ class TmsWizardInvoice(models.TransientModel):
                     _('You must have an income account in the '
                       'product or its category'))
             tax = fpos.map_tax(
-                line.product_id.taxes_id)
+                line.tax_ids)
             if line.price_subtotal > 0.0:
                 lines.append(
                     (0, 0, self.prepare_lines

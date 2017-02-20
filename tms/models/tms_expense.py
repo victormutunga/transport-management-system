@@ -5,7 +5,7 @@
 
 from openerp import _, api, fields, models
 from openerp.exceptions import ValidationError
-import datetime
+from datetime import datetime
 
 
 class TmsExpense(models.Model):
@@ -186,9 +186,9 @@ class TmsExpense(models.Model):
     def _compute_travel_days(self):
         for rec in self:
             if rec.start_date and rec.end_date:
-                strp_start_date = datetime.datetime.strptime(
+                strp_start_date = datetime.strptime(
                     rec.start_date, "%Y-%m-%d %H:%M:%S")
-                strp_end_date = datetime.datetime.strptime(
+                strp_end_date = datetime.strptime(
                     rec.end_date, "%Y-%m-%d %H:%M:%S")
                 difference = strp_end_date - strp_start_date
                 hours = int(difference.seconds / 3600)
@@ -741,6 +741,55 @@ class TmsExpense(models.Model):
                 'expense_id': False,
                 'state': 'confirmed'
             })
+            loans = self.env['tms.expense.loan'].search(
+                [('employee_id', '=', rec.employee_id.id)])
+            methods = {
+                'monthly': 30,
+                'fortnightly': 15,
+                'weekly': 7,
+            }
+            for loan in loans:
+                total_discount = 0.0
+                if not loan.lock:
+                    if loan.balance != 0.0:
+                        if loan.discount_type == 'fixed':
+                            total = loan.fixed_discount
+                        elif loan.discount_type == 'percent':
+                            total = loan.amount * (
+                                loan.percent_discount / 100)
+                        for key, value in methods.items():
+                            if loan.discount_method == key:
+                                if loan.expense_ids:
+                                    dates = []
+                                    for loan_date in loan.expense_ids:
+                                        dates.append(loan_date.date)
+                                    dates.sort(reverse=True)
+                                    end_date = datetime.strptime(
+                                        dates[0], "%Y-%m-%d")
+                                else:
+                                    end_date = datetime.strptime(
+                                        loan.date, "%Y-%m-%d")
+                                start_date = datetime.strptime(
+                                    rec.date, "%Y-%m-%d")
+                                total_date = start_date - end_date
+                                total_payment = total_date / value
+                                if int(total_payment.days) >= 1:
+                                    total_discount = total_payment.days * total
+                        total_final = loan.balance - total_discount
+                        if total_final <= 0.0:
+                            total_discount = loan.balance
+                            loan.write({'balance': 0.0, 'state': 'closed', 'paid': True})
+                        rec.expense_line_ids.create({
+                            'name': _("Loan: ") + str(loan.name),
+                            'expense_id': rec.id,
+                            'line_type': "salary_discount",
+                            'product_id': loan.product_id.id,
+                            'product_qty': 1.0,
+                            'unit_price': total_discount,
+                            'control': True
+                        })
+                        loan.expense_ids += rec
+                    # loan.write({'expense_line_ids': [(4, 0, rec.id)]})
             for travel in rec.travel_ids:
                 travel.write({'state': 'closed', 'expense_id': rec.id})
                 for advance in travel.advance_ids:
