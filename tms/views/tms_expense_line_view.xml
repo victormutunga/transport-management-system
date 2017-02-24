@@ -36,7 +36,7 @@
                             <field name="travel_id" domain="[('expense_id', '=', expense_id),('expense_id', '!=', False)]" options="{'no_create': True}"/>
                             <field name='route_id'/>
                             <field name="line_type" required='1'/>
-                            <field name="product_id" required='1' domain="[('tms_product_category', 'in', ['real_expense','made_up_expense','salary','salary_retention','salary_discount','fuel','other_income','refund','fuel_cash'])]" options="{'no_create': True}"/>
+                            <field name="product_id" domain="[('tms_product_category', 'in', ['real_expense','made_up_expense','salary','salary_retention','salary_discount','fuel','other_income','refund','fuel_cash'])]" options="{'no_create': True}"/>
                             <field name="name"/>
                             <field name="product_qty" required="1" attrs="{'invisible':['|', ('line_type','in', ['real_expense', 'made_up_expense', 'salary', 'refund', 'salary_retention', 'salary_discount', 'other_income']),('line_type','=', False)]}"/>
                             <field name='unit_price' required="1"/>
