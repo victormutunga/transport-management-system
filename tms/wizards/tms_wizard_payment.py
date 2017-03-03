@@ -53,7 +53,7 @@ class TmsWizardPayment(models.TransientModel):
             name = 'Payment of'
             for obj in active_ids:
                 name = name + ' / ' + obj.name
-                if obj.state != 'confirmed' or obj.paid:
+                if obj.state not in ['confirmed', 'closed'] or obj.paid:
                     raise ValidationError(
                         _('The document %s must be confirmed and '
                           'unpaid.') % obj.name)
