@@ -244,8 +244,8 @@
                 </form>
             </field>
         </record>
-        <record id="view_tms_travel_form_expense" model="ir.ui.view">
-            <field name="name">tms.travel.form</field>
+        <record id="view_tms_travel_form_expense2" model="ir.ui.view">
+            <field name="name">tms.travel.expense.form</field>
             <field name="model">tms.travel</field>
             <field name="arch" type="xml">
                 <form string="Travels">
