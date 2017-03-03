@@ -745,29 +745,39 @@ class TmsExpense(models.Model):
                             'Name of advance not confirmed or cancelled: ' +
                             advance.name +
                             '\n State: ' + advance.state))
-                    elif not advance.paid and advance.state == 'confirmed':
+                    if not advance.paid:
+                        if advance.move_id.matched_percentage == 1.0:
+                            advance_move = advance.move_id.line_ids[-1]
+                            if advance_move.credit > 0:
+                                move_lines = advance.move_id.line_ids[-1]
+                                reconcile_move = move_lines.full_reconcile_id
+                                for line in reconcile_move.reconciled_line_ids:
+                                    if line.journal_id.type == 'bank':
+                                        move_id = line.move_id.id
+                            advance.write(
+                                {'paid': True, 'payment_move_id': move_id})
+                    if not advance.paid and advance.state == 'confirmed':
                         raise ValidationError(_(
                             'Oops! All the advances must be paid'
                             '\n Name of advance not paid: ' +
                             advance.name))
-                    else:
-                        if (advance.auto_expense and
-                                advance.state == 'confirmed'):
-                            rec.expense_line_ids.create({
-                                'name': _("Advance: ") + str(advance.name),
-                                'travel_id': travel.id,
-                                'expense_id': rec.id,
-                                'line_type': "real_expense",
-                                'product_id': advance.product_id.id,
-                                'product_qty': 1.0,
-                                'unit_price': advance.amount,
-                                'control': True
-                            })
-                        if advance.state != 'cancel':
-                            advance.write({
-                                'state': 'closed',
-                                'expense_id': rec.id
-                            })
+                    if (advance.auto_expense and
+                            advance.state == 'confirmed'):
+                        rec.expense_line_ids.create({
+                            'name': _("Advance: ") + str(advance.name),
+                            'travel_id': travel.id,
+                            'expense_id': rec.id,
+                            'line_type': "real_expense",
+                            'product_id': advance.product_id.id,
+                            'product_qty': 1.0,
+                            'unit_price': advance.amount,
+                            'control': True
+                        })
+                    if advance.state != 'cancel':
+                        advance.write({
+                            'state': 'closed',
+                            'expense_id': rec.id
+                        })
                 for fuel_log in travel.fuel_log_ids:
                     if (fuel_log.state != 'confirmed' and
                             fuel_log.state != 'closed'):
