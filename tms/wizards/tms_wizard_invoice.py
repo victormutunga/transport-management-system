@@ -134,7 +134,6 @@ class TmsWizardInvoice(models.TransientModel):
             'account_id': res['invoice_account'].id,
             'type': res['invoice_type'],
             'invoice_line_ids': [line for line in res['lines']],
-            'waybill_ids': [waybill for waybill in records]
         })
         records.write({'invoice_id': invoice_id.id})
         message = _(
