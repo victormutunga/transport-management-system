@@ -18,10 +18,13 @@ class TmsExpenseLoan(models.Model):
     date = fields.Date(
         required=True,
         default=fields.Date.today)
+    date_confirmed = fields.Date(
+        readonly=True,
+        related='move_id.date', string='Date Confirmed')
     employee_id = fields.Many2one(
         'hr.employee', 'Driver', required=True)
     expense_ids = fields.Many2many(
-        'tms.expense', readonly=True)
+        'tms.expense.line', readonly=True)
     state = fields.Selection(
         [('draft', 'Draft'),
          ('authorized', 'Waiting for authorization'),
@@ -46,7 +49,8 @@ class TmsExpenseLoan(models.Model):
     percent_discount = fields.Float()
     fixed_discount = fields.Float()
     balance = fields.Float(compute='_compute_balance')
-    paid = fields.Boolean()
+    paid = fields.Boolean(compute='_compute_paid',
+                          store=True, readonly=True)
     lock = fields.Boolean(string='Lock Payment')
     product_id = fields.Many2one(
         'product.product', 'Discount Product',
@@ -86,8 +90,18 @@ class TmsExpenseLoan(models.Model):
         for rec in self:
             if rec.amount <= 0.0:
                 raise exceptions.ValidationError(
-                    _('Could not approve the Loan'
-                        ' The Amount must be greater than zero.'))
+                    _('Could not approve the Loan\n'
+                      ' The Amount must be greater than zero.'))
+            if rec.discount_type == 'fixed' and rec.fixed_discount <= 0.0:
+                raise exceptions.ValidationError(
+                    _('Could not approve the Loan\n'
+                      ' The Amount of discount must be greater than zero.'))
+            elif (rec.discount_type == 'percent' and
+                  rec.percent_discount <= 0.0):
+                raise exceptions.ValidationError(
+                    _('Could not approve the Loan\n'
+                      ' The Amount of discount must be greater than zero.'))
+
             rec.state = 'approved'
             rec.message_post(_(
                 '<strong>Loan approved.</strong><ul>'
@@ -98,12 +112,21 @@ class TmsExpenseLoan(models.Model):
     @api.multi
     def action_cancel(self):
         for rec in self:
-            rec.state = 'cancel'
-            rec.message_post(_(
-                '<strong>Loan cancelled.</strong><ul>'
-                '<li><strong>Cancelled by: </strong>%s</li>'
-                '<li><strong>Cancelled at: </strong>%s</li>'
-                '</ul>') % (self.env.user.name, fields.Datetime.now()))
+            if rec.paid:
+                raise exceptions.ValidationError(
+                    _('Could not cancel this loan because'
+                      ' the loan is already paid. '
+                      'Please cancel the payment first.'))
+            else:
+                if rec.move_id.state == 'posted':
+                    rec.move_id.button_cancel()
+                rec.move_id.unlink()
+                rec.state = 'cancel'
+                rec.message_post(_(
+                    '<strong>Loan cancelled.</strong><ul>'
+                    '<li><strong>Cancelled by: </strong>%s</li>'
+                    '<li><strong>Cancelled at: </strong>%s</li>'
+                    '</ul>') % (self.env.user.name, fields.Datetime.now()))
 
     @api.multi
     def action_confirm(self):
@@ -180,7 +203,7 @@ class TmsExpenseLoan(models.Model):
                         self.write(
                             {
                                 'move_id': move_id.id,
-                                'state': 'confirmed'
+                                'state': 'confirmed',
                             })
                         self.message_post(_(
                             '<strong>Loan confirmed.</strong><ul>'
@@ -201,13 +224,33 @@ class TmsExpenseLoan(models.Model):
 
     @api.depends('amount')
     def _compute_balance(self):
-        line_amount = 0.0
         for loan in self:
+            line_amount = 0.0
             if not loan.expense_ids:
                 loan.balance = loan.amount
             else:
                 for line in loan.expense_ids:
-                    line_amount += line.amount_total_total
+                    line_amount += line.price_total
                 loan.balance = loan.amount + line_amount
-            if loan.balance == 0.0:
-                loan.write({'paid': True})
+
+    @api.depends('payment_move_id')
+    def _compute_paid(self):
+        for rec in self:
+            if rec.payment_move_id.id:
+                rec.paid = True
+
+    @api.onchange('lock')
+    def onchange_lock_payment(self):
+        import ipdb; ipdb.set_trace()
+        if self.lock:
+            self.message_post(_(
+                '<strong>Loan.</strong><ul>'
+                '<li><strong>Payment Locked by: </strong>%s</li>'
+                '<li><strong>Payment Locked at: </strong>%s</li>'
+                '</ul>') % (self.env.user.name, fields.Datetime.now()))
+        else:
+            self.message_post(_(
+                '<strong>Loan.</strong><ul>'
+                '<li><strong>Payment Unlocked by: </strong>%s</li>'
+                '<li><strong>Payment Unlocked at: </strong>%s</li>'
+                '</ul>') % (self.env.user.name, fields.Datetime.now()))

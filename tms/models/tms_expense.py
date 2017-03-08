@@ -748,10 +748,14 @@ class TmsExpense(models.Model):
                 'fortnightly': 15,
                 'weekly': 7,
             }
+            loans_unpaid = []
             for loan in loans:
                 total_discount = 0.0
-                if not loan.lock:
-                    if loan.balance != 0.0:
+                payment = loan.payment_move_id.id
+                if not loan.lock and loan.state == 'confirmed' and not payment:
+                    loans_unpaid.append(loan.name)
+                if not loan.lock and loan.state == 'confirmed' and payment:
+                    if loan.balance > 0.0:
                         if loan.discount_type == 'fixed':
                             total = loan.fixed_discount
                         elif loan.discount_type == 'percent':
@@ -768,28 +772,43 @@ class TmsExpense(models.Model):
                                         dates[0], "%Y-%m-%d")
                                 else:
                                     end_date = datetime.strptime(
-                                        loan.date, "%Y-%m-%d")
+                                        loan.date_confirmed, "%Y-%m-%d")
                                 start_date = datetime.strptime(
                                     rec.date, "%Y-%m-%d")
                                 total_date = start_date - end_date
                                 total_payment = total_date / value
                                 if int(total_payment.days) >= 1:
                                     total_discount = total_payment.days * total
+                            elif loan.discount_method == 'each':
+                                total_discount = total
                         total_final = loan.balance - total_discount
                         if total_final <= 0.0:
                             total_discount = loan.balance
-                            loan.write({'balance': 0.0, 'state': 'closed', 'paid': True})
-                        rec.expense_line_ids.create({
+                            loan.write({'balance': 0.0, 'state': 'closed'})
+                        expense_line = rec.expense_line_ids.create({
                             'name': _("Loan: ") + str(loan.name),
                             'expense_id': rec.id,
                             'line_type': "salary_discount",
                             'product_id': loan.product_id.id,
                             'product_qty': 1.0,
                             'unit_price': total_discount,
+                            'date': rec.date,
                             'control': True
                         })
-                        loan.expense_ids += rec
-                    # loan.write({'expense_line_ids': [(4, 0, rec.id)]})
+                        loan.expense_ids += expense_line
+                elif loan.lock and loan.state == 'confirmed':
+                    if loan.balance > 0.0:
+                        expense_line = rec.expense_line_ids.create({
+                            'name': _("Loan: ") + str(loan.name),
+                            'expense_id': rec.id,
+                            'line_type': "salary_discount",
+                            'product_id': loan.product_id.id,
+                            'product_qty': 1.0,
+                            'unit_price': 0.0,
+                            'date': rec.date,
+                            'control': True
+                        })
+                    loan.expense_ids += expense_line
             for travel in rec.travel_ids:
                 travel.write({'state': 'closed', 'expense_id': rec.id})
                 for advance in travel.advance_ids:
@@ -823,7 +842,7 @@ class TmsExpense(models.Model):
                 for fuel_log in travel.fuel_log_ids:
                     if (fuel_log.state != 'confirmed' and
                             fuel_log.state != 'closed'):
-                        raise ValidationError(_(
+                        raise ValidationError( (
                             'Oops! All the voucher must be confirmed'
                             '\n Name of voucher not confirmed: ' +
                             fuel_log.name +
@@ -867,6 +886,12 @@ class TmsExpense(models.Model):
                     'unit_price': rec.get_driver_salary(travel),
                     'control': True
                 })
+        return {'warning': {
+            'title': _('Warning!'),
+            'message': _('You have loans unpaid\
+                \nLoan(s) %s.\
+                ' % (' or '.join(loans_unpaid))),
+        }}
 
     @api.depends('travel_ids')
     def get_driver_salary(self, travel):
