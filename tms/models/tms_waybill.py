@@ -277,7 +277,7 @@ class TmsWaybill(models.Model):
                 "<h5><strong>Aprroved</strong></h5>"
                 "<p><strong>Approved by: </strong> %s <br>"
                 "<strong>Approved at: </strong> %s</p") % (
-                self.user_id.name, fields.Datetime.now()))
+                self.user_id.name, fields.Date.today()))
         return True
 
     @api.depends('travel_ids')
@@ -442,7 +442,7 @@ class TmsWaybill(models.Model):
                 "<h5><strong>Cancel to Draft</strong></h5>"
                 "<p><strong>by: </strong> %s <br>"
                 "<strong>at: </strong> %s</p") % (
-                waybill.user_id.name, fields.Datetime.now()))
+                waybill.user_id.name, fields.Date.today()))
             waybill.state = 'draft'
 
     @api.multi
@@ -472,7 +472,7 @@ class TmsWaybill(models.Model):
                     "<h5><strong>Cancelled</strong></h5>"
                     "<p><strong>Cancelled by: </strong> %s <br>"
                     "<strong>Cancelled at: </strong> %s</p") % (
-                    waybill.user_id.name, fields.Datetime.now()))
+                    waybill.user_id.name, fields.Date.today()))
 
     @api.depends('supplier_invoice_id')
     def _compute_supplier_invoice_paid(self):

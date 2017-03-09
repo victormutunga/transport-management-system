@@ -443,7 +443,7 @@ class TmsExpense(models.Model):
                         '<li><b>Approved at: </b>%s</li>'
                         '</ul>') % (
                             self.env.user.name,
-                            fields.Datetime.now())
+                            fields.Date.today())
             rec.message_post(body=message)
         self.state = 'approved'
 
@@ -455,7 +455,7 @@ class TmsExpense(models.Model):
                         '<li><b>Drafted at: </b>%s</li>'
                         '</ul>') % (
                             self.env.user.name,
-                            fields.Datetime.now())
+                            fields.Date.today())
             rec.message_post(body=message)
         self.state = 'draft'
 
@@ -678,7 +678,7 @@ class TmsExpense(models.Model):
                         '<li><b>Confirmed at: </b>%s</li>'
                         '</ul>') % (
                             self.env.user.name,
-                            fields.Datetime.now())
+                            fields.Date.today())
             rec.message_post(body=message)
 
     @api.multi

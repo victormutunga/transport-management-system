@@ -140,7 +140,7 @@ class TmsWizardInvoice(models.TransientModel):
             '<strong>Invoice of:</strong> %s </br>'
             '<strong>Created by: </strong>%s </br>'
             '<strong>Date: </strong>%s') % (
-            ', '.join(record_names), self.env.user.name, fields.Datetime.now())
+            ', '.join(record_names), self.env.user.name, fields.Date.today())
         invoice_id.message_post(body=message)
 
         return {
