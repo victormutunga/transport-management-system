@@ -132,7 +132,7 @@ class TmsAdvance(models.Model):
                     '<strong>Advance approved.</strong><ul>'
                     '<li><strong>Approved by: </strong>%s</li>'
                     '<li><strong>Approved at: </strong>%s</li>'
-                    '</ul>') % (rec.env.user.name, fields.Datetime.now()))
+                    '</ul>') % (rec.env.user.name, fields.Date.today()))
 
     @api.multi
     def action_confirm(self):
@@ -220,7 +220,7 @@ class TmsAdvance(models.Model):
                             '<li><strong>Confirmed by: </strong>%s</li>'
                             '<li><strong>Confirmed at: </strong>%s</li>'
                             '</ul>') % (self.env.user.name,
-                                        fields.Datetime.now()))
+                                        fields.Date.today()))
 
     @api.multi
     def action_cancel(self):
@@ -239,7 +239,7 @@ class TmsAdvance(models.Model):
                     '<strong>Advance cancelled.</strong><ul>'
                     '<li><strong>Cancelled by: </strong>%s</li>'
                     '<li><strong>Cancelled at: </strong>%s</li>'
-                    '</ul>') % (self.env.user.name, fields.Datetime.now()))
+                    '</ul>') % (self.env.user.name, fields.Date.today()))
 
     @api.multi
     def action_cancel_draft(self):
@@ -254,4 +254,4 @@ class TmsAdvance(models.Model):
                     '<strong>Advance drafted.</strong><ul>'
                     '<li><strong>Drafted by: </strong>%s</li>'
                     '<li><strong>Drafted at: </strong>%s</li>'
-                    '</ul>') % (self.env.user.name, fields.Datetime.now()))
+                    '</ul>') % (self.env.user.name, fields.Date.today()))

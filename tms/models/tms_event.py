@@ -57,7 +57,7 @@ class TmsEvent(models.Model):
             message = _('<b>Event Confirmed.</b></br><ul>'
                         '<li><b>Approved by: </b>%s</li>'
                         '<li><b>Approved at: </b>%s</li>'
-                        '</ul>') % (self.env.user.name, fields.Datetime.now())
+                        '</ul>') % (self.env.user.name, fields.Date.today())
             rec.message_post(body=message)
             rec.state = 'confirm'
 
@@ -69,7 +69,7 @@ class TmsEvent(models.Model):
                         '<li><b>Cancelled at: </b>%s</li>'
                         '</ul>') % (
                             self.env.user.name,
-                            fields.Datetime.now())
+                            fields.Date.today())
             rec.message_post(body=message)
             rec.state = 'cancel'
 
@@ -80,6 +80,6 @@ class TmsEvent(models.Model):
                 '<b>Event Draft.</b></br><ul>'
                 '<li><b>Drafted by: </b>%s</li>'
                 '<li><b>Drafted at: </b>%s</li>'
-                '</ul>') % (self.env.user.name, fields.Datetime.now())
+                '</ul>') % (self.env.user.name, fields.Date.today())
             rec.message_post(body=message)
             rec.state = 'draft'
