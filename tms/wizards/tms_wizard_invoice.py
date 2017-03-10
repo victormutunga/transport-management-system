@@ -45,7 +45,7 @@ class TmsWizardInvoice(models.TransientModel):
             else:
                 raise exceptions.ValidationError(
                     _('You must have an income account in the '
-                      'product or its category'))
+                      'product or its category.'))
             tax = fpos.map_tax(
                 line.tax_ids)
             if line.price_subtotal > 0.0:
@@ -115,10 +115,10 @@ class TmsWizardInvoice(models.TransientModel):
             journal_id = record.operating_unit_id.sale_journal_id.id
             if active_model == 'tms.waybill':
                 res = self.compute_waybill(record, lines)
-
             if active_model == 'fleet.vehicle.log.fuel':
                 res = self.compute_fuel_log(record, lines)
             partner_ids.append(res['partner_id'].id)
+
         if len(set(partner_ids)) > 1:
             raise exceptions.ValidationError(
                 _('The records must be of the same partner.'))
@@ -133,18 +133,16 @@ class TmsWizardInvoice(models.TransientModel):
             'currency_id': currency_id,
             'account_id': res['invoice_account'].id,
             'type': res['invoice_type'],
-            'invoice_line_ids': [line for line in lines],
+            'invoice_line_ids': [line for line in res['lines']],
         })
-
+        records.write({'invoice_id': invoice_id.id})
         message = _(
             '<strong>Invoice of:</strong> %s </br>'
             '<strong>Created by: </strong>%s </br>'
             '<strong>Date: </strong>%s') % (
-            ', '.join(record_names), self.env.user.name, fields.Datetime.now())
+            ', '.join(record_names), self.env.user.name, fields.Date.today())
         invoice_id.message_post(body=message)
 
-        for record in records:
-            record.invoice_id = invoice_id.id
         return {
             'name': 'Customer Invoice',
             'view_id': self.env.ref(

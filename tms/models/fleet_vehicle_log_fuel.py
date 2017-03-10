@@ -140,7 +140,7 @@ class FleetVehicleLogFuel(models.Model):
             message = _('<b>Fuel Voucher Approved.</b></br><ul>'
                         '<li><b>Approved by: </b>%s</li>'
                         '<li><b>Approved at: </b>%s</li>'
-                        '</ul>') % (self.env.user.name, fields.Datetime.now())
+                        '</ul>') % (self.env.user.name, fields.Date.today())
             rec.message_post(body=message)
             rec.state = 'approved'
 
@@ -177,7 +177,7 @@ class FleetVehicleLogFuel(models.Model):
                 '<b>Fuel Voucher Draft.</b></br><ul>'
                 '<li><b>Drafted by: </b>%s</li>'
                 '<li><b>Drafted at: </b>%s</li>'
-                '</ul>') % (self.env.user.name, fields.Datetime.now())
+                '</ul>') % (self.env.user.name, fields.Date.today())
             rec.message_post(body=message)
             rec.state = 'draft'
 
@@ -194,7 +194,7 @@ class FleetVehicleLogFuel(models.Model):
                 '<b>Fuel Voucher Confirmed.</b></br><ul>'
                 '<li><b>Confirmed by: </b>%s</li>'
                 '<li><b>Confirmed at: </b>%s</li>'
-                '</ul>') % (self.env.user.name, fields.Datetime.now())
+                '</ul>') % (self.env.user.name, fields.Date.today())
             rec.message_post(body=message)
             rec.state = 'confirmed'
 

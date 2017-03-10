@@ -82,7 +82,8 @@ class TmsExpenseLine(models.Model):
         string='Supplier Invoice')
     product_id = fields.Many2one(
         'product.product',
-        string='Product')
+        string='Product',
+        required=True,)
     route_id = fields.Many2one(
         'tms.route', related='travel_id.route_id',
         string='Route', readonly=True)

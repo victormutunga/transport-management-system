@@ -238,3 +238,13 @@ class TmsExpenseLoan(models.Model):
         for rec in self:
             if rec.payment_move_id.id:
                 rec.paid = True
+
+    @api.model
+    def write(self, values):
+        loan = super(TmsExpenseLoan, self).write(values)
+        if self._context.get('active_model') == 'tms.expense':
+            for rec in self:
+                loan.write{
+                    'unit_price': rec.unit_price,
+                }
+        return loan
