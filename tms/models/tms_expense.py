@@ -793,7 +793,7 @@ class TmsExpense(models.Model):
                             'product_qty': 1.0,
                             'unit_price': total_discount,
                             'date': rec.date,
-                            'control': True
+                            'control': False
                         })
                         loan.expense_ids += expense_line
                 elif loan.lock and loan.state == 'confirmed':
@@ -806,7 +806,7 @@ class TmsExpense(models.Model):
                             'product_qty': 1.0,
                             'unit_price': 0.0,
                             'date': rec.date,
-                            'control': True
+                            'control': False
                         })
                     loan.expense_ids += expense_line
             for travel in rec.travel_ids:

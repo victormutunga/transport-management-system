@@ -238,19 +238,3 @@ class TmsExpenseLoan(models.Model):
         for rec in self:
             if rec.payment_move_id.id:
                 rec.paid = True
-
-    @api.onchange('lock')
-    def onchange_lock_payment(self):
-        import ipdb; ipdb.set_trace()
-        if self.lock:
-            self.message_post(_(
-                '<strong>Loan.</strong><ul>'
-                '<li><strong>Payment Locked by: </strong>%s</li>'
-                '<li><strong>Payment Locked at: </strong>%s</li>'
-                '</ul>') % (self.env.user.name, fields.Datetime.now()))
-        else:
-            self.message_post(_(
-                '<strong>Loan.</strong><ul>'
-                '<li><strong>Payment Unlocked by: </strong>%s</li>'
-                '<li><strong>Payment Unlocked at: </strong>%s</li>'
-                '</ul>') % (self.env.user.name, fields.Datetime.now()))
