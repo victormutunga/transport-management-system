@@ -335,7 +335,8 @@ class TmsExpense(models.Model):
             rec.amount_advance = 0
             for travel in rec.travel_ids:
                 for advance in travel.advance_ids:
-                    rec.amount_advance += advance.amount
+                    if advance.payment_move_id:
+                        rec.amount_advance += advance.amount
 
     @api.depends('travel_ids')
     def _compute_amount_balance2(self):
