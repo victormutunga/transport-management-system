@@ -53,7 +53,9 @@
                     <group>
                         <field name="product_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>     
                         <field name="amount" options="{'currency_field': 'currency_id'}" widget="monetary" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
-                        <field name="lock"/>
+                        <field name="lock" readonly="0"/>
+                        <field name="amount_discount" 
+                                   attrs="{'invisible':[('lock','!=',True)]}"/>
                     </group>
                 </group>
                 <notebook>

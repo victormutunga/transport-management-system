@@ -145,6 +145,22 @@
                             <page string="Fuel log Vouchers">
                                 <field colspan="4" name="fuel_log_ids" nolabel="1" readonly="1"/>
                             </page>
+                            <page string="Loans">
+                                <field colspan="4" name="loan_ids" nolabel="1" attrs="{'readonly':[('state','in',('confirmed'))]}">
+                                    <tree string="aa">
+                                        <field name="name"/>
+                                        <field name="date"/>
+                                        <field name="employee_id"/>
+                                        <field name="product_id"/>
+                                        <field name="amount"/>
+                                        <field name="balance"/>                    
+                                        <field name="paid" />
+                                        <field name="state"/>
+                                        <field name="lock"/>
+                                        <field name="amount_discount"/>
+                                    </tree>
+                                </field>
+                            </page>
                             <page string="Notes">
                                 <group>
                                     <field colspan="4" name="notes" nolabel="1"/>
@@ -157,6 +173,7 @@
                                     </group>
                                 </group>
                             </page>
+
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">

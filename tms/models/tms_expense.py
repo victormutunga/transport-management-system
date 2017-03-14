@@ -152,6 +152,8 @@ class TmsExpense(models.Model):
         readonly=True)
     advance_ids = fields.One2many(
         'tms.advance', 'expense_id', string='Advances', readonly=True)
+    loan_ids = fields.One2many('tms.expense.loan', 'expense_id',
+                            string='Loans', readonly=True)
     fuel_qty_real = fields.Float(
         'Fuel Qty Real',
         help="Fuel Qty computed based on Distance Real and Global Fuel "
@@ -755,6 +757,9 @@ class TmsExpense(models.Model):
                 if not loan.lock and loan.state == 'confirmed' and not payment:
                     loans_unpaid.append(loan.name)
                 if not loan.lock and loan.state == 'confirmed' and payment:
+                    loan.write({
+                            'expense_id': rec.id
+                        })
                     if loan.balance > 0.0:
                         if loan.discount_type == 'fixed':
                             total = loan.fixed_discount
@@ -793,20 +798,23 @@ class TmsExpense(models.Model):
                             'product_qty': 1.0,
                             'unit_price': total_discount,
                             'date': rec.date,
-                            'control': False
+                            'control': True
                         })
                         loan.expense_ids += expense_line
                 elif loan.lock and loan.state == 'confirmed':
                     if loan.balance > 0.0:
+                        loan.write({
+                            'expense_id': rec.id
+                        })
                         expense_line = rec.expense_line_ids.create({
                             'name': _("Loan: ") + str(loan.name),
                             'expense_id': rec.id,
                             'line_type': "salary_discount",
                             'product_id': loan.product_id.id,
                             'product_qty': 1.0,
-                            'unit_price': 0.0,
+                            'unit_price': loan.amount_discount,
                             'date': rec.date,
-                            'control': False
+                            'control': True
                         })
                     loan.expense_ids += expense_line
             for travel in rec.travel_ids:

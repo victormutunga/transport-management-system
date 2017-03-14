@@ -5,6 +5,7 @@
 
 
 from openerp import _, api, exceptions, fields, models
+from openerp.exceptions import ValidationError
 
 
 class TmsExpenseLoan(models.Model):
@@ -51,11 +52,12 @@ class TmsExpenseLoan(models.Model):
     balance = fields.Float(compute='_compute_balance')
     paid = fields.Boolean(compute='_compute_paid',
                           store=True, readonly=True)
-    lock = fields.Boolean(string='Lock Payment')
+    lock = fields.Boolean(string='Other discount?')
+    amount_discount = fields.Float()
     product_id = fields.Many2one(
         'product.product', 'Discount Product',
         required=True,
-        domain=[('name', '=', ('Loan'))])
+        domain=[('name', '=', ('Prestamo'))])
     expense_id = fields.Many2one(
         'tms.expense', 'Expense Record', readonly=True)
     payment_move_id = fields.Many2one(
@@ -232,19 +234,22 @@ class TmsExpenseLoan(models.Model):
                 for line in loan.expense_ids:
                     line_amount += line.price_total
                 loan.balance = loan.amount + line_amount
+            if loan.balance <= 0.0:
+                loan.write({'state': 'closed'})
+
+    @api.multi
+    def unlink(self):
+        for rec in self:
+            if rec.state == 'confirmed' or rec.state == 'closed':
+                raise ValidationError(
+                    _('You can not delete a Loan'
+                      ' in status confirmed or closed'))
+            return super(TmsExpenseLoan, self).unlink()
 
     @api.depends('payment_move_id')
     def _compute_paid(self):
         for rec in self:
             if rec.payment_move_id.id:
                 rec.paid = True
-
-    @api.model
-    def write(self, values):
-        loan = super(TmsExpenseLoan, self).write(values)
-        if self._context.get('active_model') == 'tms.expense':
-            for rec in self:
-                loan.write{
-                    'unit_price': rec.unit_price,
-                }
-        return loan
+            else:
+                rec.paid = False
