@@ -90,4 +90,4 @@ Maintainer
    :alt: Jarsa Sistemas, S.A. de C.V.
    :target: http://www.jarsa.com.mx
 
-This module is maintained by the Jarsa Sistemas.
+This module is maintained by Jarsa Sistemas, S.A. de C.V.
