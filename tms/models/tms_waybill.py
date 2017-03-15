@@ -284,7 +284,7 @@ class TmsWaybill(models.Model):
     def _compute_waybill_type(self):
         for waybill in self:
             for travel in waybill.travel_ids:
-                self.waybill_type = (
+                waybill.waybill_type = (
                     'outsourced'
                     if travel.unit_id.supplier_unit
                     else 'self')
