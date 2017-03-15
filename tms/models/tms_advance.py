@@ -72,10 +72,6 @@ class TmsAdvance(models.Model):
         'product.product', string='Product', required=True,
         domain=[('tms_product_category', '=', 'real_expense')])
 
-    _sql_constraints = [
-        ('name_uniq', 'unique(name)', 'Advance number must be unique !'),
-    ]
-
     @api.multi
     @api.depends('travel_id')
     def _compute_unit_id(self):

@@ -477,8 +477,7 @@ class TmsWaybill(models.Model):
     @api.depends('supplier_invoice_id')
     def _compute_supplier_invoice_paid(self):
         for rec in self:
-            paid = (rec.invoice_id and rec.invoice_id.state == 'paid')
-            self.supplier_invoice_paid = paid
+            rec.supplier_invoice_paid = False
 
     @api.multi
     def _amount_to_text(self, amount_total, currency, partner_lang='es_MX'):
