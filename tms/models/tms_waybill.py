@@ -192,10 +192,11 @@ class TmsWaybill(models.Model):
     move_id = fields.Many2one(
         'account.move', string='Journal Entry', readonly=True)
     waybill_type = fields.Selection(
-        selection=[('self', 'Self'), ('outsourced', 'Outsourced')],
+        compute='_compute_waybill_type',
+        selection=[('own', 'Self'), ('outsourced', 'Outsourced')],
         string='Waybill Type',
-        help=" - Self: Travel with our own units. \n "
-        "- Outsourced: Travel without our own units.", default='self')
+        help=" - Own: Travel with our own units. \n "
+        "- Outsourced: Travel without our own units.", default='own')
     client_order_ref = fields.Char(
         'Customer Reference', size=64, readonly=False,
         states={'confirmed': [('readonly', True)]})
@@ -278,6 +279,15 @@ class TmsWaybill(models.Model):
                 "<strong>Approved at: </strong> %s</p") % (
                 self.user_id.name, fields.Date.today()))
         return True
+
+    @api.depends('travel_ids')
+    def _compute_waybill_type(self):
+        for waybill in self:
+            for travel in waybill.travel_ids:
+                waybill.waybill_type = (
+                    'outsourced'
+                    if travel.unit_id.supplier_unit
+                    else 'own')
 
     @api.multi
     @api.depends('invoice_id')
