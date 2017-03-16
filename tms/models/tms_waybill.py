@@ -94,7 +94,7 @@ class TmsWaybill(models.Model):
     upload_point = fields.Char('Upload Point', change_default=True)
     download_point = fields.Char('Download Point', change_default=True)
     invoice_id = fields.Many2one(
-        'account.invoice', 'Invoice', readonly=True)
+        'account.invoice', 'Invoice', readonly=True, copy=False)
     invoice_paid = fields.Boolean(
         compute="_compute_invoice_paid")
     supplier_invoice_id = fields.Many2one(
