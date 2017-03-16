@@ -52,6 +52,7 @@ class TmsExpenseLoan(models.Model):
     balance = fields.Float(compute='_compute_balance')
     paid = fields.Boolean(compute='_compute_paid',
                           store=True, readonly=True)
+    active_loan = fields.Boolean()
     lock = fields.Boolean(string='Other discount?')
     amount_discount = fields.Float()
     product_id = fields.Many2one(
@@ -72,7 +73,7 @@ class TmsExpenseLoan(models.Model):
     move_id = fields.Many2one(
         'account.move', 'Journal Entry',
         help="Link to the automatically generated Journal Items.\nThis move "
-        "is only for Travel Expense Records with balance < 0.0",
+        "is only for Loan Expense Records with balance < 0.0",
         readonly=True)
 
     @api.model

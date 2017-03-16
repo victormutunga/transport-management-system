@@ -23,7 +23,7 @@
             <field name="name">tms.expense.loan.form</field>
             <field name="model">tms.expense.loan</field>
             <field name="arch" type="xml">
-                <form string="Drivers Loans" version="7.0">
+                <form string="Drivers Loans">
                 <header>
                     <button name="action_cancel_draft" icon="fa-reply" states="cancel" string="Set to Draft" type="object"/>
                     <button name="action_cancel" icon="fa-times" states="draft,approved,confirmed" string="Cancel" type="object"/>
@@ -53,6 +53,7 @@
                     <group>
                         <field name="product_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>     
                         <field name="amount" options="{'currency_field': 'currency_id'}" widget="monetary" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                        <field name="active_loan"/>
                         <field name="lock" readonly="0"/>
                         <field name="amount_discount" 
                                    attrs="{'invisible':[('lock','!=',True)]}"/>

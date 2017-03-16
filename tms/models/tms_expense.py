@@ -754,54 +754,56 @@ class TmsExpense(models.Model):
             for loan in loans:
                 total_discount = 0.0
                 payment = loan.payment_move_id.id
+                ac_loan = loan.active_loan
                 if not loan.lock and loan.state == 'confirmed' and not payment:
                     loans_unpaid.append(loan.name)
                 if not loan.lock and loan.state == 'confirmed' and payment:
-                    loan.write({
-                            'expense_id': rec.id
-                        })
-                    if loan.balance > 0.0:
-                        if loan.discount_type == 'fixed':
-                            total = loan.fixed_discount
-                        elif loan.discount_type == 'percent':
-                            total = loan.amount * (
-                                loan.percent_discount / 100)
-                        for key, value in methods.items():
-                            if loan.discount_method == key:
-                                if loan.expense_ids:
-                                    dates = []
-                                    for loan_date in loan.expense_ids:
-                                        dates.append(loan_date.date)
-                                    dates.sort(reverse=True)
-                                    end_date = datetime.strptime(
-                                        dates[0], "%Y-%m-%d")
-                                else:
-                                    end_date = datetime.strptime(
-                                        loan.date_confirmed, "%Y-%m-%d")
-                                start_date = datetime.strptime(
-                                    rec.date, "%Y-%m-%d")
-                                total_date = start_date - end_date
-                                total_payment = total_date / value
-                                if int(total_payment.days) >= 1:
-                                    total_discount = total_payment.days * total
-                            elif loan.discount_method == 'each':
-                                total_discount = total
-                        total_final = loan.balance - total_discount
-                        if total_final <= 0.0:
-                            total_discount = loan.balance
-                            loan.write({'balance': 0.0, 'state': 'closed'})
-                        expense_line = rec.expense_line_ids.create({
-                            'name': _("Loan: ") + str(loan.name),
-                            'expense_id': rec.id,
-                            'line_type': "salary_discount",
-                            'product_id': loan.product_id.id,
-                            'product_qty': 1.0,
-                            'unit_price': total_discount,
-                            'date': rec.date,
-                            'control': True
-                        })
-                        loan.expense_ids += expense_line
-                elif loan.lock and loan.state == 'confirmed':
+                    if ac_loan:
+                        loan.write({
+                                'expense_id': rec.id
+                            })
+                        if loan.balance > 0.0:
+                            if loan.discount_type == 'fixed':
+                                total = loan.fixed_discount
+                            elif loan.discount_type == 'percent':
+                                total = loan.amount * (
+                                    loan.percent_discount / 100)
+                            for key, value in methods.items():
+                                if loan.discount_method == key:
+                                    if loan.expense_ids:
+                                        dates = []
+                                        for loan_date in loan.expense_ids:
+                                            dates.append(loan_date.date)
+                                        dates.sort(reverse=True)
+                                        end_date = datetime.strptime(
+                                            dates[0], "%Y-%m-%d")
+                                    else:
+                                        end_date = datetime.strptime(
+                                            loan.date_confirmed, "%Y-%m-%d")
+                                    start_date = datetime.strptime(
+                                        rec.date, "%Y-%m-%d")
+                                    total_date = start_date - end_date
+                                    total_payment = total_date / value
+                                    if int(total_payment.days) >= 1:
+                                        total_discount = total_payment.days * total
+                                elif loan.discount_method == 'each':
+                                    total_discount = total
+                            total_final = loan.balance - total_discount
+                            if total_final <= 0.0:
+                                total_discount = loan.balance
+                                loan.write({'balance': 0.0, 'state': 'closed'})
+                            expense_line = rec.expense_line_ids.create({
+                                'name': _("Loan: ") + str(loan.name),
+                                'expense_id': rec.id,
+                                'line_type': "salary_discount",
+                                'product_id': loan.product_id.id,
+                                'product_qty': 1.0,
+                                'unit_price': total_discount,
+                                'date': rec.date,
+                                'control': True
+                            })
+                            loan.expense_ids += expense_line
+                elif loan.lock and loan.state == 'confirmed' and ac_loan:
                     if loan.balance > 0.0:
                         loan.write({
                             'expense_id': rec.id
