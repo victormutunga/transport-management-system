@@ -1,2 +1,2 @@
-operating-unit https://github.com/Jarsa-dev/operating-unit.git 10.0
+operating-unit https://github.com/OCA/operating-unit.git 10.0
 geospatial https://github.com/OCA/geospatial.git 10.0
