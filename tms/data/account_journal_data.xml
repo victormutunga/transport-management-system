@@ -1,22 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data>
-        <record id="tms_account_journal_waybill" model="account.journal">
-            <field name='name'>Waybill Journal</field>
-            <field name='type'>general</field>
-            <field name='code'>WB</field>
-            <field name='show_on_dashboard' eval="False"/>
-        </record>
+    <data noupdate="1">
         <record id="tms_account_journal_advance" model="account.journal">
             <field name='name'>Advance Journal</field>
             <field name='type'>general</field>
             <field name='code'>AD</field>
-            <field name='show_on_dashboard' eval="False"/>
-        </record>
-        <record id="tms_account_journal_fuel_log" model="account.journal">
-            <field name='name'>Fuel Log Journal</field>
-            <field name='type'>general</field>
-            <field name='code'>FL</field>
             <field name='show_on_dashboard' eval="False"/>
         </record>
         <record id="tms_account_journal_expense" model="account.journal">
@@ -25,10 +13,16 @@
             <field name='code'>EXP</field>
             <field name='show_on_dashboard' eval="False"/>
         </record>
-        <record id="tms_account_journal_supplier" model="account.journal">
-            <field name='name'>Supplier Journal</field>
+        <record id="tms_account_journal_sale" model="account.journal">
+            <field name='name'>Sale Journal</field>
             <field name='type'>general</field>
-            <field name='code'>SP</field>
+            <field name='code'>AD</field>
+            <field name='show_on_dashboard' eval="False"/>
+        </record>
+        <record id="tms_account_journal_purchase" model="account.journal">
+            <field name='name'>Purchase Journal</field>
+            <field name='type'>general</field>
+            <field name='code'>EXP</field>
             <field name='show_on_dashboard' eval="False"/>
         </record>
     </data>

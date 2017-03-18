@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="operating_unit_form" model="ir.ui.view">
+            <field name="name">Operating Unit</field>
+            <field name="model">operating.unit</field>
+            <field name="inherit_id" ref="operating_unit.view_operating_unit_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <group>
+                        <field name="credit_limit"/>
+                    </group>
+                    <group string="Sequences for TMS">
+                        <field name="travel_sequence_id"/>
+                        <field name="expense_sequence_id"/>
+                        <field name="waybill_sequence_id"/>
+                        <field name="advance_sequence_id"/>
+                        <field name="fuel_log_sequence_id"/>
+                    </group>
+                    <group string="Journals for TMS">
+                        <field name="advance_journal_id"/>
+                        <field name="expense_journal_id"/>
+                        <field name="sale_journal_id"/>
+                        <field name="purchase_journal_id"/>
+                    </group>
+                    <group string="Products for TMS">
+                        <field name="ieps_product_id"/>
+                    </group>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
-# © <2012> <Israel Cruz Argil, Argil Consulting>
-# © <2016> <Jarsa Sistemas, S.A. de C.V.>
+# Copyright 2012, Israel Cruz Argil, Argil Consulting
+# Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import _, api, fields, models
-from openerp.exceptions import ValidationError
+from __future__ import division
+
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class TmsFactor(models.Model):
@@ -29,18 +31,15 @@ class TmsFactor(models.Model):
         ('travel', 'Travel'),
         ('qty', 'Quantity'),
         ('volume', 'Volume'),
-        ('percent', 'Income Percent')], 'Factor Type', required=True, help="""
-For next options you have to type Ranges or Fixed Amount
- - Distance Route (Km/mi)
- - Distance Real (Km/Mi)
- - Weight
- - Quantity
- - Volume
-For next option you only have to type Fixed Amount:
- - Travel
-For next option you only have to type Factor like 10.5 for 10.50%:
- - Income Percent
-                        """)
+        ('percent', 'Income Percent'),
+        ('percent_driver', 'Income Percent per Driver'),
+        ('amount_driver', 'Amount Percent per Driver')], string='Factor Type',
+        required=True,
+        help='For next options you have to type Ranges or Fixed Amount\n - '
+             'Distance Route (Km/mi)\n - Distance Real (Km/Mi)\n - Weight\n'
+             ' - Quantity\n - Volume\nFor next option you only have to type'
+             ' Fixed Amount:\n - Travel\nFor next option you only have to type'
+             ' Factor like 10.5 for 10.50%:\n - Income Percent')
     range_start = fields.Float()
     range_end = fields.Float()
     factor = fields.Float()
@@ -63,6 +62,8 @@ For next option you only have to type Factor like 10.5 for 10.50%:
             'qty': _('Quantity'),
             'volume': _('Volume'),
             'percent': _('Income Percent'),
+            'percent_driver': _('Income Percent per Driver'),
+            'amount_driver': _('Amount Percent per Driver'),
         }
         if not self.factor_type:
             self.name = 'name'
@@ -71,33 +72,47 @@ For next option you only have to type Factor like 10.5 for 10.50%:
 
     @api.multi
     def get_amount(self, weight=0.0, distance=0.0, distance_real=0.0, qty=0.0,
-                   volume=0.0, income=0.0):
+                   volume=0.0, income=0.0, employee=False):
         factor_list = {'weight': weight, 'distance': distance,
                        'distance_real': distance_real, 'qty': qty,
                        'volume': volume}
-        res = 0.0
+        amount = 0.0
         for rec in self:
             if rec.factor_type == 'travel':
-                res += rec.fixed_amount
+                amount += rec.fixed_amount
             elif rec.factor_type == 'percent':
-                amount = income * (rec.factor / 100)
-                if rec.mixed:
-                    res += amount + rec.fixed_amount
-                else:
-                    res += amount
-            for key, value in factor_list.items():
-                if rec.factor_type == key:
-                    if rec.range_start <= value <= rec.range_end:
-                        if rec.mixed:
-                            res += (rec.factor * value) + rec.fixed_amount
-                        else:
-                            res += rec.factor
-                    elif rec.range_start == 0 and rec.range_end == 0:
-                        if rec.factor > 1:
-                            res += rec.factor * value
-                        else:
-                            res += value
-                    else:
+                amount += income * (rec.factor / 100)
+            elif rec.factor_type == 'percent_driver':
+                if employee:
+                    if employee.income_percentage == 0.0:
                         raise ValidationError(
-                            _('the amount isnt between of any ranges'))
-        return res
+                            _('The employee must have a income percentage '
+                              'value'))
+                    else:
+                        amount += income * (employee.income_percentage / 100)
+                else:
+                    raise ValidationError(
+                        _('Invalid parameter you can use this factor only with'
+                          ' drivers'))
+            elif rec.factor_type == 'amount_driver':
+                if employee:
+                    if employee.income_percentage == 0.0:
+                        raise ValidationError(
+                            _('The employee must have a income percentage '
+                              'value'))
+                    else:
+                        amount += rec.fixed_amount * (
+                            employee.income_percentage / 100)
+            else:
+                for key, value in factor_list.items():
+                    if rec.factor_type == key:
+                        if rec.range_start <= value <= rec.range_end:
+                            amount += rec.factor * value
+                        elif rec.range_start == 0 and rec.range_end == 0:
+                            amount += rec.factor * value
+                if amount == 0.0:
+                    raise ValidationError(
+                        _('the amount isnt between of any ranges'))
+            if rec.mixed:
+                amount += rec.fixed_amount
+        return amount

@@ -1,17 +1,14 @@
 # -*- coding: utf-8 -*-
-# © <2016> <Jarsa Sistemas, S.A. de C.V.>
+# Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
-
-from openerp.tests.common import TransactionCase
-from openerp.tools import mute_logger
 
 from psycopg2 import IntegrityError
 
+from odoo.tests.common import TransactionCase
+from odoo.tools import mute_logger
+
 
 class TestTmsTransportable(TransactionCase):
-    """
-        Test tms transportable product
-    """
 
     def setUp(self):
         super(TestTmsTransportable, self).setUp()
@@ -26,8 +23,3 @@ class TestTmsTransportable(TransactionCase):
                 '"tms_transportable_name_unique"'):
             self.transportable.create({'name': 'Test', 'uom_id': self.ton.id})
             self.transportable.create({'name': 'Test', 'uom_id': self.ton.id})
-
-    def test_20_duplicate_transportable(self):
-        transportable = self.env.ref('tms.tms_transportable_01')
-        transportable.copy()
-        transportable.copy()

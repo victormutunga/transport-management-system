@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <record id="tms_fleet_vehicle_01" model="fleet.vehicle">
-            <field name="base_id" ref="tms.tms_base_1"/>
+            <field name="operating_unit_id" ref="tms.tms_operating_unit_1"/>
             <field name="license_plate">0924</field>
             <field name="name">T1</field>
             <field name="odometer_unit">kilometers</field>
@@ -12,7 +12,7 @@
             <field name="engine_id" ref="tms.fleet_vehicle_engine_03"/>
         </record>
         <record id="tms_fleet_vehicle_02" model="fleet.vehicle">
-            <field name="base_id" ref="tms.tms_base_1"/>
+            <field name="operating_unit_id" ref="tms.tms_operating_unit_1"/>
             <field name="license_plate">8943</field>
             <field name="name">C1</field>
             <field name="odometer_unit">kilometers</field>
@@ -21,7 +21,7 @@
             <field name="fleet_type">trailer</field>
         </record>
         <record id="tms_fleet_vehicle_03" model="fleet.vehicle">
-            <field name="base_id" ref="tms.tms_base_1"/>
+            <field name="operating_unit_id" ref="tms.tms_operating_unit_1"/>
             <field name="license_plate">928374</field>
             <field name="name">C2</field>
             <field name="odometer_unit">kilometers</field>
@@ -30,7 +30,7 @@
             <field name="fleet_type">trailer</field>
         </record>
         <record id="tms_fleet_vehicle_04" model="fleet.vehicle">
-            <field name="base_id" ref="tms.tms_base_1"/>
+            <field name="operating_unit_id" ref="tms.tms_operating_unit_1"/>
             <field name="license_plate">.</field>
             <field name="name">D1</field>
             <field name="odometer_unit">kilometers</field>
@@ -39,7 +39,7 @@
             <field name="fleet_type">dolly</field>
         </record>
         <record id="tms_fleet_vehicle_05" model="fleet.vehicle">
-            <field name="base_id" ref="tms.tms_base_1"/>
+            <field name="operating_unit_id" ref="tms.tms_operating_unit_1"/>
             <field name="license_plate">8723</field>
             <field name="name">T2</field>
             <field name="odometer_unit">kilometers</field>
@@ -49,7 +49,7 @@
             <field name="engine_id" ref="tms.fleet_vehicle_engine_03"/>
         </record>
         <record id="tms_fleet_vehicle_06" model="fleet.vehicle">
-            <field name="base_id" ref="tms.tms_base_1"/>
+            <field name="operating_unit_id" ref="tms.tms_operating_unit_1"/>
             <field name="license_plate">2389</field>
             <field name="name">C3</field>
             <field name="odometer_unit">kilometers</field>
@@ -58,7 +58,7 @@
             <field name="fleet_type">trailer</field>
         </record>
          <record id="tms_fleet_vehicle_07" model="fleet.vehicle">
-            <field name="base_id" ref="tms.tms_base_1"/>
+            <field name="operating_unit_id" ref="tms.tms_operating_unit_1"/>
             <field name="license_plate">9823</field>
             <field name="name">C4</field>
             <field name="odometer_unit">kilometers</field>
@@ -67,7 +67,7 @@
             <field name="fleet_type">trailer</field>
         </record>
         <record id="tms_fleet_vehicle_08" model="fleet.vehicle">
-            <field name="base_id" ref="tms.tms_base_1"/>
+            <field name="operating_unit_id" ref="tms.tms_operating_unit_1"/>
             <field name="license_plate">.</field>
             <field name="name">D2</field>
             <field name="odometer_unit">kilometers</field>

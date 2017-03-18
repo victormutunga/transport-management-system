@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
-# © <2012> <Israel Cruz Argil, Argil Consulting>
-# © <2016> <Jarsa Sistemas, S.A. de C.V.>
+# Copyright 2012, Israel Cruz Argil, Argil Consulting
+# Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 
-from openerp import fields, models
-# from openerp.tools.translate import _
+from odoo import fields, models
+
+
+# from odoo.tools.translate import _
 
 # Vehicle Odometer records
 
 
 class FleetVehicleOdometer(models.Model):
     _inherit = ['fleet.vehicle.odometer']
-    _name = 'fleet.vehicle.odometer'
 
     last_odometer = fields.Float(
         string='Last Read',

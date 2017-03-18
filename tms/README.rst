@@ -77,6 +77,11 @@ Contributors
 * Alan Ramos <alan.ramos@jarsa.com.mx>
 * Luis Triana <luis.triana@jarsa.com.mx>
 * Sarai Osorio <sarai.osorio@jarsa.com.mx>
+* Oscar Garza <oscar.garza@jarsa.com.mx>
+* Hector Camacho <hector.camacho@jarsa.com.mx>
+* Luis Miguel Guzmán <miguel.ruiz@jarsa.com.mx>
+* Isabel Ávila <isabel.esparza@jarsa.com.mx>
+* Erick Reza <alexis.reza.s@gmail.com>
 
 Maintainer
 ----------
@@ -85,4 +90,4 @@ Maintainer
    :alt: Jarsa Sistemas, S.A. de C.V.
    :target: http://www.jarsa.com.mx
 
-This module is maintained by the Jarsa Sistemas.
+This module is maintained by Jarsa Sistemas, S.A. de C.V.

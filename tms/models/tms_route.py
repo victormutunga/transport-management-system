@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
-# © <2012> <Israel Cruz Argil, Argil Consulting>
-# © <2016> <Jarsa Sistemas, S.A. de C.V.>
+# Copyright 2012, Israel Cruz Argil, Argil Consulting
+# Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 ##############################################################################
 
-from openerp import _, api, exceptions, fields, models
-
 import requests
-
 import simplejson as json
+
+from odoo import _, api, exceptions, fields, models
 
 
 class TmsRoute(models.Model):
@@ -33,11 +32,11 @@ class TmsRoute(models.Model):
     distance_loaded = fields.Float(
         string='Distance Loaded (mi./km)',
         required=True
-        )
+    )
     distance_empty = fields.Float(
         string='Distance Empty (mi./km)',
         required=True
-        )
+    )
     fuel_efficiency_ids = fields.One2many(
         'tms.route.fuelefficiency',
         'route_id',
@@ -48,6 +47,7 @@ class TmsRoute(models.Model):
         string='Places')
     tollstation_ids = fields.Many2many(
         'tms.route.tollstation', string="Toll Station")
+    note_ids = fields.One2many('tms.route.note', 'route_id', string='Notes')
 
     @api.depends('distance_empty', 'distance')
     @api.onchange('distance_empty')
@@ -153,5 +153,5 @@ class TmsRoute(models.Model):
                 ('route_id', '=', rec.id),
                 ('engine_id', '=', vehicle_id.engine_id.id),
                 ('type', '=', framework)
-                ])
+            ])
         return fuel_id.performance

@@ -1,25 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data>
-        <record model="tms.base" id="tms_base_1">
-            <field name="name">Your Company</field>
+    <data noupdate="1">
+        <record model="operating.unit" id="tms_operating_unit_1">
+            <field name="name">TMS</field>
+            <field name="code">TMS</field>
+            <field name="partner_id" ref="base.main_partner"/>
             <field name="travel_sequence_id" ref="tms.travel_sequence"/>
             <field name="expense_sequence_id" ref="tms.expense_sequence"/>
             <field name="waybill_sequence_id" ref="tms.waybill_sequence"/>
             <field name="advance_sequence_id" ref="tms.advance_sequence"/>
             <field name="fuel_log_sequence_id" ref="tms.fuel_log_sequence"/>
-            <field name="fuelvoucher_product_id" ref="tms.product_fuel"/>
             <field name="ieps_product_id" ref="product_ieps"/>
-            <field name='waybill_freight_id' ref="tms.product_freight" />
-            <field name='waybill_moves_id' ref="tms.product_move"/>
-            <field name='waybill_highway_tolls_id' ref="tms.product_highway_tolls"/>
-            <field name='waybill_insurance_id' ref="tms.product_insurance"/>
-            <field name='waybill_other_product_id' ref="tms.product_other"/>
-            <field name="waybill_journal_id" ref="tms.tms_account_journal_waybill"/>
             <field name="advance_journal_id" ref="tms.tms_account_journal_advance"/>
-            <field name="fuelvoucher_journal_id" ref="tms.tms_account_journal_fuel_log"/>
             <field name="expense_journal_id" ref="tms.tms_account_journal_expense"/>
-            <field name="supplier_journal_id" ref="tms.tms_account_journal_supplier"/>
+            <field name="sale_journal_id" ref="tms.tms_account_journal_sale"/>
+            <field name="purchase_journal_id" ref="tms.tms_account_journal_purchase"/>
         </record>
     </data>
 </odoo>

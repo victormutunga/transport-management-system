@@ -1,0 +1,6 @@
+geojson
+geopy
+geographiclib
+Shapely
+sodapy
+num2words

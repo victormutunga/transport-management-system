@@ -9,7 +9,7 @@
             <field name="date" eval="datetime.now()"/>
             <field name="date_start" eval="datetime.now()"/>
             <field name="date_end" eval="datetime.now()+timedelta(days=2)"/>
-            <field name="base_id" ref="tms_base_1"/>
+            <field name="operating_unit_id" ref="tms.tms_operating_unit_1"/>
         </record>
          <record id="tms_travel_02" model="tms.travel">
             <field name="state">draft</field>
@@ -19,7 +19,7 @@
             <field name="date" eval="datetime.now()"/>
             <field name="date_start" eval="datetime.now()+timedelta(days=2)"/>
             <field name="date_end" eval="datetime.now()+timedelta(days=5)"/>
-            <field name="base_id" ref="tms_base_1"/>
+            <field name="operating_unit_id" ref="tms.tms_operating_unit_1"/>
         </record>
          <record id="tms_travel_03" model="tms.travel">
             <field name="state">draft</field>
@@ -29,7 +29,7 @@
             <field name="date" eval="datetime.now()"/>
             <field name="date_start" eval="datetime.now()+timedelta(days=5)"/>
             <field name="date_end" eval="datetime.now()+timedelta(days=9)"/>
-            <field name="base_id" ref="tms_base_1"/>
+            <field name="operating_unit_id" ref="tms.tms_operating_unit_1"/>
         </record>
          <record id="tms_travel_04" model="tms.travel">
             <field name="state">draft</field>
@@ -39,7 +39,7 @@
             <field name="date" eval="datetime.now()"/>
             <field name="date_start" eval="datetime.now()"/>
             <field name="date_end" eval="datetime.now()+timedelta(days=2)"/>
-            <field name="base_id" ref="tms_base_1"/>
+            <field name="operating_unit_id" ref="tms.tms_operating_unit_1"/>
         </record>
          <record id="tms_travel_05" model="tms.travel">
             <field name="state">draft</field>
@@ -49,7 +49,7 @@
             <field name="date" eval="datetime.now()"/>
             <field name="date_start" eval="datetime.now()+timedelta(days=2)"/>
             <field name="date_end" eval="datetime.now()+timedelta(days=9)"/>
-            <field name="base_id" ref="tms_base_1"/>
+            <field name="operating_unit_id" ref="tms.tms_operating_unit_1"/>
         </record>
     </data>
 </odoo>

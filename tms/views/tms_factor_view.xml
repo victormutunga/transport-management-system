@@ -7,7 +7,7 @@
             <field name="priority">2</field>
             <field name="arch" type="xml">
                 <tree string="Billing Factors">
-                    <field name="category" invisible="1"/>
+                    <field invisible="1" name="category"/>
                     <field name="name"/>
                     <field name="factor_type"/>
                     <field name="factor"/>
@@ -15,30 +15,28 @@
                     <field name="range_end"/>
                     <field name="fixed_amount"/>
                     <field name="mixed"/>
-                    <field name="sequence"/>
                 </tree>
             </field>
         </record>
         <record id="view_tms_factor_form" model="ir.ui.view">
-            <field name="name">tms.factor.form</field> 
+            <field name="name">tms.factor.form</field>
             <field name="model">tms.factor</field>
             <field name="arch" type="xml">
                 <form string="Factors">
                     <sheet>
                         <group col="4" colspan="4">
                             <field name="factor_type"/>
-                            <field name="category" invisible="True"/>
+                            <field invisible="True" name="category"/>
                             <field name="name"/>
                             <newline/>
-                            <field name="factor" attrs="{'invisible' :[('factor_type','in',('special','travel'))],'required': [('factor_type','in',('distance','weight','qty','volume','percent'))]}"/>
+                            <field attrs="{'invisible' :[('factor_type','in',('percent_driver','travel','amount_driver'))],'required': [('factor_type','in',('distance','weight','qty','volume','percent'))]}" name="factor"/>
                             <newline/>
-                            <field name="range_start" attrs="{'invisible': [('factor_type', 'in', ('special', 'travel', 'percent'))], 'required': [('factor_type', 'in', ('distance','weight','qty','volume'))]}"/>
-                            <field name="range_end" attrs="{'invisible': [('factor_type', 'in', ('special', 'travel', 'percent'))], 'required': [('factor_type', 'in', ('distance', 'weight', 'qty', 'volume'))]}"/>
-                            <field name="mixed" attrs="{'invisible' :[('factor_type','=','travel')]}"/>
+                            <field attrs="{'invisible': [('factor_type', 'in', ('percent_driver', 'travel', 'percent','amount_driver'))], 'required': [('factor_type', 'in', ('distance','weight','qty','volume'))]}" name="range_start"/>
+                            <field attrs="{'invisible': [('factor_type', 'in', ('percent_driver', 'travel', 'percent', 'amount_driver'))], 'required': [('factor_type', 'in', ('distance', 'weight', 'qty', 'volume'))]}" name="range_end"/>
+                            <field attrs="{'invisible' :[('factor_type','in',('travel', 'amount_driver'))]}" name="mixed"/>
                             <newline/>
-                            <field name="fixed_amount" required="1"/>
+                            <field name="fixed_amount"/>
                             <newline/>
-                            <field name="sequence"/>
                             <field colspan="4" name="notes"/>
                         </group>
                     </sheet>

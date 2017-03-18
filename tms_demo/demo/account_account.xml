@@ -5,43 +5,36 @@
             <field name="name">Fernando Bedoya</field>
             <field name="code">10-01-01</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="reconcile" eval="False"/>
         </record>
         <record id="account_employee_02" model="account.account">
             <field name="name">Jose Almendrariz</field>
             <field name="code">10-01-02</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="reconcile" eval="False"/>
         </record>
         <record id="account_employee_03" model="account.account">
             <field name="name">Ricardo Bocanegra</field>
             <field name="code">10-01-03</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="reconcile" eval="False"/>
         </record>
         <record id="account_employee_04" model="account.account">
             <field name="name">Jhon Hawk</field>
             <field name="code">10-01-04</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="reconcile" eval="False"/>
         </record>
         <record id="account_employee_05" model="account.account">
             <field name="name">Jonathan Tomlinson</field>
             <field name="code">10-01-05</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="reconcile" eval="False"/>
         </record>
         <record id="account_employee_06" model="account.account">
             <field name="name">Fernando Hernandez</field>
             <field name="code">10-01-06</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="reconcile" eval="False"/>
         </record>
         <record id="account_employee_07" model="account.account">
             <field name="name">Luis Esparza</field>
             <field name="code">10-01-07</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="reconcile" eval="False"/>
         </record>
         <record id="account_waybill_product_fuel_log" model="account.account">
             <field name="name">Fuel Log</field>
@@ -89,25 +82,21 @@
             <field name="name">Fuel Log Expense</field>
             <field name="code">1000-022-077</field>
             <field name="user_type_id" ref="account.data_account_type_expenses"/>
-            <field name="reconcile" eval="True"/>
         </record>
           <record id="account_fuel_income" model="account.account">
             <field name="name">Fuel Log Income</field>
             <field name="code">1000-023-078</field>
             <field name="user_type_id" ref="account.data_account_type_other_income"/>
-            <field name="reconcile" eval="True"/>
         </record>
           <record id="account_ieps_expense" model="account.account">
             <field name="name">IEPS Expense</field>
             <field name="code">1000-022-0227</field>
             <field name="user_type_id" ref="account.data_account_type_expenses"/>
-            <field name="reconcile" eval="True"/>
         </record>
           <record id="account_ieps_income" model="account.account">
             <field name="name">IEPS Income</field>
             <field name="code">1000-0222-0711</field>
             <field name="user_type_id" ref="account.data_account_type_other_income"/>
-            <field name="reconcile" eval="True"/>
         </record>
     </data>
 </odoo>

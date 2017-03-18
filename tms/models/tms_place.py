@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
-# © <2012> <Israel Cruz Argil, Argil Consulting>
-# © <2016> <Jarsa Sistemas, S.A. de C.V.>
+# Copyright 2012, Israel Cruz Argil, Argil Consulting
+# Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 import urllib as my_urllib
 
-from openerp import api, fields, models
-from openerp.exceptions import UserError
-from openerp.tools.translate import _
-
 import simplejson as json
+from odoo import api, fields
+from odoo.addons.base_geoengine import fields as geo_fields
+from odoo.addons.base_geoengine import geo_model
+from odoo.exceptions import UserError
+from odoo.tools.translate import _
 
 
-class TmsPlace(models.Model):
+class TmsPlace(geo_model.GeoModel):
     _name = 'tms.place'
     _description = 'Cities / Places'
 
@@ -31,6 +32,11 @@ class TmsPlace(models.Model):
     longitude = fields.Float(
         'Longitude', required=False, digits=(20, 10),
         help='GPS Longitude')
+    point = geo_fields.GeoPoint(
+        string='Coordinate',
+        store=True,
+        compute='_compute_point'
+    )
 
     @api.multi
     def get_coordinates(self):
@@ -67,3 +73,9 @@ class TmsPlace(models.Model):
                 rec.complete_name = rec.name + ', ' + rec.state_id.name
             else:
                 rec.complete_name = rec.name
+
+    @api.depends('latitude', 'longitude')
+    def _compute_point(self):
+        for rec in self:
+            rec.point = geo_fields.GeoPoint.from_latlon(
+                self.env.cr, rec.latitude, rec.longitude)

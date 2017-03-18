@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-# © <2012> <Israel Cruz Argil, Argil Consulting>
-# © <2016> <Jarsa Sistemas, S.A. de C.V.>
+# Copyright 2012, Israel Cruz Argil, Argil Consulting
+# Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 
-from openerp import fields, models
+from odoo import fields, models
 
 
 class TmsUnitKit(models.Model):
@@ -12,6 +12,8 @@ class TmsUnitKit(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Units Kits"
 
+    operating_unit_id = fields.Many2one(
+        'operating.unit', string='Operating Unit', required=True)
     name = fields.Char('Name', required=True)
     unit_id = fields.Many2one('fleet.vehicle', 'Unit', required=True)
     trailer1_id = fields.Many2one('fleet.vehicle', 'Trailer 1', required=True)

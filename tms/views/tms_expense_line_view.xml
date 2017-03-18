@@ -6,13 +6,20 @@
             <field name="model">tms.expense.line</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <tree colors="blue:line_type=='salary';gray:line_type=='madeup_expense';red:price_total&lt;0;" string="Expense Lines">
-                    <field name="travel_id"/> 
-                    <field name="line_type"/>
-                    <field name="name"/>
-                    <field name="price_total"/>
-                    <field name="sequence"/>
-                    <field name="is_invoice"/> 
+                <tree colors="blue:line_type=='salary';green:line_type=='fuel';gray:line_type=='madeup_expense';red:price_total&lt;0;" string="Expense Lines">
+                    <field name='travel_id' readonly='1'/>
+                        <field name='line_type'/>
+                        <field name='product_id'/>
+                        <field name='name'/>
+                        <field name='product_uom_id'/>
+                        <field name='product_qty'/>
+                        <field name='unit_price'/>
+                        <field name='tax_ids' widget='many2many_tags'/>
+                        <field name='price_subtotal'/>
+                        <field name='tax_amount'/>
+                        <field name='price_total'/>
+                        <field name='is_invoice'/>
+                        <field name='invoice_id'/>
                 </tree>
             </field>
         </record>
@@ -22,36 +29,31 @@
             <field name="arch" type="xml">
                 <form string="Expense Lines">
                     <sheet>
-                        <h2> Travel Expenses Line </h2>
-                         <group>
-                            <field name="travel_id" domain="[('expense_id', '=', expense_id)]"/>
-                            <field name="line_type"/>
-                            <field name="name"/>
-                            <field name="expense_id" invisible="1"/>
-                        </group>
+                        <h2>Travel Expense Line </h2>
                         <group>
-                            <group string="Product Details">
-                                <field name="product_id" attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}"/>
-                                <field name="product_uom_id" attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}"/>
-                                <field name="product_uom_qty" attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}"/>
-                                <field name="price_unit_control" attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}"/>
-                                <field name="price_subtotal" attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}"/>
-                                <field name="tax_amount" attrs="{'invisible':[('is_invoice', '=', False)]}"/>
-                                <field name="price_total"/>
-                            </group>
-                            <group string="Supplier Details">
-                                <field name="is_invoice" attrs="{'invisible':[('line_type','!=','real_expense')]}"/>
-                                <field name="partner_id" attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}"/>
-                                <field name="invoice_id" attrs="{'invisible':[('is_invoice', '=', False)],'required':[('is_invoice', '=', True)]}" domain="[('partner_id', '=', partner_id)]" />
-                            </group>
+                            <field name="product_uom_id" invisible="1"/>
+                            <field name="expense_id" invisible="1"/>
+                            <field name="travel_id" domain="[('expense_id', '=', expense_id),('expense_id', '!=', False)]" options="{'no_create': True}"/>
+                            <field name='route_id'/>
+                            <field name="line_type" required='1'/>
+                            <field name="product_id" domain="[('tms_product_category', 'in', ['real_expense','made_up_expense','salary','salary_retention','salary_discount','fuel','other_income','refund','fuel_cash'])]" options="{'no_create': True}"/>
+                            <field name="name"/>
+                            <field name="product_qty" required="1" attrs="{'invisible':['|', ('line_type','in', ['real_expense', 'made_up_expense', 'salary', 'refund', 'salary_retention', 'salary_discount', 'other_income']),('line_type','=', False)]}"/>
+                            <field name='unit_price' required="1"/>
+                            <field name='tax_ids' widget='many2many_tags' attrs="{'invisible':[('line_type','in', ['salary_discount', 'salary', 'salary_retention', 'other_income', 'refund'])]}"/>
+                            <field name="price_subtotal"/>
+                            <field name="tax_amount" attrs="{'invisible':[('line_type','in', ['salary_discount', 'salary', 'salary_retention', 'other_income', 'refund'])]}"/>
+                            <field name='special_tax_amount'
+                                attrs="{'invisible':['|', ('line_type','in', ['real_expense','made_up_expense','salary','salary_retention','salary_discount','other_income','refund']),('product_id', '=', False)]}"/>
+                            <field name="price_total" required='1'/>
                         </group>
-                        <newline/>
-                        <!-- <field name="price_subtotal" readonly="1"/> -->
-                        <newline/>
-                        <!-- <field name="tax_amount" readonly="1"/> -->
-                        <newline/>
-                        <!-- <field attrs="{'readonly':[('control','!=',False)]}" name="price_total" on_change="on_change_price_total(product_id, product_uom_qty, price_total, special_tax_amount)"/> -->
-                        <newline/>
+                        <group string="Supplier Details" attrs="{'invisible':['|', ('line_type','=',False), ('line_type','in', ['salary','salary_retention','salary_discount','other_income','refund'])]}">
+                            <field name="is_invoice" attrs="{'invisible':['|', ('line_type','=', False), ('line_type','in',['salary','salary_retention','salary_discount','other_income','refund', 'fuel',])]}"/>
+                            <field name="partner_id" attrs="{'invisible':[('is_invoice', '=', False), ('line_type', '!=', 'fuel')],'required':['|', ('is_invoice', '=', True),('line_type', 'in', ['fuel', 'fuel_cash'])]}" domain="[('supplier', '=', True), ('company_type', '=', 'company')]"/>
+                            <field name="invoice_number" attrs="{'invisible':[('is_invoice', '=', False), ('line_type', '!=', 'fuel')]}"/>
+                            <field name="date" attrs="{'invisible':[('is_invoice', '=', False), ('line_type', '!=', 'fuel')],'required':['|', ('is_invoice', '=', True),('line_type', 'in', ['fuel', 'fuel_cash'])]}"/>
+                            <field name="invoice_id" attrs="{'invisible':['|', ('is_invoice', '=', False), ('invoice_id', '=', False)]}" domain="[('partner_id', '=', partner_id),('state', 'not in', ['paid'])]" readonly="1"/>
+                        </group>
                     </sheet>
                 </form>
             </field>

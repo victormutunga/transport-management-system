@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
-# © <2012> <Israel Cruz Argil, Argil Consulting>
-# © <2016> <Jarsa Sistemas, S.A. de C.V.>
+# Copyright 2012, Israel Cruz Argil, Argil Consulting
+# Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import _, api, fields, models
-from openerp.exceptions import ValidationError
+from __future__ import division
+
 from datetime import datetime, timedelta
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class TmsTravel(models.Model):
@@ -13,13 +15,12 @@ class TmsTravel(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = 'Travel'
     _order = "date desc"
+
     waybill_ids = fields.Many2many(
         'tms.waybill', string='Waybills')
     driver_factor_ids = fields.One2many(
         'tms.factor', 'travel_id', string='Travel Driver Payment Factors',
-        domain=[('category', '=', 'driver')],
-        states={'cancel': [('readonly', True)],
-                'done': [('readonly', True)]})
+        domain=[('category', '=', 'driver')])
     name = fields.Char('Travel Number')
     state = fields.Selection(
         [('draft', 'Pending'), ('progress', 'In Progress'), ('done', 'Done'),
@@ -46,11 +47,9 @@ class TmsTravel(models.Model):
         'tms.unit.kit', 'Kit')
     unit_id = fields.Many2one(
         'fleet.vehicle', 'Unit',
-        domain=[('fleet_type', '=', 'tractor')],
         required=True)
     trailer1_id = fields.Many2one(
-        'fleet.vehicle', 'Trailer1',
-        domain=[('fleet_type', '=', 'trailer')])
+        'fleet.vehicle', 'Trailer1')
     dolly_id = fields.Many2one(
         'fleet.vehicle', 'Dolly',
         domain=[('fleet_type', '=', 'dolly')])
@@ -91,7 +90,9 @@ class TmsTravel(models.Model):
         string='Fuel Efficiency Extraction')
     departure_id = fields.Many2one(
         'tms.place',
-        related='route_id.departure_id',
+        string='Departure',
+        compute='_compute_departure_id',
+        store=True,
         readonly=True)
     fuel_log_ids = fields.One2many(
         'fleet.vehicle.log.fuel', 'travel_id', string='Fuel Vouchers')
@@ -99,7 +100,9 @@ class TmsTravel(models.Model):
         'tms.advance', 'travel_id', string='Advances')
     arrival_id = fields.Many2one(
         'tms.place',
-        related='route_id.arrival_id',
+        string='Arrival',
+        compute='_compute_arrival_id',
+        store=True,
         readonly=True)
     notes = fields.Text(
         'Description')
@@ -112,13 +115,34 @@ class TmsTravel(models.Model):
     is_available = fields.Boolean(
         compute='_compute_is_available',
         string='Travel available')
-    base_id = fields.Many2one('tms.base', 'Base')
+    operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit')
     color = fields.Integer()
     framework = fields.Selection([
         ('unit', 'Unit'),
         ('single', 'Single'),
         ('double', 'Double')],
         compute='_compute_framework')
+    partner_ids = fields.Many2many(
+        'res.partner', string='Customer', compute='_compute_partner_ids',
+        store=True)
+
+    @api.depends('waybill_ids')
+    def _compute_partner_ids(self):
+        for rec in self:
+            partner_ids = []
+            for waybill in rec.waybill_ids:
+                partner_ids.append(waybill.partner_id.id)
+            rec.partner_ids = partner_ids
+
+    @api.depends('route_id')
+    def _compute_departure_id(self):
+        for rec in self:
+            rec.departure_id = rec.route_id.departure_id
+
+    @api.depends('route_id')
+    def _compute_arrival_id(self):
+        for rec in self:
+            rec.arrival_id = rec.route_id.arrival_id
 
     @api.depends('fuel_efficiency_expected', 'fuel_efficiency_travel')
     def _compute_fuel_efficiency_extraction(self):
@@ -188,6 +212,8 @@ class TmsTravel(models.Model):
     @api.multi
     def action_progress(self):
         for rec in self:
+            rec.validate_driver_license()
+            rec.validate_vehicle_insurance()
             travels = rec.search(
                 [('state', '=', 'progress'), '|',
                  ('employee_id', '=', rec.employee_id.id),
@@ -209,7 +235,7 @@ class TmsTravel(models.Model):
                 'distance': rec.distance_driver,
                 'current_odometer': rec.unit_id.odometer + rec.distance_driver,
                 'value': rec.unit_id.odometer + rec.distance_driver
-                })
+            })
             rec.state = "done"
             rec.odometer = odometer.current_odometer
             rec.date_end_real = fields.Datetime.now()
@@ -218,11 +244,13 @@ class TmsTravel(models.Model):
     @api.multi
     def action_cancel(self):
         for rec in self:
-            advances = rec.search([
-                '|',
-                ('fuel_log_ids', '!=', 'cancel'),
-                ('advance_ids', '!=', 'cancel')])
-            if len(advances) >= 1:
+            advances = rec.advance_ids.search([
+                ('state', '!=', 'cancel'),
+                ('travel_id', '=', rec.id)])
+            fuel_log = rec.fuel_log_ids.search([
+                ('state', '!=', 'cancel'),
+                ('travel_id', '=', rec.id)])
+            if len(advances) >= 1 or len(fuel_log) >= 1:
                 raise ValidationError(
                     _('If you want to cancel this travel,'
                       ' you must cancel the fuel logs or the advances '
@@ -233,7 +261,7 @@ class TmsTravel(models.Model):
     @api.model
     def create(self, values):
         travel = super(TmsTravel, self).create(values)
-        sequence = travel.base_id.travel_sequence_id
+        sequence = travel.operating_unit_id.travel_sequence_id
         travel.name = sequence.next_by_id()
         return travel
 
@@ -271,7 +299,7 @@ class TmsTravel(models.Model):
                 ('route_id', '=', rec.route_id.id),
                 ('engine_id', '=', rec.unit_id.engine_id.id),
                 ('type', '=', rec.framework)
-                ]).performance
+            ]).performance
             rec.fuel_efficiency_expected = res
 
     @api.depends('trailer1_id', 'trailer2_id')
@@ -283,3 +311,38 @@ class TmsTravel(models.Model):
                 rec.framework = 'single'
             else:
                 rec.framework = 'unit'
+
+    @api.multi
+    def validate_driver_license(self):
+        val = self.env['ir.config_parameter'].get_param(
+            'driver_license_security_days')
+        days = int(val) or 0
+        for rec in self:
+            if rec.employee_id.days_to_expire <= days:
+                raise ValidationError(
+                    _("You can not Dispatch this Travel because %s "
+                      "Driver's License Validity (%s) is expired or"
+                      " about to expire in next %s day(s)") % (
+                        rec.employee_id.name,
+                        rec.employee_id.license_expiration, val))
+        return True
+
+    @api.multi
+    def validate_vehicle_insurance(self):
+        val = self.env['ir.config_parameter'].get_param(
+            'tms_vehicle_insurance_security_days')
+        xdays = int(val) or 0
+        date = datetime.now() + timedelta(days=xdays)
+        for rec in self:
+            units = [
+                rec.unit_id, rec.trailer1_id, rec.dolly_id, rec.trailer2_id]
+            for unit in units:
+                if (unit and unit.insurance_expiration and
+                        unit.insurance_expiration <= date.strftime(
+                            '%Y-%m-%d')):
+                    raise ValidationError(_(
+                        "You can not Dispatch this Travel because this Vehicle"
+                        "(%s) Insurance (%s) is expired or about to expire in "
+                        "next %s day(s)") % (
+                        rec.unit_id.name, rec.unit_id.insurance_expiration,
+                        val))

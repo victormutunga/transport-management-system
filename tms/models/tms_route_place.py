@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# © <2012> <Israel Cruz Argil, Argil Consulting>
-# © <2016> <Jarsa Sistemas, S.A. de C.V.>
+# Copyright 2012, Israel Cruz Argil, Argil Consulting
+# Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import fields, models
+from odoo import fields, models
 
 
 class TmsRoutePlace(models.Model):
@@ -12,6 +12,7 @@ class TmsRoutePlace(models.Model):
 
     route_id = fields.Many2one(
         'tms.route',
+        required=True,
         string="Route")
     sequence = fields.Integer(default=10)
     place_id = fields.Many2one('tms.place', string="Place")

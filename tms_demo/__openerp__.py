@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
-# © <2012> <Israel Cruz Argil, Argil Consulting>
-# © <2016> <Jarsa Sistemas, S.A. de C.V.>
+# Copyright 2012, Israel Cruz Argil, Argil Consulting
+# Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 {
     "name": "TMS Demo Data",
     "version": "9.0.0.1.0",
     "category": "Transport",
-    "author": "Argil Consulting, Jarsa Sistemas",
-    "website": "http://www.argil.mx, https://www.jarsa.com.mx",
+    "author": "Jarsa Sistemas, Argil Consulting",
+    "website": "https://www.jarsa.com.mx/page/transport-management-system",
     "depends": ["tms", "l10n_generic_coa"],
     "summary": "Demo Data for TMS",
     "license": "AGPL-3",
@@ -16,10 +16,9 @@
         'demo/account_account.xml',
         'demo/res_partner.xml',
         'demo/hr_employee.xml',
-        'demo/tms_base.xml',
         'demo/product_product.xml',
+        'demo/tms_advance.xml',
     ],
-    "application": True,
     "installable": True,
     "auto-install": True,
 }

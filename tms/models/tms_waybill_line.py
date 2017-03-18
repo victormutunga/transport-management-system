@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-# © <2012> <Israel Cruz Argil, Argil Consulting>
-# © <2016> <Jarsa Sistemas, S.A. de C.V.>
+# Copyright 2012, Israel Cruz Argil, Argil Consulting
+# Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import api, fields, models
+from __future__ import division
+
+from odoo import api, fields, models
 
 
 class TmsWaybillLine(models.Model):
@@ -47,17 +49,21 @@ class TmsWaybillLine(models.Model):
 
     @api.onchange('product_id')
     def on_change_product_id(self):
-        self.name = self.product_id.name
-        fpos = self.waybill_id.partner_id.property_account_position_id
-        fpos_tax_ids = fpos.map_tax(self.product_id.taxes_id)
-        self.tax_ids = fpos_tax_ids
+        for rec in self:
+            rec.name = rec.product_id.name
+            fpos = rec.waybill_id.partner_id.property_account_position_id
+            fpos_tax_ids = fpos.map_tax(rec.product_id.taxes_id)
+            rec.tax_ids = fpos_tax_ids
+            rec.write({
+                'account_id': rec.product_id.property_account_income_id.id
+            })
 
     @api.multi
     @api.depends('product_qty', 'unit_price', 'discount')
     def _compute_amount_line(self):
         for rec in self:
             price_discount = (
-                rec.unit_price * ((100.00 - rec.discount)/100))
+                rec.unit_price * ((100.00 - rec.discount) / 100))
             taxes = rec.tax_ids.compute_all(
                 price_discount, rec.waybill_id.currency_id,
                 rec.product_qty, rec.product_id,
