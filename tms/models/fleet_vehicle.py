@@ -14,7 +14,7 @@ class FleetVehicle(models.Model):
     _description = "Vehicle"
     _order = 'name asc'
 
-    name = fields.Char(required=True),
+    name = fields.Char(required=True)
     operating_unit_id = fields.Many2one(
         'operating.unit', string='Operating Unit')
     year_model = fields.Char(string='Year Model')
