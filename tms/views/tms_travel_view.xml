@@ -244,9 +244,10 @@
                 </form>
             </field>
         </record>
-        <record id="view_tms_travel_form_expense2" model="ir.ui.view">
+        <record id="view_tms_travel_form_expense" model="ir.ui.view">
             <field name="name">tms.travel.expense.form</field>
             <field name="model">tms.travel</field>
+            <field name="sequence">17</field>
             <field name="arch" type="xml">
                 <form string="Travels">
                     <header>
@@ -372,17 +373,6 @@
                         </t>
                     </templates>
                 </kanban>
-            </field>
-        </record>
-        <record id="view_tms_travel_form_cust" model="ir.ui.view">
-            <field name="name">tms.travel.form.readonly.cust</field>
-            <field name="model">tms.travel</field>
-            <field name="inherit_id" ref="view_tms_travel_form"/>
-            <field name="groups_id" eval="[(6, 0, [ref('tms.group_expenses') ])]"/>
-            <field name="arch" type="xml">
-                <field name='driver_factor_ids' position="replace">
-                    <field name='driver_factor_ids' context="{'default_category': 'driver'}" />
-                </field>
             </field>
         </record>
 
