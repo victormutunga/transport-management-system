@@ -23,6 +23,7 @@
                     <filter context="{'group_by': 'employee_id'}" string="Driver"/>
                     <filter context="{'group_by': 'state'}" string="State"/>
                     <filter context="{'group_by': 'date'}" string="Period"/>
+                    <filter context="{'group_by': 'date:day'}" string="Day"/>
                     <filter name="operating_unit_group_by" context="{'group_by':'operating_unit_id'}" string="Operating Unit"/>
                 </search>
             </field>
