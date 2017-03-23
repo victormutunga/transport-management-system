@@ -197,7 +197,7 @@
         <record id="view_tms_waybill_form_expense" model="ir.ui.view">
             <field name="name">tms.waybill.form</field>
             <field name="model">tms.waybill</field>
-            <field name="sequence">17</field>
+            <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <form string="Waybill">
                     <sheet>
