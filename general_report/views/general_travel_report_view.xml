@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_report_general_travel_tree" model="ir.ui.view">
+            <field name="name">report.general.travel.tree</field>
+            <field name="model">report.general.travel</field>
+            <field name="field_parent">child_ids</field>
+            <field name="arch" type="xml">
+                <tree sum="true">
+                    <field name='name'/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="no_travel" sum="travels"/>
+					<field name="distance_real"/>
+					<field name="income"/>
+					<field name="expense_travel"/>
+					<field name="expense_mtto"/>
+                    <field name='utility'/>
+					<field name="percentage_utility"/>
+					<field name="expense_fuel"/>
+					<field name="tires"/>
+					<field name="fuel"/>
+					<field name="efficienty_fuel"/>
+					<field name="expense_km"/>
+					<field name="income_km"/>
+					<field name="utility_km"/>
+                </tree>
+            </field>
+        </record>
+        <record id="open_view_report_general_travel_form" model="ir.actions.act_window">
+            <field name="name">General Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">report.general.travel</field>
+            <field name="view_type">tree</field>
+            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="view_id" ref="view_report_general_travel_tree"/>
+        </record>
+    </data>
+</openerp>
