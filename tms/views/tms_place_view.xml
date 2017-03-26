@@ -61,8 +61,7 @@
             <field name="begin_color">#FF680A</field>
         </record>
         <record id="geoengine_raster_layer_tmsplacemapbox" model="geoengine.raster.layer">
-            <field name="raster_type">mapbox</field>
-            <field name="mapbox_id">camptocamp.map-ok288g0c</field>
+            <field name="raster_type">osm</field>
             <field name="name">Place Mapbox</field>
             <field name="view_id" ref="tms_place_geoengine_view"/>
             <field eval="0" name="overlay"/>
