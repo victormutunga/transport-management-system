@@ -6,19 +6,6 @@
             <button type="button" class='btn btn-primary btn-sm o_account-widget-xls'>EXPORT (XLS)</button>
             <button t-if='xml_export' type="button" class='btn btn-primary btn-sm o_account-widget-xml'>EXPORT (XML)</button>
     </t>
-    <div t-name='tmsReports.errorModal' class="modal" id="editable_error" tabindex="-1" data-backdrop="static" role="dialog" aria-hidden="true" style="z-index:9999;">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h3 class="modal-title">Error</h3>
-                </div>
-                <div class="modal-body">
-                    <p id='insert_error' class='text-center'></p>
-                </div>
-            </div>
-        </div>
-    </div>
     <t t-name="tmsReports.searchView">
         <div class="o_dropdown o_account_reports_date-filter" t-if="report_type != 'date_range_extended'">
             <a type="button" class="dropdown-toggle" data-toggle="dropdown">
@@ -38,7 +25,6 @@
                         </div>
                     </div>
                     <label class="custom-date" for="date_to" t-if="report_type != 'no_date_range' and report_type != 'bank_reconciliation'">End Date :</label>
-                    <label class="custom-date" for="date_to" t-if="report_type == 'no_date_range' or report_type == 'bank_reconciliation'">Date :</label>
                     <div class="form-group custom-date">
                         <div class='o_datepicker date o_account_reports_datetimepicker' t-att-data-default-value="context.date_to">
                             <input type='text' class="o_datepicker_input" name="date_to" />

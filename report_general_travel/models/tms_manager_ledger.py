@@ -3,8 +3,8 @@
 
 from openerp import models, fields, api, _
 from openerp.tools.misc import formatLang
-from datetime import date, datetime, timedelta
-import time
+from datetime import datetime, timedelta
+from pytz import timezone
 import pytz
 from dateutil.rrule import rrule, MONTHLY
 
@@ -37,6 +37,17 @@ class tms_manager_ledger(models.AbstractModel):
             value = abs(value)
         res = formatLang(self.env, value, currency_obj=currency_id)
         return res
+
+    @api.model
+    def _do_query(self, date, fleet=False):
+        date = date.strftime('%Y-%m-%d')
+        select = (
+            "SELECT expense_id from tms_travel WHERE state = 'closed' and "
+            "Extract(month from date) = Extract(month from '" +
+            str(date) + "'::DATE);")
+        self.env.cr.execute(select)
+        results = [x[0] for x in self.env.cr.fetchall()]
+        return results
 
     @api.model
     def get_lines(self, context_id, line_id=None):
@@ -73,7 +84,8 @@ class tms_manager_ledger(models.AbstractModel):
             date_from, date_to, inc=True)
         comluns = []
         for date in dates:
-            comluns.append(self.get_method_lines(level, date))
+            travels = self._do_query(date)
+            comluns.append(self.get_method_lines(level, travels))
         return {
                 'id': self.id,
                 'name':  self._get_name_leve(level),
@@ -112,74 +124,63 @@ class tms_manager_ledger(models.AbstractModel):
         return 'report_general_travel.main_tms_general_report'
 
     @api.multi
-    def get_method_lines(self, level, date):
-        return getattr(self, method_list[level])(date)
+    def get_method_lines(self, level, travels):
+        return getattr(self, method_list[level])(travels)
 
 
 # _______METHODS FOR GET DATES OF TABLE_______
     @api.model
-    def get_no_travels(self, date):
-        obj_travel = self.env['tms.travel'].search([
-                    ('state', '=', 'done')])
-        tz = pytz.timezone(
-            self.env.user.tz) if self.env.user.tz else pytz.utc
-        travels = [
-            travel for travel in obj_travel if
-            pytz.utc.localize(travel.date).astimezone(tz).strptime(
-                "%Y-%m-%d %H:%M:%S").month ==
-            date.month and
-            pytz.utc.localize(travel.date).astimezone(tz).strptime(
-                "%Y-%m-%d %H:%M:%S").year == date.year]
+    def get_no_travels(self, travels):
         return len(travels)
 
     @api.model
-    def get_distance_real(self, date):
+    def get_distance_real(self, travels):
         return "#distance"
 
     @api.model
-    def get_income(self, date):
+    def get_income(self, travels):
         return "ingresos"
 
     @api.model
-    def get_expense_travel(self, date):
+    def get_expense_travel(self, travels):
         return "gastos"
 
     @api.model
-    def get_expense_mtto(self, date):
+    def get_expense_mtto(self, travels):
         return "gastos mtto"
 
     @api.model
-    def get_utility(self, date):
+    def get_utility(self, travels):
         return "utilidad"
 
     @api.model
-    def get_percentage_utility(self, date):
+    def get_percentage_utility(self, travels):
         return "porcentaje"
 
     @api.model
-    def get_expense_fuel(self, date):
+    def get_expense_fuel(self, travels):
         return "gastos fuel"
 
     @api.model
-    def get_tires(self, date):
+    def get_tires(self, travels):
         return "tires"
 
     @api.model
-    def get_fuel(self, date):
+    def get_fuel(self, travels):
         return "fuel"
 
     @api.model
-    def get_efficienty_fuel(self, date):
+    def get_efficienty_fuel(self, travels):
         return "fuel dates"
 
     @api.model
-    def get_expense_km(self, date):
+    def get_expense_km(self, travels):
         return "fuel dates"
 
     @api.model
-    def get_income_km(self, date):
+    def get_income_km(self, travels):
         return "fuel dates"
 
     @api.model
-    def get_utility_km(self, date):
+    def get_utility_km(self, travels):
         return "fuel dates"
