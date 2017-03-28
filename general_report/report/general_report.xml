@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_general_xml">
+            <t t-call="report.external_layout">
+                <div class="page">
+                    <div class="row">
+                        <h3>Title</h3>
+                    </div>
+                </div>
+            </t>
+        </template>
+        <template id="report_general">
+            <t t-call="report.html_container">
+                <t t-foreach="doc_ids" t-as="doc_id">
+                    <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'general_report.report_general_xml')"/>
+                </t>
+            </t>
+        </template>
+        <report 
+            id="custom_report_general"
+            model="report.general.travel"
+            string="Invoice without prices"
+            report_type="qweb-pdf"
+            name="general_report.report_general"
+            attachment_use="False"
+            file="general_report.report_general"
+        />
+    </data>
+</odoo>

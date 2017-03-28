@@ -17,6 +17,7 @@
     "data": [
         'views/general_travel_report_view.xml',
         'wizard/general_report_wizard_view.xml',
+        'report/general_report.xml',
     ],
     "demo": [
     ],
