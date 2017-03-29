@@ -27,7 +27,7 @@ class TmsTollImport(models.TransientModel):
             lines = document.split('\n')
             lines.remove('')
             for line in lines:
-                if line == '\r':
+                if line == '\r' or line[:10] == 'Tag,No.Eco':
                     continue
                 split_line = line.split('|')
                 flag = split_line[0].split('\t')
@@ -39,15 +39,9 @@ class TmsTollImport(models.TransientModel):
                 try:
                     create_date = datetime.strptime(
                         toll_datetime, "%Y/%m/%d %H:%M:%S")
-                    toll_datetime = datetime.strptime(
-                        toll_datetime,
-                        "%Y/%m/%d %H:%M:%S").strftime('%Y-%m-%d %H:%M:%S')
                 except:
                     create_date = datetime.strptime(
                         toll_datetime, "%d/%m/%Y %H:%M:%S")
-                    toll_datetime = datetime.strptime(
-                        toll_datetime,
-                        "%d/%m/%Y %H:%M:%S").strftime('%Y-%m-%d %H:%M:%S')
                 txt_date = create_date + timedelta(hours=8)
                 tz = pytz.timezone(self._context['tz'])
                 create_date = create_date.replace(tzinfo=pytz.utc)
