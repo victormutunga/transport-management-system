@@ -1852,10 +1852,6 @@ msgstr "Da el estado de una Carta Porte. \n"
 msgid "Global Fuel Efficiency Real"
 msgstr "Eficiencia de Combustible Global Real"
 
-#. module: tms
-#: model:ir.model.fields,field_description:tms.field_tms_expense_global_fuel_efficiency_routes
-msgid "Global Fuel Efficiency Routes"
-msgstr "Eficiencia de Combustible Global de las Rutas"
 
 #. module: tms
 #: model:ir.ui.view,arch_db:tms.view_tms_expense_form
@@ -2395,11 +2391,6 @@ msgstr "Fecha Programada Cargado"
 #: model:ir.model.fields,field_description:tms.field_tms_waybill_date_up_docs_real
 msgid "Load Docs Real"
 msgstr "Documentos Reales Cargado"
-
-#. module: tms
-#: model:ir.model.fields,field_description:tms.field_tms_expense_loaded_fuel_efficiency
-msgid "Loaded Fuel Efficiency"
-msgstr "Eficiencia de Combustible Cargado"
 
 #. module: tms
 #: model:ir.ui.view,arch_db:tms.view_tms_waybill_form
@@ -3896,10 +3887,6 @@ msgstr "Kits"
 msgid "Units Odometers"
 msgstr "Odómetros de las Unidades"
 
-#. module: tms
-#: model:ir.model.fields,field_description:tms.field_tms_expense_unloaded_fuel_efficiency
-msgid "Unloaded Fuel Efficiency"
-msgstr "Eficiencia de Combustible sin Carga"
 
 #. module: tms
 #: model:ir.model.fields,field_description:tms.field_fleet_vehicle_log_fuel_message_unread

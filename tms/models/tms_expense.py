@@ -125,22 +125,8 @@ class TmsExpense(models.Model):
     current_odometer = fields.Float(
         string='Current Real',
         compute='_compute_current_odometer')
-    distance_routes = fields.Float(
-        compute='_compute_distance_routes',
-        string='Distance from routes',
-        help="Routes Distance")
-    distance_real = fields.Float(
-        string='Distance Real',
-        help="Route obtained by electronic reading and/or GPS")
     odometer_log_id = fields.Many2one(
         'fleet.vehicle.odometer', 'Odometer Record')
-    global_fuel_efficiency_routes = fields.Float(
-        # compute=_get_fuel_efficiency,
-        string='Global Fuel Efficiency Routes')
-    loaded_fuel_efficiency = fields.Float(
-        'Loaded Fuel Efficiency')
-    unloaded_fuel_efficiency = fields.Float(
-        'Unloaded Fuel Efficiency')
     notes = fields.Text()
     move_id = fields.Many2one(
         'account.move', 'Journal Entry', readonly=True,
@@ -162,9 +148,6 @@ class TmsExpense(models.Model):
         "Efficiency Real obtained by electronic reading and/or GPS"
         # compute=_get_fuel_diff
     )
-    global_fuel_efficiency_real = fields.Float(
-        # compute=_get_fuel_diff,
-        string='Global Fuel Efficiency Real')
     fuel_log_ids = fields.One2many(
         'fleet.vehicle.log.fuel', 'expense_id', string='Fuel Vouchers')
     start_date = fields.Datetime(
@@ -179,6 +162,40 @@ class TmsExpense(models.Model):
     travel_days = fields.Char(
         string='Travel Days',
         compute='_compute_travel_days',
+    )
+    distance_loaded = fields.Float(
+        'Distance Loaded',
+    )
+    distance_empty = fields.Float(
+        'Dsitance Empty',
+    )
+    distance_loaded_real = fields.Float(
+        'Distance Loaded Real',
+    )
+    distance_empty_real = fields.Float(
+        'Distance Empty Real',
+    )
+    distance_routes = fields.Float(
+        compute='_compute_distance_routes',
+        string='Distance from routes',
+        help="Routes Distance")
+    distance_real = fields.Float(
+        string='Distance Real',
+        help="Route obtained by electronic reading and/or GPS")
+    income_km = fields.Float(
+        'Income/km',
+    )
+    expense_km = fields.Float(
+        'Expense/Km',
+    )
+    percentage_km = fields.Float(
+        'Productivity Percentage'
+    )
+    fuel_efficiency_real = fields.Float(
+        'Fuel Efficiency Real',
+    )
+    fuel_efficiency_planned = fields.Float(
+        'Fuel Efficiency Planned',
     )
 
     @api.depends('start_date', 'end_date')
