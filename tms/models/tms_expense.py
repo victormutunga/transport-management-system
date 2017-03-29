@@ -719,8 +719,7 @@ class TmsExpense(models.Model):
                 ('id', 'not in', exp_no_travel)]).unlink()
             rec.expense_line_ids.search([
                 ('expense_id', '=', rec.id),
-                ('control', '=', True),
-                ('line_type', '!=', 'fuel')]).unlink()
+                ('control', '=', True)]).unlink()
             travels = self.env['tms.travel'].search(
                 [('expense_id', '=', rec.id)])
             travels.write({'expense_id': False, 'state': 'done'})
