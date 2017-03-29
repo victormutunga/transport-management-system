@@ -168,7 +168,7 @@
                                     <group col="2" colspan="2" >
                                        <field name="income_km"></field>
                                        <field name="expense_km"></field>
-                                       <field name="percentage_km"></field>
+                                       <field name="percentage_km" widget="progressbar"></field>
                                     </group>
                                 </group>
                             </page>

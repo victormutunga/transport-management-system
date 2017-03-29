@@ -184,12 +184,15 @@ class TmsExpense(models.Model):
         help="Route obtained by electronic reading and/or GPS")
     income_km = fields.Float(
         'Income/km',
+        compute='_compute_income_km',
     )
     expense_km = fields.Float(
         'Expense/Km',
+        compute='_compute_expense_km',
     )
     percentage_km = fields.Float(
-        'Productivity Percentage'
+        'Productivity Percentage',
+        compute='_compute_percentage_km',
     )
     fuel_efficiency_real = fields.Float(
         'Fuel Efficiency Real',
@@ -197,6 +200,27 @@ class TmsExpense(models.Model):
     fuel_efficiency_planned = fields.Float(
         'Fuel Efficiency Planned',
     )
+
+    @api.depends('travel_ids')
+    def _compute_income_km(self):
+        for rec in self:
+            rec.income_km = 0.0
+            rec.expense = 0.0
+            subtotal_waybills = 0.0
+            for travel in rec.travel_ids:
+                for waybill in travel.waybill_ids:
+                    subtotal_waybills += waybill.amount_untaxed
+            rec.income_km = subtotal_waybills / rec.distance_real
+
+    @api.depends('distance_real', 'amount_subtotal_real')
+    def _compute_expense_km(self):
+        for rec in self:
+            rec.expense_km = rec.amount_subtotal_real / rec.distance_real
+
+    @api.depends('income_km', 'expense_km')
+    def _compute_percentage_km(self):
+        for rec in self:
+            rec.percentage_km = rec.income_km / rec.expense_km
 
     @api.depends('start_date', 'end_date')
     def _compute_travel_days(self):
