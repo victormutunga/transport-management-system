@@ -38,10 +38,6 @@ class TmsEvent(models.Model):
         string='Longitude',
         states={'confirmed': [('readonly', True)],
                 'cancel': [('readonly', True)]})
-    origin = fields.Char(
-        string='Origin', size=64, required=True,
-        states={'confirmed': [('readonly', True)],
-                'cancel': [('readonly', True)]})
     position_real = fields.Text(
         string='Position Real', help="Position as GPS",
         states={'confirmed': [('readonly', True)],

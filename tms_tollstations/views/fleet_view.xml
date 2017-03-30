@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="expenseline_form_view">
+            <field name="name">expense.lines.files</field>
+            <field name="model">tms.expense.line</field>
+            <field name="inherit_id" ref="tms.view_tms_expense_line_form"/>
+            <field name='arch' type='xml'>
+                <xpath expr="//notebook" position="inside">
+                    <page>
+                        <group>
+                            <field name="tollstation_tag"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -125,22 +125,8 @@ class TmsExpense(models.Model):
     current_odometer = fields.Float(
         string='Current Real',
         compute='_compute_current_odometer')
-    distance_routes = fields.Float(
-        compute='_compute_distance_routes',
-        string='Distance from routes',
-        help="Routes Distance")
-    distance_real = fields.Float(
-        string='Distance Real',
-        help="Route obtained by electronic reading and/or GPS")
     odometer_log_id = fields.Many2one(
         'fleet.vehicle.odometer', 'Odometer Record')
-    global_fuel_efficiency_routes = fields.Float(
-        # compute=_get_fuel_efficiency,
-        string='Global Fuel Efficiency Routes')
-    loaded_fuel_efficiency = fields.Float(
-        'Loaded Fuel Efficiency')
-    unloaded_fuel_efficiency = fields.Float(
-        'Unloaded Fuel Efficiency')
     notes = fields.Text()
     move_id = fields.Many2one(
         'account.move', 'Journal Entry', readonly=True,
@@ -162,9 +148,6 @@ class TmsExpense(models.Model):
         "Efficiency Real obtained by electronic reading and/or GPS"
         # compute=_get_fuel_diff
     )
-    global_fuel_efficiency_real = fields.Float(
-        # compute=_get_fuel_diff,
-        string='Global Fuel Efficiency Real')
     fuel_log_ids = fields.One2many(
         'fleet.vehicle.log.fuel', 'expense_id', string='Fuel Vouchers')
     start_date = fields.Datetime(
@@ -180,6 +163,79 @@ class TmsExpense(models.Model):
         string='Travel Days',
         compute='_compute_travel_days',
     )
+    distance_loaded = fields.Float(
+        'Distance Loaded',
+        compute='_compute_distance_expense',
+    )
+    distance_empty = fields.Float(
+        'Distance Empty',
+        compute='_compute_distance_expense',
+    )
+    distance_loaded_real = fields.Float(
+        'Distance Loaded Real',
+    )
+    distance_empty_real = fields.Float(
+        'Distance Empty Real',
+    )
+    distance_routes = fields.Float(
+        compute='_compute_distance_routes',
+        string='Distance from routes',
+        help="Routes Distance")
+    distance_real = fields.Float(
+        string='Distance Real',
+        help="Route obtained by electronic reading and/or GPS")
+    income_km = fields.Float(
+        'Income/km',
+        compute='_compute_income_km',
+    )
+    expense_km = fields.Float(
+        'Expense/Km',
+        compute='_compute_expense_km',
+    )
+    percentage_km = fields.Float(
+        'Productivity Percentage',
+        compute='_compute_percentage_km',
+    )
+    fuel_efficiency_real = fields.Float(
+        'Fuel Efficiency Real',
+    )
+
+    @api.depends('travel_ids')
+    def _compute_income_km(self):
+        for rec in self:
+            rec.income_km = 0.0
+            rec.expense = 0.0
+            subtotal_waybills = 0.0
+            for travel in rec.travel_ids:
+                for waybill in travel.waybill_ids:
+                    subtotal_waybills += waybill.amount_untaxed
+            try:
+                rec.income_km = subtotal_waybills / rec.distance_real
+            except ZeroDivisionError:
+                rec.income_km = 0.0
+
+    @api.depends('distance_real', 'amount_subtotal_real')
+    def _compute_expense_km(self):
+        for rec in self:
+            try:
+                rec.expense_km = rec.amount_subtotal_real / rec.distance_real
+            except ZeroDivisionError:
+                rec.expense_km = 0.0
+
+    @api.depends('income_km', 'expense_km')
+    def _compute_percentage_km(self):
+        for rec in self:
+            try:
+                rec.percentage_km = rec.income_km / rec.expense_km
+            except ZeroDivisionError:
+                rec.percentage_km = 0.0
+
+    @api.depends('travel_ids')
+    def _compute_distance_expense(self):
+        for rec in self:
+            for travel in rec.travel_ids:
+                rec.distance_loaded += travel.distance_loaded
+                rec.distance_empty += travel.distance_empty
 
     @api.depends('start_date', 'end_date')
     def _compute_travel_days(self):
@@ -719,8 +775,7 @@ class TmsExpense(models.Model):
                 ('id', 'not in', exp_no_travel)]).unlink()
             rec.expense_line_ids.search([
                 ('expense_id', '=', rec.id),
-                ('control', '=', True),
-                ('line_type', '!=', 'fuel')]).unlink()
+                ('control', '=', True)]).unlink()
             travels = self.env['tms.travel'].search(
                 [('expense_id', '=', rec.id)])
             travels.write({'expense_id': False, 'state': 'done'})

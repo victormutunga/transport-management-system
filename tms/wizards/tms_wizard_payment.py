@@ -15,6 +15,8 @@ class TmsWizardPayment(models.TransientModel):
         'account.journal', string='Bank Account',
         domain="[('type', '=', 'bank')]")
     amount_total = fields.Float(compute='_compute_amount_total')
+    date = fields.Date(required=True, default=fields.Date.today())
+    notes = fields.Text()
 
     @api.depends('journal_id')
     def _compute_amount_total(self):
@@ -109,10 +111,11 @@ class TmsWizardPayment(models.TransientModel):
                 bank_line['currency_id'] = currency.id
             move_lines.append((0, 0, bank_line))
             move = {
-                'date': fields.Date.today(),
+                'date': rec.date,
                 'journal_id': rec.journal_id.id,
                 'ref': name,
                 'line_ids': [line for line in move_lines],
+                'narration': rec.notes,
             }
             move_id = self.env['account.move'].create(move)
             move_id.post()

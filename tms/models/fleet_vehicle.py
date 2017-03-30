@@ -60,5 +60,3 @@ class FleetVehicle(models.Model):
                 rec.insurance_days_to_expire = delta.days + 1
             else:
                 rec.insurance_days_to_expire = 0
-                raise ValidationError(
-                    _('The date of the insurance policy is expired'))
