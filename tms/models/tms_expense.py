@@ -3,9 +3,10 @@
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
+from __future__ import division
+import datetime
 from openerp import _, api, fields, models
 from openerp.exceptions import ValidationError
-import datetime
 
 
 class TmsExpense(models.Model):
@@ -16,7 +17,7 @@ class TmsExpense(models.Model):
 
     name = fields.Char(readonly=True)
     operating_unit_id = fields.Many2one(
-        'operating.unit', string='Operating Unit', required=True)
+        'operating.unit', required=True)
     employee_id = fields.Many2one(
         'hr.employee', 'Driver', required=True)
     travel_ids = fields.Many2many(
@@ -34,8 +35,7 @@ class TmsExpense(models.Model):
         ('cancel', 'Cancelled')], 'Expense State', readonly=True,
         help="Gives the state of the Travel Expense. ",
         default='draft')
-    date = fields.Date(
-        'Date', required=True,
+    date = fields.Date(required=True,
         default=fields.Date.today)
     expense_line_ids = fields.One2many(
         'tms.expense.line', 'expense_id', 'Expense Lines')
@@ -49,7 +49,6 @@ class TmsExpense(models.Model):
         store=True)
     fuel_qty = fields.Float(
         compute='_compute_fuel_qty',
-        string='Fuel Qty',
         store=True)
     amount_fuel = fields.Float(
         compute='_compute_amount_fuel',
@@ -121,7 +120,7 @@ class TmsExpense(models.Model):
         store=True)
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle')
     last_odometer = fields.Float('Last Read')
-    vehicle_odometer = fields.Float('Vehicle Odometer')
+    vehicle_odometer = fields.Float()
     current_odometer = fields.Float(
         string='Current Real',
         compute='_compute_current_odometer')
@@ -138,7 +137,6 @@ class TmsExpense(models.Model):
     advance_ids = fields.One2many(
         'tms.advance', 'expense_id', string='Advances', readonly=True)
     fuel_qty_real = fields.Float(
-        'Fuel Qty Real',
         help="Fuel Qty computed based on Distance Real and Global Fuel "
         "Efficiency Real obtained by electronic reading and/or GPS")
     fuel_diff = fields.Float(
@@ -150,46 +148,34 @@ class TmsExpense(models.Model):
     )
     fuel_log_ids = fields.One2many(
         'fleet.vehicle.log.fuel', 'expense_id', string='Fuel Vouchers')
-    start_date = fields.Datetime(
-        string="Start Date",)
-    end_date = fields.Datetime(
-        string="End Date",)
+    start_date = fields.Datetime()
+    end_date = fields.Datetime()
     fuel_efficiency = fields.Float(
-        string="Fuel Efficiency", readonly=True,
+        readonly=True,
         compute="_compute_fuel_efficiency")
     payment_move_id = fields.Many2one(
         'account.move', string='Payment Entry', readonly=True)
     travel_days = fields.Char(
-        string='Travel Days',
         compute='_compute_travel_days',
     )
     distance_loaded = fields.Float(
-        'Distance Loaded',
         compute='_compute_distance_expense',
     )
     distance_empty = fields.Float(
-        'Distance Empty',
         compute='_compute_distance_expense',
     )
-    distance_loaded_real = fields.Float(
-        'Distance Loaded Real',
-    )
-    distance_empty_real = fields.Float(
-        'Distance Empty Real',
-    )
+    distance_loaded_real = fields.Float()
+    distance_empty_real = fields.Float()
     distance_routes = fields.Float(
         compute='_compute_distance_routes',
         string='Distance from routes',
         help="Routes Distance")
     distance_real = fields.Float(
-        string='Distance Real',
         help="Route obtained by electronic reading and/or GPS")
     income_km = fields.Float(
-        'Income/km',
         compute='_compute_income_km',
     )
     expense_km = fields.Float(
-        'Expense/Km',
         compute='_compute_expense_km',
     )
     percentage_km = fields.Float(
@@ -197,7 +183,6 @@ class TmsExpense(models.Model):
         compute='_compute_percentage_km',
     )
     fuel_efficiency_real = fields.Float(
-        'Fuel Efficiency Real',
     )
 
     @api.depends('travel_ids')
@@ -740,28 +725,27 @@ class TmsExpense(models.Model):
 
     @api.multi
     def action_cancel(self):
-        for rec in self:
-            if rec.paid:
-                raise ValidationError(
-                    _('You cannot cancel an expense that is paid.'))
-            if rec.state == 'confirmed':
-                for line in rec.expense_line_ids:
-                    if line.invoice_id and line.line_type != 'fuel':
-                        for move_line in line.invoice_id.move_id.line_ids:
-                            if move_line.account_id.reconcile:
-                                move_line.remove_move_reconcile()
-                        line.invoice_id.write({
-                            # TODO Make a separate module to delete oml data
-                            'cfdi_fiscal_folio': False,
-                            'xml_signed': False,
-                            'reference': False,
-                            })
-                        line.invoice_id.signal_workflow('invoice_cancel')
-                        line.invoice_id = False
-                if rec.move_id.state == 'posted':
-                    rec.move_id.button_cancel()
-                rec.move_id.unlink()
-            rec.state = 'cancel'
+        if self.paid:
+            raise ValidationError(
+                _('You cannot cancel an expense that is paid.'))
+        if self.state == 'confirmed':
+            for line in self.expense_line_ids:
+                if line.invoice_id and line.line_type != 'fuel':
+                    for move_line in line.invoice_id.move_id.line_ids:
+                        if move_line.account_id.reconcile:
+                            move_line.remove_move_reconcile()
+                    line.invoice_id.write({
+                        # TODO Make a separate module to delete oml data
+                        'cfdi_fiscal_folio': False,
+                        'xml_signed': False,
+                        'reference': False,
+                        })
+                    line.invoice_id.signal_workflow('invoice_cancel')
+                    line.invoice_id = False
+            if self.move_id.state == 'posted':
+                self.move_id.button_cancel()
+            self.move_id.unlink()
+        self.state = 'cancel'
 
     @api.multi
     def get_travel_info(self):
@@ -894,7 +878,7 @@ class TmsExpense(models.Model):
                 if waybill.currency_id.name == 'USD':
                     income = (income *
                               self.env.user.company_id.expense_currency_rate)
-                if len(waybill.driver_factor_ids) > 0:
+                if waybill.driver_factor_ids:
                     for factor in waybill.driver_factor_ids:
                         driver_salary += factor.get_amount(
                             weight=waybill.product_weight,
@@ -904,7 +888,7 @@ class TmsExpense(models.Model):
                             volume=waybill.product_volume,
                             income=income,
                             employee=rec.employee_id)
-                elif len(travel.driver_factor_ids) > 0:
+                elif travel.driver_factor_ids:
                     for factor in travel.driver_factor_ids:
                         driver_salary += factor.get_amount(
                             weight=waybill.product_weight,

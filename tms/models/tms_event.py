@@ -17,29 +17,27 @@ class TmsEvent(models.Model):
     state = fields.Selection(
         [('draft', 'Draft'),
          ('confirm', 'Confirm'),
-         ('cancel', 'Cancel')], 'State', readonly=True, default='draft')
+         ('cancel', 'Cancel')], readonly=True, default='draft')
     date = fields.Date(
         default=fields.Date.today,
-        string='Date', required=True,
+        required=True,
         states={'confirmed': [('readonly', True)],
                 'cancel': [('readonly', True)]})
     notes = fields.Text(
-        string='Notes', states={'confirmed': [('readonly', True)],
-                                'cancel': [('readonly', True)]})
+        states={'confirmed': [('readonly', True)],
+                'cancel': [('readonly', True)]})
     travel_id = fields.Many2one(
-        'tms.travel', 'Travel', select=True, required=True, readonly=False,
+        'tms.travel', 'Travel', index=True, required=True, readonly=False,
         states={'confirmed': [('readonly', True)],
                 'cancel': [('readonly', True)]}, ondelete='restrict')
     latitude = fields.Float(
-        string='Latitude',
         states={'confirmed': [('readonly', True)],
                 'cancel': [('readonly', True)]})
     longitude = fields.Float(
-        string='Longitude',
         states={'confirmed': [('readonly', True)],
                 'cancel': [('readonly', True)]})
     position_real = fields.Text(
-        string='Position Real', help="Position as GPS",
+        help="Position as GPS",
         states={'confirmed': [('readonly', True)],
                 'cancel': [('readonly', True)]})
     position_pi = fields.Text(

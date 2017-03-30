@@ -55,7 +55,7 @@ class TmsWaybill(models.Model):
         ('draft', 'Pending'),
         ('approved', 'Approved'),
         ('confirmed', 'Confirmed'),
-        ('cancel', 'Cancelled')], 'State', readonly=True,
+        ('cancel', 'Cancelled')], readonly=True,
         help="Gives the state of the Waybill.",
         default='draft')
     date_order = fields.Datetime(
@@ -91,8 +91,8 @@ class TmsWaybill(models.Model):
     arrival_address_id = fields.Many2one(
         'res.partner', 'Arrival Address', required=True,
         help="Arrival address for current Waybill.", change_default=True)
-    upload_point = fields.Char('Upload Point', change_default=True)
-    download_point = fields.Char('Download Point', change_default=True)
+    upload_point = fields.Char(change_default=True)
+    download_point = fields.Char(change_default=True)
     invoice_id = fields.Many2one(
         'account.invoice', 'Invoice', readonly=True, copy=False)
     invoice_paid = fields.Boolean(
@@ -101,8 +101,7 @@ class TmsWaybill(models.Model):
         'account.invoice', string='Supplier Invoice', readonly=True)
     supplier_invoice_paid = fields.Boolean(
         compute='_compute_supplier_invoice_paid',
-        readonly=True,
-        string='Supplier Invoice Paid')
+        readonly=True)
     waybill_line_ids = fields.One2many(
         'tms.waybill.line', 'waybill_id',
         string='Waybill Lines')
@@ -143,10 +142,8 @@ class TmsWaybill(models.Model):
         compute='_compute_amount_total',
         string='Total')
     distance_real = fields.Float(
-        'Distance Real',
         help="Route obtained by electronic reading")
-    distance_route = fields.Float(
-        'Distance Route')
+    distance_route = fields.Float()
     notes = fields.Html()
     date_start = fields.Datetime(
         'Load Date Sched', help="Date Start time for Load",
@@ -185,25 +182,18 @@ class TmsWaybill(models.Model):
     date_down_docs_real = fields.Datetime('Download Docs Real')
     date_end_real = fields.Datetime('Travel End Real')
     amount_declared = fields.Float(
-        'Amount Declared',
         help=" Load value amount declared for insurance purposes...")
     replaced_waybill_id = fields.Many2one(
         'tms.waybill', 'Replaced Waybill', readonly=True)
     move_id = fields.Many2one(
         'account.move', string='Journal Entry', readonly=True)
-    # waybill_type = fields.Selection(
-    #     compute='_compute_waybill_type',
-    #     selection=[('own', 'Self'), ('outsourced', 'Outsourced')],
-    #     string='Waybill Type',
-    #     help=" - Own: Travel with our own units. \n "
-    #     "- Outsourced: Travel without our own units.", default='own')
     client_order_ref = fields.Char(
         'Customer Reference', size=64, readonly=False,
         states={'confirmed': [('readonly', True)]})
     billing_policy = fields.Selection([
         ('manual', 'Manual'),
         ('automatic', 'Automatic'), ],
-        'Billing Policy', readonly=False,
+        readonly=False,
         states={'confirmed': [('readonly', True)]},
         help="Gives the state of the Waybill. \n "
         "-The exception state is automatically set "
@@ -212,7 +202,7 @@ class TmsWaybill(models.Model):
         "list process (Shipping Exception). \n"
         "The 'Waiting Schedule' state is set when the invoice "
         "is confirmed but waiting for the scheduler to run on "
-        "the date 'Ordered Date'.", select=True, default='manual')
+        "the date 'Ordered Date'.", index=True, default='manual')
     waybill_extradata = fields.One2many(
         'tms.extradata', 'waybill_id',
         string='Extra Data Fields',

@@ -18,7 +18,6 @@ monitoring_tms_waybill,access_tms_waybill,model_tms_waybill,group_monitoring,1,0
 monitoring_tms_travel,access_tms_travel,model_tms_travel,group_monitoring,1,0,0,0
 monitoring_tms_advance,access_tms_advance,model_tms_advance,group_monitoring,1,0,0,0
 monitoring_hr_employee,access_hr_employee,model_hr_employee,group_monitoring,1,0,0,0
-monitoring_fleet_vehicle,access_fleet_vehicle,model_fleet_vehicle,group_monitoring,1,0,0,
 monitoring_fleet_vehicle_log_fuel,access_fleet_vehicle_log_fuel,model_fleet_vehicle_log_fuel,group_monitoring,1,0,0,0
 monitoring_tms_place,access_tms_place,model_tms_place,group_monitoring,1,0,0,0
 monitoring_tms_route,access_tms_route,model_tms_route,group_monitoring,1,0,0,0
@@ -78,7 +77,6 @@ expenses_tms_waybill,access_tms_waybill,model_tms_waybill,group_expenses,1,1,1,0
 expenses_tms_travel,access_tms_travel,model_tms_travel,group_expenses,1,1,1,1
 expenses_tms_advance,access_tms_advance,model_tms_advance,group_expenses,1,1,1,0
 expenses_hr_employee,access_hr_employee,model_hr_employee,group_expenses,1,0,0,0
-expenses_fleet_vehicle,access_fleet_vehicle,model_fleet_vehicle,group_expenses,1,0,0,
 expenses_fleet_vehicle_log_fuel,access_fleet_vehicle_log_fuel,model_fleet_vehicle_log_fuel,group_expenses,1,1,1,0
 expenses_tms_place,access_tms_place,model_tms_place,group_expenses,1,0,0,0
 expenses_tms_route,access_tms_route,model_tms_route,group_expenses,1,0,0,0

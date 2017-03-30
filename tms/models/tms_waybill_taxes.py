@@ -14,7 +14,7 @@ class TmsWaybillTaxes(models.Model):
     _order = "tax_amount desc"
 
     waybill_id = fields.Many2one('tms.waybill', 'Waybill', readonly=True)
-    tax_id = fields.Many2one('account.tax', 'Impuesto', readonly=True)
+    tax_id = fields.Many2one('account.tax', 'Tax', readonly=True)
     account_id = fields.Many2one(
         'account.account', 'Tax Account', required=False,
         domain=[('type', '<>', 'view'),
@@ -22,8 +22,7 @@ class TmsWaybillTaxes(models.Model):
                 ('type', '<>', 'closed')])
     account_analytic_id = fields.Many2one(
         'account.analytic.account', 'Analytic account')
-    base = fields.Float(
-        'Base', digits_compute=dp.get_precision('Account'), readonly=True)
+    base = fields.Float(digits=dp.get_precision('Account'), readonly=True)
     tax_amount = fields.Float(
-        'Monto Impuesto', digits_compute=dp.get_precision('Account'),
+        digits=dp.get_precision('Account'),
         readonly=True)
