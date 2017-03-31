@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# Copyright 2016, Jarsa Sistemas, S.A. de C.V.
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp import http
 from openerp.http import request
@@ -10,17 +11,23 @@ import json
 
 
 class ledgerReportController(http.Controller):
-    @http.route('/report_general_travel/<string:output_format>/<string:report_name>/<string:report_id>', type='http', auth='user')
+    @http.route(
+        '/report_general_travel/<string:output_format>/'
+        '<string:report_name>/<string:report_id>', type='http', auth='user')
     def report(self, output_format, report_name, token, report_id=None, **kw):
         uid = request.session.uid
         domain = [('create_uid', '=', uid)]
-        report_model = request.env['account.report.context.common'].get_full_report_name_by_report_name(report_name)
+        report_model = request.env[
+            'tms.report.context.common'].get_full_report_name_by_report_name(
+                report_name)
         report_obj = request.env[report_model].sudo(uid)
-        if report_name == 'financial_report':
-            report_id = int(report_id)
-            domain.append(('report_id', '=', report_id))
-            report_obj = report_obj.browse(report_id)
-        context_obj = request.env['account.report.context.common'].get_context_by_report_name(report_name)
+        # if report_name == 'manager_ledger':
+        #     report_id = int(report_id)
+        #     domain.append(('report_id', '=', report_id))
+        #     report_obj = report_obj.browse(report_id)
+        context_obj = request.env[
+            'tms.report.context.common'].get_context_by_report_name(
+                report_name)
         context_id = context_obj.sudo(uid).search(domain, limit=1)
         try:
             if output_format == 'xls':
@@ -28,7 +35,8 @@ class ledgerReportController(http.Controller):
                     None,
                     headers=[
                         ('Content-Type', 'application/vnd.ms-excel'),
-                        ('Content-Disposition', 'attachment; filename=' + report_obj.get_name() + '.xls;')
+                        ('Content-Disposition', 'attachment; filename=' +
+                            report_obj.get_name() + '.xls;')
                     ]
                 )
                 context_id.get_xls(response)
@@ -39,7 +47,8 @@ class ledgerReportController(http.Controller):
                     context_id.get_pdf(),
                     headers=[
                         ('Content-Type', 'application/pdf'),
-                        ('Content-Disposition', 'attachment; filename=' + report_obj.get_name() + '.pdf;')
+                        ('Content-Disposition', 'attachment; filename=' +
+                            report_obj.get_name() + '.pdf;')
                     ]
                 )
                 response.set_cookie('fileToken', token)
@@ -50,7 +59,8 @@ class ledgerReportController(http.Controller):
                     content,
                     headers=[
                         ('Content-Type', 'application/vnd.sun.xml.writer'),
-                        ('Content-Disposition', 'attachment; filename=' + report_obj.get_name() + '.xml;'),
+                        ('Content-Disposition', 'attachment; filename=' +
+                            report_obj.get_name() + '.xml;'),
                         ('Content-Length', len(content))
                     ]
                 )

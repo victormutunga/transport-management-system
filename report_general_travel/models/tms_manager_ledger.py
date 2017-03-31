@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# Copyright 2016, Jarsa Sistemas, S.A. de C.V.
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp import models, fields, api, _
 from openerp.tools.misc import formatLang
@@ -52,7 +53,7 @@ class tms_manager_ledger(models.AbstractModel):
     @api.model
     def get_lines(self, context_id, line_id=None):
         if type(context_id) == int:
-            context_id = self.env['tms.manager.ledger'].search(
+            context_id = self.env['tms.context.manager.ledger'].search(
                 [['id', '=', context_id]])
         new_context = dict(self.env.context)
         new_context.update({
@@ -76,8 +77,7 @@ class tms_manager_ledger(models.AbstractModel):
     @api.model
     def _prepare_level_lines(self, level):
         context = self.env.context
-        unfold_all = context.get('print_mode') and not context[
-            'context_id']['unfolded_accounts']
+        unfold_all = context.get('print_mode')
         date_from = datetime.strptime(context['date_from'], "%Y-%m-%d")
         date_to = datetime.strptime(context['date_to'], "%Y-%m-%d")
         dates = rrule(MONTHLY, dtstart=date_from).between(
@@ -102,8 +102,7 @@ class tms_manager_ledger(models.AbstractModel):
     def _lines(self, line_id=None):
         lines = []
         context = self.env.context
-        unfold_all = context.get('print_mode') and not context[
-            'context_id']['unfolded_accounts']
+        unfold_all = context.get('print_mode')
         for x in range(0, 14):
             lines.append(self._prepare_level_lines(x))
         return lines

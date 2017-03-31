@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+# Copyright 2016, Jarsa Sistemas, S.A. de C.V.
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp import models, fields, api, _, osv
 from openerp.exceptions import Warning
@@ -41,7 +42,8 @@ class TMSReportContextCommon(models.TransientModel):
         }
 
     def _report_name_to_report_context(self):
-        return dict([(k[0], self._report_model_to_report_context()[k[1]]) for k in self._report_name_to_report_model().items()])
+        return dict([(k[0], self._report_model_to_report_context()[k[1]]) for
+                    k in self._report_name_to_report_model().items()])
 
     @api.model
     def get_full_report_name_by_report_name(self, name):
@@ -72,66 +74,53 @@ class TMSReportContextCommon(models.TransientModel):
         dt_to = datetime.strptime(dt_to, "%Y-%m-%d")
         if dt_from:
             date_from = convert_date(dt_from, None)
-        if 'month' in self.date_filter:
-            return '%s %s' % (self._get_month(dt_to.month - 1), dt_to.year)
-        if 'quarter' in self.date_filter:
-            month_start = self.env.user.company_id.fiscalyear_last_month + 1
-            month = dt_to.month if dt_to.month >= month_start else dt_to.month + 12
-            quarter = int((month - month_start) / 3) + 1
-            return dt_to.strftime(_('Quarter #') + str(quarter) + ' %Y')
-        if 'year' in self.date_filter:
-            if self.env.user.company_id.fiscalyear_last_day == 31 and self.env.user.company_id.fiscalyear_last_month == 12:
-                return dt_to.strftime('%Y')
-            else:
-                return str(dt_to.year - 1) + ' - ' + str(dt_to.year)
         if not dt_from:
             return _('(As of %s)') % (date_to,)
         return _('(From %s <br/> to  %s)') % (date_from, date_to)
 
     def _get_month(self, index):
         return [
-            _('January'), _('February'), _('March'), _('April'), _('May'), _('June'),
-            _('July'), _('August'), _('September'), _('October'), _('November'), _('December')
+            _('January'), _('February'), _('March'),
+            _('April'), _('May'), _('June'),
+            _('July'), _('August'), _('September'),
+            _('October'), _('November'), _('December')
         ][index]
 
     def get_cmp_date(self):
-        if self.get_report_obj().get_report_type() == 'no_date_range':
-            return self.get_full_date_names(self.date_to_cmp)
         return self.get_full_date_names(self.date_to_cmp, self.date_from_cmp)
 
     @api.model
     def create(self, vals):
         res = super(TMSReportContextCommon, self).create(vals)
         report_type = res.get_report_obj().get_report_type()
-        if report_type in ['date_range', 'date_range_cash', 'no_comparison']:
+        if report_type in ['date_range']:
             dt = datetime.today()
             update = {
                 'date_from': datetime.today().replace(day=1),
-                'date_to': dt.replace(day=calendar.monthrange(dt.year, dt.month)[1]),
-                'date_filter': 'this_month',
+                'date_to': dt.replace(
+                    day=calendar.monthrange(dt.year, dt.month)[1]),
             }
         res.write(update)
         return res
 
-    def get_xml(self):
-        return self.env['account.financial.html.report.xml.export'].do_xml_export(self)
-
     def get_pdf(self):
         if not config['test_enable']:
             self = self.with_context(commit_assetsbundle=True)
-
         report_obj = self.get_report_obj()
         lines = report_obj.with_context(print_mode=True).get_lines(self)
-        base_url = self.env['ir.config_parameter'].sudo().get_param('report.url') or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param(
+            'report.url') or self.env[
+            'ir.config_parameter'].sudo().get_param('web.base.url')
         rcontext = {
             'mode': 'print',
             'base_url': base_url,
             'company': self.env.user.company_id,
         }
-
         body = self.pool['ir.ui.view'].render(
-            self._cr, self._uid, "report_general_travel.main_tms_general_report_letter",
-            values=dict(rcontext, lines=lines, report=report_obj, context=self),
+            self._cr, self._uid,
+            "report_general_travel.main_tms_general_report_letter",
+            values=dict(
+                rcontext, lines=lines, report=report_obj, context=self),
             context=self.env.context
         )
 
@@ -150,7 +139,12 @@ class TMSReportContextCommon(models.TransientModel):
         if len(self.get_columns_names()) > 4:
             landscape = True
 
-        return self.env['report']._run_wkhtmltopdf([header], [''], [(0, body)], landscape, self.env.user.company_id.paperformat_id, spec_paperformat_args={'data-report-margin-top': 10, 'data-report-header-spacing': 10})
+        return self.env['report']._run_wkhtmltopdf(
+            [header], [''], [(0, body)], landscape,
+            self.env.user.company_id.paperformat_id,
+            spec_paperformat_args={
+                'data-report-margin-top': 10,
+                'data-report-header-spacing': 10})
 
     @api.multi
     def get_html_and_data(self, given_context=None):

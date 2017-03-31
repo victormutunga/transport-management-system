@@ -15,16 +15,16 @@
                 <span class="caret"/>
             </a>
             <ul class="dropdown-menu o_filters_menu" role="menu">
-                <li t-att-class="'o_account_reports_use-custom ' + (context.date_filter == 'custom' and 'o_open_menu' or 'o_closed_menu')"><a>Custom</a></li>
+                <li t-att-class="'o_account_reports_use-custom ' + (context.date_filter == 'custom' and 'o_open_menu' or 'o_closed_menu')">Custom</li>
                 <li class="o_account_reports_custom-dates" data-value='custom' style='margin-left: 10px; margin-right: 10px;'>
-                    <label class="custom-date" t-if="report_type != 'no_date_range' and report_type != 'bank_reconciliation'" for="date_from">Start Date :</label>
-                    <div t-if="report_type != 'no_date_range' and report_type != 'bank_reconciliation'" class="form-group custom-date">
+                    <label class="custom-date" for="date_from">Start Date :</label>
+                    <div class="form-group custom-date">
                         <div class='o_datepicker date o_account_reports_datetimepicker' t-att-data-default-value="context.date_from">
                             <input type='text' class="o_datepicker_input" name="date_from" />
                             <span class="o_datepicker_button"/>
                         </div>
                     </div>
-                    <label class="custom-date" for="date_to" t-if="report_type != 'no_date_range' and report_type != 'bank_reconciliation'">End Date :</label>
+                    <label class="custom-date" for="date_to">End Date :</label>
                     <div class="form-group custom-date">
                         <div class='o_datepicker date o_account_reports_datetimepicker' t-att-data-default-value="context.date_to">
                             <input type='text' class="o_datepicker_input" name="date_to" />
