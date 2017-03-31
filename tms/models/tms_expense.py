@@ -618,7 +618,7 @@ class TmsExpense(models.Model):
                 (line.price_total if line.price_total <= 0.0
                     else 0.0),
                 result['journal_id'],
-                self.partner_id.id,
+                line.partner_id.id,
                 self.operating_unit_id.id)
         # if the expense line not be a invoice we make the move
         # line based in the subtotal
@@ -666,7 +666,7 @@ class TmsExpense(models.Model):
         # We only need all the lines except the fuel and the
         # made up expenses
         if line.line_type == 'fuel' and not line.control:
-            rec.fuel_vouchers(line)
+            self.create_fuel_vouchers(line)
         if line.line_type not in ('made_up_expense', 'fuel'):
             product_account = (
                 result['negative_account']
