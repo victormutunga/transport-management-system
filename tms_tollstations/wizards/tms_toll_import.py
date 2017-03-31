@@ -5,10 +5,10 @@
 
 import base64
 import os
+from datetime import datetime, timedelta
 import pytz
 from openerp import _, api, fields, models
 from openerp.exceptions import ValidationError
-from datetime import datetime, timedelta
 
 
 class TmsTollImport(models.TransientModel):
@@ -39,11 +39,13 @@ class TmsTollImport(models.TransientModel):
                 try:
                     create_date = datetime.strptime(
                         toll_datetime, "%Y/%m/%d %H:%M:%S")
+                except ValueError:
+                    create_date = datetime.strptime(
+                        toll_datetime, "%d/%m/%Y %H:%M:%S")
                 except:
                     create_date = datetime.strptime(
                         toll_datetime, "%d/%m/%Y %H:%M:%S")
                 txt_date = create_date + timedelta(hours=8)
-                tz = pytz.timezone(self._context['tz'])
                 create_date = create_date.replace(tzinfo=pytz.utc)
                 num_tag = split_line[0].replace('.', '')
                 txt_date = txt_date.strftime('%Y-%m-%d %H:%M:%S')

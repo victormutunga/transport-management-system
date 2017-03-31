@@ -6,7 +6,6 @@
 
 import requests
 import simplejson as json
-
 from openerp import _, api, exceptions, fields, models
 
 
@@ -15,7 +14,7 @@ class TmsRoute(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = 'Routes'
 
-    name = fields.Char('Route Name', size=64, required=True, select=True)
+    name = fields.Char('Route Name', size=64, required=True, index=True)
     departure_id = fields.Many2one('tms.place', 'Departure', required=True)
     arrival_id = fields.Many2one('tms.place', 'Arrival', required=True)
     distance = fields.Float(
@@ -24,8 +23,8 @@ class TmsRoute(models.Model):
     travel_time = fields.Float(
         'Travel Time (hrs)', digits=(14, 4),
         help='Route travel time (hours)')
-    notes = fields.Text('Notes')
-    active = fields.Boolean('Active', default=True)
+    notes = fields.Text()
+    active = fields.Boolean(default=True)
     driver_factor_ids = fields.One2many(
         'tms.factor', 'route_id',
         string="Expense driver factor")
@@ -109,7 +108,7 @@ class TmsRoute(models.Model):
                 result = json.loads(requests.get(url, params=params).content)
                 distance = duration = 0.0
                 if result['status'] == 'OK':
-                    if len(rec.route_place_ids):
+                    if rec.route_place_ids:
                         for row in result['rows']:
                             distance += (
                                 row['elements'][1]['distance']
@@ -132,7 +131,7 @@ class TmsRoute(models.Model):
             points = (
                 str(route.departure_id.latitude) + ',' +
                 str(route.departure_id.longitude) +
-                (',' if len(route.route_place_ids) else '') +
+                (',' if route.route_place_ids else '') +
                 ','.join([str(x.place_id.latitude) + ',' +
                          str(x.place_id.longitude)
                          for x in route.route_place_ids
