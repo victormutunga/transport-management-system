@@ -17,9 +17,11 @@ class FleetVehicle(models.Model):
     """ This ugly code is needed to override fields.function from old api.
     See https://github.com/odoo/odoo/issues/3922
     """
+
     _columns = {
         'name': old_fields.char('Name', required=True),
     }
+
     operating_unit_id = fields.Many2one(
         'operating.unit', string='Operating Unit')
     year_model = fields.Char()

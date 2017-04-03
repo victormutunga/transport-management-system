@@ -5,11 +5,12 @@
 {
     'name': "Highway tollstations",
     'summary': "Highway tollstations",
-    "author": "Jarsa Sistemas",
+    "author": "Jarsa Sistemas, Vauxoo",
     "website": "https://www.jarsa.com.mx",
     'category': 'Transport',
     'version': '9.0.0.1.0',
     'depends': ['tms'],
+    "license": "AGPL-3",
     'data': [
         'views/tms_expense_line_view.xml',
         'views/tms_toll_data_view.xml',
