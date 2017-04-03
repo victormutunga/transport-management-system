@@ -574,28 +574,27 @@ class TmsExpense(models.Model):
                 raise ValidationError(
                     _('Warning! You must have configured the accounts'
                         'of the tms for the Driver'))
-
-        # We check if the advance amount is higher than zero to create
-        # a move line
-        if rec.amount_advance > 0:
-            move_line = rec.prepare_move_line(
-                _('Advance Discount'),
-                rec.name,
-                advance_account_id,
-                0.0,
-                rec.amount_advance,
-                journal_id,
-                rec.employee_id.address_home_id.id,
-                rec.operating_unit_id.id)
-            move_lines.append(move_line)
-        return {
-            'move_lines': move_lines,
-            'invoices': invoices,
-            'move_obj': move_obj,
-            'journal_id': journal_id,
-            'advance_account_id': advance_account_id,
-            'negative_account': negative_account,
-            'driver_account_payable': driver_account_payable,
+            # We check if the advance amount is higher than zero to create
+            # a move line
+            if rec.amount_advance > 0:
+                move_line = rec.prepare_move_line(
+                    _('Advance Discount'),
+                    rec.name,
+                    advance_account_id,
+                    0.0,
+                    rec.amount_advance,
+                    journal_id,
+                    rec.employee_id.address_home_id.id,
+                    rec.operating_unit_id.id)
+                move_lines.append(move_line)
+            return {
+                'move_lines': move_lines,
+                'invoices': invoices,
+                'move_obj': move_obj,
+                'journal_id': journal_id,
+                'advance_account_id': advance_account_id,
+                'negative_account': negative_account,
+                'driver_account_payable': driver_account_payable,
         }
 
     @api.multi
@@ -820,12 +819,12 @@ class TmsExpense(models.Model):
     @api.multi
     def create_advance_line(self, advance, travel):
         if advance.state not in ('confirmed', 'cancel'):
-                    raise ValidationError(_(
-                        'Oops! All the advances must be confirmed'
-                        ' or cancelled \n '
-                        'Name of advance not confirmed or cancelled: ' +
-                        advance.name +
-                        '\n State: ' + advance.state))
+            raise ValidationError(_(
+                'Oops! All the advances must be confirmed'
+                ' or cancelled \n '
+                'Name of advance not confirmed or cancelled: ' +
+                advance.name +
+                '\n State: ' + advance.state))
         if not advance.paid:
             if advance.move_id.matched_percentage == 1.0:
                 advance_move = advance.move_id.line_ids[-1]

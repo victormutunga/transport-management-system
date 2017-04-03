@@ -42,9 +42,6 @@ class TmsTollImport(models.TransientModel):
                 except ValueError:
                     create_date = datetime.strptime(
                         toll_datetime, "%d/%m/%Y %H:%M:%S")
-                except:
-                    create_date = datetime.strptime(
-                        toll_datetime, "%d/%m/%Y %H:%M:%S")
                 txt_date = create_date + timedelta(hours=8)
                 create_date = create_date.replace(tzinfo=pytz.utc)
                 num_tag = split_line[0].replace('.', '')
