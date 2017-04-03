@@ -23,7 +23,7 @@ class tms_retention(models.Model):
     mixed = fields.Boolean(
         string='Mixed',
     )
-    fired_amount = fields.Float(
+    fixed_amount = fields.Float(
         'Fired Amount',
     )
     employee_ids = fields.One2many(
