@@ -70,6 +70,21 @@ class TmsFactor(models.Model):
             self.name = values[self.factor_type]
 
     @api.multi
+    def get_driver_amount(self, employee, driver_value, amount):
+        if employee:
+            if employee.income_percentage == 0.0:
+                raise ValidationError(_(
+                    'The employee must have a income '
+                    'percentage value'))
+            else:
+                amount += driver_value * (employee.income_percentage / 100)
+        else:
+            raise ValidationError(_(
+                'Invalid parameter you can '
+                'use this factor only with drivers'))
+        return amount
+
+    @api.multi
     def get_amount(self, weight=0.0, distance=0.0, distance_real=0.0, qty=0.0,
                    volume=0.0, income=0.0, employee=False):
         factor_list = {'weight': weight, 'distance': distance,
@@ -82,26 +97,11 @@ class TmsFactor(models.Model):
             elif rec.factor_type == 'percent':
                 amount += income * (rec.factor / 100)
             elif rec.factor_type == 'percent_driver':
-                if employee:
-                    if employee.income_percentage == 0.0:
-                        raise ValidationError(
-                            _('The employee must have a income percentage '
-                              'value'))
-                    else:
-                        amount += income * (employee.income_percentage / 100)
-                else:
-                    raise ValidationError(
-                        _('Invalid parameter you can use this factor only with'
-                          ' drivers'))
+                amount += rec.get_driver_amount(
+                    employee, income, amount)
             elif rec.factor_type == 'amount_driver':
-                if employee:
-                    if employee.income_percentage == 0.0:
-                        raise ValidationError(
-                            _('The employee must have a income percentage '
-                              'value'))
-                    else:
-                        amount += rec.fixed_amount * (
-                            employee.income_percentage / 100)
+                amount += rec.get_driver_amount(
+                    employee, rec.fixed_amount, amount)
             else:
                 for key, value in factor_list.items():
                     if rec.factor_type == key:
