@@ -34,6 +34,7 @@ class HrEmployee(models.Model):
     income_percentage = fields.Float()
     license_valid_from = fields.Date()
     license_expiration = fields.Date()
+    outsourcing = fields.Boolean(string='Outsourcing?')
 
     @api.depends('license_expiration')
     def _compute_days_to_expire(self):
