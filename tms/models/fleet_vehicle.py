@@ -5,9 +5,8 @@
 
 from datetime import datetime
 
-from openerp import _, api, fields, models
+from openerp import api, fields, models
 from openerp.osv import fields as old_fields
-from openerp.exceptions import ValidationError
 
 
 class FleetVehicle(models.Model):
@@ -23,9 +22,9 @@ class FleetVehicle(models.Model):
     }
     operating_unit_id = fields.Many2one(
         'operating.unit', string='Operating Unit')
-    year_model = fields.Char(string='Year Model')
-    serial_number = fields.Char(string='Serial Number')
-    registration = fields.Char(string='Registration')
+    year_model = fields.Char()
+    serial_number = fields.Char()
+    registration = fields.Char()
     fleet_type = fields.Selection(
         [('tractor', 'Motorized Unit'),
          ('trailer', 'Trailer'),
@@ -41,14 +40,14 @@ class FleetVehicle(models.Model):
         domain=[('driver', '=', True)])
     expense_ids = fields.One2many('tms.expense', 'unit_id', string='Expenses')
     engine_id = fields.Many2one('fleet.vehicle.engine', string='Engine')
-    supplier_unit = fields.Boolean(string='Supplier Unit')
+    supplier_unit = fields.Boolean()
     unit_extradata = fields.One2many(
         'tms.extradata', 'vehicle_id',
         string='Extra Data Fields',
         readonly=False)
-    insurance_policy = fields.Char(string='Insurance Policy')
+    insurance_policy = fields.Char()
     insurance_policy_data = fields.Char()
-    insurance_expiration = fields.Date(string='Insurance Policy Expiration')
+    insurance_expiration = fields.Date()
     insurance_supplier_id = fields.Many2one(
         'res.partner', string='Insurance Supplier')
     insurance_days_to_expire = fields.Integer(
@@ -66,5 +65,3 @@ class FleetVehicle(models.Model):
                 rec.insurance_days_to_expire = delta.days + 1
             else:
                 rec.insurance_days_to_expire = 0
-                raise ValidationError(
-                    _('The date of the insurance policy is expired'))

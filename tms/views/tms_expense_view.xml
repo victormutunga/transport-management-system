@@ -82,6 +82,17 @@
                             </page>
                             <page string="Travels">
                                 <separator colspan="4" string="Travels for Driver"/>
+                                <group col="4" colspan="4">
+                                    <group col="2" colspan="2">
+                                        <field name='start_date'/>
+                                    </group>
+                                    <group col="2" colspan="2">
+                                        <field name='end_date'/>
+                                    </group>
+                                    <group col="2" colspan="2">
+                                        <field name='travel_days'/>
+                                    </group>
+                                </group>
                                 <field attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" colspan="4" domain="[('employee_id','=', employee_id), ('state','=', 'done'), ('state','!=','cancel'), ('unit_id', '=', unit_id)]" context="{'tree_view_ref' : 'tms.view_tms_travel_tree_customer', 'form_view_ref': 'tms.view_tms_travel_form_expense'}" name="travel_ids" nolabel="1">
                                     <tree default_order="name" string="">
                                         <field invisible="1" name="state"/>
@@ -99,32 +110,6 @@
                                         <field name="odometer" sum="Distancia Real"/>
                                     </tree>
                                 </field>
-                                 <group col="4" colspan="4">
-                                    <group col="2" colspan="2">
-                                        <field name='start_date'/>
-                                    </group>
-                                    <group col="2" colspan="2">
-                                        <field name='end_date'/>
-                                    </group>
-                                    <group col="2" colspan="2">
-                                        <field name='travel_days'/>
-                                    </group>
-                                </group>
-                                <newline/>
-                                <separator colspan="4" string="Global Performance"/>
-                                <group col="4" colspan="4">
-                                    <group col="2" colspan="2" string="Distances">
-                                        <field attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="distance_routes"/>
-                                        <field attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="distance_real"/>
-                                        <field attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="current_odometer"/>
-                                        <field attrs="{'invisible':[('odometer_log_id','=',False)], 'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="vehicle_id"/>
-                                        <field attrs="{'invisible':[('odometer_log_id','=',False)], 'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="odometer_log_id"/>
-                                    </group>
-                                    <group col="2" colspan="2" string="Fuel">
-                                        <field name="fuel_qty"/>
-                                        <field name="fuel_efficiency"/>
-                                    </group>
-                                </group>
                             </page>
                             <page string="Expense Lines">
                                 <field attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" context="{'default_expense_id': active_id, 'group_by_line_type': 1, 'default_travel_ids': travel_ids}" name="expense_line_ids" nolabel="1"/>
@@ -154,6 +139,35 @@
                                     <group>
                                         <field name='paid'/>
                                         <field name='payment_move_id'/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Statistics">
+                                <group col="4" colspan="4" string="Distances">
+                                    <group col="2" colspan="2" string="Planned">
+                                        <field name='distance_loaded'/>
+                                        <field name='distance_empty'/>
+                                        <field attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="distance_routes"/>
+                                        <field attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="current_odometer"/>
+                                        <field attrs="{'invisible':[('odometer_log_id','=',False)], 'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="vehicle_id"/>
+                                        <field attrs="{'invisible':[('odometer_log_id','=',False)], 'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="odometer_log_id"/>
+                                    </group>
+                                    <group col="2" colspan="2" string="Real">
+                                        <field name='distance_loaded_real'/>
+                                        <field name='distance_empty_real'/>
+                                        <field attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="distance_real"/>
+                                    </group>
+                                </group>
+                                <group col="4" colspan="4" string="Fuel">
+                                    <group col="2" colspan="2">
+                                        <field name="fuel_qty"/>
+                                        <field name="fuel_efficiency"/>
+                                        <field name="fuel_efficiency_real"></field>
+                                    </group>
+                                    <group col="2" colspan="2" >
+                                       <field name="income_km" widget="monetary" options="{'currency_id': 'currency_id'}"></field>
+                                       <field name="expense_km" widget="monetary" options="{'currency_id': 'currency_id'}"></field>
+                                       <field name="percentage_km" widget="progressbar"></field>
                                     </group>
                                 </group>
                             </page>

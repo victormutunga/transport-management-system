@@ -13,13 +13,14 @@ class TmsFactor(models.Model):
     _name = "tms.factor"
     _description = "Factors to calculate Payment (Driver/Supplier) "
     "& Client charge"
+    _order = "sequence"
 
     name = fields.Char(required=True)
     route_id = fields.Many2one('tms.route', string="Route")
     travel_id = fields.Many2one('tms.travel', string='Travel')
     waybill_id = fields.Many2one(
         'tms.waybill', string='waybill',
-        select=True, readonly=True)
+        index=True, readonly=True)
     category = fields.Selection([
         ('driver', 'Driver'),
         ('customer', 'Customer'),
@@ -33,7 +34,7 @@ class TmsFactor(models.Model):
         ('volume', 'Volume'),
         ('percent', 'Income Percent'),
         ('percent_driver', 'Income Percent per Driver'),
-        ('amount_driver', 'Amount Percent per Driver')], string='Factor Type',
+        ('amount_driver', 'Amount Percent per Driver')],
         required=True,
         help='For next options you have to type Ranges or Fixed Amount\n - '
              'Distance Route (Km/mi)\n - Distance Real (Km/Mi)\n - Weight\n'
@@ -48,9 +49,7 @@ class TmsFactor(models.Model):
     sequence = fields.Integer(
         help="Gives the sequence calculation for these factors.",
         default=10)
-    notes = fields.Text('Notes')
-
-    _order = "sequence"
+    notes = fields.Text()
 
     @api.onchange('factor_type')
     def _onchange_factor_type(self):

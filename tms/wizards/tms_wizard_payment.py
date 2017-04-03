@@ -15,6 +15,8 @@ class TmsWizardPayment(models.TransientModel):
         'account.journal', string='Bank Account',
         domain="[('type', '=', 'bank')]")
     amount_total = fields.Float(compute='_compute_amount_total')
+    date = fields.Date(required=True, default=fields.Date.today())
+    notes = fields.Text()
 
     @api.depends('journal_id')
     def _compute_amount_total(self):
@@ -109,10 +111,11 @@ class TmsWizardPayment(models.TransientModel):
                 bank_line['currency_id'] = currency.id
             move_lines.append((0, 0, bank_line))
             move = {
-                'date': fields.Date.today(),
+                'date': rec.date,
                 'journal_id': rec.journal_id.id,
                 'ref': name,
                 'line_ids': [line for line in move_lines],
+                'narration': rec.notes,
             }
             move_id = self.env['account.move'].create(move)
             move_id.post()
@@ -124,9 +127,9 @@ class TmsWizardPayment(models.TransientModel):
                         ('account_id.internal_type', '=', 'payable'),
                         ('move_id', '!=', move_id.id)])
                     if len(line) > 1:
-                        raise ValidationError(
+                        raise ValidationError(_(
                             'The driver advance account is defined as '
-                            'payable. %s ' % line[0].name)
+                            'payable. %s ' % line[0].name))
                     move_ids.append(line.id)
                     move_ids.append(move_line.id)
                     reconcile_ids = self.env['account.move.line'].browse(
