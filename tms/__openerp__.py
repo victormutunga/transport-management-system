@@ -8,7 +8,7 @@
     "name": "Freight Management",
     "version": "9.0.0.1.0",
     "category": "Transport",
-    "author": "Jarsa Sistemas, Argil Consulting, Vauxoo",
+    "author": "Jarsa Sistemas, Argil Consulting",
     "website": "https://www.jarsa.com.mx/page/transport-management-system",
     "depends": [
         "account_accountant",

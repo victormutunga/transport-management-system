@@ -5,7 +5,7 @@
 {
     'name': "Highway tollstations",
     'summary': "Highway tollstations",
-    "author": "Jarsa Sistemas, Vauxoo",
+    "author": "Jarsa Sistemas",
     "website": "https://www.jarsa.com.mx",
     'category': 'Transport',
     'version': '9.0.0.1.0',
