@@ -587,15 +587,16 @@ class TmsExpense(models.Model):
                     rec.employee_id.address_home_id.id,
                     rec.operating_unit_id.id)
                 move_lines.append(move_line)
-            return {
+            result = {
                 'move_lines': move_lines,
                 'invoices': invoices,
                 'move_obj': move_obj,
                 'journal_id': journal_id,
                 'advance_account_id': advance_account_id,
                 'negative_account': negative_account,
-                'driver_account_payable': driver_account_payable,
-        }
+                'driver_account_payable': driver_account_payable
+            }
+            return result
 
     @api.multi
     def check_expenseline_invoice(self, line, result, product_account):
@@ -894,8 +895,8 @@ class TmsExpense(models.Model):
     @api.multi
     def create_salary_line(self, travel):
         for rec in self:
-            product_id = self.env['product.product'].search(
-                    [('tms_product_category', '=', 'salary')])
+            product_id = self.env['product.product'].search([
+                ('tms_product_category', '=', 'salary')])
             if not product_id:
                 raise ValidationError(_(
                     'Oops! You must create a product for the'
