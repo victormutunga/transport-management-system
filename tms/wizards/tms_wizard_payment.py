@@ -53,13 +53,6 @@ class TmsWizardPayment(models.TransientModel):
             amount_bank = 0.0
             amount_currency = 0.0
             name = 'Payment of'
-            bank_line = {
-                'name': name,
-                'account_id': bank_account_id,
-                'debit': 0.0,
-                'credit': amount_bank,
-                'journal_id': rec.journal_id.id,
-            }
             for obj in active_ids:
                 name = name + ' / ' + obj.name
                 if obj.state not in ['confirmed', 'closed'] or obj.paid:
@@ -77,16 +70,26 @@ class TmsWizardPayment(models.TransientModel):
                     'operating_unit_id': obj.operating_unit_id.id,
                 }
                 model_amount = {
-                    'tms.advance': obj.amount,
-                    'tms.expense': obj.amount_balance}
+                    'tms.advance': obj.amount
+                    if hasattr(obj, 'amount') else 0.0,
+                    'tms.expense': obj.amount_balance
+                    if hasattr(obj, 'amount_balance') else 0.0}
                 # Createng counterpart move lines method explained above
-                counterpart_move_line = self.create_counterpart(
+                counterpart_move_line, amount_bank = self.create_counterpart(
                     model_amount, currency, obj,
                     amount_currency, amount_bank, counterpart_move_line)
                 move_lines.append((0, 0, counterpart_move_line))
             if amount_currency > 0.0:
                 bank_line['amount_currency'] = amount_currency
                 bank_line['currency_id'] = currency.id
+            bank_line = {
+                'name': name,
+                'account_id': bank_account_id,
+                'debit': 0.0,
+                'credit': amount_bank,
+                'journal_id': rec.journal_id.id,
+                'operating_unit_id': obj.operating_unit_id.id,
+            }
             move_lines.append((0, 0, bank_line))
             move = {
                 'date': rec.date,
@@ -123,10 +126,11 @@ class TmsWizardPayment(models.TransientModel):
                     else:
                         amount_bank += value
                         counterpart_move_line['debit'] = value
-        return counterpart_move_line
+        return counterpart_move_line, amount_bank
 
     @api.multi
     def create_moves_and_reconciles(self, move, active_ids):
+        import ipdb; ipdb.set_trace()
         move_id = self.env['account.move'].create(move)
         move_id.post()
         for move_line in move_id.line_ids:
