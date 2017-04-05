@@ -871,22 +871,23 @@ class TmsExpense(models.Model):
                     fuel_log.name +
                     '\n State: ' + fuel_log.state))
             else:
-                if not fuel_log.expense_control:
-                    rec.expense_line_ids.create({
-                        'name': _(
-                            "Fuel voucher: ") + str(fuel_log.name),
-                        'travel_id': travel.id,
-                        'expense_id': rec.id,
-                        'line_type': 'fuel',
-                        'product_id': fuel_log.product_id.id,
-                        'product_qty': fuel_log.product_qty,
-                        'product_uom_id': (
-                            fuel_log.product_id.uom_id.id),
-                        'unit_price': fuel_log.price_total,
-                        'is_invoice': fuel_log.invoice_paid,
-                        'invoice_id': fuel_log.invoice_id.id,
-                        'control': True,
+                fuel_expense = rec.expense_line_ids.create({
+                       'name': _(
+                           "Fuel voucher: ") + str(fuel_log.name),
+                       'travel_id': travel.id,
+                       'expense_id': rec.id,
+                       'line_type': 'fuel',
+                       'product_id': fuel_log.product_id.id,
+                       'product_qty': fuel_log.product_qty,
+                       'product_uom_id': (
+                           fuel_log.product_id.uom_id.id),
+                       'unit_price': fuel_log.price_total,
+                       'is_invoice': fuel_log.invoice_paid,
+                       'invoice_id': fuel_log.invoice_id.id,
+                       'control': True,
                     })
+                if fuel_log.expense_control:
+                    fuel_expense.name = fuel_expense.product_id.name
                 fuel_log.write({
                     'state': 'closed',
                     'expense_id': rec.id
