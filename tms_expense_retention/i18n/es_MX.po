@@ -174,12 +174,6 @@ msgid "Productivity Percentage"
 msgstr "Productivity Percentage"
 
 #. module: tms_expense_retention
-#: model:ir.model.fields,field_description:tms_expense_retention.field_hr_employee_retention_id
-#: model:ir.ui.menu,name:tms_expense_retention.menu_custom_retention
-msgid "Retention"
-msgstr "Retention"
-
-#. module: tms_expense_retention
 #: model:ir.ui.view,arch_db:tms_expense_retention.view_tms_retention
 msgid "Retention -"
 msgstr "Retention -"

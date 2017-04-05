@@ -28,7 +28,7 @@
                                 <field name="product_id"/>
                                 <field name="fixed_amount"/>
                             </group>
-                                <field name="employee_ids" nolabel="1"/>
+                                <field name="employee_ids" nolabel="1" domain="[('driver', '=', True)]"/>
                         </group>
                     </sheet>
                 </form>

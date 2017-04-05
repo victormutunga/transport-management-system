@@ -26,9 +26,8 @@ class tms_retention(models.Model):
     fixed_amount = fields.Float(
         'Fired Amount',
     )
-    employee_ids = fields.One2many(
+    employee_ids = fields.Many2many(
         'hr.employee',
-        'retention_id',
         string='Employees',
     )
     product_id = fields.Many2one(

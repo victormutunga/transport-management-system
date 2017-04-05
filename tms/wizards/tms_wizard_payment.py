@@ -130,7 +130,6 @@ class TmsWizardPayment(models.TransientModel):
 
     @api.multi
     def create_moves_and_reconciles(self, move, active_ids):
-        import ipdb; ipdb.set_trace()
         move_id = self.env['account.move'].create(move)
         move_id.post()
         for move_line in move_id.line_ids:
