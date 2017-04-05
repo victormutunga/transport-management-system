@@ -30,6 +30,7 @@
                         <newline/>
                         <field name="latitude"/>
                         <field name="longitude"/>
+                        <field name="point" widget="geo_edit_map"/>
                     </group>
                 </form>
             </field>
