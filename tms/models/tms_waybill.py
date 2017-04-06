@@ -135,7 +135,7 @@ class TmsWaybill(models.Model):
         string='Other')
     amount_untaxed = fields.Float(
         compute='_compute_amount_untaxed',
-        string='SubTotal')
+        string='SubTotal', store=True)
     amount_tax = fields.Float(
         compute='_compute_amount_tax',
         string='Taxes')
