@@ -13,23 +13,21 @@ class TmsExpense(models.Model):
     def get_retention(self):
         for rec in self:
             obj_retention = self.env['tms.retention']
-            retentions = [x.product_id for x in obj_retention.search([])]
+            retentions = [x for x in obj_retention.search([])]
             if retentions:
-                for obj in retentions:
+                for retention in retentions:
                     value = 0.0
                     product = self.env['product.product'].search(
-                        [('id', '=', obj.id),
+                        [('id', '=', retention.product_id.id),
                          ('apply_for_retention', '=', True)],
                         limit=1)
-                    if not product:
-                        raise ValidationError(
-                            _('You must have a product called %s' % obj.name))
-                    retention = obj_retention.search([
-                        ('product_id', '=', product.id)])
-                    days = int(rec.travel_days.split('D')[0])
                     if retention.employee_ids:
                         if rec.employee_id in retention.employee_ids:
-                            value = retention.factor * days
+                            if retention.retention_type == 'days':
+                                days = int(rec.travel_days.split('D')[0])
+                                value = retention.factor * days
+                            else:
+                                value = rec.amount_salary * retention.factor
                     else:
                         value = retention.factor * days
                     if value > 0.0:

@@ -9,7 +9,8 @@
                     <header>
                         <button class="oe_highlight" name="execute" string="Apply" type="object"/>or
                         
-                        <button class="oe_link" name="cancel" string="Cancel" type="object"/></header>
+                        <button class="oe_link" name="cancel" string="Cancel" type="object"/>
+                    </header>
                     <group id="tms" string="TMS">
                         <label for="id" string="Expense Currency Rate"/>
                         <div>
