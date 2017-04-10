@@ -251,6 +251,16 @@ class TmsWaybill(models.Model):
         default['travel_ids'] = False
         return super(TmsWaybill, self).copy(default)
 
+    @api.multi
+    def write(self, values):
+        for rec in self:
+            if 'partner_id' in values:
+                for travel in rec.travel_ids:
+                    travel.partner_ids = False
+                    travel._compute_partner_ids()
+            res = super(TmsWaybill, self).write(values)
+            return res
+
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         if self.partner_id:
