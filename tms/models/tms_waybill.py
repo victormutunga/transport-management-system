@@ -280,15 +280,6 @@ class TmsWaybill(models.Model):
                 self.user_id.name, fields.Date.today()))
         return True
 
-    # @api.depends('travel_ids')
-    # def _compute_waybill_type(self):
-    #     for waybill in self:
-    #         for travel in waybill.travel_ids:
-    #             waybill.waybill_type = (
-    #                 'outsourced'
-    #                 if travel.unit_id.supplier_unit
-    #                 else 'own')
-
     @api.multi
     @api.depends('invoice_id')
     def _compute_invoice_paid(self):
