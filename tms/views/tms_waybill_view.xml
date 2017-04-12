@@ -114,7 +114,6 @@
                             </page>
                             <page string="Extra Fields">
                                 <group col="4" colspan="4">
-                                    <field name="waybill_type"/>
                                     <newline/>
                                     <field colspan="4" context="{'default_waybill_id': active_id, 'active_model_base': active_model}" name="waybill_extradata" nolabel="1">
                                         <tree string="Extra Fields">
@@ -198,6 +197,7 @@
         <record id="view_tms_waybill_form_expense" model="ir.ui.view">
             <field name="name">tms.waybill.form</field>
             <field name="model">tms.waybill</field>
+            <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <form string="Waybill">
                     <sheet>

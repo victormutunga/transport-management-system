@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Copyright 2012, Israel Cruz Argil, Argil Consulting
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
@@ -7,8 +8,8 @@
     "name": "Freight Management",
     "version": "9.0.0.1.0",
     "category": "Transport",
-    "author": "Argil Consulting, Jarsa Sistemas",
-    "website": "http://www.argil.mx, https://www.jarsa.com.mx",
+    "author": "Jarsa Sistemas, Argil Consulting",
+    "website": "https://www.jarsa.com.mx/page/transport-management-system",
     "depends": [
         "account_accountant",
         "fleet",
@@ -58,7 +59,6 @@
         'views/tms_custom_house_view.xml',
         'views/tms_custom_view.xml',
         'views/res_company_view.xml',
-        'views/tms_toll_data_view.xml',
         'data/product_product_data.xml',
         'data/ir_sequence_data.xml',
         'data/tms_base_data.xml',

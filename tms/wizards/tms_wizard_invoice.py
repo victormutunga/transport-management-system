@@ -135,7 +135,8 @@ class TmsWizardInvoice(models.TransientModel):
             'type': res['invoice_type'],
             'invoice_line_ids': [line for line in res['lines']],
         })
-        records.write({'invoice_id': invoice_id.id})
+        for record in records:
+            record.write({'invoice_id': invoice_id.id})
         message = _(
             '<strong>Invoice of:</strong> %s </br>'
             '<strong>Created by: </strong>%s </br>'

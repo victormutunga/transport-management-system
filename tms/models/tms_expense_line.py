@@ -67,7 +67,7 @@ class TmsExpenseLine(models.Model):
         string='Driver')
     date = fields.Date()
     state = fields.Char(readonly=True)
-    control = fields.Boolean('Control')
+    control = fields.Boolean()
     automatic = fields.Boolean(
         help="Check this if you want to create Advances and/or "
         "Fuel Vouchers for this line automatically")

@@ -23,7 +23,13 @@
             <field name="name">fleet.vehicle.tms.form</field>
             <field name="model">fleet.vehicle</field>
             <field name="inherit_id" ref="fleet.fleet_vehicle_form"/>
+            <field name="priority">110</field> <!--Priority greater than 100-->
             <field name="arch" type="xml">
+                <xpath expr="//form/sheet" position="before">
+                    <div class="alert alert-info" role="alert" style="margin-bottom:0px;" attrs="{'invisible': [('insurance_days_to_expire','!=', 0)]}">
+                        <h4><center>The date of the insurance policy is expired</center></h4>
+                    </div>
+                </xpath>
                 <xpath expr="//label[@for='model_id']" name="model_id" position="before">
                     <label class="oe_edit_only" for="name"/>
                     <h1>

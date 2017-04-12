@@ -18,7 +18,7 @@ class TmsPlace(geo_model.GeoModel):
     _name = 'tms.place'
     _description = 'Cities / Places'
 
-    name = fields.Char('Place', size=64, required=True, select=True)
+    name = fields.Char('Place', size=64, required=True, index=True)
     complete_name = fields.Char(compute='_compute_complete_name')
     state_id = fields.Many2one(
         'res.country.state',
@@ -28,10 +28,10 @@ class TmsPlace(geo_model.GeoModel):
         related='state_id.country_id',
         string='Country')
     latitude = fields.Float(
-        'Latitude', required=False, digits=(20, 10),
+        required=False, digits=(20, 10),
         help='GPS Latitude')
     longitude = fields.Float(
-        'Longitude', required=False, digits=(20, 10),
+        required=False, digits=(20, 10),
         help='GPS Longitude')
     point = geo_fields.GeoPoint(
         string='Coordinate',

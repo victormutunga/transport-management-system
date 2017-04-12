@@ -31,11 +31,12 @@ class HrEmployee(models.Model):
     operating_unit_id = fields.Many2one(
         'operating.unit', 'Operating Unit')
     driver_license = fields.Char(string="License ID")
-    license_type = fields.Char(string="License Type")
+    license_type = fields.Char()
     days_to_expire = fields.Integer(compute='_compute_days_to_expire')
     income_percentage = fields.Float()
     license_valid_from = fields.Date()
     license_expiration = fields.Date()
+    outsourcing = fields.Boolean(string='Outsourcing?')
 
     @api.depends('license_expiration')
     def _compute_days_to_expire(self):

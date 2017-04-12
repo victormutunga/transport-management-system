@@ -22,11 +22,9 @@ class TmsAdvance(models.Model):
          ('confirmed', 'Confirmed'),
          ('closed', 'Closed'),
          ('cancel', 'Cancelled'), ],
-        string='State',
         readonly=True,
         default='draft')
     date = fields.Date(
-        'Date',
         required=True,
         default=fields.Date.today)
     travel_id = fields.Many2one(
@@ -72,10 +70,6 @@ class TmsAdvance(models.Model):
         'product.product', string='Product', required=True,
         domain=[('tms_product_category', '=', 'real_expense')])
 
-    _sql_constraints = [
-        ('name_uniq', 'unique(name)', 'Advance number must be unique !'),
-    ]
-
     @api.multi
     @api.depends('travel_id')
     def _compute_unit_id(self):
@@ -111,10 +105,10 @@ class TmsAdvance(models.Model):
     @api.depends('payment_move_id')
     def _compute_paid(self):
         for rec in self:
+            status = False
             if rec.payment_move_id:
-                rec.paid = True
-            else:
-                rec.paid = False
+                status = True
+            rec.paid = status
 
     @api.multi
     def action_authorized(self):
