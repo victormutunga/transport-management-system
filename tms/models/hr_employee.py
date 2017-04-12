@@ -24,6 +24,8 @@ class HrEmployee(models.Model):
         help='Used to define if this person will be used as a Driver')
     tms_advance_account_id = fields.Many2one(
         'account.account', 'Advance Account')
+    tms_loan_account_id = fields.Many2one(
+        'account.account', 'Loan Account')
     tms_expense_negative_account_id = fields.Many2one(
         'account.account', 'Negative Balance Account')
     operating_unit_id = fields.Many2one(

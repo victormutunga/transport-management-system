@@ -26,7 +26,8 @@ class TmsWizardPayment(models.TransientModel):
             active_ids = self.env[self._context.get('active_model')].browse(
                 self._context.get('active_ids'))
             for obj in active_ids:
-                if self._context.get('active_model') == 'tms.advance':
+                if self._context.get('active_model') in [
+                        'tms.advance', 'tms.expense.loan']:
                     amount_total += currency.compute(
                         obj.amount, self.env.user.currency_id)
                 elif self._context.get('active_model') == 'tms.expense':

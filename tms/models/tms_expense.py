@@ -7,6 +7,7 @@ from __future__ import division
 import datetime
 from openerp import _, api, fields, models
 from openerp.exceptions import ValidationError
+from datetime import datetime
 
 
 class TmsExpense(models.Model):
@@ -135,6 +136,8 @@ class TmsExpense(models.Model):
         readonly=True)
     advance_ids = fields.One2many(
         'tms.advance', 'expense_id', string='Advances', readonly=True)
+    loan_ids = fields.One2many('tms.expense.loan', 'expense_id',
+                               string='Loans', readonly=True)
     fuel_qty_real = fields.Float(
         help="Fuel Qty computed based on Distance Real and Global Fuel "
         "Efficiency Real obtained by electronic reading and/or GPS")
@@ -225,9 +228,9 @@ class TmsExpense(models.Model):
     def _compute_travel_days(self):
         for rec in self:
             if rec.start_date and rec.end_date:
-                strp_start_date = datetime.datetime.strptime(
+                strp_start_date = datetime.strptime(
                     rec.start_date, "%Y-%m-%d %H:%M:%S")
-                strp_end_date = datetime.datetime.strptime(
+                strp_end_date = datetime.strptime(
                     rec.end_date, "%Y-%m-%d %H:%M:%S")
                 difference = strp_end_date - strp_start_date
                 hours = int(difference.seconds / 3600)
@@ -434,6 +437,11 @@ class TmsExpense(models.Model):
         for rec in self:
             rec.current_odometer = rec.unit_id.odometer
 
+    @api.depends('travel_ids')
+    def _compute_distance_real(self):
+        for rec in self:
+            rec.distance_real = 1.0
+
     @api.model
     def create(self, values):
         expense = super(TmsExpense, self).create(values)
@@ -484,7 +492,7 @@ class TmsExpense(models.Model):
                         '<li><b>Approved at: </b>%s</li>'
                         '</ul>') % (
                             self.env.user.name,
-                            fields.Date.today())
+                            fields.Datetime.now())
             rec.message_post(body=message)
         self.state = 'approved'
 
@@ -496,7 +504,7 @@ class TmsExpense(models.Model):
                         '<li><b>Drafted at: </b>%s</li>'
                         '</ul>') % (
                             self.env.user.name,
-                            fields.Date.today())
+                            fields.Datetime.now())
             rec.message_post(body=message)
         self.state = 'draft'
 
@@ -597,7 +605,6 @@ class TmsExpense(models.Model):
                 'driver_account_payable': driver_account_payable
             }
             return result
-
     @api.multi
     def check_expenseline_invoice(self, line, result, product_account):
         for rec in self:
@@ -761,7 +768,7 @@ class TmsExpense(models.Model):
                         '<li><b>Confirmed at: </b>%s</li>'
                         '</ul>') % (
                             self.env.user.name,
-                            fields.Date.today())
+                            fields.Datetime.now())
             rec.message_post(body=message)
 
     @api.multi
@@ -806,10 +813,10 @@ class TmsExpense(models.Model):
             travels.write({'expense_id': False, 'state': 'done'})
             advances = self.env['tms.advance'].search(
                 [('expense_id', '=', rec.id)])
-            for adv in advances:
-                if adv.state != 'cancel':
-                    adv.state = 'confirmed'
-                adv.expense_id = False
+            advances.write({
+                'expense_id': False,
+                'state': 'confirmed'
+            })
             fuel_logs = self.env['fleet.vehicle.log.fuel'].search(
                 [('expense_id', '=', rec.id)])
             fuel_logs.write({
@@ -917,11 +924,92 @@ class TmsExpense(models.Model):
                 })
 
     @api.multi
+    def get_expense_loan(self):
+        loans = self.env['tms.expense.loan'].search([
+            ('employee_id', '=', self.employee_id.id)])
+        methods = {
+            'monthly': 30,
+            'fortnightly': 15,
+            'weekly': 7,
+        }
+        loans_unpaid = []
+        for loan in loans:
+            total_discount = 0.0
+            payment = loan.payment_move_id.id
+            ac_loan = loan.active_loan
+            if not loan.lock and loan.state == 'confirmed' and not payment:
+                loans_unpaid.append(loan.name)
+            if not loan.lock and loan.state == 'confirmed' and payment:
+                if ac_loan:
+                    loan.write({
+                        'expense_id': self.id
+                        })
+                    if loan.balance > 0.0:
+                        if loan.discount_type == 'fixed':
+                            total = loan.fixed_discount
+                        elif loan.discount_type == 'percent':
+                            total = loan.amount * (
+                                loan.percent_discount / 100)
+                        for key, value in methods.items():
+                            if loan.discount_method == key:
+                                if loan.expense_ids:
+                                    dates = []
+                                    for loan_date in loan.expense_ids:
+                                        dates.append(loan_date.date)
+                                    dates.sort(reverse=True)
+                                    end_date = datetime.strptime(
+                                        dates[0], "%Y-%m-%d")
+                                else:
+                                    end_date = datetime.strptime(
+                                        loan.date_confirmed, "%Y-%m-%d")
+                                start_date = datetime.strptime(
+                                    self.date, "%Y-%m-%d")
+                                total_date = start_date - end_date
+                                total_payment = total_date / value
+                                if int(total_payment.days) >= 1:
+                                    total_discount = (
+                                        total_payment.days * total)
+                            elif loan.discount_method == 'each':
+                                total_discount = total
+                        total_final = loan.balance - total_discount
+                        if total_final <= 0.0:
+                            total_discount = loan.balance
+                            loan.write({'balance': 0.0, 'state': 'closed'})
+                        expense_line = self.expense_line_ids.create({
+                            'name': _("Loan: ") + str(loan.name),
+                            'expense_id': self.id,
+                            'line_type': "salary_discount",
+                            'product_id': loan.product_id.id,
+                            'product_qty': 1.0,
+                            'unit_price': total_discount,
+                            'date': self.date,
+                            'control': True
+                        })
+                        loan.expense_ids += expense_line
+            elif loan.lock and loan.state == 'confirmed' and ac_loan:
+                if loan.balance > 0.0:
+                    loan.write({
+                        'expense_id': self.id
+                    })
+                    expense_line = self.expense_line_ids.create({
+                        'name': _("Loan: ") + str(loan.name),
+                        'expense_id': self.id,
+                        'line_type': "salary_discount",
+                        'product_id': loan.product_id.id,
+                        'product_qty': 1.0,
+                        'unit_price': loan.amount_discount,
+                        'date': self.date,
+                        'control': True
+                    })
+                loan.expense_ids += expense_line
+
+    @api.multi
     def get_travel_info(self):
         for rec in self:
             # Unattaching info from expense
             rec.unattach_info()
             # Finish unattach info from expense
+            rec.get_expense_loan()
             for travel in rec.travel_ids:
                 travel.write({'state': 'closed', 'expense_id': rec.id})
                 for advance in travel.advance_ids:
@@ -1027,7 +1115,7 @@ class TmsExpense(models.Model):
             'operating_unit_id': line.expense_id.operating_unit_id.id,
         }
         invoice_id = self.env['account.invoice'].create(invoice)
-        line.write({'invoice_id': invoice_id.id})
+        invoice_id.signal_workflow('invoice_open')
         return invoice_id
 
     @api.multi

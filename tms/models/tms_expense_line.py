@@ -11,6 +11,8 @@ class TmsExpenseLine(models.Model):
     _name = 'tms.expense.line'
     _description = 'Expense Line'
 
+    loan_id = fields.Many2one('tms.expense.loan',
+                              string='Loan')
     travel_id = fields.Many2one(
         'tms.travel',
         string='Travel')
