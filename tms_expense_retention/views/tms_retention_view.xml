@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="view_tms_retention" model="ir.ui.view">
+        <record id="view_tms_expense_retention" model="ir.ui.view">
             <field name="name">tms.retention.form</field>
             <field name="model">tms.retention</field>
             <field name="arch" type="xml">
@@ -34,7 +34,7 @@
                 </form>
             </field>
         </record>
-        <record id="view_tms_retention_tree" model="ir.ui.view">
+        <record id="view_tms_expense_retention_tree" model="ir.ui.view">
             <field name="name">tms.retention.tree</field>
             <field name="model">tms.retention</field>
             <field name="priority">2</field>
@@ -49,7 +49,7 @@
                 </tree>
             </field>
         </record>
-        <record id="action_tms_retention" model="ir.actions.act_window">
+        <record id="action_tms_expense_retention" model="ir.actions.act_window">
             <field name="name">Tms Retention</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">tms.retention</field>
@@ -58,6 +58,6 @@
             <field name="help">TMS Retention</field>
         </record>
         <menuitem id="menu_custom_retention" name="Retention" parent="tms.menu_tms_settings"
-        action="action_tms_retention"/>
+        action="action_tms_expense_retention"/>
     </data>
 </odoo>

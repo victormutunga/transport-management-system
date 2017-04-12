@@ -19,8 +19,7 @@ class TmsExpense(models.Model):
                     value = 0.0
                     product = self.env['product.product'].search(
                         [('id', '=', retention.product_id.id),
-                         ('apply_for_retention', '=', True)],
-                        limit=1)
+                         ('apply_for_retention', '=', True)])
                     if retention.employee_ids:
                         if rec.employee_id in retention.employee_ids:
                             if retention.retention_type == 'days':

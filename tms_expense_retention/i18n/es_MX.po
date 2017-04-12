@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-03 23:20+0000\n"
-"PO-Revision-Date: 2017-04-03 23:20+0000\n"
+"POT-Creation-Date: 2017-04-12 17:07+0000\n"
+"PO-Revision-Date: 2017-04-12 17:07+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,15 +18,15 @@ msgstr ""
 #. module: tms_expense_retention
 #: model:ir.model.fields,field_description:tms_expense_retention.field_product_template_apply_for_retention
 msgid "Apply for Retention"
-msgstr "Apply for Retention"
+msgstr "Aplicar Retencion"
 
 #. module: tms_expense_retention
-#: model:ir.ui.view,arch_db:tms_expense_retention.view_tms_retention
+#: model:ir.ui.view,arch_db:tms_expense_retention.view_tms_expense_retention
 msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: tms_expense_retention
-#: model:ir.ui.view,arch_db:tms_expense_retention.view_tms_retention
+#: model:ir.ui.view,arch_db:tms_expense_retention.view_tms_expense_retention
 msgid "Confirm"
 msgstr "Confirmar"
 
@@ -43,32 +43,12 @@ msgstr "Creado en"
 #. module: tms_expense_retention
 #: selection:tms.retention,retention_type:0
 msgid "Days"
-msgstr "Days"
+msgstr "Dias"
 
 #. module: tms_expense_retention
 #: model:ir.model.fields,field_description:tms_expense_retention.field_tms_retention_display_name
 msgid "Display Name"
 msgstr "Nombre desplegado"
-
-#. module: tms_expense_retention
-#: model:ir.model.fields,field_description:tms_expense_retention.field_tms_expense_distance_empty
-msgid "Distance empty"
-msgstr "Distance empty"
-
-#. module: tms_expense_retention
-#: model:ir.model.fields,field_description:tms_expense_retention.field_tms_expense_distance_empty_real
-msgid "Distance empty real"
-msgstr "Distance empty real"
-
-#. module: tms_expense_retention
-#: model:ir.model.fields,field_description:tms_expense_retention.field_tms_expense_distance_loaded
-msgid "Distance loaded"
-msgstr "Distance loaded"
-
-#. module: tms_expense_retention
-#: model:ir.model.fields,field_description:tms_expense_retention.field_tms_expense_distance_loaded_real
-msgid "Distance loaded real"
-msgstr "Distance loaded real"
 
 #. module: tms_expense_retention
 #: model:ir.model,name:tms_expense_retention.model_hr_employee
@@ -81,56 +61,29 @@ msgid "Employees"
 msgstr "Empleados"
 
 #. module: tms_expense_retention
-#: model:ir.model.fields,field_description:tms_expense_retention.field_tms_expense_expense_km
-msgid "Expense km"
-msgstr "Expense km"
-
-#. module: tms_expense_retention
 #: model:ir.model.fields,field_description:tms_expense_retention.field_tms_retention_factor
 msgid "Factor"
 msgstr "Factor"
 
 #. module: tms_expense_retention
-#: model:ir.model.fields,field_description:tms_expense_retention.field_tms_retention_fired_amount
+#: model:ir.model.fields,field_description:tms_expense_retention.field_tms_retention_fixed_amount
 msgid "Fired Amount"
-msgstr "Fired Amount"
-
-#. module: tms_expense_retention
-#: model:ir.model.fields,field_description:tms_expense_retention.field_tms_expense_fuel_efficiency_real
-msgid "Fuel efficiency real"
-msgstr "Fuel efficiency real"
+msgstr "Cantidad Fija"
 
 #. module: tms_expense_retention
 #: model:ir.model.fields,field_description:tms_expense_retention.field_tms_retention_id
 msgid "ID"
-msgstr "INE"
-
-#. module: tms_expense_retention
-#: model:product.product,name:tms_expense_retention.product_isr
-#: model:product.template,name:tms_expense_retention.product_isr_product_template
-msgid "ISR"
-msgstr "ISR"
-
-#. module: tms_expense_retention
-#: model:ir.model.fields,field_description:tms_expense_retention.field_tms_expense_income_km
-msgid "Income km"
-msgstr "Income km"
-
-#. module: tms_expense_retention
-#: model:product.product,name:tms_expense_retention.product_insurance
-#: model:product.template,name:tms_expense_retention.product_insurance_product_template
-msgid "Insurance"
-msgstr "Seguro "
+msgstr "ID"
 
 #. module: tms_expense_retention
 #: model:ir.model.fields,field_description:tms_expense_retention.field_tms_retention___last_update
 msgid "Last Modified on"
-msgstr "Última Modificación El"
+msgstr "Ultima modificacion realizada"
 
 #. module: tms_expense_retention
 #: model:ir.model.fields,field_description:tms_expense_retention.field_tms_retention_write_uid
 msgid "Last Updated by"
-msgstr "Última Actualización Hecha Por"
+msgstr "Ultima actualizacion por"
 
 #. module: tms_expense_retention
 #: model:ir.model.fields,field_description:tms_expense_retention.field_tms_retention_write_date
@@ -148,15 +101,10 @@ msgid "Name"
 msgstr "Nombre"
 
 #. module: tms_expense_retention
-#: code:addons/tms_expense_retention/models/tms_retention.py:47
+#: code:addons/tms_expense_retention/models/tms_retention.py:46
 #, python-format
 msgid "Only there must be a product \"\""
-msgstr "Only there must be a product \"\""
-
-#. module: tms_expense_retention
-#: model:ir.model.fields,field_description:tms_expense_retention.field_hr_employee_outsourcing
-msgid "Outsourcing?"
-msgstr "Outsourcing?"
+msgstr "Solo debe haber un product\"\""
 
 #. module: tms_expense_retention
 #: model:ir.model.fields,field_description:tms_expense_retention.field_tms_retention_product_id
@@ -166,54 +114,49 @@ msgstr "Producto"
 #. module: tms_expense_retention
 #: model:ir.model,name:tms_expense_retention.model_product_template
 msgid "Product Template"
-msgstr "Plantilla producto"
+msgstr "Plantilla de producto"
 
 #. module: tms_expense_retention
-#: model:ir.model.fields,field_description:tms_expense_retention.field_tms_expense_percentage_km
-msgid "Productivity Percentage"
-msgstr "Productivity Percentage"
+#: model:ir.model.fields,field_description:tms_expense_retention.field_hr_employee_retention_id
+#: model:ir.ui.menu,name:tms_expense_retention.menu_custom_retention
+msgid "Retention"
+msgstr "Retencion"
 
 #. module: tms_expense_retention
-#: model:ir.ui.view,arch_db:tms_expense_retention.view_tms_retention
+#: model:ir.ui.view,arch_db:tms_expense_retention.view_tms_expense_retention
 msgid "Retention -"
-msgstr "Retention -"
+msgstr "Retencion -"
 
 #. module: tms_expense_retention
 #: model:ir.model.fields,field_description:tms_expense_retention.field_tms_retention_retention_type
 msgid "Retention Type"
-msgstr "Retention Type"
+msgstr "Tipo de Retencion"
 
 #. module: tms_expense_retention
 #: selection:tms.retention,retention_type:0
 msgid "Salary"
-msgstr "Salary"
+msgstr "Salario"
 
 #. module: tms_expense_retention
-#: model:ir.ui.view,arch_db:tms_expense_retention.view_tms_retention
+#: model:ir.ui.view,arch_db:tms_expense_retention.view_tms_expense_retention
 msgid "Set to Draft"
-msgstr "Establecer en Borrador"
+msgstr "Cambiar a borrador"
 
 #. module: tms_expense_retention
-#: model:ir.actions.act_window,help:tms_expense_retention.action_tms_retention
-#: model:ir.ui.view,arch_db:tms_expense_retention.view_tms_retention
-#: model:ir.ui.view,arch_db:tms_expense_retention.view_tms_retention_tree
+#: model:ir.actions.act_window,help:tms_expense_retention.action_tms_expense_retention
+#: model:ir.ui.view,arch_db:tms_expense_retention.view_tms_expense_retention
+#: model:ir.ui.view,arch_db:tms_expense_retention.view_tms_expense_retention_tree
 msgid "TMS Retention"
-msgstr "TMS Retention"
+msgstr "TMS Retencion"
 
 #. module: tms_expense_retention
-#: model:ir.actions.act_window,name:tms_expense_retention.action_tms_retention
+#: model:ir.actions.act_window,name:tms_expense_retention.action_tms_expense_retention
 #: model:ir.model,name:tms_expense_retention.model_tms_retention
 msgid "Tms Retention"
-msgstr "Tms Retention"
+msgstr "Tms Retencion"
 
 #. module: tms_expense_retention
 #: model:ir.model,name:tms_expense_retention.model_tms_expense
 msgid "Travel Expenses"
 msgstr "Liquidación de Viajes"
-
-#. module: tms_expense_retention
-#: code:addons/tms_expense_retention/models/tms_expense.py:24
-#, python-format
-msgid "You must have a product called %s"
-msgstr "You must have a product called %s"
 
