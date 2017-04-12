@@ -710,7 +710,7 @@ class TmsExpense(models.Model):
                     rec.operating_unit_id.id)
             else:
                 move_line = rec.prepare_move_line(
-                    _('Negative Balance'),
+                    rec.name,
                     rec.name,
                     result['driver_account_payable'],
                     0.0,
