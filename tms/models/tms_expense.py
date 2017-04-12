@@ -587,15 +587,16 @@ class TmsExpense(models.Model):
                     rec.employee_id.address_home_id.id,
                     rec.operating_unit_id.id)
                 move_lines.append(move_line)
-            return {
+            result = {
                 'move_lines': move_lines,
                 'invoices': invoices,
                 'move_obj': move_obj,
                 'journal_id': journal_id,
                 'advance_account_id': advance_account_id,
                 'negative_account': negative_account,
-                'driver_account_payable': driver_account_payable,
-        }
+                'driver_account_payable': driver_account_payable
+            }
+            return result
 
     @api.multi
     def check_expenseline_invoice(self, line, result, product_account):
@@ -870,22 +871,23 @@ class TmsExpense(models.Model):
                     fuel_log.name +
                     '\n State: ' + fuel_log.state))
             else:
-                if not fuel_log.expense_control:
-                    rec.expense_line_ids.create({
-                        'name': _(
-                            "Fuel voucher: ") + str(fuel_log.name),
-                        'travel_id': travel.id,
-                        'expense_id': rec.id,
-                        'line_type': 'fuel',
-                        'product_id': fuel_log.product_id.id,
-                        'product_qty': fuel_log.product_qty,
-                        'product_uom_id': (
-                            fuel_log.product_id.uom_id.id),
-                        'unit_price': fuel_log.price_total,
-                        'is_invoice': fuel_log.invoice_paid,
-                        'invoice_id': fuel_log.invoice_id.id,
-                        'control': True,
+                fuel_expense = rec.expense_line_ids.create({
+                       'name': _(
+                           "Fuel voucher: ") + str(fuel_log.name),
+                       'travel_id': travel.id,
+                       'expense_id': rec.id,
+                       'line_type': 'fuel',
+                       'product_id': fuel_log.product_id.id,
+                       'product_qty': fuel_log.product_qty,
+                       'product_uom_id': (
+                           fuel_log.product_id.uom_id.id),
+                       'unit_price': fuel_log.price_total,
+                       'is_invoice': fuel_log.invoice_paid,
+                       'invoice_id': fuel_log.invoice_id.id,
+                       'control': True,
                     })
+                if fuel_log.expense_control:
+                    fuel_expense.name = fuel_expense.product_id.name
                 fuel_log.write({
                     'state': 'closed',
                     'expense_id': rec.id
@@ -894,8 +896,8 @@ class TmsExpense(models.Model):
     @api.multi
     def create_salary_line(self, travel):
         for rec in self:
-            product_id = self.env['product.product'].search(
-                    [('tms_product_category', '=', 'salary')])
+            product_id = self.env['product.product'].search([
+                ('tms_product_category', '=', 'salary')])
             if not product_id:
                 raise ValidationError(_(
                     'Oops! You must create a product for the'

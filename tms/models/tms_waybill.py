@@ -251,6 +251,16 @@ class TmsWaybill(models.Model):
         default['travel_ids'] = False
         return super(TmsWaybill, self).copy(default)
 
+    @api.multi
+    def write(self, values):
+        for rec in self:
+            if 'partner_id' in values:
+                for travel in rec.travel_ids:
+                    travel.partner_ids = False
+                    travel._compute_partner_ids()
+            res = super(TmsWaybill, self).write(values)
+            return res
+
     @api.onchange('partner_id')
     def onchange_partner_id(self):
         if self.partner_id:
@@ -269,15 +279,6 @@ class TmsWaybill(models.Model):
                 "<strong>Approved at: </strong> %s</p") % (
                 self.user_id.name, fields.Date.today()))
         return True
-
-    # @api.depends('travel_ids')
-    # def _compute_waybill_type(self):
-    #     for waybill in self:
-    #         for travel in waybill.travel_ids:
-    #             waybill.waybill_type = (
-    #                 'outsourced'
-    #                 if travel.unit_id.supplier_unit
-    #                 else 'own')
 
     @api.multi
     @api.depends('invoice_id')
