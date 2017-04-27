@@ -60,6 +60,7 @@
                             <th style='background-color:#D8D8D8'>Importe</th>
                             <th style='background-color:#D8D8D8'>IVA</th>
                             <th style='background-color:#D8D8D8'>Total</th>
+                            <th style='background-color:#D8D8D8'>Fecha de creacion</th>
                         </tr>
                         <t t-as="expense_line" t-foreach="doc.expense_line_ids">
                             <t t-if="expense_line.line_type == 'made_up_expense'">
@@ -70,6 +71,7 @@
                                     <td width="20%"><span t-esc="round((tollstation.import_rate * 100) / 116, 2)"/></td>
                                     <td width="20%"><span t-esc="round((tollstation.import_rate * 16) / 116, 2)"/></td>
                                     <td width="20%"><span t-field="tollstation.import_rate"/></td>
+                                    <td width="20%"><span t-field="tollstation.create_date"/></td>
                                 </tr>
                             </t>
                         </t>
