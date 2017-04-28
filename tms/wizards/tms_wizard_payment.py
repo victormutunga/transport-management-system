@@ -40,6 +40,7 @@ class TmsWizardPayment(models.TransientModel):
         for rec in self:
             active_ids = self.env[self._context.get('active_model')].browse(
                 self._context.get('active_ids'))
+            active_model = self._context['active_model']
             bank_account_id = rec.journal_id.default_debit_account_id.id
             currency = rec.journal_id.currency_id or self.env.user.currency_id
             currency_id = set([x.currency_id.id for x in active_ids])
@@ -54,6 +55,7 @@ class TmsWizardPayment(models.TransientModel):
             amount_bank = 0.0
             amount_currency = 0.0
             name = 'Payment of'
+            bank_line = {}
             for obj in active_ids:
                 name = name + ' / ' + obj.name
                 if obj.state not in ['confirmed', 'closed'] or obj.paid:
@@ -72,9 +74,14 @@ class TmsWizardPayment(models.TransientModel):
                 }
                 model_amount = {
                     'tms.advance': obj.amount
-                    if hasattr(obj, 'amount') else 0.0,
+                    if hasattr(obj, 'amount') and
+                    active_model == 'tms.advance' else 0.0,
                     'tms.expense': obj.amount_balance
-                    if hasattr(obj, 'amount_balance') else 0.0}
+                    if hasattr(obj, 'amount_balance') and
+                    active_model == 'tms.expense' else 0.0,
+                    'tms.expense.loan': obj.amount
+                    if hasattr(obj, 'amount') and
+                    active_model == 'tms.expense.loan'else 0.0}
                 # Createng counterpart move lines method explained above
                 counterpart_move_line, amount_bank = self.create_counterpart(
                     model_amount, currency, obj,

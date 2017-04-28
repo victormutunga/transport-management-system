@@ -16,10 +16,15 @@ class AccountMove(models.Model):
                 [('payment_move_id', '=', rec.id)])
             expenses = self.env['tms.expense'].search(
                 [('payment_move_id', '=', rec.id)])
+            loans = self.env['tms.expense.loan'].search(
+                [('paid', '=', rec.id)])
             if advances:
                 for advance in advances:
                     advance.paid = False
             if expenses:
                 for expense in expenses:
                     expense.paid = False
+            if loans:
+                for loan in loans:
+                    loan.paid = False
             return super(AccountMove, self).unlink()
