@@ -60,15 +60,18 @@
                             <th style='background-color:#D8D8D8'>Importe</th>
                             <th style='background-color:#D8D8D8'>IVA</th>
                             <th style='background-color:#D8D8D8'>Total</th>
+                            <th style='background-color:#D8D8D8'>Fecha de creacion</th>
                         </tr>
                         <t t-as="expense_line" t-foreach="doc.expense_line_ids">
                             <t t-if="expense_line.line_type == 'made_up_expense'">
-                                <tr t-as="tollstation" t-foreach="expense_line.tollstation_ids">
+                                <t t-set="sorted_lines" t-value="expense_line.tollstation_ids.sort(key=lambda x: datetime.datetime.strptime(x.date, '%d-%M-%Y %H-%M-%S'))"></t>
+                                <tr t-as="tollstation" t-foreach="sorted_lines">
                                     <td width="20%"><span t-field="tollstation.name"/></td>
                                     <td width="20%"><span t-field="tollstation.date"/></td>
                                     <td width="20%"><span t-esc="round((tollstation.import_rate * 100) / 116, 2)"/></td>
                                     <td width="20%"><span t-esc="round((tollstation.import_rate * 16) / 116, 2)"/></td>
                                     <td width="20%"><span t-field="tollstation.import_rate"/></td>
+                                    <td width="20%"><span t-field="tollstation.create_date"/></td>
                                 </tr>
                             </t>
                         </t>
@@ -83,6 +86,7 @@
                     </div>
                     <div class='col-xs-5 col-sm-5 col-md-5 col-lg-5'>
                         <table class='table table-condensed'>
+
                             <t t-set='subtotal' t-value='0'/>
                                 <p t-foreach='doc.expense_line_ids' t-as='expense_line'>
                                     <t t-if="expense_line.line_type == 'made_up_expense'">
