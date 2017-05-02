@@ -615,6 +615,7 @@ class TmsExpense(models.Model):
 
             if line.is_invoice:
                 inv_id = rec.create_supplier_invoice(line)
+                inv_id.signal_workflow('invoice_open')
                 result['invoices'].append(inv_id)
                 move_line = rec.prepare_move_line(
                     (rec.name + ' ' + line.name +
@@ -1116,7 +1117,6 @@ class TmsExpense(models.Model):
         }
         invoice_id = self.env['account.invoice'].create(invoice)
         line.invoice_id = invoice_id
-        invoice_id.signal_workflow('invoice_open')
         return invoice_id
 
     @api.multi
