@@ -605,6 +605,7 @@ class TmsExpense(models.Model):
                 'driver_account_payable': driver_account_payable
             }
             return result
+
     @api.multi
     def check_expenseline_invoice(self, line, result, product_account):
         for rec in self:
@@ -879,20 +880,20 @@ class TmsExpense(models.Model):
                     '\n State: ' + fuel_log.state))
             else:
                 fuel_expense = rec.expense_line_ids.create({
-                       'name': _(
-                           "Fuel voucher: ") + str(fuel_log.name),
-                       'travel_id': travel.id,
-                       'expense_id': rec.id,
-                       'line_type': 'fuel',
-                       'product_id': fuel_log.product_id.id,
-                       'product_qty': fuel_log.product_qty,
-                       'product_uom_id': (
-                           fuel_log.product_id.uom_id.id),
-                       'unit_price': fuel_log.price_total,
-                       'is_invoice': fuel_log.invoice_paid,
-                       'invoice_id': fuel_log.invoice_id.id,
-                       'control': True,
-                    })
+                    'name': _(
+                        "Fuel voucher: ") + str(fuel_log.name),
+                    'travel_id': travel.id,
+                    'expense_id': rec.id,
+                    'line_type': 'fuel',
+                    'product_id': fuel_log.product_id.id,
+                    'product_qty': fuel_log.product_qty,
+                    'product_uom_id': (
+                        fuel_log.product_id.uom_id.id),
+                    'unit_price': fuel_log.price_total,
+                    'is_invoice': fuel_log.invoice_paid,
+                    'invoice_id': fuel_log.invoice_id.id,
+                    'control': True,
+                })
                 if fuel_log.expense_control:
                     fuel_expense.name = fuel_expense.product_id.name
                 fuel_log.write({
@@ -1115,7 +1116,7 @@ class TmsExpense(models.Model):
             'operating_unit_id': line.expense_id.operating_unit_id.id,
         }
         invoice_id = self.env['account.invoice'].create(invoice)
-        invoice_id.signal_workflow('invoice_open')
+        line.invoice_id = invoice_id
         return invoice_id
 
     @api.multi
