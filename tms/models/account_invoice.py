@@ -11,7 +11,3 @@ class AccountInvoice(models.Model):
 
     waybill_ids = fields.One2many(
         'tms.waybill', 'invoice_id', string="Waybills", readonly=True)
-
-    @api.onchange('partner_id')
-    def onchange_partner_id(self):
-        self.payment_method_id = self.partner_id.payment_method_id
