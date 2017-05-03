@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp import api, fields, models
-
+from datetime import datetime
 
 class TmsExpenseLine(models.Model):
     _inherit = 'tms.expense.line'
@@ -59,3 +59,13 @@ class TmsExpenseLine(models.Model):
                 'state': 'open',
                 'expense_line_id': False})
         return super(TmsExpenseLine, self).unlink()
+
+    @api.multi
+    def getOrderLines(self):
+        for rec in self:
+            sortedArray = sorted(
+                rec.tollstation_ids,
+                key=lambda x: datetime.strptime(x['date'],
+                    '%Y-%m-%d %H:%M:%S'),
+                reverse=True)
+            return sortedArray

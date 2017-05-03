@@ -53,8 +53,9 @@
                     </table>
                 </div>
                 <div class='row'>
-                    <table class='table table-condensed table-bordered'>
+                    <table class='table table-bordered'>
                         <tr>
+                            <th style='background-color:#D8D8D8'>Viaje</th>
                             <th style='background-color:#D8D8D8'>Concepto de Gastos</th>
                             <th style='background-color:#D8D8D8'>Fecha</th>
                             <th style='background-color:#D8D8D8'>Importe</th>
@@ -64,13 +65,14 @@
                         </tr>
                         <t t-as="expense_line" t-foreach="doc.expense_line_ids">
                             <t t-if="expense_line.line_type == 'made_up_expense'">
-                                <t t-set="sorted_lines" t-value="expense_line.tollstation_ids.sort(key=lambda x: datetime.datetime.strptime(x.date, '%d-%M-%Y %H-%M-%S'))"></t>
-                                <tr t-as="tollstation" t-foreach="sorted_lines">
+                                <t t-set="tollstation_lines" t-value="expense_line.getOrderLines()"></t>
+                                <tr t-as="tollstation" t-foreach="tollstation_lines">
+                                    <td width="10%"><span t-field="tollstation.expense_line_id.travel_id.name"/></td>
                                     <td width="20%"><span t-field="tollstation.name"/></td>
                                     <td width="20%"><span t-field="tollstation.date"/></td>
-                                    <td width="20%"><span t-esc="round((tollstation.import_rate * 100) / 116, 2)"/></td>
-                                    <td width="20%"><span t-esc="round((tollstation.import_rate * 16) / 116, 2)"/></td>
-                                    <td width="20%"><span t-field="tollstation.import_rate"/></td>
+                                    <td width="10%"><span t-esc="round((tollstation.import_rate * 100) / 116, 2)"/></td>
+                                    <td width="10%"><span t-esc="round((tollstation.import_rate * 16) / 116, 2)"/></td>
+                                    <td width="10%"><span t-field="tollstation.import_rate"/></td>
                                     <td width="20%"><span t-field="tollstation.create_date"/></td>
                                 </tr>
                             </t>
