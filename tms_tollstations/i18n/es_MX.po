@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-16 00:49+0000\n"
-"PO-Revision-Date: 2017-02-16 00:49+0000\n"
+"POT-Creation-Date: 2017-05-04 17:12+0000\n"
+"PO-Revision-Date: 2017-05-04 17:12+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -106,6 +106,11 @@ msgid "Fecha"
 msgstr "Fecha"
 
 #. module: tms_tollstations
+#: model:ir.ui.view,arch_db:tms_tollstations.report_highway
+msgid "Fecha de creacion"
+msgstr "Fecha de creacion"
+
+#. module: tms_tollstations
 #: model:ir.actions.report.xml,name:tms_tollstations.print_report_highway_expense
 msgid "Highway Report"
 msgstr "Reporte de CASETAS"
@@ -152,7 +157,21 @@ msgid "Name"
 msgstr "Nombre"
 
 #. module: tms_tollstations
-#: code:addons/tms_tollstations/wizards/tms_toll_import.py:64
+#: code:addons/tms_tollstations/wizards/tms_toll_import.py:75
+#, python-format
+msgid "Oops! Odoo has detected an error in the file. \n"
+"Please contact your admin system.\n"
+"\n"
+"Error message\n"
+"[]"
+msgstr "Oops! Odoo ha detectado un error en el archivo. \n"
+"Por favor contacta a tu administrador de sistemas.\n"
+"\n"
+"Mensaje de error\n"
+"[]"
+
+#. module: tms_tollstations
+#: code:addons/tms_tollstations/wizards/tms_toll_import.py:78
 #, python-format
 msgid "Oops! The files must have .txt or .dat extensions"
 msgstr "Oops! Los archivos deben de tener las extenciones .txt o .dat"
@@ -199,6 +218,11 @@ msgid "Total"
 msgstr "Total"
 
 #. module: tms_tollstations
+#: model:ir.ui.view,arch_db:tms_tollstations.report_highway
+msgid "Viaje"
+msgstr "Viaje"
+
+#. module: tms_tollstations
 #: model:ir.model,name:tms_tollstations.model_tms_toll_data
 msgid "tms.toll.data"
 msgstr "tms.toll.data"
@@ -212,3 +236,4 @@ msgstr "tms.toll.import"
 #: model:ir.ui.view,arch_db:tms_tollstations.report_highway
 msgid "to"
 msgstr "hasta"
+
