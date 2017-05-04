@@ -11,6 +11,7 @@
                     <field name="economic_number"/>
                     <field name="date"/>
                     <field name="import_rate"/>
+                    <field name="create_date"/>
                 </tree>
             </field>
         </record>
