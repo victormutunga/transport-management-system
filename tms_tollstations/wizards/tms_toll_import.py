@@ -28,7 +28,9 @@ class TmsTollImport(models.TransientModel):
                 lines = document.split('\n')
                 lines.remove('')
                 for line in lines:
-                    if line == '\r' or line[:10] == 'Tag,No.Eco':
+                    if (line == '\r' or
+                            line[:10] == 'Tag,No.Eco' or
+                            line[:10] == 'Núm. TAG|N'):
                         continue
                     split_line = line.split('|')
                     flag = split_line[0].split('\t')
