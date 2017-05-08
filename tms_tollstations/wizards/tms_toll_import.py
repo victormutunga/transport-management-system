@@ -29,8 +29,7 @@ class TmsTollImport(models.TransientModel):
                 lines.remove('')
                 for line in lines:
                     if (line == '\r' or
-                            line[:10] == 'Tag,No.Eco' or
-                            line[:10] == 'Núm. TAG|N'):
+                            line[:10] == 'Tag,No.Eco'):
                         continue
                     split_line = line.split('|')
                     flag = split_line[0].split('\t')
@@ -39,6 +38,8 @@ class TmsTollImport(models.TransientModel):
                     if split_line[5][-1] == '.':
                         split_line[5].replace('.', '')
                     toll_datetime = str(split_line[2] + ' ' + split_line[3])
+                    if toll_datetime == 'Fecha de Trans. Caseta':
+                        continue
                     try:
                         create_date = datetime.strptime(
                             toll_datetime, "%Y/%m/%d %H:%M:%S")
