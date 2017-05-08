@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# Copyright 2012, Israel Cruz Argil, Argil Consulting
 # Copyright 2017, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
@@ -17,7 +16,7 @@ class AccountMove(models.Model):
             expenses = self.env['tms.expense'].search(
                 [('payment_move_id', '=', rec.id)])
             loans = self.env['tms.expense.loan'].search(
-                [('paid', '=', rec.id)])
+                [('payment_move_id', '=', rec.id)])
             if advances:
                 for advance in advances:
                     advance.paid = False
