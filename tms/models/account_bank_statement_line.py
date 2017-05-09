@@ -19,18 +19,25 @@ class AccountBankStatementLine(models.Model):
             loans = False
             debit_payment_lines = res.line_ids.filtered(
                 lambda x: x.account_id.user_type_id.id != 3)
-            for lines in debit_payment_lines:
+            for line in debit_payment_lines:
+                home_address = self.env['hr.employee'].search(
+                    [('address_home_id', '=', line.partner_id.id)])
+                account_employee = (
+                    home_address.tms_expense_negative_account_id.id)
+                accounts = [account_employee,
+                            line.partner_id.property_account_payable_id.id]
                 payment_line = (
-                    lines.full_reconcile_id.
-                    reconciled_line_ids.filtered(
-                        lambda x: x.journal_id.type != 'bank'))
-                if len(payment_line) == 1:
-                    advances = self.env['tms.advance'].search(
-                        [('move_id', '=', payment_line.move_id.id)])
-                    expenses = self.env['tms.expense'].search(
-                        [('move_id', '=', payment_line.move_id.id)])
-                    loans = self.env['tms.expense.loan'].search(
-                        [('move_id', '=', payment_line.move_id.id)])
+                    line.full_reconcile_id.
+                    reconciled_line_ids.search([
+                        ('account_id', 'in', accounts),
+                        ('full_reconcile_id', '=', line.full_reconcile_id.id),
+                        ('credit', '>', 0.0)]))
+                advances = self.env['tms.advance'].search(
+                    [('move_id', '=', payment_line.move_id.id)])
+                expenses = self.env['tms.expense'].search(
+                    [('move_id', '=', payment_line.move_id.id)])
+                loans = self.env['tms.expense.loan'].search(
+                    [('move_id', '=', payment_line.move_id.id)])
                 if advances:
                     for advance in advances:
                         advance.paid = True
