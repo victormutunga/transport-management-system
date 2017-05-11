@@ -185,6 +185,17 @@
                                 <separator coslpan="4" string="Customs"/>
                                 <field name="custom_ids" nolabel="1"/>
                             </page>
+                            <page string="Expenses">
+                                <field colspan="4" name="expense_ids" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="name"/>
+                                        <field name="date"/>
+                                        <field name="employee_id"/>
+                                        <field name="unit_id"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                            </page>
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">
