@@ -343,3 +343,9 @@ class TmsTravel(models.Model):
                         "next %s day(s)") % (
                         rec.unit_id.name, rec.unit_id.insurance_expiration,
                         val))
+
+    @api.multi
+    def copy(self, default=None):
+        default = dict(default or {})
+        default['waybill_ids'] = False
+        return super(TmsTravel, self).copy(default)
