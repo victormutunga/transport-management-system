@@ -893,6 +893,9 @@ class TmsExpense(models.Model):
                     'is_invoice': fuel_log.invoice_paid,
                     'invoice_id': fuel_log.invoice_id.id,
                     'control': True,
+                    'partner_id': fuel_log.vendor_id.id or False,
+                    'date': fuel_log.date,
+                    'invoice_number': fuel_log.ticket_number,
                 })
                 if fuel_log.expense_control:
                     fuel_expense.name = fuel_expense.product_id.name
