@@ -186,7 +186,6 @@
                                             <field name="state"/>
                                             <field name="name"/> 
                                             <field name="date_order"/>
-                                            <field name="client_order_ref"/> 
                                             <field name="partner_id"/> 
                                             <field name="product_qty" sum="Product Quantity"/> 
                                             <field name="amount_untaxed" sum="Amount Untaxed"/>
@@ -312,7 +311,7 @@
             <field name="name">tms.travel.gantt</field>
             <field name="model">tms.travel</field>
             <field name="arch" type="xml">
-                <gantt color="unit_id" date_start="date_start" date_stop="date_end" default_group_by="unit_id" string="Travels">
+                <gantt color="unit_id" date_start="date_start" date_stop="date_end" default_group_by="unit_id" duration_unit="week" type="consolidate" consolidation="travel_duration" consolidation_label="hours" string="Travels">
                     <field name="name"/>
                     <!-- <field name="distance_route"/> -->
                 </gantt>

@@ -18,7 +18,7 @@ class TmsExpense(models.Model):
 
     name = fields.Char(readonly=True)
     operating_unit_id = fields.Many2one(
-        'operating.unit', required=True)
+        'operating.unit', string="Operating Unit", required=True)
     employee_id = fields.Many2one(
         'hr.employee', 'Driver', required=True)
     travel_ids = fields.Many2many(
@@ -488,25 +488,13 @@ class TmsExpense(models.Model):
     @api.multi
     def action_approved(self):
         for rec in self:
-            message = _('<b>Expense Approved.</b></br><ul>'
-                        '<li><b>Approved by: </b>%s</li>'
-                        '<li><b>Approved at: </b>%s</li>'
-                        '</ul>') % (
-                            self.env.user.name,
-                            fields.Datetime.now())
-            rec.message_post(body=message)
+            rec.message_post(body=_('<b>Expense Approved.</b>'))
         self.state = 'approved'
 
     @api.multi
     def action_draft(self):
         for rec in self:
-            message = _('<b>Expense Drafted.</b></br><ul>'
-                        '<li><b>Drafted by: </b>%s</li>'
-                        '<li><b>Drafted at: </b>%s</li>'
-                        '</ul>') % (
-                            self.env.user.name,
-                            fields.Datetime.now())
-            rec.message_post(body=message)
+            rec.message_post(body=_('<b>Expense Drafted.</b>'))
         self.state = 'draft'
 
     @api.model
@@ -772,13 +760,7 @@ class TmsExpense(models.Model):
             # the move line with the correct values
             rec.check_balance_value(result)
             rec.reconcile_account_move(result)
-            message = _('<b>Expense Confirmed.</b></br><ul>'
-                        '<li><b>Confirmed by: </b>%s</li>'
-                        '<li><b>Confirmed at: </b>%s</li>'
-                        '</ul>') % (
-                            self.env.user.name,
-                            fields.Datetime.now())
-            rec.message_post(body=message)
+            rec.message_post(body=_('<b>Expense Confirmed.</b>'))
 
     @api.multi
     def action_cancel(self):

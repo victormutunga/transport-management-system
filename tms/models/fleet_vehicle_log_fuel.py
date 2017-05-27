@@ -88,7 +88,6 @@ class FleetVehicleLogFuel(models.Model):
     product_id = fields.Many2one(
         'product.product',
         string='Product',
-        required=True,
         domain=[('tms_product_category', '=', 'fuel')])
     currency_id = fields.Many2one(
         'res.currency', 'Currency', required=True,
@@ -132,11 +131,7 @@ class FleetVehicleLogFuel(models.Model):
     @api.multi
     def action_approved(self):
         for rec in self:
-            message = _('<b>Fuel Voucher Approved.</b></br><ul>'
-                        '<li><b>Approved by: </b>%s</li>'
-                        '<li><b>Approved at: </b>%s</li>'
-                        '</ul>') % (self.env.user.name, fields.Date.today())
-            rec.message_post(body=message)
+            rec.message_post(body=_('<b>Fuel Voucher Approved.</b>'))
             rec.state = 'approved'
 
     @api.multi
@@ -168,12 +163,7 @@ class FleetVehicleLogFuel(models.Model):
     @api.multi
     def set_2_draft(self):
         for rec in self:
-            message = _(
-                '<b>Fuel Voucher Draft.</b></br><ul>'
-                '<li><b>Drafted by: </b>%s</li>'
-                '<li><b>Drafted at: </b>%s</li>'
-                '</ul>') % (self.env.user.name, fields.Date.today())
-            rec.message_post(body=message)
+            rec.message_post(body=_('<b>Fuel Voucher Draft.</b>'))
             rec.state = 'draft'
 
     @api.multi
@@ -185,12 +175,7 @@ class FleetVehicleLogFuel(models.Model):
                 raise ValidationError(
                     _('Liters, Taxes and Total'
                       ' must be greater than zero.'))
-            message = _(
-                '<b>Fuel Voucher Confirmed.</b></br><ul>'
-                '<li><b>Confirmed by: </b>%s</li>'
-                '<li><b>Confirmed at: </b>%s</li>'
-                '</ul>') % (self.env.user.name, fields.Date.today())
-            rec.message_post(body=message)
+            rec.message_post(body=_('<b>Fuel Voucher Confirmed.</b>'))
             rec.state = 'confirmed'
 
     @api.onchange('travel_id')
