@@ -3,38 +3,38 @@
     <data>
          <record id="res_partner_01" model="res.partner">
             <field name="name">Fernando Bedoya</field>
-            <field name="property_account_payable_id" ref="tms_demo.account_employee_01"/>
-            <field name="property_account_receivable_id" ref="tms_demo.account_employee_01"/>
+            <field name="property_account_payable_id" ref="account_drivers"/>
+            <field name="property_account_receivable_id" ref="account_drivers"/>
         </record>
         <record id="res_partner_02" model="res.partner">
             <field name="name">Jose Almendariz</field>
-            <field name="property_account_payable_id" ref="tms_demo.account_employee_02"/>
-            <field name="property_account_receivable_id" ref="tms_demo.account_employee_02"/>
+            <field name="property_account_payable_id" ref="account_drivers"/>
+            <field name="property_account_receivable_id" ref="account_drivers"/>
         </record>
         <record id="res_partner_03" model="res.partner">
             <field name="name">Ricardo Bocanegra</field>
-            <field name="property_account_payable_id" ref="tms_demo.account_employee_03"/>
-            <field name="property_account_receivable_id" ref="tms_demo.account_employee_03"/>
+            <field name="property_account_payable_id" ref="account_drivers"/>
+            <field name="property_account_receivable_id" ref="account_drivers"/>
         </record>
          <record id="res_partner_04" model="res.partner">
             <field name="name">Jhon Hawk</field>
-            <field name="property_account_payable_id" ref="tms_demo.account_employee_04"/>
-            <field name="property_account_receivable_id" ref="tms_demo.account_employee_04"/>
+            <field name="property_account_payable_id" ref="account_drivers"/>
+            <field name="property_account_receivable_id" ref="account_drivers"/>
         </record>
          <record id="res_partner_05" model="res.partner">
             <field name="name">Jonathan Tomlinson</field>
-            <field name="property_account_payable_id" ref="tms_demo.account_employee_05"/>
-            <field name="property_account_receivable_id" ref="tms_demo.account_employee_05"/>
+            <field name="property_account_payable_id" ref="account_drivers"/>
+            <field name="property_account_receivable_id" ref="account_drivers"/>
         </record>
          <record id="res_partner_06" model="res.partner">
             <field name="name">Fernando Hernandez</field>
-            <field name="property_account_payable_id" ref="tms_demo.account_employee_06"/>
-            <field name="property_account_receivable_id" ref="tms_demo.account_employee_06"/>
+            <field name="property_account_payable_id" ref="account_drivers"/>
+            <field name="property_account_receivable_id" ref="account_drivers"/>
         </record>
          <record id="res_partner_07" model="res.partner">
             <field name="name">Luis Esparza</field>
-            <field name="property_account_payable_id" ref="tms_demo.account_employee_07"/>
-            <field name="property_account_receivable_id" ref="tms_demo.account_employee_07"/>
+            <field name="property_account_payable_id" ref="account_drivers"/>
+            <field name="property_account_receivable_id" ref="account_drivers"/>
         </record>
     </data>
 </odoo>

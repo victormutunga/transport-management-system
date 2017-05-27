@@ -83,19 +83,19 @@ class TmsAdvance(models.Model):
 
     @api.model
     def create(self, values):
-        advance = super(TmsAdvance, self).create(values)
-        sequence = advance.operating_unit_id.advance_sequence_id
-        if advance.amount <= 0:
+        res = super(TmsAdvance, self).create(values)
+        sequence = res.operating_unit_id.advance_sequence_id
+        if res.amount <= 0:
             raise exceptions.ValidationError(
                 _('The amount must be greater than zero.'))
         else:
-            advance.name = sequence.next_by_id()
-            if advance.name == 'False':
+            res.name = sequence.next_by_id()
+            if res.name == 'False':
                 raise exceptions.ValidationError(
                     _('Error you need define an'
                         ' advance sequence in the base.'))
             else:
-                return advance
+                return res
 
     @api.onchange('travel_id')
     def _onchange_travel_id(self):
@@ -122,28 +122,24 @@ class TmsAdvance(models.Model):
                 rec.state = "authorized"
             else:
                 rec.state = 'approved'
-                rec.message_post(_(
-                    '<strong>Advance approved.</strong><ul>'
-                    '<li><strong>Approved by: </strong>%s</li>'
-                    '<li><strong>Approved at: </strong>%s</li>'
-                    '</ul>') % (rec.env.user.name, fields.Date.today()))
+                rec.message_post(_('<strong>Advance approved.</strong>'))
 
     @api.multi
     def action_confirm(self):
-        for advance in self:
-            if advance.amount <= 0:
+        for rec in self:
+            if rec.amount <= 0:
                 raise exceptions.ValidationError(
                     _('The amount must be greater than zero.'))
             else:
                 obj_account_move = self.env['account.move']
                 advance_journal_id = (
-                    advance.operating_unit_id.advance_journal_id.id)
+                    rec.operating_unit_id.advance_journal_id.id)
                 advance_debit_account_id = (
-                    advance.employee_id.
+                    rec.employee_id.
                     tms_advance_account_id.id
                 )
                 advance_credit_account_id = (
-                    advance.employee_id.
+                    rec.employee_id.
                     address_home_id.property_account_payable_id.id
                 )
                 if not advance_journal_id:
@@ -166,36 +162,36 @@ class TmsAdvance(models.Model):
                           '* Travel: %s \n'
                           '* Driver: %s \n'
                           '* Vehicle: %s') % (
-                    advance.operating_unit_id.name,
-                    advance.name,
-                    advance.travel_id.name,
-                    advance.employee_id.name,
-                    advance.unit_id.name)
-                total = advance.currency_id.compute(
-                    advance.amount,
+                    rec.operating_unit_id.name,
+                    rec.name,
+                    rec.travel_id.name,
+                    rec.employee_id.name,
+                    rec.unit_id.name)
+                total = rec.currency_id.compute(
+                    rec.amount,
                     self.env.user.currency_id)
                 if total > 0.0:
                     accounts = {'credit': advance_credit_account_id,
                                 'debit': advance_debit_account_id}
                     for name, account in accounts.items():
                         move_line = (0, 0, {
-                            'name': advance.name,
+                            'name': rec.name,
                             'partner_id': (
-                                advance.employee_id.address_home_id.id),
+                                rec.employee_id.address_home_id.id),
                             'account_id': account,
                             'narration': notes,
                             'debit': (total if name == 'debit' else 0.0),
                             'credit': (total if name == 'credit' else 0.0),
                             'journal_id': advance_journal_id,
-                            'operating_unit_id': advance.operating_unit_id.id,
+                            'operating_unit_id': rec.operating_unit_id.id,
                         })
                         move_lines.append(move_line)
                     move = {
                         'date': fields.Date.today(),
                         'journal_id': advance_journal_id,
-                        'name': _('Advance: %s') % (advance.name),
+                        'name': _('Advance: %s') % (rec.name),
                         'line_ids': [line for line in move_lines],
-                        'operating_unit_id': advance.operating_unit_id.id
+                        'operating_unit_id': rec.operating_unit_id.id
                     }
                     move_id = obj_account_move.create(move)
                     if not move_id:
@@ -204,17 +200,10 @@ class TmsAdvance(models.Model):
                                 ' of the accounting move. '))
                     else:
                         move_id.post()
-                        self.write(
-                            {
-                                'move_id': move_id.id,
-                                'state': 'confirmed'
-                            })
-                        self.message_post(_(
-                            '<strong>Advance confirmed.</strong><ul>'
-                            '<li><strong>Confirmed by: </strong>%s</li>'
-                            '<li><strong>Confirmed at: </strong>%s</li>'
-                            '</ul>') % (self.env.user.name,
-                                        fields.Date.today()))
+                        rec.move_id = move_id.id
+                        rec.state = 'confirmed'
+                        rec.message_post(
+                            _('<strong>Advance confirmed.</strong>'))
 
     @api.multi
     def action_cancel(self):
@@ -229,11 +218,7 @@ class TmsAdvance(models.Model):
                     rec.move_id.button_cancel()
                 rec.move_id.unlink()
                 rec.state = 'cancel'
-                rec.message_post(_(
-                    '<strong>Advance cancelled.</strong><ul>'
-                    '<li><strong>Cancelled by: </strong>%s</li>'
-                    '<li><strong>Cancelled at: </strong>%s</li>'
-                    '</ul>') % (self.env.user.name, fields.Date.today()))
+                rec.message_post(_('<strong>Advance cancelled.</strong>'))
 
     @api.multi
     def action_cancel_draft(self):
@@ -244,8 +229,17 @@ class TmsAdvance(models.Model):
                         ' the travel is cancelled.'))
             else:
                 rec.state = 'draft'
-                rec.message_post(_(
-                    '<strong>Advance drafted.</strong><ul>'
-                    '<li><strong>Drafted by: </strong>%s</li>'
-                    '<li><strong>Drafted at: </strong>%s</li>'
-                    '</ul>') % (self.env.user.name, fields.Date.today()))
+                rec.message_post(_('<strong>Advance drafted.</strong>'))
+
+    @api.multi
+    def action_pay(self):
+        for rec in self:
+            bank = self.env['account.journal'].search(
+                [('type', '=', 'bank')])[0]
+            wiz = self.env['tms.wizard.payment'].with_context(
+                active_model='tms.advance', active_ids=[rec.id]).create({
+                    'journal_id': bank.id,
+                    'amount_total': rec.amount,
+                    'date': rec.date,
+                    })
+            wiz.make_payment()
