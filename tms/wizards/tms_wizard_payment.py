@@ -86,6 +86,7 @@ class TmsWizardPayment(models.TransientModel):
                 counterpart_move_line, amount_bank = self.create_counterpart(
                     model_amount, currency, obj,
                     amount_currency, amount_bank, counterpart_move_line)
+                self._create_payment(counterpart_move_line, rec)
                 move_lines.append((0, 0, counterpart_move_line))
             if amount_currency > 0.0:
                 bank_line['amount_currency'] = amount_currency
@@ -108,6 +109,22 @@ class TmsWizardPayment(models.TransientModel):
             }
             # Creating moves and reconciles method explained above
             rec.create_moves_and_reconciles(move, active_ids)
+
+    @api.multi
+    def _create_payment(self, counterpart_move_line, record):
+        obj_payment = self.env['account.payment']
+        payment_id = obj_payment.create({
+            'partner_type': 'supplier',
+            'journal_id': counterpart_move_line['journal_id'],
+            'partner_id': counterpart_move_line['partner_id'],
+            'amount': counterpart_move_line['debit'],
+            'payment_date': record.date,
+            'communication': counterpart_move_line['name'],
+            'payment_type': 'outbound',
+            'payment_method_id': 1,
+        })
+        payment_id.post()
+        counterpart_move_line['payment_id'] = payment_id.id
 
     @api.multi
     def create_counterpart(self, model_amount, currency, obj,
