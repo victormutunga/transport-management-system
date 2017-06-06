@@ -1,2 +1,3 @@
 operating-unit https://github.com/Jarsa-dev/operating-unit.git 9.0
 geospatial https://github.com/OCA/geospatial.git 9.0
+mexico git@github.com:Vauxoo/mexico.git 9.0
