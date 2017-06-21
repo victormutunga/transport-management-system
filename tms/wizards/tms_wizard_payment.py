@@ -122,8 +122,8 @@ class TmsWizardPayment(models.TransientModel):
             'communication': counterpart_move_line['name'],
             'payment_type': 'outbound',
             'payment_method_id': 1,
+            'state': 'posted',
         })
-        payment_id.post()
         counterpart_move_line['payment_id'] = payment_id.id
 
     @api.multi
