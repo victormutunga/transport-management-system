@@ -5,6 +5,7 @@
 from openerp import api, fields, models
 from datetime import datetime
 
+
 class TmsExpenseLine(models.Model):
     _inherit = 'tms.expense.line'
 
@@ -65,7 +66,7 @@ class TmsExpenseLine(models.Model):
         for rec in self:
             sortedArray = sorted(
                 rec.tollstation_ids,
-                key=lambda x: datetime.strptime(x['date'],
-                    '%Y-%m-%d %H:%M:%S'),
+                key=lambda x: datetime.strptime(
+                    x['date'], '%Y-%m-%d %H:%M:%S'),
                 reverse=True)
             return sortedArray

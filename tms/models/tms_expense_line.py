@@ -38,7 +38,8 @@ class TmsExpenseLine(models.Model):
          ('refund', 'Refund'),
          ('salary_retention', 'Salary Retention'),
          ('salary_discount', 'Salary Discount'),
-         ('other_income', 'Other Income')],
+         ('other_income', 'Other Income'),
+         ('tollstations', 'Toll Stations')],
         compute='_compute_line_type',
         store=True, readonly=True)
     name = fields.Char(
