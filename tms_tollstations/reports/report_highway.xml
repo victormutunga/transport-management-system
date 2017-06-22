@@ -64,7 +64,7 @@
                             <th style='background-color:#D8D8D8'>Fecha de creacion</th>
                         </tr>
                         <t t-as="expense_line" t-foreach="doc.expense_line_ids">
-                            <t t-if="expense_line.line_type == 'made_up_expense'">
+                            <t t-if="expense_line.line_type == 'tollstations'">
                                 <t t-set="tollstation_lines" t-value="expense_line.getOrderLines()"></t>
                                 <tr t-as="tollstation" t-foreach="tollstation_lines">
                                     <td width="10%"><span t-field="tollstation.expense_line_id.travel_id.name"/></td>
