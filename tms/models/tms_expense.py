@@ -612,7 +612,6 @@ class TmsExpense(models.Model):
             # We check if the expense line is an invoice to create it
             # and make the move line based in the total with taxes
             inv_id = False
-
             if line.is_invoice:
                 inv_id = rec.create_supplier_invoice(line)
                 inv_id.signal_workflow('invoice_open')
@@ -634,7 +633,7 @@ class TmsExpense(models.Model):
             # line based in the subtotal
             elif (rec.employee_id.outsourcing and
                   line.product_id.tms_product_category in
-                  ['salary', 'other_income']):
+                  ['salary', 'other_income', 'salary_discount']):
                 continue
             else:
 
@@ -707,12 +706,19 @@ class TmsExpense(models.Model):
     @api.multi
     def check_balance_value(self, result):
         for rec in self:
-            if rec.amount_balance < 0:
+            balance = rec.amount_balance
+            if (rec.employee_id.outsourcing and rec.expense_line_ids.filtered(
+                    lambda x: x.line_type == 'other_income')):
+                balance = (balance - rec.amount_other_income) - sum(
+                    rec.expense_line_ids.filtered(
+                        lambda y: y.line_type == 'salary_discount').mapped(
+                        'price_total'))
+            if balance < 0:
                 move_line = rec.prepare_move_line(
                     _('Negative Balance'),
                     rec.name,
                     result['negative_account'],
-                    rec.amount_balance * -1.0,
+                    balance * -1.0,
                     0.0,
                     result['journal_id'],
                     rec.employee_id.address_home_id.id,
@@ -723,7 +729,7 @@ class TmsExpense(models.Model):
                     rec.name,
                     result['driver_account_payable'],
                     0.0,
-                    rec.amount_balance,
+                    balance,
                     result['journal_id'],
                     rec.employee_id.address_home_id.id,
                     rec.operating_unit_id.id)
