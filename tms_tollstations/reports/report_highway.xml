@@ -91,19 +91,19 @@
 
                             <t t-set='subtotal' t-value='0'/>
                                 <p t-foreach='doc.expense_line_ids' t-as='expense_line'>
-                                    <t t-if="expense_line.line_type == 'made_up_expense'">
+                                    <t t-if="expense_line.line_type == 'tollstations'">
                                         <t t-set='subtotal' t-value='round(subtotal+expense_line.price_subtotal, 2)'/>
                                     </t>
                                 </p>
                             <t t-set='tax_amount' t-value='0'/>
                                 <p t-foreach='doc.expense_line_ids' t-as='expense_line'>
-                                    <t t-if="expense_line.line_type == 'made_up_expense'">
+                                    <t t-if="expense_line.line_type == 'tollstations'">
                                         <t t-set='tax_amount' t-value='round(tax_amount+expense_line.tax_amount, 2)'/>
                                     </t>
                                 </p>
                             <t t-set='total' t-value='0'/>
                                 <p t-foreach='doc.expense_line_ids' t-as='expense_line'>
-                                    <t t-if="expense_line.line_type == 'made_up_expense'">
+                                    <t t-if="expense_line.line_type == 'tollstations'">
                                         <t t-set='total' t-value='round(total+expense_line.price_total, 2)'/>
                                     </t>
                                 </p>
