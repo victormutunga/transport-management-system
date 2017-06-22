@@ -683,7 +683,8 @@ class TmsExpense(models.Model):
             # made up expenses
             if line.line_type == 'fuel' and not line.control:
                 rec.create_fuel_vouchers(line)
-            if line.line_type not in ('made_up_expense', 'fuel'):
+            if line.line_type not in (
+                    'made_up_expense', 'fuel', 'tollstations'):
                 product_account = (
                     result['negative_account']
                     if (line.product_id.
