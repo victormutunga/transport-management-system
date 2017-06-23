@@ -233,6 +233,7 @@ class TmsExpense(models.Model):
                 strp_end_date = datetime.strptime(
                     rec.end_date, "%Y-%m-%d %H:%M:%S")
                 difference = strp_end_date - strp_start_date
+                days = int(difference.days) + 1
                 hours = int(difference.seconds / 3600)
                 mins = int((difference.seconds - (hours * 3600))/60)
                 seconds = difference.seconds - ((hours * 3600) + (mins * 60))
@@ -243,7 +244,7 @@ class TmsExpense(models.Model):
                 if seconds < 10:
                     seconds = '0' + str(seconds)
                 total_string = (
-                    str(difference.days) + _('Day(s), ') +
+                    str(days) + _('Day(s), ') +
                     str(hours) + ':' +
                     str(mins) + ':' +
                     str(seconds))
