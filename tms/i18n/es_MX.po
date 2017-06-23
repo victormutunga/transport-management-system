@@ -53,6 +53,11 @@ msgstr "* Base: %s \n"
 ""
 
 #. module: tms
+#: model:ir.model.fields,field_description:tms.field_tms_expense_travel_days
+msgid "Travel days"
+msgstr "Días de viaje"
+
+#. module: tms
 #: code:addons/tms/models/tms_event.py:61
 #, python-format
 msgid "<b>Event Cancelled.</b></br><ul><li><b>Cancelled by: </b>%s</li><li><b>Cancelled at: </b>%s</li></ul>"
