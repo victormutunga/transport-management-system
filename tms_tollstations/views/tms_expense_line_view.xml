@@ -8,7 +8,7 @@
             <field name='arch' type='xml'>
                 <xpath expr="//group[1]" position="after">
                     <group>
-                        <field name="tollstation_ids" nolabel='1' attrs="{'invisible':[('line_type','not in', ['made_up_expense'])]}" domain="[('num_tag', '=', tollstation_tag), ('state', '=', 'open')]">
+                        <field name="tollstation_ids" nolabel='1' attrs="{'invisible':[('line_type','not in', ['tollstations'])]}" domain="[('num_tag', '=', tollstation_tag), ('state', '=', 'open')]">
                             <tree>
                                 <field name="name"/>
                                 <field name="date"/>

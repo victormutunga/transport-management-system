@@ -5,10 +5,11 @@
 
 from __future__ import division
 
+import logging
+
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
-import logging
 _logger = logging.getLogger(__name__)
 try:
     from num2words import num2words
@@ -63,7 +64,6 @@ class FleetVehicleLogFuel(models.Model):
         readonly=True,
         domain=[('state', '!=', 'cancel')],)
     invoice_paid = fields.Boolean(
-        string='Invoice Paid',
         compute='_compute_invoiced_paid')
     operating_unit_id = fields.Many2one(
         'operating.unit',
@@ -79,11 +79,9 @@ class FleetVehicleLogFuel(models.Model):
          ('confirmed', 'Confirmed'),
          ('closed', 'Closed'),
          ('cancel', 'Cancelled')],
-        string='State',
         readonly=True,
         default='draft',)
     no_travel = fields.Boolean(
-        string='No Travel',
         help="Check this if you want to create Fuel Voucher "
         "with no Travel.",)
     vendor_id = fields.Many2one(
@@ -100,8 +98,7 @@ class FleetVehicleLogFuel(models.Model):
     expense_control = fields.Boolean(
         readonly=True,
     )
-    ticket_number = fields.Char(
-        string='Ticket Number',)
+    ticket_number = fields.Char()
 
     @api.multi
     @api.depends('vehicle_id')

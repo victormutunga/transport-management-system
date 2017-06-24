@@ -11,6 +11,8 @@ class TmsExpenseLine(models.Model):
     _name = 'tms.expense.line'
     _description = 'Expense Line'
 
+    loan_id = fields.Many2one('tms.expense.loan',
+                              string='Loan')
     travel_id = fields.Many2one(
         'tms.travel',
         string='Travel')
@@ -36,7 +38,8 @@ class TmsExpenseLine(models.Model):
          ('refund', 'Refund'),
          ('salary_retention', 'Salary Retention'),
          ('salary_discount', 'Salary Discount'),
-         ('other_income', 'Other Income')],
+         ('other_income', 'Other Income'),
+         ('tollstations', 'Toll Stations')],
         compute='_compute_line_type',
         store=True, readonly=True)
     name = fields.Char(
@@ -65,7 +68,7 @@ class TmsExpenseLine(models.Model):
         string='Driver')
     date = fields.Date()
     state = fields.Char(readonly=True)
-    control = fields.Boolean('Control')
+    control = fields.Boolean()
     automatic = fields.Boolean(
         help="Check this if you want to create Advances and/or "
         "Fuel Vouchers for this line automatically")

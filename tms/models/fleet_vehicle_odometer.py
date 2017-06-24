@@ -22,6 +22,5 @@ class FleetVehicleOdometer(models.Model):
         string='Current Read',
         required=True)
     distance = fields.Float(
-        string='Distance',
         required=True)
     travel_id = fields.Many2one('tms.travel', string='Travel')

@@ -53,22 +53,27 @@
                     </table>
                 </div>
                 <div class='row'>
-                    <table class='table table-condensed table-bordered'>
+                    <table class='table table-bordered'>
                         <tr>
+                            <th style='background-color:#D8D8D8'>Viaje</th>
                             <th style='background-color:#D8D8D8'>Concepto de Gastos</th>
                             <th style='background-color:#D8D8D8'>Fecha</th>
                             <th style='background-color:#D8D8D8'>Importe</th>
                             <th style='background-color:#D8D8D8'>IVA</th>
                             <th style='background-color:#D8D8D8'>Total</th>
+                            <th style='background-color:#D8D8D8'>Fecha de creacion</th>
                         </tr>
                         <t t-as="expense_line" t-foreach="doc.expense_line_ids">
-                            <t t-if="expense_line.line_type == 'made_up_expense'">
-                                <tr t-as="tollstation" t-foreach="expense_line.tollstation_ids">
+                            <t t-if="expense_line.line_type == 'tollstations'">
+                                <t t-set="tollstation_lines" t-value="expense_line.getOrderLines()"></t>
+                                <tr t-as="tollstation" t-foreach="tollstation_lines">
+                                    <td width="10%"><span t-field="tollstation.expense_line_id.travel_id.name"/></td>
                                     <td width="20%"><span t-field="tollstation.name"/></td>
                                     <td width="20%"><span t-field="tollstation.date"/></td>
-                                    <td width="20%"><span t-esc="round((tollstation.import_rate * 100) / 116, 2)"/></td>
-                                    <td width="20%"><span t-esc="round((tollstation.import_rate * 16) / 116, 2)"/></td>
-                                    <td width="20%"><span t-field="tollstation.import_rate"/></td>
+                                    <td width="10%"><span t-esc="round((tollstation.import_rate * 100) / 116, 2)"/></td>
+                                    <td width="10%"><span t-esc="round((tollstation.import_rate * 16) / 116, 2)"/></td>
+                                    <td width="10%"><span t-field="tollstation.import_rate"/></td>
+                                    <td width="20%"><span t-field="tollstation.create_date"/></td>
                                 </tr>
                             </t>
                         </t>
@@ -83,21 +88,22 @@
                     </div>
                     <div class='col-xs-5 col-sm-5 col-md-5 col-lg-5'>
                         <table class='table table-condensed'>
+
                             <t t-set='subtotal' t-value='0'/>
                                 <p t-foreach='doc.expense_line_ids' t-as='expense_line'>
-                                    <t t-if="expense_line.line_type == 'made_up_expense'">
+                                    <t t-if="expense_line.line_type == 'tollstations'">
                                         <t t-set='subtotal' t-value='round(subtotal+expense_line.price_subtotal, 2)'/>
                                     </t>
                                 </p>
                             <t t-set='tax_amount' t-value='0'/>
                                 <p t-foreach='doc.expense_line_ids' t-as='expense_line'>
-                                    <t t-if="expense_line.line_type == 'made_up_expense'">
+                                    <t t-if="expense_line.line_type == 'tollstations'">
                                         <t t-set='tax_amount' t-value='round(tax_amount+expense_line.tax_amount, 2)'/>
                                     </t>
                                 </p>
                             <t t-set='total' t-value='0'/>
                                 <p t-foreach='doc.expense_line_ids' t-as='expense_line'>
-                                    <t t-if="expense_line.line_type == 'made_up_expense'">
+                                    <t t-if="expense_line.line_type == 'tollstations'">
                                         <t t-set='total' t-value='round(total+expense_line.price_total, 2)'/>
                                     </t>
                                 </p>

@@ -28,7 +28,6 @@ class TmsWaybillLine(models.Model):
         required=True,
         domain=[('sale_ok', '=', True)])
     unit_price = fields.Float(
-        'Unit Price',
         default=0.0)
     price_subtotal = fields.Float(
         compute='_compute_amount_line',

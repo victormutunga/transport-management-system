@@ -98,5 +98,12 @@
             <field eval="True" name="purchase_ok"/>
             <field eval="False" name="sale_ok"/>
         </record>
+        <record id="product_loan" model="product.product">
+            <field name="name">Loan</field>
+            <field name="type">service</field>
+            <field eval="True" name="purchase_ok"/>
+            <field eval="False" name="sale_ok"/>
+            <field name="tms_product_category">salary_discount</field>
+        </record>
     </data>
 </odoo>

@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Copyright 2012, Israel Cruz Argil, Argil Consulting
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
@@ -42,6 +43,7 @@
         'views/tms_event_view.xml',
         'views/tms_expense_view.xml',
         'views/tms_expense_line_view.xml',
+        'views/tms_expense_loan_view.xml',
         'views/tms_factor_view.xml',
         'views/tms_place_view.xml',
         'views/tms_route_view.xml',

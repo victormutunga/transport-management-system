@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-	<data>
+    <data>
         <record id="paperformat_94_151_tms" model="report.paperformat">
             <field name="name">US Letter TMS</field>
             <field eval="True" name="default"/>
@@ -48,5 +48,5 @@
                 </div>
             </div>
         </template>
-	</data>
+    </data>
 </odoo>

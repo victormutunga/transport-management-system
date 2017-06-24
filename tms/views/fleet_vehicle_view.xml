@@ -23,6 +23,7 @@
             <field name="name">fleet.vehicle.tms.form</field>
             <field name="model">fleet.vehicle</field>
             <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+            <field name="priority">110</field>
             <field name="arch" type="xml">
                 <xpath expr="//form/sheet" position="before">
                     <div class="alert alert-info" role="alert" style="margin-bottom:0px;" attrs="{'invisible': [('insurance_days_to_expire','!=', 0)]}">
