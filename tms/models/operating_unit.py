@@ -10,33 +10,27 @@ class OperatingUnit(models.Model):
     _inherit = 'operating.unit'
 
     travel_sequence_id = fields.Many2one(
-        'ir.sequence',
-        string='Travel Sequence', required=True)
+        'ir.sequence', string='Travel Sequence')
     fuel_log_sequence_id = fields.Many2one(
-        'ir.sequence', string='Fuel Log Sequence', required=True)
+        'ir.sequence', string='Fuel Log Sequence')
     advance_sequence_id = fields.Many2one(
-        'ir.sequence', string='Advance Sequence', required=True)
+        'ir.sequence', string='Advance Sequence')
     waybill_sequence_id = fields.Many2one(
-        'ir.sequence', string='Waybill Sequence', required=True)
+        'ir.sequence', string='Waybill Sequence')
     expense_sequence_id = fields.Many2one(
-        'ir.sequence', string='Expense Sequence', required=True)
+        'ir.sequence', string='Expense Sequence')
     loan_sequence_id = fields.Many2one(
-        'ir.sequence', string='Expense Loan Sequence', required=True)
+        'ir.sequence', string='Expense Loan Sequence')
     advance_journal_id = fields.Many2one(
-        'account.journal',
-        string='Advance Journal', required=True)
+        'account.journal', string='Advance Journal')
     expense_journal_id = fields.Many2one(
-        'account.journal',
-        string='Expense Journal', required=True)
+        'account.journal', string='Expense Journal')
     loan_journal_id = fields.Many2one(
-        'account.journal',
-        string='Expense Loan Journal', required=True)
+        'account.journal', string='Expense Loan Journal')
     sale_journal_id = fields.Many2one(
-        'account.journal',
-        string='Sale Journal', required=True)
+        'account.journal', string='Sale Journal')
     purchase_journal_id = fields.Many2one(
-        'account.journal',
-        string='Purchase Journal', required=True)
+        'account.journal', string='Purchase Journal')
     ieps_product_id = fields.Many2one(
-        'product.product', string='IEPS Product', required=True)
-    credit_limit = fields.Float(string="Credict Limit")
+        'product.product', string='IEPS Product')
+    credit_limit = fields.Float()

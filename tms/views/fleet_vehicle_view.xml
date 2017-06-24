@@ -105,6 +105,16 @@
                 </xpath>
             </field>
         </record>
+        <record model='ir.ui.view' id='fleet_vehicle_tms_kanban'>
+            <field name='name'>fleet_vehicle_tms_kanban</field>
+            <field name='model'>fleet.vehicle</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_kanban"/>
+            <field name='arch' type='xml'>
+                <xpath expr="//strong" position="before">
+                    <strong><field name="name"/></strong><br/>
+                </xpath>
+            </field>
+        </record>
         <record id="fleet.fleet_vehicle_tree" model="ir.ui.view">
             <field name="name">fleet.vehicle.tms.tree</field>
             <field name="model">fleet.vehicle</field>

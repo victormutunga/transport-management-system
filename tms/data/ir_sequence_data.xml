@@ -44,8 +44,24 @@
         <record model="ir.sequence" id="loan_sequence">
             <field name="name">Loan Sequence</field>
             <field name="implementation">no_gap</field>
-            <field name="code">PR</field>
-            <field name="prefix">PR</field>
+            <field name="code">L</field>
+            <field name="prefix">L</field>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+        </record>
+        <record model="ir.sequence" id="sale_journal_sequence">
+            <field name="name">Sale Jorunal Sequence</field>
+            <field name="implementation">no_gap</field>
+            <field name="code">S</field>
+            <field name="prefix">S</field>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+        </record>
+        <record model="ir.sequence" id="purchase_journal_sequence">
+            <field name="name">Purchase Journal Sequence</field>
+            <field name="implementation">no_gap</field>
+            <field name="code">P</field>
+            <field name="prefix">P</field>
             <field name="padding">4</field>
             <field name="number_increment">1</field>
         </record>

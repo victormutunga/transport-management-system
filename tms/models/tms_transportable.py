@@ -10,7 +10,7 @@ class TmsTransportable(models.Model):
     _name = 'tms.transportable'
     _description = 'Transportable Product'
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     uom_id = fields.Many2one(
         'product.uom', 'Unit of Measure ', required=True)
 
