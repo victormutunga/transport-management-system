@@ -83,16 +83,16 @@ class TmsExpense(models.Model):
         compute='_compute_amount_salary_discount',
         string='Salary Discounts',
         store=True)
+    amount_loan = fields.Float(
+        compute='_compute_amount_loan',
+        string='Loans',
+        store=True)
     amount_advance = fields.Float(
         compute='_compute_amount_advance',
         string='Advances',
         store=True)
     amount_balance = fields.Float(
         compute='_compute_amount_balance',
-        string='Balance',
-        store=True)
-    amount_balance2 = fields.Float(
-        compute='_compute_amount_balance2',
         string='Balance',
         store=True)
     amount_tax_total = fields.Float(
@@ -322,6 +322,14 @@ class TmsExpense(models.Model):
                     rec.amount_salary_discount += line.price_total
 
     @api.depends('expense_line_ids')
+    def _compute_amount_loan(self):
+        for rec in self:
+            rec.amount_loan = 0
+            for line in rec.expense_line_ids:
+                if line.line_type == 'loan':
+                    rec.amount_loan += line.price_total
+
+    @api.depends('expense_line_ids')
     def _compute_amount_made_up_expense(self):
         for rec in self:
             rec.amount_made_up_expense = 0
@@ -345,6 +353,7 @@ class TmsExpense(models.Model):
                 rec.amount_salary_discount +
                 rec.amount_real_expense +
                 rec.amount_salary_retention +
+                rec.amount_loan +
                 rec.amount_refund +
                 rec.amount_fuel_cash +
                 rec.amount_other_income)
@@ -382,11 +391,6 @@ class TmsExpense(models.Model):
                 for advance in travel.advance_ids:
                     if advance.payment_move_id:
                         rec.amount_advance += advance.amount
-
-    @api.depends('travel_ids')
-    def _compute_amount_balance2(self):
-        for rec in self:
-            rec.amount_balance2 = 1.0
 
     @api.depends('travel_ids', 'expense_line_ids')
     def _compute_amount_tax_total(self):
@@ -736,6 +740,7 @@ class TmsExpense(models.Model):
                 'partner_id': rec.env.user.company_id.id,
                 'operating_unit_id': rec.operating_unit_id.id,
             }
+            import ipdb; ipdb.set_trace()
             move_id = result['move_obj'].create(move)
             if not move_id:
                 raise ValidationError(
@@ -973,7 +978,7 @@ class TmsExpense(models.Model):
                         expense_line = self.expense_line_ids.create({
                             'name': _("Loan: ") + str(loan.name),
                             'expense_id': self.id,
-                            'line_type': "salary_discount",
+                            'line_type': "loan",
                             'product_id': loan.product_id.id,
                             'product_qty': 1.0,
                             'unit_price': total_discount,
@@ -989,7 +994,7 @@ class TmsExpense(models.Model):
                     expense_line = self.expense_line_ids.create({
                         'name': _("Loan: ") + str(loan.name),
                         'expense_id': self.id,
-                        'line_type': "salary_discount",
+                        'line_type': "loan",
                         'product_id': loan.product_id.id,
                         'product_qty': 1.0,
                         'unit_price': loan.amount_discount,

@@ -8,8 +8,6 @@
         <menuitem id="menu_tms_settings" name="Configuration" parent="menu_tms" sequence="99"/>
         <menuitem id="menu_tms_settings_unit" name="Units" parent="menu_tms_settings" sequence="30"/>
         <menuitem id="menu_tms_settings_routes" name="Routes" parent="menu_tms_settings" sequence="40"/>
-        <menuitem action="base.action_partner_customer_form" id="menu_tms_account_customer" name="Customers" parent="menu_tms_settings" sequence="15"/>
-        <menuitem action="base.action_partner_supplier_form" id="menu_tms_procurement_management_supplier_name" name="Suppliers" parent="menu_tms_settings" sequence="15"/>
         <menuitem action="fleet.fleet_vehicle_state_action" groups="fleet.fleet_group_manager" id="tms_fleet_vehicle_state_menu" parent="menu_tms_settings_unit" sequence="13"/>
         <menuitem action="fleet.fleet_vehicle_model_action" id="tms_fleet_vehicle_model" parent="menu_tms_settings_unit" sequence="14"/>
         <menuitem action="fleet.fleet_vehicle_model_brand_action" id="tms_fleet_vehicle_make" parent="menu_tms_settings_unit" sequence="15"/>

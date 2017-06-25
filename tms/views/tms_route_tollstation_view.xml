@@ -46,7 +46,7 @@
             </field>
         </record>
         <record id='action_tms_route_tollstation' model='ir.actions.act_window'>
-            <field name='name'>Tollstation Action</field>
+            <field name='name'>Tollstations</field>
             <field name='res_model'>tms.route.tollstation</field>
             <field name='view_type'>form</field>
             <field name='view_mode'>tree,form</field>

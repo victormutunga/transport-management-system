@@ -178,9 +178,10 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Expenses">
+                            <page string="Expenses" 
+                                attrs="{'invisible':[('expense_ids','=', [(6, False, [])])]}">
                                 <field colspan="4" name="expense_ids" nolabel="1">
-                                    <tree editable="bottom">
+                                    <tree>
                                         <field name="name"/>
                                         <field name="date"/>
                                         <field name="employee_id"/>
