@@ -10,7 +10,7 @@
 Accounting Reports
 ====================
     """,
-    'depends': ['account', 'tms'],
+    'depends': ['account_reports', 'tms'],
     'data': [
         'data/init.yml',
         'data/tms_general_report_data.xml',
@@ -19,7 +19,6 @@ Accounting Reports
     'qweb': [
         'static/src/xml/tms_report_backend.xml',
     ],
-    'auto_install': True,
     'installable': True,
     'license': 'OEEL-1',
 }

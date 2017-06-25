@@ -935,8 +935,6 @@ msgstr "Crear factura"
 #: model:ir.model.fields,field_description:tms.field_fleet_vehicle_engine_create_uid
 #: model:ir.model.fields,field_description:tms.field_tms_advance_create_uid
 #: model:ir.model.fields,field_description:tms.field_tms_config_settings_create_uid
-#: model:ir.model.fields,field_description:tms.field_tms_custom_house_create_uid
-#: model:ir.model.fields,field_description:tms.field_tms_customs_create_uid
 #: model:ir.model.fields,field_description:tms.field_tms_event_create_uid
 #: model:ir.model.fields,field_description:tms.field_tms_expense_create_uid
 #: model:ir.model.fields,field_description:tms.field_tms_expense_line_create_uid
@@ -969,8 +967,6 @@ msgstr "Creado por"
 #: model:ir.model.fields,field_description:tms.field_fleet_vehicle_engine_create_date
 #: model:ir.model.fields,field_description:tms.field_tms_advance_create_date
 #: model:ir.model.fields,field_description:tms.field_tms_config_settings_create_date
-#: model:ir.model.fields,field_description:tms.field_tms_custom_house_create_date
-#: model:ir.model.fields,field_description:tms.field_tms_customs_create_date
 #: model:ir.model.fields,field_description:tms.field_tms_event_create_date
 #: model:ir.model.fields,field_description:tms.field_tms_expense_create_date
 #: model:ir.model.fields,field_description:tms.field_tms_expense_line_create_date
@@ -1029,14 +1025,6 @@ msgid "Current Real"
 msgstr "Odometro Actual"
 
 #. module: tms
-#: model:ir.actions.act_window,name:tms.action_tms_custom_house
-#: model:ir.model.fields,field_description:tms.field_tms_custom_house_custom_ids
-#: model:ir.model.fields,field_description:tms.field_tms_customs_custom_house_id
-#: model:ir.ui.menu,name:tms.tms_custom_house
-msgid "Custom House"
-msgstr "Aduana"
-
-#. module: tms
 #: model:ir.model.fields,field_description:tms.field_tms_travel_partner_ids
 #: model:ir.model.fields,field_description:tms.field_tms_waybill_partner_id
 #: model:ir.ui.view,arch_db:tms.view_tms_travel_search
@@ -1044,14 +1032,6 @@ msgstr "Aduana"
 #: selection:tms.factor,category:0
 msgid "Customer"
 msgstr "Cliente"
-
-#. module: tms
-#: model:ir.actions.act_window,name:tms.action_tms_customs
-#: model:ir.model.fields,field_description:tms.field_tms_customs_customs
-#: model:ir.model.fields,field_description:tms.field_tms_waybill_custom_ids
-#: model:ir.ui.view,arch_db:tms.view_tms_waybill_form
-msgid "Customs"
-msgstr "Pedimentos"
 
 #. module: tms
 #: model:ir.model.fields,field_description:tms.field_tms_advance_date
@@ -1098,16 +1078,6 @@ msgid "Date end"
 msgstr "Fecha final"
 
 #. module: tms
-#: model:ir.model.fields,field_description:tms.field_tms_customs_return_datetime
-msgid "Date of Return"
-msgstr "Fecha de Regreso"
-
-#. module: tms
-#: model:ir.model.fields,field_description:tms.field_tms_customs_returned_datetime
-msgid "Date of Returned"
-msgstr "Fecha de Regreso"
-
-#. module: tms
 #: model:ir.model.fields,help:tms.field_fleet_vehicle_log_fuel_message_last_post
 #: model:ir.model.fields,help:tms.field_tms_advance_message_last_post
 #: model:ir.model.fields,help:tms.field_tms_event_message_last_post
@@ -1124,12 +1094,6 @@ msgstr "Fecha del último mensaje publicado en el registro."
 #: model:ir.model.fields,field_description:tms.field_tms_unit_kit_date_start
 msgid "Date start"
 msgstr "Fecha de inicio"
-
-#. module: tms
-#: model:ir.model.fields,field_description:tms.field_tms_customs_datetime
-#: selection:tms.extradata.type,type:0
-msgid "Datetime"
-msgstr "Fecha y Hora"
 
 #. module: tms
 #: model:ir.ui.view,arch_db:tms.view_tms_advance_search
@@ -1239,8 +1203,6 @@ msgstr "Despachar Viaje"
 #: model:ir.model.fields,field_description:tms.field_fleet_vehicle_engine_display_name
 #: model:ir.model.fields,field_description:tms.field_tms_advance_display_name
 #: model:ir.model.fields,field_description:tms.field_tms_config_settings_display_name
-#: model:ir.model.fields,field_description:tms.field_tms_custom_house_display_name
-#: model:ir.model.fields,field_description:tms.field_tms_customs_display_name
 #: model:ir.model.fields,field_description:tms.field_tms_event_display_name
 #: model:ir.model.fields,field_description:tms.field_tms_expense_display_name
 #: model:ir.model.fields,field_description:tms.field_tms_expense_line_display_name
@@ -2135,8 +2097,6 @@ msgstr "I.V.A."
 #: model:ir.model.fields,field_description:tms.field_fleet_vehicle_engine_id_5991
 #: model:ir.model.fields,field_description:tms.field_tms_advance_id
 #: model:ir.model.fields,field_description:tms.field_tms_config_settings_id
-#: model:ir.model.fields,field_description:tms.field_tms_custom_house_id
-#: model:ir.model.fields,field_description:tms.field_tms_customs_id
 #: model:ir.model.fields,field_description:tms.field_tms_event_id
 #: model:ir.model.fields,field_description:tms.field_tms_expense_id
 #: model:ir.model.fields,field_description:tms.field_tms_expense_line_id
@@ -2401,8 +2361,6 @@ msgstr "Fecha Último Mensaje"
 #: model:ir.model.fields,field_description:tms.field_fleet_vehicle_engine___last_update
 #: model:ir.model.fields,field_description:tms.field_tms_advance___last_update
 #: model:ir.model.fields,field_description:tms.field_tms_config_settings___last_update
-#: model:ir.model.fields,field_description:tms.field_tms_custom_house___last_update
-#: model:ir.model.fields,field_description:tms.field_tms_customs___last_update
 #: model:ir.model.fields,field_description:tms.field_tms_event___last_update
 #: model:ir.model.fields,field_description:tms.field_tms_expense___last_update
 #: model:ir.model.fields,field_description:tms.field_tms_expense_line___last_update
@@ -2441,8 +2399,6 @@ msgstr "Última Lectura"
 #: model:ir.model.fields,field_description:tms.field_fleet_vehicle_engine_write_uid
 #: model:ir.model.fields,field_description:tms.field_tms_advance_write_uid
 #: model:ir.model.fields,field_description:tms.field_tms_config_settings_write_uid
-#: model:ir.model.fields,field_description:tms.field_tms_custom_house_write_uid
-#: model:ir.model.fields,field_description:tms.field_tms_customs_write_uid
 #: model:ir.model.fields,field_description:tms.field_tms_event_write_uid
 #: model:ir.model.fields,field_description:tms.field_tms_expense_line_write_uid
 #: model:ir.model.fields,field_description:tms.field_tms_expense_loan_write_uid_8370
@@ -2475,8 +2431,6 @@ msgstr "Ultima actualizacion por"
 #: model:ir.model.fields,field_description:tms.field_fleet_vehicle_engine_write_date
 #: model:ir.model.fields,field_description:tms.field_tms_advance_write_date
 #: model:ir.model.fields,field_description:tms.field_tms_config_settings_write_date
-#: model:ir.model.fields,field_description:tms.field_tms_custom_house_write_date
-#: model:ir.model.fields,field_description:tms.field_tms_customs_write_date
 #: model:ir.model.fields,field_description:tms.field_tms_event_write_date
 #: model:ir.model.fields,field_description:tms.field_tms_expense_line_write_date
 #: model:ir.model.fields,field_description:tms.field_tms_expense_loan_write_date_8365
@@ -2761,7 +2715,6 @@ msgstr "Mis Cartas Porte"
 
 #. module: tms
 #: model:ir.model.fields,field_description:tms.field_fleet_vehicle_engine_name
-#: model:ir.model.fields,field_description:tms.field_tms_custom_house_name
 #: model:ir.model.fields,field_description:tms.field_tms_expense_loan_name_8394
 #: model:ir.model.fields,field_description:tms.field_tms_expense_name
 #: model:ir.model.fields,field_description:tms.field_tms_extradata_type_name
@@ -4606,14 +4559,6 @@ msgid "basic"
 msgstr "básico"
 
 #. module: tms
-#: model:ir.ui.view,arch_db:tms.tms_custom_form_view
-#: model:ir.ui.view,arch_db:tms.tms_custom_house_form_view
-#: model:ir.ui.view,arch_db:tms.tms_custom_house_tree_view
-#: model:ir.ui.view,arch_db:tms.tms_custom_tree_view
-msgid "description"
-msgstr "Descripción "
-
-#. module: tms
 #: model:ir.ui.view,arch_db:tms.fleet_vehicle_form_inherit_tms
 msgid "e.g. T-1"
 msgstr "Ejemplo T-1"
@@ -4644,16 +4589,6 @@ msgstr "tms config settings"
 #: model:ir.model,name:tms.model_tms_config_settings
 msgid "tms.config.settings"
 msgstr "tms.config.settings"
-
-#. module: tms
-#: model:ir.model,name:tms.model_tms_custom_house
-msgid "tms.custom.house"
-msgstr "tms.custom.house"
-
-#. module: tms
-#: model:ir.model,name:tms.model_tms_customs
-msgid "tms.customs"
-msgstr "tms.customs"
 
 #. module: tms
 #: model:ir.model,name:tms.model_tms_route_fuelefficiency

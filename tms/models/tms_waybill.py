@@ -180,10 +180,6 @@ class TmsWaybill(models.Model):
         'tms.extradata', 'waybill_id',
         string='Extra Data Fields',
         states={'confirmed': [('readonly', True)]})
-    custom_ids = fields.One2many(
-        'tms.customs',
-        'waybill_id',
-        string="Customs")
     expense_ids = fields.Many2many(
         'tms.expense',
         compute="_compute_waybill_expense",

@@ -23,12 +23,8 @@ class FleetVehicleLogFuel(models.Model):
     _order = "date desc,vehicle_id desc"
 
     name = fields.Char()
-    travel_id = fields.Many2one(
-        'tms.travel',
-        string='Travel',)
-    expense_id = fields.Many2one(
-        'tms.expense',
-        string='Expense',)
+    travel_id = fields.Many2one('tms.travel', string='Travel')
+    expense_id = fields.Many2one('tms.expense', string='Expense')
     employee_id = fields.Many2one(
         'hr.employee',
         string='Driver',
@@ -36,67 +32,43 @@ class FleetVehicleLogFuel(models.Model):
         compute='_compute_employee_id',
         store=True,)
     odometer = fields.Float(related='vehicle_id.odometer',)
-    product_uom_id = fields.Many2one(
-        'product.uom',
-        string='UoM ')
-    product_qty = fields.Float(
-        string='Liters',
-        required=True,
-        default=1.0,)
-    tax_amount = fields.Float(
-        string='Taxes',
-        required=True,)
-    price_total = fields.Float(
-        string='Total',
-        required=True,)
+    product_uom_id = fields.Many2one('product.uom', string='UoM')
+    product_qty = fields.Float(string='Liters', default=1.0,)
+    tax_amount = fields.Float(string='Taxes',)
+    price_total = fields.Float(string='Total')
     special_tax_amount = fields.Float(
-        compute="_compute_special_tax_amount",
-        string='IEPS',)
+        compute="_compute_special_tax_amount", string='IEPS')
     price_unit = fields.Float(
-        compute='_compute_price_unit',
-        string='Unit Price',)
+        compute='_compute_price_unit', string='Unit Price')
     price_subtotal = fields.Float(
-        string="Subtotal",
-        compute='_compute_price_subtotal',)
+        string="Subtotal", compute='_compute_price_subtotal')
     invoice_id = fields.Many2one(
-        'account.invoice',
-        'Invoice',
-        readonly=True,
-        domain=[('state', '!=', 'cancel')],)
+        'account.invoice', string='Invoice', readonly=True)
     invoice_paid = fields.Boolean(
         compute='_compute_invoiced_paid')
     operating_unit_id = fields.Many2one(
-        'operating.unit',
-        string='Operating Unit',)
-    currency_id = fields.Many2one(
-        'res.currency', string='Currency',
-        required=True,
-        default=lambda self: self.env.user.company_id.currency_id,)
+        'operating.unit', string='Operating Unit')
     notes = fields.Char()
-    state = fields.Selection(
-        [('draft', 'Draft'),
-         ('approved', 'Approved'),
-         ('confirmed', 'Confirmed'),
-         ('closed', 'Closed'),
-         ('cancel', 'Cancelled')],
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('approved', 'Approved'),
+        ('confirmed', 'Confirmed'),
+        ('closed', 'Closed'),
+        ('cancel', 'Cancelled')],
         readonly=True,
-        default='draft',)
+        default='draft')
     no_travel = fields.Boolean(
         help="Check this if you want to create Fuel Voucher "
-        "with no Travel.",)
-    vendor_id = fields.Many2one(
-        'res.partner',
-        required=True)
+        "with no Travel.")
+    vendor_id = fields.Many2one('res.partner')
     product_id = fields.Many2one(
         'product.product',
         string='Product',
         domain=[('tms_product_category', '=', 'fuel')])
     currency_id = fields.Many2one(
-        'res.currency', 'Currency', required=True,
+        'res.currency', string='Currency',
         default=lambda self: self.env.user.company_id.currency_id)
-    expense_control = fields.Boolean(
-        readonly=True,
-    )
+    expense_control = fields.Boolean(readonly=True)
     ticket_number = fields.Char()
 
     @api.multi
@@ -193,7 +165,7 @@ class FleetVehicleLogFuel(models.Model):
                 rec.invoice_id.state == 'paid')
 
     @api.onchange('no_travel')
-    def _onchange_no_tracel(self):
+    def _onchange_no_travel(self):
         if self.no_travel:
             self.travel_id = False
             self.vehicle_id = False

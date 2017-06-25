@@ -57,8 +57,6 @@
         'views/tms_route_tollstation_view.xml',
         'views/fleet_vehicle_engine_view.xml',
         'views/tms_route_note_view.xml',
-        'views/tms_custom_house_view.xml',
-        'views/tms_custom_view.xml',
         'views/res_company_view.xml',
         'data/product_product_data.xml',
         'data/operating_unit.xml',
@@ -70,7 +68,7 @@
         'data/ir_config_parameter.xml',
     ],
     "demo": [
-        'demo/product_template.xml',
+        'demo/product_product.xml',
         'demo/fleet_vehicle_odometer.xml',
         'demo/ir_sequence.xml',
         'demo/operating_unit.xml',

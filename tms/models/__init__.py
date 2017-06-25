@@ -16,8 +16,6 @@ from . import product_template
 from . import res_company
 from . import tms_advance
 from . import tms_config_settings
-from . import tms_custom_house
-from . import tms_customs
 from . import tms_event
 from . import tms_expense
 from . import tms_expense_line

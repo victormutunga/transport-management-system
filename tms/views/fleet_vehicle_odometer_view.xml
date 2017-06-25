@@ -7,11 +7,10 @@
             <field name="inherit_id" ref="fleet.fleet_vehicle_odometer_view_tree"/>
             <field name="arch" type="xml">
                 <field name="vehicle_id" position="after">
-                    <!-- <field name="odometer_id" />-->
-                    <field invisible="1" name="last_odometer"/>
-                    <field name="current_odometer" />
-                    <field name="distance" />
-                    <field name="travel_id" />
+                    <field invisible="1" name="last_odometer" required="1"/>
+                    <field name="current_odometer" required="1"/>
+                    <field name="distance" required="1"/>
+                    <field name="travel_id"/>
                 </field>
             </field>
         </record>
