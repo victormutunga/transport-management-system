@@ -34,7 +34,6 @@ class TmsPlace(geo_model.GeoModel):
         help='GPS Longitude')
     point = geo_fields.GeoPoint(
         string='Coordinate',
-        store=True,
         compute='_compute_point'
     )
 
@@ -78,4 +77,4 @@ class TmsPlace(geo_model.GeoModel):
     def _compute_point(self):
         for rec in self:
             rec.point = geo_fields.GeoPoint.from_latlon(
-                self.env.cr, rec.latitude, rec.longitude)
+                self.env.cr, rec.latitude, rec.longitude).wkb_hex
