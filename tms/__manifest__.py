@@ -23,6 +23,8 @@
         'python': [
             'sodapy',
             'num2words',
+            'pyproj',
+            'geojson',
         ],
     },
     "summary": "Management System for Carriers, Trucking and other companies",
