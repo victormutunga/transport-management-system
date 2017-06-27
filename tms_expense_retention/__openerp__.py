@@ -3,19 +3,20 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 {
-    "name": "Retention for TMS Expense",
-    "version": "9.0.0.1.0",
-    "category": "Transport",
-    "author": "Jarsa Sistemas",
-    "website": "https://www.jarsa.com.mx",
-    "depends": [
-        "tms",
+    'name': 'Retention for TMS Expense',
+    'version': '10.0.0.1.0',
+    'category': 'Transport',
+    'author': 'Jarsa Sistemas',
+    'website': 'https://www.jarsa.com.mx',
+    'depends': [
+        'tms',
     ],
-    "data": [
-        "views/tms_retention_view.xml",
-        "views/product_template.xml",
+    'data': [
+        'views/tms_retention_view.xml',
+        'views/product_template.xml',
+        'security/ir.model.access.csv',
     ],
-    "summary": "Management System for Carriers, Trucking and other companies",
-    "license": "AGPL-3",
-    "installable": True,
+    'summary': 'Management System for Carriers, Trucking and other companies',
+    'license': 'AGPL-3',
+    'installable': True,
 }
