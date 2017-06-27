@@ -9,7 +9,7 @@
     'category': 'Transport',
     'author': 'Jarsa Sistemas, Argil Consulting',
     'website': 'https://www.jarsa.com.mx/page/transport-management-system',
-    'depends': ['tms', 'l10n_mx', 'l10n_mx_base'],
+    'depends': ['tms', 'l10n_mx'],
     'summary': 'Demo Data for TMS',
     'license': 'AGPL-3',
     'demo': [
