@@ -4,3 +4,4 @@ geographiclib
 Shapely
 sodapy
 num2words
+pyproj
