@@ -3,14 +3,12 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 {
-    'name': "Highway tollstations",
-    'summary': "Highway tollstations",
-    'description': "Import data form iave, "
-    "capufe and epass and link it to a travel expense",
-    "author": "Jarsa Sistemas",
-    "website": "https://www.jarsa.com.mx",
+    'name': 'Highway tollstations',
+    'summary': 'Highway tollstations',
+    'author': 'Jarsa Sistemas',
+    'website': 'https://www.jarsa.com.mx',
     'category': 'Transport',
-    'version': '9.0.0.1.0',
+    'version': '10.0.0.1.0',
     'depends': ['tms'],
     'data': [
         'views/tms_expense_line_view.xml',
@@ -19,5 +17,5 @@
         'wizards/tms_toll_import.xml',
         'reports/report_highway.xml',
     ],
-    "installable": True,
+    'installable': True,
 }

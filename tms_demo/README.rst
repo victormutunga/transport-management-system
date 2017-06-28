@@ -29,7 +29,7 @@ To use this module, you need to:
 
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
    :alt: Try me on Runbot
-   :target: http://runbot.jarsa.com.mx/runbot/repo/git-github-com-jarsa-transport-management-system-1
+   :target: http://runbot.jarsa.com.mx/runbot/repo/git-github-com-jarsa-transport-management-system-2
 
 Known issues / Roadmap
 ======================
