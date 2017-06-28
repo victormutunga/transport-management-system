@@ -2,9 +2,7 @@
 # Copyright 2012, Israel Cruz Argil, Argil Consulting
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
-
-
-from odoo import _, api, fields, exceptions, models
+from odoo import _, api, exceptions, models
 
 
 class TmsWizardInvoice(models.TransientModel):

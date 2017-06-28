@@ -740,7 +740,6 @@ class TmsExpense(models.Model):
                 'partner_id': rec.env.user.company_id.id,
                 'operating_unit_id': rec.operating_unit_id.id,
             }
-            import ipdb; ipdb.set_trace()
             move_id = result['move_obj'].create(move)
             if not move_id:
                 raise ValidationError(
