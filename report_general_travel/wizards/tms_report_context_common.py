@@ -2,9 +2,9 @@
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import models, fields, api, _, osv
+from openerp import models, fields, api, _
 from openerp.exceptions import Warning
-from datetime import timedelta, datetime
+from datetime import datetime
 import calendar
 import json
 from openerp.tools import config
@@ -191,60 +191,101 @@ class TMSReportContextCommon(models.TransientModel):
         title_style = xlwt.easyxf(
             'font: bold true; borders: bottom medium;',
             num_format_str='#,##0.00')
-        level_0_style = xlwt.easyxf('font: bold true; borders: bottom medium, top medium; pattern: pattern solid, fore-colour grey25;', num_format_str='#,##0.00')
-        level_0_style_left = xlwt.easyxf('font: bold true; borders: bottom medium, top medium, left medium; pattern: pattern solid, fore-colour grey25;', num_format_str='#,##0.00')
-        level_0_style_right = xlwt.easyxf('font: bold true; borders: bottom medium, top medium, right medium; pattern: pattern solid, fore-colour grey25;', num_format_str='#,##0.00')
-        level_1_style = xlwt.easyxf('font: bold true; borders: bottom medium, top medium;', num_format_str='#,##0.00')
-        level_1_style_left = xlwt.easyxf('font: bold true; borders: bottom medium, top medium, left medium;', num_format_str='#,##0.00')
-        level_1_style_right = xlwt.easyxf('font: bold true; borders: bottom medium, top medium, right medium;', num_format_str='#,##0.00')
-        level_2_style = xlwt.easyxf('font: bold true; borders: top medium;', num_format_str='#,##0.00')
-        level_2_style_left = xlwt.easyxf('font: bold true; borders: top medium, left medium;', num_format_str='#,##0.00')
-        level_2_style_right = xlwt.easyxf('font: bold true; borders: top medium, right medium;', num_format_str='#,##0.00')
-        level_3_style = xlwt.easyxf(num_format_str='#,##0.00')
-        level_3_style_left = xlwt.easyxf('borders: left medium;', num_format_str='#,##0.00')
-        level_3_style_right = xlwt.easyxf('borders: right medium;', num_format_str='#,##0.00')
-        domain_style = xlwt.easyxf('font: italic true;', num_format_str='#,##0.00')
-        domain_style_left = xlwt.easyxf('font: italic true; borders: left medium;', num_format_str='#,##0.00')
-        domain_style_right = xlwt.easyxf('font: italic true; borders: right medium;', num_format_str='#,##0.00')
-        upper_line_style = xlwt.easyxf('borders: top medium;', num_format_str='#,##0.00')
-        def_style = xlwt.easyxf(num_format_str='#,##0.00')
+        level_0_style = xlwt.easyxf(
+            'font: bold true; borders: bottom medium, top medium;'
+            ' pattern: pattern solid, fore-colour grey25;',
+            num_format_str='#,##0.00')
+        level_0_style_left = xlwt.easyxf(
+            'font: bold true; borders: bottom medium, top medium, '
+            'left medium; pattern: pattern solid, fore-colour grey25;',
+            num_format_str='#,##0.00')
+        level_0_style_right = xlwt.easyxf(
+            'font: bold true; borders: bottom medium, top medium, '
+            'right medium; pattern: pattern solid, fore-colour grey25;',
+            num_format_str='#,##0.00')
+        level_1_style = xlwt.easyxf(
+            'font: bold true; borders: bottom medium, top medium;',
+            num_format_str='#,##0.00')
+        level_1_style_left = xlwt.easyxf(
+            'font: bold true; borders: bottom medium, top medium, '
+            'left medium;',
+            num_format_str='#,##0.00')
+        level_1_style_right = xlwt.easyxf(
+            'font: bold true; borders: bottom medium, top medium, '
+            'right medium;',
+            num_format_str='#,##0.00')
+        level_2_style = xlwt.easyxf(
+            'font: bold true; borders: top medium;',
+            num_format_str='#,##0.00')
+        level_2_style_left = xlwt.easyxf(
+            'font: bold true; borders: top medium, left medium;',
+            num_format_str='#,##0.00')
+        level_2_style_right = xlwt.easyxf(
+            'font: bold true; borders: top medium, right medium;',
+            num_format_str='#,##0.00')
+        level_3_style = xlwt.easyxf(
+            num_format_str='#,##0.00')
+        level_3_style_left = xlwt.easyxf(
+            'borders: left medium;',
+            num_format_str='#,##0.00')
+        level_3_style_right = xlwt.easyxf(
+            'borders: right medium;',
+            num_format_str='#,##0.00')
+        domain_style = xlwt.easyxf(
+            'font: italic true;',
+            num_format_str='#,##0.00')
+        domain_style_left = xlwt.easyxf(
+            'font: italic true; borders: left medium;',
+            num_format_str='#,##0.00')
+        domain_style_right = xlwt.easyxf(
+            'font: italic true; borders: right medium;',
+            num_format_str='#,##0.00')
+        upper_line_style = xlwt.easyxf(
+            'borders: top medium;',
+            num_format_str='#,##0.00')
+        def_style = xlwt.easyxf(
+            num_format_str='#,##0.00')
 
         sheet.col(0).width = 10000
 
         sheet.write(0, 0, '', title_style)
 
-        x = 1
+        count_column = 1
         for column in self.with_context(is_xls=True).get_columns_names():
-            sheet.write(0, x, column, title_style)
-            x += 1
+            sheet.write(0, count_column, column, title_style)
+            count_column += 1
 
         y_offset = 1
-        lines = report_id.with_context(no_format=True, print_mode=True).get_lines(self)
+        lines = (report_id.with_context(
+            no_format=True, print_mode=True).get_lines(self))
 
-        for y in range(0, len(lines)):
-            if lines[y].get('level') == 0 and lines[y].get('type') == 'line':
-                for x in range(0, len(lines[y]['columns']) + 1):
-                    sheet.write(y + y_offset, x, None, upper_line_style)
+        for level_line in range(0, len(lines)):
+            if (lines[level_line].get('level') == 0 and
+                    lines[level_line].get('type') == 'line'):
+                for level_x in range(0, len(lines[level_line]['columns']) + 1):
+                    sheet.write(
+                        level_line + y_offset, level_x, None, upper_line_style)
                 y_offset += 1
                 style_left = level_0_style_left
                 style_right = level_0_style_right
                 style = level_0_style
-            elif lines[y].get('level') == 1 and lines[y].get('type') == 'line':
-                for x in range(0, len(lines[y]['columns']) + 1):
-                    sheet.write(y + y_offset, x, None, upper_line_style)
+            elif lines[level_line].get('level') == 1 and lines[level_line].get('type') == 'line':
+                for level_x in range(0, len(lines[level_line]['columns']) + 1):
+                    sheet.write(
+                        level_line + y_offset, level_x, None, upper_line_style)
                 y_offset += 1
                 style_left = level_1_style_left
                 style_right = level_1_style_right
                 style = level_1_style
-            elif lines[y].get('level') == 2:
+            elif lines[level_line].get('level') == 2:
                 style_left = level_2_style_left
                 style_right = level_2_style_right
                 style = level_2_style
-            elif lines[y].get('level') == 3:
+            elif lines[level_line].get('level') == 3:
                 style_left = level_3_style_left
                 style_right = level_3_style_right
                 style = level_3_style
-            elif lines[y].get('type') != 'line':
+            elif lines[level_line].get('type') != 'line':
                 style_left = domain_style_left
                 style_right = domain_style_right
                 style = domain_style
@@ -252,21 +293,38 @@ class TMSReportContextCommon(models.TransientModel):
                 style = def_style
                 style_left = def_style
                 style_right = def_style
-            sheet.write(y + y_offset, 0, lines[y]['name'], style_left)
-            for x in xrange(1, len(lines[y]['columns']) + 1):
-                if isinstance(lines[y]['columns'][x - 1], tuple):
-                    lines[y]['columns'][x - 1] = lines[y]['columns'][x - 1][0]
-                if x < len(lines[y]['columns']):
-                    sheet.write(y + y_offset, x, lines[y]['columns'][x - 1], style)
+            sheet.write(level_line + y_offset, 0, lines[level_line]['name'],
+                        style_left)
+            for level_x in xrange(1, len(lines[level_line]['columns']) + 1):
+                if isinstance(
+                        lines[level_line]['columns'][level_x - 1], tuple):
+                    lines[level_line]['columns'][level_x - 1] = (
+                        lines[level_line]['columns'][level_x - 1][0])
+                if level_x < len(lines[level_line]['columns']):
+                    sheet.write(
+                        level_line + (
+                            y_offset,
+                            level_x,
+                            lines[level_line]['columns'][level_x - 1],
+                            style))
                 else:
-                    sheet.write(y + y_offset, x, lines[y]['columns'][x - 1], style_right)
-            if lines[y]['type'] == 'total' or lines[y].get('level') == 0:
-                for x in xrange(0, len(lines[0]['columns']) + 1):
-                    sheet.write(y + 1 + y_offset, x, None, upper_line_style)
+                    sheet.write(level_line + (
+                        y_offset,
+                        level_x,
+                        lines[level_line]['columns'][level_x - 1],
+                        style_right))
+            if (lines[level_line]['type'] ==
+                'total' or
+                    lines[level_line].get('level') == 0):
+                for level_x in xrange(0, len(lines[0]['columns']) + 1):
+                    sheet.write(
+                        level_line + 1 + (
+                            y_offset, level_x, None, upper_line_style))
                 y_offset += 1
         if lines:
-            for x in xrange(0, len(lines[0]['columns']) + 1):
-                sheet.write(len(lines) + y_offset, x, None, upper_line_style)
+            for level_x in xrange(0, len(lines[0]['columns']) + 1):
+                sheet.write(len(lines) + (
+                    y_offset, level_x, None, upper_line_style))
 
         book.save(response.stream)
 
