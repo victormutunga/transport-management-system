@@ -239,10 +239,9 @@ class TmsExpenseLoan(models.Model):
     @api.depends('payment_move_id')
     def _compute_paid(self):
         for rec in self:
+            rec.paid = False
             if rec.payment_move_id.id:
                 rec.paid = True
-            else:
-                rec.paid = False
 
     @api.multi
     def action_pay(self):
