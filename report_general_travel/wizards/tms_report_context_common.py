@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from openerp import models, fields, api, _
-from openerp.exceptions import Warning
+from openerp.exceptions import ValidationError
 from datetime import datetime
 import calendar
 import json
@@ -50,7 +50,7 @@ class TMSReportContextCommon(models.TransientModel):
         return self._report_name_to_report_model()[name]
 
     def get_report_obj(self):
-        raise Warning(_('get_report_obj not implemented'))
+        raise ValidationError(_('get_report_obj not implemented'))
 
     @api.multi
     def remove_line(self, line_id):
@@ -66,7 +66,7 @@ class TMSReportContextCommon(models.TransientModel):
         return
 
     def get_columns_names(self):
-        raise Warning(_('get_columns_names not implemented'))
+        raise ValidationError(_('get_columns_names not implemented'))
 
     def get_full_date_names(self, dt_to, dt_from=None):
         convert_date = self.env['ir.qweb.field.date'].value_to_html
@@ -295,7 +295,7 @@ class TMSReportContextCommon(models.TransientModel):
                 style_right = def_style
             sheet.write(level_line + y_offset, 0, lines[level_line]['name'],
                         style_left)
-            for level_x in xrange(1, len(lines[level_line]['columns']) + 1):
+            for level_x in range(1, len(lines[level_line]['columns']) + 1):
                 if isinstance(
                         lines[level_line]['columns'][level_x - 1], tuple):
                     lines[level_line]['columns'][level_x - 1] = (
@@ -316,13 +316,13 @@ class TMSReportContextCommon(models.TransientModel):
             if (lines[level_line]['type'] ==
                 'total' or
                     lines[level_line].get('level') == 0):
-                for level_x in xrange(0, len(lines[0]['columns']) + 1):
+                for level_x in range(0, len(lines[0]['columns']) + 1):
                     sheet.write(
                         level_line + 1 + (
                             y_offset, level_x, None, upper_line_style))
                 y_offset += 1
         if lines:
-            for level_x in xrange(0, len(lines[0]['columns']) + 1):
+            for level_x in range(0, len(lines[0]['columns']) + 1):
                 sheet.write(len(lines) + (
                     y_offset, level_x, None, upper_line_style))
 

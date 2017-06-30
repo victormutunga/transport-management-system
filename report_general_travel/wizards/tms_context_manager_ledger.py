@@ -2,9 +2,8 @@
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import models, fields, api, _
-from openerp.tools.misc import formatLang
-from datetime import datetime, date, time, timedelta
+from openerp import models, fields, api
+from datetime import datetime
 from dateutil.rrule import rrule, MONTHLY
 
 
@@ -29,15 +28,15 @@ class tms_context_general_ledger(models.TransientModel):
         names = []
         dates = rrule(MONTHLY, dtstart=date_from).between(
             date_from, date_to, inc=True)
-        for date in dates:
-            names.append(str(self._get_month(date.month - 1) +
-                         '/' + str(date.year)))
+        for only_date in dates:
+            names.append(str(self._get_month(only_date.month - 1) +
+                         '/' + str(only_date.year)))
         return names
 
     @api.multi
     def get_columns_types(self):
         types = []
         limit = len(self.get_columns_names())
-        for x in range(limit):
+        for limit in range(limit):
             types.append("text")
         return types
