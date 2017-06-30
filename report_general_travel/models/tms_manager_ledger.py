@@ -2,33 +2,31 @@
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import models, fields, api, _
+from openerp import models, api, _
 from openerp.tools.misc import formatLang
-from datetime import datetime, timedelta
-from pytz import timezone
-import pytz
+from datetime import datetime
 from dateutil.rrule import rrule, MONTHLY
-
-method_list = [
-    'get_no_travels',
-    'get_distance_real',
-    'get_income',
-    'get_expense_travel',
-    'get_expense_mtto',
-    'get_utility',
-    'get_percentage_utility',
-    'get_expense_fuel',
-    'get_tires',
-    'get_fuel',
-    'get_efficienty_fuel',
-    'get_expense_km',
-    'get_income_km',
-    'get_utility_km']
 
 
 class tms_manager_ledger(models.AbstractModel):
     _name = "tms.manager.ledger"
     _description = "General Manager Report"
+
+    possible_functions = [
+        'get_no_travels',
+        'get_distance_real',
+        'get_income',
+        'get_expense_travel',
+        'get_expense_mtto',
+        'get_utility',
+        'get_percentage_utility',
+        'get_expense_fuel',
+        'get_tires',
+        'get_fuel',
+        'get_efficienty_fuel',
+        'get_expense_km',
+        'get_income_km',
+        'get_utility_km']
 
     def _format(self, value, currency=False):
         if self.env.context.get('no_format'):
@@ -52,7 +50,7 @@ class tms_manager_ledger(models.AbstractModel):
 
     @api.model
     def get_lines(self, context_id, line_id=None):
-        if type(context_id) == int:
+        if isinstance(context_id, int):
             context_id = self.env['tms.context.manager.ledger'].search(
                 [['id', '=', context_id]])
         new_context = dict(self.env.context)
@@ -101,10 +99,8 @@ class tms_manager_ledger(models.AbstractModel):
     @api.model
     def _lines(self, line_id=None):
         lines = []
-        context = self.env.context
-        unfold_all = context.get('print_mode')
-        for x in range(0, 14):
-            lines.append(self._prepare_level_lines(x))
+        for level_x in range(0, 14):
+            lines.append(self._prepare_level_lines(level_x))
         return lines
 
     @api.model
@@ -124,8 +120,7 @@ class tms_manager_ledger(models.AbstractModel):
 
     @api.multi
     def get_method_lines(self, level, travels):
-        return getattr(self, method_list[level])(travels)
-
+        return getattr(self, self.method_list[level])(travels)
 
 # _______METHODS FOR GET DATES OF TABLE_______
     @api.model
