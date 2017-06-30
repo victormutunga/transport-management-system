@@ -66,12 +66,26 @@ class ledgerReportController(http.Controller):
                 )
                 response.set_cookie('fileToken', token)
                 return response
-        except Exception, e:
-            se = _serialize_exception(e)
+        except IOError as i_o_error:
+            ser_excep = _serialize_exception(i_o_error)
             error = {
                 'code': 200,
                 'message': 'Odoo Server Error',
-                'data': se
+                'data': ser_excep
+            }
+        except AttributeError as attr_error:
+            ser_excep = _serialize_exception(attr_error)
+            error = {
+                'code': 200,
+                'message': 'Odoo Server Error',
+                'data': ser_excep
+            }
+        except OSError as op_sis_error:
+            ser_excep = _serialize_exception(op_sis_error)
+            error = {
+                'code': 200,
+                'message': 'Odoo Server Error',
+                'data': ser_excep
             }
             return request.make_response(html_escape(json.dumps(error)))
         else:
