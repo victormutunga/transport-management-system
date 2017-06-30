@@ -85,15 +85,15 @@ class tms_manager_ledger(models.AbstractModel):
             travels = self._do_query(date)
             comluns.append(self.get_method_lines(level, travels))
         return {
-                'id': self.id,
-                'name':  self._get_name_leve(level),
-                'type': 'line',
-                'footnotes':  {},
-                'columns': comluns,
-                'level': level + 3,
-                'unfoldable': False,
-                'unfolded': unfold_all,
-                'colspan': 0,
+            'id': self.id,
+            'name':  self._get_name_leve(level),
+            'type': 'line',
+            'footnotes':  {},
+            'columns': comluns,
+            'level': level + 3,
+            'unfoldable': False,
+            'unfolded': unfold_all,
+            'colspan': 0,
             }
 
     @api.model
@@ -120,7 +120,7 @@ class tms_manager_ledger(models.AbstractModel):
 
     @api.multi
     def get_method_lines(self, level, travels):
-        return getattr(self, self.method_list[level])(travels)
+        return getattr(self, self.possible_functions[level])(travels)
 
 # _______METHODS FOR GET DATES OF TABLE_______
     @api.model

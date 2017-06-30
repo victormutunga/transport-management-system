@@ -158,12 +158,14 @@ class TMSReportContextCommon(models.TransientModel):
                     update[field[4:]] = [(4, int(given_context[field]))]
                 if field.startswith('remove_'):
                     update[field[7:]] = [(3, int(given_context[field]))]
-                if self._fields.get(field) and given_context[field] != 'undefined':
+                if (self._fields.get(field) and
+                        given_context[field] != 'undefined'):
                     if given_context[field] == 'false':
                         given_context[field] = False
                     if given_context[field] == 'none':
                         given_context[field] = None
-                    if field == 'company_ids': #  Needs to be treated differently as it's a many2many
+                    # Needs to be treated differently as it's a many2many
+                    if field == 'company_ids':
                         update[field] = [(6, 0, given_context[field])]
                     else:
                         update[field] = given_context[field]
@@ -171,13 +173,15 @@ class TMSReportContextCommon(models.TransientModel):
             self.write(update)
         lines = self.get_report_obj().get_lines(self)
         rcontext = {
-            'res_company': self.env['res.users'].browse(self.env.uid).company_id,
+            'res_company': (
+                self.env['res.users'].browse(self.env.uid).company_id),
             'context': self,
             'report': self.get_report_obj(),
             'lines': lines,
             'mode': 'display',
         }
-        result['html'] = self.env['ir.model.data'].xmlid_to_object(self.get_report_obj().get_template()).render(rcontext)
+        result['html'] = self.env['ir.model.data'].xmlid_to_object(
+            self.get_report_obj().get_template()).render(rcontext)
         result['report_type'] = self.get_report_obj().get_report_type()
         select = ['id', 'date_filter', 'date_from', 'date_to']
         result['report_context'] = self.read(select)[0]
@@ -269,7 +273,8 @@ class TMSReportContextCommon(models.TransientModel):
                 style_left = level_0_style_left
                 style_right = level_0_style_right
                 style = level_0_style
-            elif lines[level_line].get('level') == 1 and lines[level_line].get('type') == 'line':
+            elif (lines[level_line].get('level') == 1 and
+                  lines[level_line].get('type') == 'line'):
                 for level_x in range(0, len(lines[level_line]['columns']) + 1):
                     sheet.write(
                         level_line + y_offset, level_x, None, upper_line_style)
@@ -314,7 +319,7 @@ class TMSReportContextCommon(models.TransientModel):
                         lines[level_line]['columns'][level_x - 1],
                         style_right))
             if (lines[level_line]['type'] ==
-                'total' or
+                    'total' or
                     lines[level_line].get('level') == 0):
                 for level_x in range(0, len(lines[0]['columns']) + 1):
                     sheet.write(
@@ -328,12 +333,15 @@ class TMSReportContextCommon(models.TransientModel):
 
         book.save(response.stream)
 
-    # Tries to find the corresponding context (model name and id) and creates it if none is found.
+    # Tries to find the corresponding context (model name and id)
+    # and creates it if none is found.
+
     @api.model
     def return_context(self, report_model, given_context, report_id=None):
         context_model = self._report_model_to_report_context()[report_model]
         # Fetch the context_id or create one if none exist.
-        # Look for a context with create_uid = current user (and with possibly a report_id)
+        # Look for a context with create_uid = current user
+        # (and with possibly a report_id)
         domain = [('create_uid', '=', self.env.user.id)]
         if report_id:
             domain.append(('report_id', '=', int(report_id)))
