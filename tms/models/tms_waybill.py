@@ -246,13 +246,9 @@ class TmsWaybill(models.Model):
                 'name': product.name,
                 'waybill_id': waybill.id,
                 'product_id': product.id,
-                'tax_ids': [(
-                    6, 0, [x.id for x in (
-                        product.taxes_id)]
-                )],
+                'unit_price': waybill._compute_transportable_product(),
                 'account_id': product.property_account_income_id.id,
             })
-        waybill._compute_transportable_product()
         waybill.onchange_waybill_line_ids()
 
         return waybill
@@ -299,51 +295,44 @@ class TmsWaybill(models.Model):
             paid = (rec.invoice_id and rec.invoice_id.state == 'paid')
             rec.invoice_paid = paid
 
-    @api.depends('transportable_line_ids', 'customer_factor_ids')
+    @api.onchange('customer_factor_ids', 'transportable_line_ids')
+    def _onchange_waybill_line_ids(self):
+        for rec in self:
+            for product in rec.waybill_line_ids:
+                if product.product_id.tms_product_category == 'freight':
+                    product.write({
+                        'unit_price': rec._compute_transportable_product()})
+
+    @api.model
     def _compute_transportable_product(self):
         for waybill in self:
-            volume = weight = qty = distance_real = distance_route = 0
-            control = ""
-            for record in waybill.transportable_line_ids:
-                total = 0.0
-                for factor in waybill.customer_factor_ids:
-                    qty = record.quantity
-                    if (record.transportable_uom_id.category_id.name ==
-                            _('Volume')):
-                        volume += record.quantity
-                        control = "volume"
-                    elif (record.transportable_uom_id.category_id.name ==
-                            _('Weight')):
-                        weight += record.quantity
-                        control = "weight"
-                    elif (record.transportable_uom_id.category_id.name ==
-                            _('Length / Distance')):
-                        if factor.factor_type == 'distance':
-                            distance_route += record.quantity
-                            control = "distance"
-                        else:
-                            distance_real += record.quantity
-                            control = "distance_real"
-                    waybill.product_qty = qty
-                    waybill.product_volume = volume
-                    waybill.product_weight = weight
-                    waybill.distance_route = distance_route
-                    waybill.distance_real = distance_real
-                    if factor.factor_type != control and (
-                        factor.factor_type not in [
-                            'travel', 'percent', 'qty', 'percent_driver']):
-                        raise exceptions.ValidationError(
-                            _('Check the type of customer factor for the '
-                              'product to be transported.'))
-                    total_get_amount = waybill.customer_factor_ids.get_amount(
+            total_get_amount = 0.0
+            for factor in waybill.customer_factor_ids:
+                if factor.factor_type in [
+                        'distance', 'distance_real', 'percent',
+                        'percent_drive', 'travel', 'amount_driver']:
+                    for travel in waybill.travel_ids:
+                        waybill.distance_route += travel.route_id.distance
+                    waybill.distance_real = 0.0
+                    total_get_amount += waybill.customer_factor_ids.get_amount(
                         waybill.product_weight, waybill.distance_route,
                         waybill.distance_real, waybill.product_qty,
                         waybill.product_volume, waybill.amount_total)
-                    total = (total + total_get_amount)
-                    for product in waybill.waybill_line_ids:
-                        if (product.product_id.tms_product_category ==
-                                'freight'):
-                            product.write({'unit_price': total})
+                else:
+                    for record in waybill.transportable_line_ids:
+                        waybill.product_qty = record.quantity
+                        if (record.transportable_uom_id.category_id.name ==
+                                _('Volume')):
+                            waybill.product_volume += record.quantity
+                        elif (record.transportable_uom_id.category_id.name ==
+                                _('Weight')):
+                            waybill.product_weight += record.quantity
+                        total_get_amount += (
+                            waybill.customer_factor_ids.get_amount(
+                                waybill.product_weight, waybill.distance_route,
+                                waybill.distance_real, waybill.product_qty,
+                                waybill.product_volume, waybill.amount_total))
+            return total_get_amount
 
     @api.multi
     def _compute_amount_all(self, category):
