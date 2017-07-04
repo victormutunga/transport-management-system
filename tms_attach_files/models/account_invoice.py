@@ -30,7 +30,7 @@ class AccountInvoice(models.Model):
         except SyntaxError as ex:
             raise ValidationError(
                 _('Error in XML structure\n%s \n %s') %
-                ex.message, expense_line.name)
+                str(ex), expense_line.name)
         validate_xml = self._validate_xml_sat(
             xml_vat_emitter, xml_vat_receiver, xml_amount, xml_uuid)
         if validate_xml.Estado == 'Cancelado':
