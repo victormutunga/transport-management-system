@@ -21,7 +21,7 @@ class TmsExpenseLoan(models.Model):
         default=fields.Date.today)
     date_confirmed = fields.Date(
         readonly=True,
-        related='move_id.date', string='Date Confirmed')
+        related='move_id.date')
     employee_id = fields.Many2one(
         'hr.employee', 'Driver', required=True)
     expense_ids = fields.Many2many(
@@ -33,7 +33,6 @@ class TmsExpenseLoan(models.Model):
          ('confirmed', 'Confirmed'),
          ('closed', 'Closed'),
          ('cancel', 'Cancelled'), ],
-        string='State',
         readonly=True,
         default='draft')
     discount_method = fields.Selection([
@@ -43,7 +42,7 @@ class TmsExpenseLoan(models.Model):
         ('monthly', 'Monthly')], required=True)
     discount_type = fields.Selection([
         ('fixed', 'Fixed'),
-        ('percent', 'Loan Percentage'), ], 'Discount Type', required=True)
+        ('percent', 'Loan Percentage'), ], required=True)
     notes = fields.Text()
     origin = fields.Char()
     amount = fields.Float(required=True)

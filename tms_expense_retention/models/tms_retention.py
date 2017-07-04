@@ -5,35 +5,21 @@
 from openerp import _, api, exceptions, fields, models
 
 
-class tms_retention(models.Model):
+class TmsRetention(models.Model):
     _name = "tms.retention"
     _description = "Tms Retention"
 
     name = fields.Char(
-        string='Name',
     )
     retention_type = fields.Selection(
         [('days', 'Days'),
          ('salary', 'Salary'), ],
-        string='Retention Type',
         default='days')
-    factor = fields.Float(
-        'Factor',
-    )
-    mixed = fields.Boolean(
-        string='Mixed',
-    )
-    fixed_amount = fields.Float(
-        'Fired Amount',
-    )
-    employee_ids = fields.Many2many(
-        'hr.employee',
-        string='Employees',
-    )
-    product_id = fields.Many2one(
-        'product.product',
-        string='Product',
-    )
+    factor = fields.Float()
+    mixed = fields.Boolean()
+    fixed_amount = fields.Float()
+    employee_ids = fields.Many2many('hr.employee')
+    product_id = fields.Many2one('product.product')
 
     @api.constrains('product_id')
     def unique_product(self):

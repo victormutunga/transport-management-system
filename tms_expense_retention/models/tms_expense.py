@@ -42,5 +42,6 @@ class TmsExpense(models.Model):
     @api.multi
     def get_travel_info(self):
         for rec in self:
-            super(TmsExpense, self).get_travel_info()
+            res = super(TmsExpense, self).get_travel_info()
             rec.get_retention()
+            return res
