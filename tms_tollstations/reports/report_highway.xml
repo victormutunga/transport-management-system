@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
         <template id="report_highway">
             <t t-as="doc" t-foreach="docs">
                 <template id="header">
@@ -167,5 +166,4 @@
             </t>
         </template>
         <report file="tms_tollstations.report_highway" id="print_report_highway_expense" model="tms.expense" name="tms_tollstations.report_highway" report_type="qweb-pdf" string="Highway Report"/>
-    </data>
 </odoo>

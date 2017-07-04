@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data>
         <record model="ir.ui.view" id="fleet_vehicle_inherith_form_view_toll_station">
             <field name="name">fleet.vehicle.form.view</field>
             <field name="model">fleet.vehicle</field>
@@ -13,5 +12,4 @@
                 </xpath>
             </field>
         </record>
-    </data>
 </odoo>
