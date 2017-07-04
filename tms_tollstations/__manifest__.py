@@ -9,6 +9,7 @@
     'website': 'https://www.jarsa.com.mx',
     'category': 'Transport',
     'version': '10.0.0.1.0',
+    "license": "AGPL-3",
     'depends': ['tms'],
     'data': [
         'views/tms_expense_line_view.xml',
