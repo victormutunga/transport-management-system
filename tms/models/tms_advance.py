@@ -84,7 +84,13 @@ class TmsAdvance(models.Model):
     @api.model
     def create(self, values):
         res = super(TmsAdvance, self).create(values)
-        sequence = res.operating_unit_id.advance_sequence_id
+        if res.operating_unit_id.advance_sequence_id:
+            sequence = res.operating_unit_id.advance_sequence_id
+        else:
+            raise exceptions.ValidationError(
+                _('The sequence is not '
+                    'defined in operating unit %s',
+                    res.operating_unit_id.name))
         if res.amount <= 0:
             raise exceptions.ValidationError(
                 _('The amount must be greater than zero.'))
