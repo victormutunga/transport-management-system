@@ -48,9 +48,12 @@ class TmsExpenseLoan(models.Model):
     amount = fields.Float(required=True)
     percent_discount = fields.Float()
     fixed_discount = fields.Float()
-    balance = fields.Float(compute='_compute_balance')
-    paid = fields.Boolean(compute='_compute_paid',
-                          store=True, readonly=True)
+    balance = fields.Float(
+        compute='_compute_balance',
+        store=True)
+    paid = fields.Boolean(
+        compute='_compute_paid',
+        store=True)
     active_loan = fields.Boolean()
     lock = fields.Boolean(string='Other discount?')
     amount_discount = fields.Float()
@@ -163,9 +166,9 @@ class TmsExpenseLoan(models.Model):
                 notes = _('* Base: %s \n'
                           '* Loan: %s \n'
                           '* Driver: %s \n') % (
-                    loan.operating_unit_id.name,
-                    loan.name,
-                    loan.employee_id.name)
+                              loan.operating_unit_id.name,
+                              loan.name,
+                              loan.employee_id.name)
                 total = loan.currency_id.compute(
                     loan.amount,
                     self.env.user.currency_id)
@@ -196,7 +199,7 @@ class TmsExpenseLoan(models.Model):
                     if not move_id:
                         raise exceptions.ValidationError(
                             _('An error has occurred in the creation'
-                                ' of the accounting move. '))
+                                ' of the accounting move.'))
                     else:
                         move_id.post()
                         self.write(

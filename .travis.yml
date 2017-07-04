@@ -43,7 +43,7 @@ virtualenv:
   system_site_packages: true
 
 install:
-  - git clone --depth=1 https://github.com/Vauxoo/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
+  - git clone --depth=1 https://github.com/Jarsa/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
   - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
   - if [[ "${OCA_RUNBOT}" == "1" ]]; then git clone --depth=1 git@github.com:odoo/enterprise.git -b $VERSION ${HOME}/enterprise; fi
   - travis_install_nightly
