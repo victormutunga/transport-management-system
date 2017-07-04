@@ -91,14 +91,15 @@ class TmsWizardPayment(models.TransientModel):
                 if amount_currency > 0.0:
                     bank_line['amount_currency'] = amount_currency
                     bank_line['currency_id'] = currency.id
-                bank_line = {
-                    'name': name,
-                    'account_id': bank_account_id,
-                    'debit': 0.0,
-                    'credit': amount_bank,
-                    'journal_id': rec.journal_id.id,
-                    'operating_unit_id': obj.operating_unit_id.id,
-                }
+            operating_unit_id = self.env['operating.unit'].browse(1)
+            bank_line = {
+                'name': name,
+                'account_id': bank_account_id,
+                'debit': 0.0,
+                'credit': amount_bank,
+                'journal_id': rec.journal_id.id,
+                'operating_unit_id': operating_unit_id.id,
+            }
             move_lines.append((0, 0, bank_line))
             move = {
                 'date': rec.date,
