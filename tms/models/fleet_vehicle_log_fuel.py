@@ -70,7 +70,6 @@ class FleetVehicleLogFuel(models.Model):
         'res.currency', string='Currency',
         required=True,
         default=lambda self: self.env.user.company_id.currency_id,)
-    notes = fields.Char()
     state = fields.Selection(
         [('draft', 'Draft'),
          ('approved', 'Approved'),

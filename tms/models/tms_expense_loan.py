@@ -49,7 +49,7 @@ class TmsExpenseLoan(models.Model):
     amount = fields.Float(required=True)
     percent_discount = fields.Float()
     fixed_discount = fields.Float()
-    balance = fields.Float(compute='_compute_balance')
+    balance = fields.Float(compute='_compute_balance', store=True)
     paid = fields.Boolean(compute='_compute_paid',
                           store=True, readonly=True)
     active_loan = fields.Boolean()
