@@ -91,6 +91,7 @@ class TmsWizardPayment(models.TransientModel):
                 if amount_currency > 0.0:
                     bank_line['amount_currency'] = amount_currency
                     bank_line['currency_id'] = currency.id
+                    # TODO Separate the bank line for each Operating Unit
             operating_unit_id = self.env['operating.unit'].browse(1)
             bank_line = {
                 'name': name,

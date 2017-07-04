@@ -94,14 +94,8 @@ class TmsAdvance(models.Model):
         if res.amount <= 0:
             raise exceptions.ValidationError(
                 _('The amount must be greater than zero.'))
-        else:
-            res.name = sequence.next_by_id()
-            if res.name == 'False':
-                raise exceptions.ValidationError(
-                    _('Error you need define an'
-                        ' advance sequence in the base.'))
-            else:
-                return res
+        res.name = sequence.next_by_id()
+        return res
 
     @api.onchange('travel_id')
     def _onchange_travel_id(self):
