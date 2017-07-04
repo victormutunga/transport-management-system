@@ -5,7 +5,6 @@
 {
     'name': 'Attach Travel Expense Line Files',
     'summary': 'Attach xml and pdf files to Travel Expenses Lines',
-    'description': 'Attach xml and pdf files.',
     'author': 'Jarsa Sistemas',
     'website': 'https://www.jarsa.com.mx',
     'category': 'Transport',
