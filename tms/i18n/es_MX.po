@@ -21,7 +21,7 @@ msgid " Load value amount declared for insurance purposes..."
 msgstr "Importe del valor declarado para efectos del seguro..."
 
 #. module: tms
-#: code:addons/tms/models/tms_expense.py:1088
+#: code:addons/tms/models/tms_expense.py:1084
 #, python-format
 msgid "%s (TMS Expense Record %s)"
 msgstr "%s (TMS Liquidación %s)"
@@ -538,11 +538,6 @@ msgid "Amount Untaxed"
 msgstr "Cantidad sin impuestos"
 
 #. module: tms
-#: model:ir.model.fields,field_description:tms.field_tms_waybill_amount_declared
-msgid "Amount declared"
-msgstr "Amount declared"
-
-#. module: tms
 #: model:ir.model.fields,field_description:tms.field_tms_expense_loan_amount_discount
 msgid "Amount discount"
 msgstr "Monto de Descuento"
@@ -1049,11 +1044,6 @@ msgstr "Aduana"
 #: selection:tms.factor,category:0
 msgid "Customer"
 msgstr "Cliente"
-
-#. module: tms
-#: model:ir.model.fields,field_description:tms.field_tms_waybill_client_order_ref
-msgid "Customer Reference"
-msgstr "Referencia del cliente"
 
 #. module: tms
 #: model:ir.actions.act_window,name:tms.action_tms_customs
@@ -3276,11 +3266,6 @@ msgid "Rendx"
 msgstr "Desgarrarx"
 
 #. module: tms
-#: model:ir.model.fields,field_description:tms.field_tms_waybill_replaced_waybill_id
-msgid "Replaced Waybill"
-msgstr "Carta Porte Reemplazada"
-
-#. module: tms
 #: model:ir.ui.menu,name:tms.menu_tms_reports
 msgid "Reports"
 msgstr "Reportes"
@@ -4721,3 +4706,12 @@ msgstr "tms.wizard.payment"
 msgid "waybill"
 msgstr "carta porte"
 
+#. module: tms
+#: model:tms.transportable,name:tms.tms_transportable_01
+msgid "Sand"
+msgstr "Arena"
+
+#. module: tms
+#: model:tms.transportable,name:tms.tms_transportable_02
+msgid "Water"
+msgstr "Agua"

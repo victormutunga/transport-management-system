@@ -1,102 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data>
-        <record id="account_employee_01" model="account.account">
-            <field name="name">Fernando Bedoya</field>
-            <field name="code">10-01-01</field>
+    <data noupdate="1">
+        <record id="account_advances_expenses" model="account.account">
+            <field name="name">Advances and Expenses to Pay</field>
+            <field name="code">205.02.01</field>
+            <field name="user_type_id" ref="account.data_account_type_payable"/>
+            <field name="reconcile" eval="1"/>
+        </record>
+        <record id="account_drivers" model="account.account">
+            <field name="name">Drivers</field>
+            <field name="code">107.05.01</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         </record>
-        <record id="account_employee_02" model="account.account">
-            <field name="name">Jose Almendrariz</field>
-            <field name="code">10-01-02</field>
+        <record id="account_negative_balance" model="account.account">
+            <field name="name">Divers Negative Balance</field>
+            <field name="code">107.05.02</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         </record>
-        <record id="account_employee_03" model="account.account">
-            <field name="name">Ricardo Bocanegra</field>
-            <field name="code">10-01-03</field>
+        <record id="account_loan" model="account.account">
+            <field name="name">Driver Loans</field>
+            <field name="code">107.05.03</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-        </record>
-        <record id="account_employee_04" model="account.account">
-            <field name="name">Jhon Hawk</field>
-            <field name="code">10-01-04</field>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-        </record>
-        <record id="account_employee_05" model="account.account">
-            <field name="name">Jonathan Tomlinson</field>
-            <field name="code">10-01-05</field>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-        </record>
-        <record id="account_employee_06" model="account.account">
-            <field name="name">Fernando Hernandez</field>
-            <field name="code">10-01-06</field>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-        </record>
-        <record id="account_employee_07" model="account.account">
-            <field name="name">Luis Esparza</field>
-            <field name="code">10-01-07</field>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-        </record>
-        <record id="account_waybill_product_fuel_log" model="account.account">
-            <field name="name">Fuel Log</field>
-            <field name="code">10-02-01</field>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="reconcile" eval="False"/>
-        </record>
-        <record id="account_waybill_product_advance" model="account.account">
-            <field name="name">Advance</field>
-            <field name="code">10-02-02</field>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="reconcile" eval="False"/>
-        </record>
-        <record id="account_waybill_product_freight" model="account.account">
-            <field name="name">Freight</field>
-            <field name="code">10-02-03</field>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="reconcile" eval="False"/>
-        </record>
-        <record id="account_waybill_product_move" model="account.account">
-            <field name="name">Move</field>
-            <field name="code">10-02-04</field>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="reconcile" eval="False"/>
-        </record>
-        <record id="account_waybill_product_highway_tolls" model="account.account">
-            <field name="name">Highway Tolls</field>
-            <field name="code">10-02-05</field>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="reconcile" eval="False"/>
-        </record>
-        <record id="account_waybill_product_insurance" model="account.account">
-            <field name="name">Insurance</field>
-            <field name="code">10-02-06</field>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="reconcile" eval="False"/>
-        </record>
-        <record id="account_waybill_product_other" model="account.account">
-            <field name="name">Other</field>
-            <field name="code">10-02-07</field>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="reconcile" eval="False"/>
         </record>
           <record id="account_fuel_expense" model="account.account">
-            <field name="name">Fuel Log Expense</field>
-            <field name="code">1000-022-077</field>
+            <field name="name">Fuel</field>
+            <field name="code">601.48.01</field>
             <field name="user_type_id" ref="account.data_account_type_expenses"/>
-        </record>
-          <record id="account_fuel_income" model="account.account">
-            <field name="name">Fuel Log Income</field>
-            <field name="code">1000-023-078</field>
-            <field name="user_type_id" ref="account.data_account_type_other_income"/>
         </record>
           <record id="account_ieps_expense" model="account.account">
             <field name="name">IEPS Expense</field>
-            <field name="code">1000-022-0227</field>
+            <field name="code">601.58.01</field>
             <field name="user_type_id" ref="account.data_account_type_expenses"/>
-        </record>
-          <record id="account_ieps_income" model="account.account">
-            <field name="name">IEPS Income</field>
-            <field name="code">1000-0222-0711</field>
-            <field name="user_type_id" ref="account.data_account_type_other_income"/>
         </record>
     </data>
 </odoo>

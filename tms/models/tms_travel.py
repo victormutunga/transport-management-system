@@ -258,6 +258,11 @@ class TmsTravel(models.Model):
     @api.model
     def create(self, values):
         travel = super(TmsTravel, self).create(values)
+        if not travel.operating_unit_id.travel_sequence_id:
+            raise ValidationError(_(
+                'You need to define the sequence for travels in base %s' %
+                travel.operating_unit_id.name
+            ))
         sequence = travel.operating_unit_id.travel_sequence_id
         travel.name = sequence.next_by_id()
         return travel
@@ -322,7 +327,6 @@ class TmsTravel(models.Model):
                       " about to expire in next %s day(s)") % (
                         rec.employee_id.name,
                         rec.employee_id.license_expiration, val))
-        return True
 
     @api.multi
     def validate_vehicle_insurance(self):
