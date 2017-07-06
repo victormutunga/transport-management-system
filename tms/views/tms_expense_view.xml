@@ -61,6 +61,7 @@
                                             <field name="amount_refund"/>
                                             <field name="amount_salary_discount"/>
                                             <field name="amount_salary_retention"/>
+                                            <field name="amount_loan"/>
                                             <field name="amount_real_expense"/>
                                             <field name="amount_fuel_cash"/>
                                             <field name="amount_subtotal_real"/>

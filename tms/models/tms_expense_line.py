@@ -11,8 +11,7 @@ class TmsExpenseLine(models.Model):
     _name = 'tms.expense.line'
     _description = 'Expense Line'
 
-    loan_id = fields.Many2one('tms.expense.loan',
-                              string='Loan')
+    loan_id = fields.Many2one('tms.expense.loan', string='Loan')
     travel_id = fields.Many2one(
         'tms.travel',
         string='Travel')
@@ -39,7 +38,8 @@ class TmsExpenseLine(models.Model):
          ('salary_retention', 'Salary Retention'),
          ('salary_discount', 'Salary Discount'),
          ('other_income', 'Other Income'),
-         ('tollstations', 'Toll Stations')],
+         ('tollstations', 'Toll Stations'),
+         ('loan', 'Loan')],
         compute='_compute_line_type',
         store=True, readonly=True)
     name = fields.Char(
@@ -119,7 +119,8 @@ class TmsExpenseLine(models.Model):
     @api.depends('product_qty', 'unit_price', 'line_type')
     def _compute_price_subtotal(self):
         for rec in self:
-            if rec.line_type in ['salary_retention', 'salary_discount']:
+            if rec.line_type in [
+                    'salary_retention', 'salary_discount', 'loan']:
                 rec.price_subtotal = rec.product_qty * rec.unit_price * -1
             elif rec.line_type == 'fuel':
                 rec.price_subtotal = rec.unit_price
@@ -131,7 +132,8 @@ class TmsExpenseLine(models.Model):
         for rec in self:
             if rec.line_type == 'fuel':
                 rec.price_total = rec.unit_price
-            elif rec.line_type in ['salary_retention', 'salary_discount']:
+            elif rec.line_type in [
+                    'salary_retention', 'salary_discount', 'loan']:
                 rec.price_total = rec.price_subtotal - rec.tax_amount
             else:
                 rec.price_total = rec.price_subtotal + rec.tax_amount
@@ -139,7 +141,8 @@ class TmsExpenseLine(models.Model):
     @api.model
     def create(self, values):
         expense_line = super(TmsExpenseLine, self).create(values)
-        if expense_line.line_type in ('salary_discount', 'salary_retention'):
+        if expense_line.line_type in (
+                'salary_discount', 'salary_retention', 'loan'):
             if expense_line.price_total > 0:
                 raise ValidationError(_('This line type needs a '
                                         'negative value to continue!'))

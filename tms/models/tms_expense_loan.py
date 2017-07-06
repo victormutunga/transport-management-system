@@ -49,7 +49,7 @@ class TmsExpenseLoan(models.Model):
     amount = fields.Float(required=True)
     percent_discount = fields.Float()
     fixed_discount = fields.Float()
-    balance = fields.Float(compute='_compute_balance')
+    balance = fields.Float(compute='_compute_balance', store=True)
     paid = fields.Boolean(compute='_compute_paid',
                           store=True, readonly=True)
     active_loan = fields.Boolean()
@@ -58,7 +58,7 @@ class TmsExpenseLoan(models.Model):
     product_id = fields.Many2one(
         'product.product', 'Discount Product',
         required=True,
-        domain=[('name', '=', ('Prestamo'))])
+        domain=[('tms_product_category', '=', 'loan')])
     expense_id = fields.Many2one(
         'tms.expense', 'Expense Record', readonly=True)
     payment_move_id = fields.Many2one(
@@ -79,6 +79,11 @@ class TmsExpenseLoan(models.Model):
     @api.model
     def create(self, values):
         loan = super(TmsExpenseLoan, self).create(values)
+        if not loan.operating_unit_id.loan_sequence_id:
+            raise ValidationError(_(
+                'You need to define the sequence for loans in base %s' %
+                loan.operating_unit_id.name
+            ))
         sequence = loan.operating_unit_id.loan_sequence_id
         loan.name = sequence.next_by_id()
         return loan
@@ -106,11 +111,7 @@ class TmsExpenseLoan(models.Model):
                       ' The Amount of discount must be greater than zero.'))
 
             rec.state = 'approved'
-            rec.message_post(_(
-                '<strong>Loan approved.</strong><ul>'
-                '<li><strong>Approved by: </strong>%s</li>'
-                '<li><strong>Approved at: </strong>%s</li>'
-                '</ul>') % (rec.env.user.name, fields.Datetime.now()))
+            rec.message_post(_('<strong>Loan approved.</strong>'))
 
     @api.multi
     def action_cancel(self):
@@ -125,11 +126,7 @@ class TmsExpenseLoan(models.Model):
                     rec.move_id.button_cancel()
                 rec.move_id.unlink()
                 rec.state = 'cancel'
-                rec.message_post(_(
-                    '<strong>Loan cancelled.</strong><ul>'
-                    '<li><strong>Cancelled by: </strong>%s</li>'
-                    '<li><strong>Cancelled at: </strong>%s</li>'
-                    '</ul>') % (self.env.user.name, fields.Datetime.now()))
+                rec.message_post(_('<strong>Loan cancelled.</strong>'))
 
     @api.multi
     def action_confirm(self):
@@ -208,22 +205,14 @@ class TmsExpenseLoan(models.Model):
                                 'move_id': move_id.id,
                                 'state': 'confirmed',
                             })
-                        self.message_post(_(
-                            '<strong>Loan confirmed.</strong><ul>'
-                            '<li><strong>Confirmed by: </strong>%s</li>'
-                            '<li><strong>Confirmed at: </strong>%s</li>'
-                            '</ul>') % (self.env.user.name,
-                                        fields.Datetime.now()))
+                        self.message_post(
+                            _('<strong>Loan confirmed.</strong>'))
 
     @api.multi
     def action_cancel_draft(self):
         for rec in self:
             rec.state = 'draft'
-            rec.message_post(_(
-                '<strong>Loan drafted.</strong><ul>'
-                '<li><strong>Drafted by: </strong>%s</li>'
-                '<li><strong>Drafted at: </strong>%s</li>'
-                '</ul>') % (self.env.user.name, fields.Datetime.now()))
+            rec.message_post(_('<strong>Loan drafted.</strong>'))
 
     @api.depends('amount')
     def _compute_balance(self):
@@ -250,7 +239,19 @@ class TmsExpenseLoan(models.Model):
     @api.depends('payment_move_id')
     def _compute_paid(self):
         for rec in self:
+            rec.paid = False
             if rec.payment_move_id.id:
                 rec.paid = True
-            else:
-                rec.paid = False
+
+    @api.multi
+    def action_pay(self):
+        for rec in self:
+            bank = self.env['account.journal'].search(
+                [('type', '=', 'bank')])[0]
+            wiz = self.env['tms.wizard.payment'].with_context(
+                active_model='tms.expense.loan', active_ids=[rec.id]).create({
+                    'journal_id': bank.id,
+                    'amount_total': rec.amount,
+                    'date': rec.date,
+                    })
+            wiz.make_payment()

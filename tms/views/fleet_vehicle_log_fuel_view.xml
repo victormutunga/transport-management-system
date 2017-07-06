@@ -41,7 +41,7 @@
                                     <group>
                                         <group>
                                             <group>
-                                                <field name="product_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
+                                                <field name="product_id" attrs="{'required': True,'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                                                 <field name="product_qty" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                                                 <field name="price_unit"/>
                                                 <field name="price_subtotal"/>
