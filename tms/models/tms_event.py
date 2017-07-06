@@ -48,32 +48,17 @@ class TmsEvent(models.Model):
     @api.multi
     def action_confirm(self):
         for rec in self:
-            message = _('<b>Event Confirmed.</b></br><ul>'
-                        '<li><b>Approved by: </b>%s</li>'
-                        '<li><b>Approved at: </b>%s</li>'
-                        '</ul>') % (self.env.user.name, fields.Date.today())
-            rec.message_post(body=message)
+            rec.message_post(body=_('<b>Event Confirmed.</b>'))
             rec.state = 'confirm'
 
     @api.multi
     def action_cancel(self):
         for rec in self:
-            message = _('<b>Event Cancelled.</b></br><ul>'
-                        '<li><b>Cancelled by: </b>%s</li>'
-                        '<li><b>Cancelled at: </b>%s</li>'
-                        '</ul>') % (
-                            self.env.user.name,
-                            fields.Date.today())
-            rec.message_post(body=message)
+            rec.message_post(body=_('<b>Event Cancelled.</b>'))
             rec.state = 'cancel'
 
     @api.multi
     def set_2_draft(self):
         for rec in self:
-            message = _(
-                '<b>Event Draft.</b></br><ul>'
-                '<li><b>Drafted by: </b>%s</li>'
-                '<li><b>Drafted at: </b>%s</li>'
-                '</ul>') % (self.env.user.name, fields.Date.today())
-            rec.message_post(body=message)
+            rec.message_post(body=_('<b>Event Draft.</b>'))
             rec.state = 'draft'

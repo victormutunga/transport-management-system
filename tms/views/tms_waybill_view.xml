@@ -9,7 +9,6 @@
                 <tree colors="gray:state=='cancel';red:state=='draft';green:state=='approved';" string="Waybills">
                     <field name="name"/>
                     <field name="date_order"/>
-                    <field name="client_order_ref"/>
                     <field name="partner_id"/>
                     <field name="amount_untaxed" sum="Amount Untaxed"/>
                     <field name="amount_tax"/>
@@ -169,16 +168,15 @@
                                     <group colspan="2">
                                         <separator colspan="2" string="Client Invoice Data"/>
                                         <field name="invoice_id"/>
-                                        <field attrs="{'readonly':[('state','in',('confirmed', 'cancel'))]}" name="invoice_paid"/>
+                                        <field name="invoice_paid"/>
                                         <newline/>
                                     </group>
                                     <group colspan="2">
                                         <separator colspan="2" string="Supplier Invoice Data"/>
                                         <field name="supplier_invoice_id"/>
-                                        <field attrs="{'readonly':[('state','in',('confirmed', 'cancel'))]}" name="supplier_invoice_paid"/>
+                                        <field name="supplier_invoice_paid"/>
                                         <newline/>
                                     </group>
-                                    <field name="move_id"/>
                                 </group>
                             </page>
                             <page string="Customs">
@@ -220,10 +218,9 @@
                             <field class="oe_inline" name="name" readonly="1"/>
                         </h1>
                         <group col="4">
-                            <field attrs="{'readonly':[('state','in',('confirmed', 'cancel'))]}" name="operating_unit_id"/>
-                            <field attrs="{'readonly':[('state','in',('confirmed', 'cancel'))]}" name="date_order"/>
-                            <field attrs="{'readonly':[('state','in',('confirmed', 'cancel'))]}" groups="base.group_multi_currency" name="currency_id"/>
-                            <field name='rate' invisible="1"/>
+                            <field attrs="{'readonly':[('state','in',('confirmed'))]}" name="operating_unit_id"/>
+                            <field attrs="{'readonly':[('state','in',('confirmed'))]}" name="date_order"/>
+                            <field attrs="{'readonly':[('state','in',('confirmed'))]}" groups="base.group_multi_currency" name="currency_id"/>
                             <separator colspan="4" string="·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·" style="text-align: center;"/>
                             <field attrs="{'readonly':[('state','in',('confirmed', 'cancel'))]}" colspan="4" domain="[('customer','=',True), ('is_company', '=', True)]" name="partner_id"/>
                             <field attrs="{'readonly':[('state','in',('confirmed', 'cancel'))]}" context="{'search_default_customer':1, 'show_address': 1}" domain="[('parent_id','=',partner_id)]" name="partner_order_id" options="{&quot;always_reload&quot;: True}"/>
@@ -304,7 +301,6 @@
                     <field name="partner_id"/>
                     <field name="operating_unit_id"/>
                     <field name="date_order" string="Waybill date"/>
-                    <field name="client_order_ref"/>
                     <field name="user_id"/>
                     <separator/>
                     <filter domain="[('state','=','draft')]" icon="terp-gtk-media-pause" string="Pending"/>

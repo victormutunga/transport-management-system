@@ -159,6 +159,6 @@
             <field name="help">Driver Loans</field>
         </record>
         <menuitem action="action_tms_expense_loan_form" id="hr_menu_tms_expense_loan" 
-                  parent="tms.menu_tms_settings_unit" sequence="90" />
+                  parent="menu_tms_settings" sequence="90" />
     </data>
 </odoo>
