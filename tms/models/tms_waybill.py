@@ -403,14 +403,6 @@ class TmsWaybill(models.Model):
                         ' because the invoice is still valid, '
                         'please check it.'))
             else:
-                move_obj = self.env['account.move']
-                move_id = (move_obj.search(
-                    [('id', '=', waybill.move_id.id)]))
-                move_count = len(move_id)
-
-                if move_count > 0:
-                    move_id.unlink()
-
                 waybill.invoice_id = False
                 waybill.state = 'cancel'
                 waybill.message_post(
