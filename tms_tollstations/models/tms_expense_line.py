@@ -67,6 +67,5 @@ class TmsExpenseLine(models.Model):
             ordered_lines = sorted(
                 rec.tollstation_ids,
                 key=lambda x: datetime.strptime(
-                    x['date'], '%Y-%m-%d %H:%M:%S'),
-                reverse=True)
+                    x['date'], '%Y-%m-%d %H:%M:%S'))
             return ordered_lines
