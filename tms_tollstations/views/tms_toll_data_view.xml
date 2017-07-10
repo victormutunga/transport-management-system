@@ -19,7 +19,7 @@
         <field name='name'>tms.toll.data.tree</field>
         <field name='model'>tms.toll.data</field>
         <field name='arch' type='xml'>
-            <tree string='Toll Data' colors="green:status=='open';red:status=='closed'">
+            <tree string='Toll Data' colors="green:state=='open';red:state=='closed'">
                 <field name="name" readonly="1"/>
                 <field name="num_tag" readonly="1"/>
                 <field name="economic_number" readonly="1"/>
