@@ -82,22 +82,24 @@ class TmsWizardPayment(models.TransientModel):
                     'tms.expense.loan': obj.amount
                     if hasattr(obj, 'amount') and
                     active_model == 'tms.expense.loan'else 0.0}
-                # Createng counterpart move lines method explained above
+                # Creating counterpart move lines method explained above
                 counterpart_move_line, amount_bank = self.create_counterpart(
                     model_amount, currency, obj,
                     amount_currency, amount_bank, counterpart_move_line)
                 self._create_payment(counterpart_move_line, rec)
                 move_lines.append((0, 0, counterpart_move_line))
-            if amount_currency > 0.0:
-                bank_line['amount_currency'] = amount_currency
-                bank_line['currency_id'] = currency.id
+                if amount_currency > 0.0:
+                    bank_line['amount_currency'] = amount_currency
+                    bank_line['currency_id'] = currency.id
+                    # TODO Separate the bank line for each Operating Unit
+            operating_unit_id = self.env['operating.unit'].browse(1)
             bank_line = {
                 'name': name,
                 'account_id': bank_account_id,
                 'debit': 0.0,
                 'credit': amount_bank,
                 'journal_id': rec.journal_id.id,
-                'operating_unit_id': obj.operating_unit_id.id,
+                'operating_unit_id': operating_unit_id.id,
             }
             move_lines.append((0, 0, bank_line))
             move = {
