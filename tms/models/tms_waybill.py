@@ -205,6 +205,10 @@ class TmsWaybill(models.Model):
             ('tms_product_category', '=', 'freight')])
         if product:
             self.waybill_line_ids.create({
+                'tax_ids': [(
+                    6, 0, [x.id for x in (
+                        product.taxes_id)]
+                    )],
                 'name': product.name,
                 'waybill_id': waybill.id,
                 'product_id': product.id,
