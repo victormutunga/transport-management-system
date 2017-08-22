@@ -15,7 +15,7 @@ class TmsWizardPayment(models.TransientModel):
         'account.journal', string='Bank Account',
         domain="[('type', '=', 'bank')]")
     amount_total = fields.Float(compute='_compute_amount_total')
-    date = fields.Date(required=True, default=fields.Date.today())
+    date = fields.Date(required=True, default=fields.Date.context_today)
     notes = fields.Text()
 
     @api.depends('journal_id')

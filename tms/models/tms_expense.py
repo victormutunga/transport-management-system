@@ -36,7 +36,7 @@ class TmsExpense(models.Model):
         ('cancel', 'Cancelled')], 'Expense State', readonly=True,
         help="Gives the state of the Travel Expense. ",
         default='draft')
-    date = fields.Date(required=True, default=fields.Date.today)
+    date = fields.Date(required=True, default=fields.Date.context_today)
     expense_line_ids = fields.One2many(
         'tms.expense.line', 'expense_id', 'Expense Lines')
     amount_real_expense = fields.Float(

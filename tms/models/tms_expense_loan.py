@@ -18,7 +18,7 @@ class TmsExpenseLoan(models.Model):
     name = fields.Char()
     date = fields.Date(
         required=True,
-        default=fields.Date.today)
+        default=fields.Date.context_today)
     date_confirmed = fields.Date(
         readonly=True,
         related='move_id.date', string='Date Confirmed')

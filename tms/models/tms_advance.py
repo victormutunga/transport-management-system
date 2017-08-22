@@ -26,7 +26,7 @@ class TmsAdvance(models.Model):
         default='draft')
     date = fields.Date(
         required=True,
-        default=fields.Date.today)
+        default=fields.Date.context_today)
     travel_id = fields.Many2one(
         'tms.travel',
         required=True,
