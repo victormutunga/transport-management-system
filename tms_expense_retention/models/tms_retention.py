@@ -2,46 +2,31 @@
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import _, api, exceptions, fields, models
+from openerp import fields, models
 
 
-class tms_retention(models.Model):
-    _name = "tms.retention"
-    _description = "Tms Retention"
+class TmsRetention(models.Model):
+    _name = 'tms.retention'
+    _description = 'Retentions for travel expenses'
+    _inherit = 'mail.thread'
 
-    name = fields.Char(
-        string='Name',
-    )
-    retention_type = fields.Selection(
-        [('days', 'Days'),
-         ('salary', 'Salary'), ],
-        string='Retention Type',
-        default='days')
+    name = fields.Char(required=True)
+    type = fields.Selection(
+        [('days', 'Days'), ('salary', 'Salary')],
+        required=True,
+        help='Set this field to define how the retention is computed:\n'
+             'Days: factor * days of travel\n'
+             'Salary: factor * driver salary')
     factor = fields.Float(
-        'Factor',
-    )
+        help='Factor to compute the retention depending of the type:\n'
+             'Days: factor * days of travel\n'
+             'Salary: factor * driver salary')
     mixed = fields.Boolean(
-        string='Mixed',
-    )
-    fixed_amount = fields.Float(
-        'Fired Amount',
-    )
+        help='Check this if you want to compute the retention plus a fixed '
+             'amount')
+    fixed_amount = fields.Float()
     employee_ids = fields.Many2many(
-        'hr.employee',
-        string='Employees',
-    )
+        'hr.employee', string='Employees', domain="[('driver', '=', True)]")
     product_id = fields.Many2one(
-        'product.product',
-        string='Product',
-    )
-
-    @api.constrains('product_id')
-    def unique_product(self):
-        for rec in self:
-            product = rec.search([
-                ('product_id', '=', rec.product_id.id),
-                ('id', '!=', rec.id)])
-            if product:
-                raise exceptions.ValidationError(
-                    _('Only there must be a product "' +
-                        product.product_id.name + '"'))
+        'product.product', string='Product', required=True,
+        domain="[('apply_for_retention', '=', True)]")
