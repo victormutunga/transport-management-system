@@ -37,15 +37,11 @@ class TmsWaybill(models.Model):
         string='Travel Driver Payment Factors',
         domain=[('category', '=', 'driver'), ])
     transportable_line_ids = fields.One2many(
-        'tms.waybill.transportable.line', 'waybill_id', string="Transportable"
-    )
+        'tms.waybill.transportable.line', 'waybill_id', string="Transportable")
     tax_line_ids = fields.One2many(
-        'tms.waybill.taxes', 'waybill_id',
-        string='Tax Lines', store=True)
+        'tms.waybill.taxes', 'waybill_id', string='Tax Lines', store=True)
     name = fields.Char()
-    travel_ids = fields.Many2many(
-        'tms.travel',
-        string='Travels')
+    travel_ids = fields.Many2many('tms.travel', copy=False, string='Travels')
     state = fields.Selection([
         ('draft', 'Pending'),
         ('approved', 'Approved'),
@@ -175,9 +171,11 @@ class TmsWaybill(models.Model):
     date_down_end_real = fields.Datetime('Download End Real')
     date_down_docs_real = fields.Datetime('Download Docs Real')
     date_end_real = fields.Datetime('Travel End Real')
-    waybill_extradata = fields.One2many(
+    waybill_extradata_ids = fields.One2many(
         'tms.extradata', 'waybill_id',
         string='Extra Data Fields',
+        oldname='waybill_extradata',
+        copy=True,
         states={'confirmed': [('readonly', True)]})
     custom_ids = fields.One2many(
         'tms.customs',
@@ -217,12 +215,6 @@ class TmsWaybill(models.Model):
             })
         waybill.onchange_waybill_line_ids()
         return waybill
-
-    @api.multi
-    def copy(self, default=None):
-        default = dict(default or {})
-        default['travel_ids'] = False
-        return super(TmsWaybill, self).copy(default)
 
     @api.multi
     def write(self, values):

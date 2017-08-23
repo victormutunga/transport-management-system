@@ -113,7 +113,7 @@
                             <page string="Extra Fields">
                                 <group col="4" colspan="4">
                                     <newline/>
-                                    <field colspan="4" context="{'default_waybill_id': active_id, 'active_model_base': active_model}" name="waybill_extradata" nolabel="1">
+                                    <field colspan="4" context="{'default_waybill_id': active_id, 'active_model_base': active_model}" name="waybill_extradata_ids" nolabel="1">
                                         <tree string="Extra Fields">
                                             <field name="type_id" string="Name"/>
                                             <field name="value_extra" string="Value"/>
