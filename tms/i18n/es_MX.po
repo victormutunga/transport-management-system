@@ -626,7 +626,7 @@ msgstr "Dirección de destino para la carta de porte actual."
 #. module: tms
 #: model:ir.model.fields,field_description:tms.field_tms_advance_auto_expense
 msgid "Auto expense"
-msgstr "Liquidación Automática"
+msgstr "Gasto Pre-Aprobado"
 
 #. module: tms
 #: model:ir.model.fields,field_description:tms.field_tms_expense_line_automatic
