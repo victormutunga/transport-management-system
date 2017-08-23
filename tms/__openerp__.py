@@ -70,6 +70,7 @@
         'data/ir_config_parameter.xml',
     ],
     "demo": [
+        'demo/stock_warehouse_orderpoint.xml',
         'demo/product_template.xml',
         'demo/fleet_vehicle_odometer.xml',
         'demo/ir_sequence.xml',
