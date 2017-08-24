@@ -28,7 +28,9 @@ class TmsExpenseLine(models.Model):
                 raise ValidationError(_(
                     'Verify that file be .xml, please!'))
             xml_str = base64.decodestring(self.xml_file).lstrip(BOM_UTF8)
-            xml = objectify.fromstring(xml_str)
+            xml_str_rep = xml_str.replace(
+                'xmlns:schemaLocation', 'xsi:schemaLocation')
+            xml = objectify.fromstring(xml_str_rep)
             xml_vat_emitter = xml.Emisor.get('rfc', '')
             xml_name_emitter = xml.Emisor.get('nombre', '')
             xml_folio = xml.get('folio', '')
