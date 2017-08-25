@@ -118,7 +118,6 @@ class TmsExpense(models.Model):
         string='SubTotal (All)',
         compute='_compute_amount_subtotal_total',
         store=True)
-    vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle')
     last_odometer = fields.Float('Last Read')
     vehicle_odometer = fields.Float()
     current_odometer = fields.Float(
@@ -524,7 +523,7 @@ class TmsExpense(models.Model):
             fuel_voucher = rec.env['fleet.vehicle.log.fuel'].create({
                 'operating_unit_id': rec.operating_unit_id.id,
                 'travel_id': line.travel_id.id,
-                'vehicle_id': line.travel_id.unit_id.id,
+                'unit_id': line.travel_id.unit_id.id,
                 'product_id': line.product_id.id,
                 'price_unit': line.unit_price,
                 'price_subtotal': line.price_subtotal,

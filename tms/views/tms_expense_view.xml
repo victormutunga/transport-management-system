@@ -12,7 +12,7 @@
                     <field name="name"/>
                     <field name="date"/>
                     <field name="employee_id"/>
-                    <field name="vehicle_id"/>
+                    <field name="unit_id"/>
                     <field name="amount_advance" sum="Advances"/>
                     <field name="amount_net_salary" sum="Net Salary"/>
                     <field name="amount_subtotal_real" sum="SubTotal (Real)"/>
@@ -166,7 +166,7 @@
                                         <field name='distance_empty'/>
                                         <field attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="distance_routes"/>
                                         <field attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="current_odometer"/>
-                                        <field attrs="{'invisible':[('odometer_log_id','=',False)], 'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="vehicle_id"/>
+                                        <field attrs="{'invisible':[('odometer_log_id','=',False)], 'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="unit_id"/>
                                         <field attrs="{'invisible':[('odometer_log_id','=',False)], 'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="odometer_log_id"/>
                                     </group>
                                     <group col="2" colspan="2" string="Real">
