@@ -166,7 +166,7 @@
                                         <field name='distance_empty'/>
                                         <field attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="distance_routes"/>
                                         <field attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="current_odometer"/>
-                                        <field attrs="{'invisible':[('odometer_log_id','=',False)], 'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="unit_id"/>
+                                        <field attrs="{'invisible':[('odometer_log_id','=',False)], 'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="vehicle_id"/>
                                         <field attrs="{'invisible':[('odometer_log_id','=',False)], 'readonly':[('state','in',('confirmed','cancel','closed'))]}" name="odometer_log_id"/>
                                     </group>
                                     <group col="2" colspan="2" string="Real">
