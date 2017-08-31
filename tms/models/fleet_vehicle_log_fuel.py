@@ -146,6 +146,7 @@ class FleetVehicleLogFuel(models.Model):
                     _('Could not cancel Fuel Voucher !'
                         'This Fuel Voucher is already linked to Travel '
                         'Expenses record'))
+            rec.state = 'cancel'
 
     @api.model
     def create(self, values):

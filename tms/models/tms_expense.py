@@ -524,7 +524,7 @@ class TmsExpense(models.Model):
             fuel_voucher = rec.env['fleet.vehicle.log.fuel'].create({
                 'operating_unit_id': rec.operating_unit_id.id,
                 'travel_id': line.travel_id.id,
-                'unit_id': line.travel_id.unit_id.id,
+                'vehicle_id': line.travel_id.unit_id.id,
                 'product_id': line.product_id.id,
                 'price_unit': line.unit_price,
                 'price_subtotal': line.price_subtotal,
