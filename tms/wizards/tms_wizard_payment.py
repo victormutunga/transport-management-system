@@ -166,7 +166,8 @@ class TmsWizardPayment(models.TransientModel):
                 line = self.env['account.move.line'].search([
                     ('name', '=', move_line.name),
                     ('account_id.internal_type', '=', 'payable'),
-                    ('move_id', '!=', move_id.id)])
+                    ('move_id', '!=', move_id.id),
+                    ('journal_id', '=', move_line.journal_id.id)])
                 if len(line) > 1:
                     raise ValidationError(_(
                         'The driver advance account is defined as '
