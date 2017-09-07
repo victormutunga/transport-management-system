@@ -896,6 +896,7 @@ class TmsExpense(models.Model):
                     'state': 'closed',
                     'expense_id': rec.id
                 })
+        return fuel_expense
 
     @api.multi
     def create_salary_line(self, travel):

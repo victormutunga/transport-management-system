@@ -117,6 +117,7 @@ class FleetVehicleLogFuel(models.Model):
             rec.price_unit = 0
             if rec.product_qty and rec.price_subtotal > 0:
                 rec.price_unit = rec.price_subtotal / rec.product_qty
+            return rec.price_unit
 
     @api.multi
     @api.depends('price_subtotal', 'tax_amount', 'price_total')
