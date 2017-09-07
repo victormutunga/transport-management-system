@@ -168,7 +168,7 @@ class TmsWizardPayment(models.TransientModel):
             journal_id = active_obj.move_id.journal_id.id
             if move_line.account_id.internal_type == 'payable':
                 line = self.env['account.move.line'].search([
-                    ('name', '=', active_obj.name),
+                    ('name', '=', move_line.name),
                     ('account_id.internal_type', '=', 'payable'),
                     ('move_id', '!=', move_id.id),
                     ('journal_id', '=', journal_id)])
