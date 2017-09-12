@@ -173,7 +173,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Advances">
+                        <page string="Advances" attrs="{'invisible':[('name', '=', False)]}">
                             <field name="advance_ids" attrs="{'readonly':[('state','in',('done', 'closed'))]}" context="{'default_travel_id':active_id, 'default_operating_unit_id': operating_unit_id}"/>
                         </page>
                         <page string="Waybills">
@@ -197,7 +197,7 @@
                         <page string="Expense driver factor">
                             <field name="driver_factor_ids" attrs="{'readonly':[('state','in',('done', 'closed'))]}" context="{'default_category': 'driver'}"/>
                         </page>
-                        <page string="History">
+                        <page string="History" attrs="{'invisible':[('name', '=', False)]}">
                             <field name="event_ids" context="{'default_travel_id':active_id}"/>
                             <group>
                                 <separator colspan="4" string="Notes"/>

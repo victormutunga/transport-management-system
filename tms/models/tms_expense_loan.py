@@ -219,6 +219,8 @@ class TmsExpenseLoan(models.Model):
     @api.depends('amount')
     def _compute_balance(self):
         for loan in self:
+            if not loan.amount:
+                return
             line_amount = 0.0
             if not loan.expense_ids:
                 loan.balance = loan.amount
