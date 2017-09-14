@@ -1076,7 +1076,7 @@ class TmsExpense(models.Model):
             raise ValidationError(
                 _('Error !'),
                 _('There is no expense account defined for this'
-                    ' product: "%s") % (line.product_id.name'))
+                    ' product: "%s"') % (line.product_id.name))
         if not journal_id:
             raise ValidationError(
                 _('Error !',
