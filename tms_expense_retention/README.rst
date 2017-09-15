@@ -2,9 +2,10 @@
    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
    :alt: License: AGPL-3
 
-===========================
+
+=====================
 TMS Expense Retention
-===========================
+=====================
 
 This application add the functionality to add automatic retentions to expenses.
 
