@@ -20,7 +20,9 @@ class AccountInvoice(models.Model):
             expense_line = self.env['tms.expense.line'].search(
                 [('invoice_id', '=', self.id)])
             xml_str = base64.decodestring(xml_signed).lstrip(BOM_UTF8)
-            xml = objectify.fromstring(xml_str)
+            xml_str_rep = xml_str.replace(
+                'xmlns:schemaLocation', 'xsi:schemaLocation')
+            xml = objectify.fromstring(xml_str_rep)
             xml_vat_emitter = xml.Emisor.get('rfc', '')
             xml_vat_receiver = xml.Receptor.get('rfc', '')
             xml_amount = xml.get('total')
@@ -101,3 +103,12 @@ class AccountInvoice(models.Model):
         }
         self.env['ir.attachment'].with_context({}).create(data_attach)
         return True
+
+    @api.multi
+    def _validate_invoice_xml(self, xml_signed):
+        xml_str = base64.decodestring(xml_signed).lstrip(BOM_UTF8)
+        xml_str_rep = xml_str.replace(
+            'xmlns:schemaLocation', 'xsi:schemaLocation')
+        xml_64 = base64.encodestring(xml_str_rep).lstrip(BOM_UTF8)
+        res = super(AccountInvoice, self)._validate_invoice_xml(xml_64)
+        return res
