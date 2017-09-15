@@ -3,6 +3,9 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 # from . import test_tms_factor
-# from . import test_tms_route
-# from . import test_tms_place
-# from . import test_tms_transportable
+from . import test_tms_route
+from . import test_tms_place
+from . import test_tms_transportable
+from . import test_product_template
+from . import test_tms_expense_line
+from . import test_tms_waybill_transportable_line

@@ -70,7 +70,7 @@ class TmsPlace(geo_model.GeoModel):
                     self.latitude = location['lat']
                     self.longitude = location['lng']
             except:
-                raise UserError(_("Google Maps is not available."))
+                raise ValidationError(_("Google Maps is not available."))
 
     @api.multi
     def open_in_google(self):

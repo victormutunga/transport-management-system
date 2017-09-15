@@ -2,6 +2,8 @@
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
+import urllib
+
 from mock import MagicMock
 from odoo import api
 from odoo.exceptions import UserError
@@ -45,7 +47,9 @@ class TestTmsPlace(TransactionCase):
             'On change works')
 
     def test_50_tms_place_get_cordinates(self):
-        self.place.get_coordinates = MagicMock()
-        attrs = {'other.side_effect': UserError}
-        self.place.get_coordinates.configure_mock(**attrs)
-        self.place.get_coordinates.other()
+        urllib.urlopen = MagicMock()
+        urllib.urlopen.return_value = False
+        with self.assertRaisesRegexp(
+                ValidationError,
+                'Google Maps is not available.'):
+            self.place.get_coordinates()
