@@ -9,3 +9,4 @@ from . import test_tms_transportable
 from . import test_product_template
 from . import test_tms_expense_line
 from . import test_tms_waybill_transportable_line
+from . import test_tms_waybill_line
