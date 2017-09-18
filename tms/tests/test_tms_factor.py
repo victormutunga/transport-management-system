@@ -59,10 +59,9 @@ class TestTmsFactor(TransactionCase):
             'range_end': 2000,
             'factor': 1,
             })
-        factors = self.factor.browse([factor.id, factor2.id])
-        value = factors.get_amount(distance=100)
+        value = factor.get_amount(distance=100)
         self.assertEqual(value, 200, 'Error in factor calculation (distance)')
-        value = factors.get_amount(distance=1500)
+        value = factor2.get_amount(distance=1500)
         self.assertEqual(value, 1500, 'Error in factor calculation (distance)')
 
     def test_22_get_amount_distance_fixed_amount(self):
@@ -105,11 +104,10 @@ class TestTmsFactor(TransactionCase):
             'range_end': 2000,
             'factor': 1,
             })
-        factors = self.factor.browse([factor.id, factor2.id])
-        value = factors.get_amount(distance_real=100)
+        value = factor.get_amount(distance_real=100)
         self.assertEqual(
             value, 200, 'Error in factor calculation (distance_real)')
-        value = factors.get_amount(distance_real=1500)
+        value = factor2.get_amount(distance_real=1500)
         self.assertEqual(
             value, 1500, 'Error in factor calculation (distance_real)')
 
@@ -154,11 +152,10 @@ class TestTmsFactor(TransactionCase):
             'range_end': 2000,
             'factor': 1,
             })
-        factors = self.factor.browse([factor.id, factor2.id])
-        value = factors.get_amount(weight=100)
+        value = factor.get_amount(weight=100)
         self.assertEqual(
             value, 200, 'Error in factor calculation (weight)')
-        value = factors.get_amount(weight=1500)
+        value = factor2.get_amount(weight=1500)
         self.assertEqual(
             value, 1500, 'Error in factor calculation (weight)')
 
@@ -214,11 +211,10 @@ class TestTmsFactor(TransactionCase):
             'range_end': 2000,
             'factor': 1,
             })
-        factors = self.factor.browse([factor.id, factor2.id])
-        value = factors.get_amount(qty=100)
+        value = factor.get_amount(qty=100)
         self.assertEqual(
             value, 200, 'Error in factor calculation (qty)')
-        value = factors.get_amount(qty=1500)
+        value = factor2.get_amount(qty=1500)
         self.assertEqual(
             value, 1500, 'Error in factor calculation (qty)')
 
@@ -263,11 +259,10 @@ class TestTmsFactor(TransactionCase):
             'range_end': 2000,
             'factor': 1,
             })
-        factors = self.factor.browse([factor.id, factor2.id])
-        value = factors.get_amount(volume=100)
+        value = factor.get_amount(volume=100)
         self.assertEqual(
             value, 200, 'Error in factor calculation (volume)')
-        value = factors.get_amount(volume=1500)
+        value = factor2.get_amount(volume=1500)
         self.assertEqual(
             value, 1500, 'Error in factor calculation (volume)')
 
