@@ -1147,11 +1147,11 @@ class TmsExpense(models.Model):
             ('operating_unit_id', '=', self.operating_unit_id.id),
             ('state', '=', 'done'),
             ('unit_id', '=', self.unit_id.id)])
-        employee_ids = [x.employee_id.id for x in travels]
+        employee_ids = travels.mapped('employee_id').ids
         if self.employee_id.id not in employee_ids:
             self.employee_id = False
-        tlines_units = [t.unit_id.id for t in self.travel_ids]
-        tlines_drivers = [t.employee_id.id for t in self.travel_ids]
+        tlines_units = self.travel_ids.mapped('unit_id').ids
+        tlines_drivers = self.travel_ids.mapped('employee_id').ids
         if (self.unit_id.id not in tlines_units and
                 self.employee_id.id not in tlines_drivers):
             self.travel_ids = False

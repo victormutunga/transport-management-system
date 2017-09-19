@@ -9,6 +9,7 @@ python:
   - "2.7"
 
 addons:
+  postgresql: 9.3
   apt:
     sources:
       - pov-wkhtmltopdf
@@ -21,11 +22,7 @@ addons:
       - wkhtmltopdf
       - libgeos-dev
       - postgis
-      - postgresql-9.3-postgis-scripts
       - postgresql-9.3-postgis-2.3
-
-services:
-  - postgresql
 
 before_install:
  - "export DISPLAY=:99.0"

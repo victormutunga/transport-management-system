@@ -64,7 +64,6 @@
         'views/tms_custom_view.xml',
         'data/product_product_data.xml',
         'data/operating_unit.xml',
-        'data/paper_format.xml',
         'wizards/tms_wizard_payment_view.xml',
         'wizards/tms_wizard_invoice_view.xml',
         'report/travel_instructions_letter.xml',
@@ -72,8 +71,8 @@
         'data/ir_config_parameter.xml',
     ],
     "demo": [
-        'demo/product_product.xml',
         'demo/stock_warehouse_orderpoint.xml',
+        'demo/product_product.xml',
         'demo/product_template.xml',
         'demo/fleet_vehicle_odometer.xml',
         'demo/ir_sequence.xml',

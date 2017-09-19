@@ -45,7 +45,7 @@
         <field name="name">tms.unit.kit.form</field>
         <field name="model">tms.unit.kit</field>
         <field name="arch" type="xml">
-            <form string="Units Kits" version="10.0">
+            <form string="Units Kits">
                 <sheet>
                     <h1>
                         <label class="oe_inline" style="font-size:30px;" string="Kit Name - " attrs="{'invisible':[('name','=', False)]}"/>

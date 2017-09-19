@@ -140,7 +140,4 @@
         </t>
     </template>
     <report file="tms.travel_instructions_letter" id="print_travel_intructions_letter" model="tms.travel" name="tms.travel_instructions_letter" report_type="qweb-pdf" string="Letter of Instructions"/>
-    <record id="print_travel_intructions_letter" model="ir.actions.report.xml">
-        <field name="paperformat_id" ref="tms.paperformat_94_151_tms"/>
-    </record>
 </odoo>

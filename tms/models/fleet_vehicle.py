@@ -11,9 +11,9 @@ from odoo import api, fields, models
 class FleetVehicle(models.Model):
     _inherit = 'fleet.vehicle'
     _description = "Vehicle"
-    _order = 'name1 asc'
+    _order = 'name'
 
-    name1 = fields.Char(required=True)
+    name = fields.Char(compute=False, required=True)
     operating_unit_id = fields.Many2one(
         'operating.unit', string='Operating Unit')
     year_model = fields.Char()
@@ -46,11 +46,6 @@ class FleetVehicle(models.Model):
         'res.partner', string='Insurance Supplier')
     insurance_days_to_expire = fields.Integer(
         compute='_compute_insurance_days_to_expire', string='Days to expire')
-
-    @api.model
-    @api.depends('name1')
-    def _compute_vehicle_name(self):
-        self.name = self.name1
 
     @api.depends('insurance_expiration')
     def _compute_insurance_days_to_expire(self):

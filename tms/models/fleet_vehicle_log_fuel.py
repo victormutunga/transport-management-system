@@ -47,7 +47,7 @@ class FleetVehicleLogFuel(models.Model):
     invoice_paid = fields.Boolean(
         compute='_compute_invoiced_paid')
     operating_unit_id = fields.Many2one(
-        'operating.unit', string='Operating Unit',)
+        'operating.unit', string='Operating Unit')
     notes = fields.Char()
     state = fields.Selection([
         ('draft', 'Draft'),
