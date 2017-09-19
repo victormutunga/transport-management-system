@@ -23,9 +23,12 @@ class AccountInvoice(models.Model):
             xml_str_rep = xml_str.replace(
                 'xmlns:schemaLocation', 'xsi:schemaLocation')
             xml = objectify.fromstring(xml_str_rep)
-            xml_vat_emitter = xml.Emisor.get('rfc', '')
-            xml_vat_receiver = xml.Receptor.get('rfc', '')
-            xml_amount = xml.get('total')
+            xml_vat_emitter = xml.Emisor.get(
+                'rfc', xml.Emisor.get('Rfc', ''))
+            xml_vat_receiver = xml.Receptor.get(
+                'rfc', xml.Receptor.get('Rfc', ''))
+            xml_amount = xml.get(
+                'total', xml.get('Total', ''))
             xml_uuid = self.l10n_mx_edi_get_tfd_etree(xml)
         except AttributeError as ex:
             raise ValidationError(ex)
