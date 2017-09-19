@@ -47,7 +47,7 @@ class FleetVehicleLogFuel(models.Model):
     invoice_paid = fields.Boolean(
         compute='_compute_invoiced_paid')
     operating_unit_id = fields.Many2one(
-        'operating.unit', string='Operating Unit')
+        'operating.unit', string='Operating Unit',)
     notes = fields.Char()
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -75,7 +75,7 @@ class FleetVehicleLogFuel(models.Model):
     @api.depends('vehicle_id')
     def _compute_employee_id(self):
         for rec in self:
-            rec.employee_id = rec.vehicle_id.employee_id.id
+            rec.employee_id = rec.travel_id.employee_id
 
     @api.multi
     @api.depends('tax_amount')
@@ -121,6 +121,7 @@ class FleetVehicleLogFuel(models.Model):
                     _('Could not cancel Fuel Voucher !'
                         'This Fuel Voucher is already linked to Travel '
                         'Expenses record'))
+            rec.state = 'cancel'
 
     @api.model
     def create(self, values):

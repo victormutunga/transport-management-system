@@ -7,11 +7,10 @@ import logging
 import urllib as my_urllib
 
 import simplejson as json
-from odoo import api, fields
+from odoo import _, api, fields
 from odoo.addons.base_geoengine import fields as geo_fields
 from odoo.addons.base_geoengine import geo_model
 from odoo.exceptions import UserError
-from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 try:
@@ -32,7 +31,6 @@ class TmsPlace(geo_model.GeoModel):
         string='State Name')
     country_id = fields.Many2one(
         'res.country',
-        related='state_id.country_id',
         string='Country')
     latitude = fields.Float(
         required=False, digits=(20, 10),
@@ -46,11 +44,22 @@ class TmsPlace(geo_model.GeoModel):
         inverse='_set_lat_long',
     )
 
+    @api.onchange('state_id')
+    def get_country_id(self):
+        for rec in self:
+            if rec.state_id:
+                rec.country_id = rec.state_id.country_id
+            else:
+                rec.country_id = False
+
     @api.multi
     def get_coordinates(self):
         for rec in self:
-            address = (rec.name + "," + rec.state_id.name + "," +
-                       rec.country_id.name)
+            if rec.name and rec.state_id:
+                address = (rec.name + "," + rec.state_id.name + "," +
+                           rec.state_id.country_id.name)
+            else:
+                raise UserError(_("You need to set a Place and a State Name"))
             google_url = (
                 'http://maps.googleapis.com/maps/api/geocode/json?' +
                 'address=' + address.encode('utf-8') + '&sensor=false')
@@ -104,4 +113,5 @@ class TmsPlace(geo_model.GeoModel):
     @api.depends('point')
     def _set_lat_long(self):
         for rec in self:
-            rec.set_lang_long()
+            if rec.point:
+                rec.set_lang_long()

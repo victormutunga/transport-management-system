@@ -45,7 +45,7 @@
         <field name="name">tms.unit.kit.form</field>
         <field name="model">tms.unit.kit</field>
         <field name="arch" type="xml">
-            <form string="Units Kits" version="9.0">
+            <form string="Units Kits" version="10.0">
                 <sheet>
                     <h1>
                         <label class="oe_inline" style="font-size:30px;" string="Kit Name - " attrs="{'invisible':[('name','=', False)]}"/>
@@ -57,7 +57,7 @@
                         <field name="unit_id"/>
                         <field attrs="{'required':['|', ('dolly_id','!=',False),('trailer2_id','!=',False)]}" domain="[('id','!=',trailer2_id), ('fleet_type','=','trailer'), ('operating_unit_id', '=', operating_unit_id)]" name="trailer1_id" />
                         <field attrs="{'required':[('trailer2_id','!=',False)]}" domain="[('fleet_type','=','dolly'), ('operating_unit_id', '=', operating_unit_id)]" name="dolly_id"/>
-                        <field attrs="{'required':[('dolly_id','!=',False)]}" domain="[('id','!=',trailer1_id), ('fleet_type','=','trailer'), ('operating_unit_id', '=', operating_unit_id)]" name="trailer2_id"/>
+                        <field attrs="{'required':[('dolly_id','!=',False)], 'invisible': [('dolly_id', '=', False)]}" domain="[('id','!=',trailer1_id), ('fleet_type','=','trailer'), ('operating_unit_id', '=', operating_unit_id)]" name="trailer2_id"/>
                         <field colspan="2" name="employee_id"/>
                         <newline/>
                         <separator colspan="4" string="Validity"/>

@@ -11,7 +11,7 @@
                 <field name="name"/>
                 <field name="date"/>
                 <field name="employee_id"/>
-                <field name="vehicle_id"/>
+                <field name="unit_id"/>
                 <field name="amount_advance" sum="Advances"/>
                 <field name="amount_net_salary" sum="Net Salary"/>
                 <field name="amount_subtotal_real" sum="SubTotal (Real)"/>
@@ -131,7 +131,7 @@
                             <field colspan="4" name="fuel_log_ids" nolabel="1" readonly="1"/>
                         </page>
                         <page string="Loans">
-                            <field colspan="4" name="loan_ids" nolabel="1">
+                            <field colspan="4" name="loan_ids" nolabel="1" attrs="{'readonly':[('state','in',('confirmed'))]}">
                                 <tree string="aa">
                                     <field name="name"/>
                                     <field name="date"/>

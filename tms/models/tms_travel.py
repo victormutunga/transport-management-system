@@ -179,22 +179,18 @@ class TmsTravel(models.Model):
 
     @api.onchange('kit_id')
     def _onchange_kit(self):
-        for rec in self:
-            rec.unit_id = rec.kit_id.unit_id
-            rec.trailer2_id = rec.kit_id.trailer2_id
-            rec.trailer1_id = rec.kit_id.trailer1_id
-            rec.dolly_id = rec.kit_id.dolly_id
-            rec.employee_id = rec.kit_id.employee_id
+        self.unit_id = self.kit_id.unit_id.id
+        self.trailer2_id = self.kit_id.trailer2_id.id
+        self.trailer1_id = self.kit_id.trailer1_id.id
+        self.dolly_id = self.kit_id.dolly_id.id
+        self.employee_id = self.kit_id.employee_id.id
 
     @api.onchange('route_id')
     def _onchange_route(self):
-        self.driver_factor_ids = self.route_id.driver_factor_ids
         self.travel_duration = self.route_id.travel_time
-        for rec in self:
-            rec.driver_factor_ids = rec.route_id.driver_factor_ids
-            rec.distance_route = rec.route_id.distance
-            rec.distance_loaded = rec.route_id.distance_loaded
-            rec.distance_empty = rec.route_id.distance_empty
+        self.distance_route = self.route_id.distance
+        self.distance_loaded = self.route_id.distance_loaded
+        self.distance_empty = self.route_id.distance_empty
 
     @api.depends('distance_empty', 'distance_loaded')
     def _compute_distance_driver(self):

@@ -32,7 +32,7 @@
             <xpath expr="//label[@for='model_id']" name="model_id" position="before">
                 <label class="oe_edit_only" for="name"/>
                 <h1>
-                    <field name="name" placeholder="e.g. T-1"/>
+                    <field name="name1" placeholder="e.g. T-1"/>
                 </h1>
             </xpath>
             <field name="driver_id" position="replace">

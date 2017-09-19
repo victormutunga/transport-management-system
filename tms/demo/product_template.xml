@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- <record id="product.product_product_52_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_51_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_7_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_9_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_57_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_35_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_36_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_5b_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_16_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_3_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_5_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_46_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_49_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="sale.advance_product_0_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_55_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_56_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_54_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_1b_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_28_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_1_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_44_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_24_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_17_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_18_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_19_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_33_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_32_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="stock.product_icecream_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_38_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_27_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_25_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_26_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_50_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_58_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_21_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_20_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_10_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_12_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_31_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_42_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_29_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_30_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_0_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_37_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_23_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_22_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_14_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_15_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_13_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_45_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_59_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_2_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_47_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_39_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_53_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_48_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_34_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_40_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_41_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_43_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_8_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_6_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record> -->
+        <record id="product.product_product_4_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+        <record id="product.product_product_11_product_template" model="product.template">
+            <field name="active" eval="0"/>
+        </record>
+    </data>
+</odoo>

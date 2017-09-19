@@ -37,7 +37,7 @@ class TmsExpense(models.Model):
         ('cancel', 'Cancelled')], 'Expense State', readonly=True,
         help="Gives the state of the Travel Expense. ",
         default='draft')
-    date = fields.Date(required=True, default=fields.Date.today)
+    date = fields.Date(required=True, default=fields.Date.context_today)
     expense_line_ids = fields.One2many(
         'tms.expense.line', 'expense_id', 'Expense Lines')
     amount_real_expense = fields.Float(
@@ -172,7 +172,7 @@ class TmsExpense(models.Model):
     distance_routes = fields.Float(
         compute='_compute_distance_routes',
         string='Distance from routes',
-        help="Routes Distance")
+        help="Routes Distance", readonly=True)
     distance_real = fields.Float(
         help="Route obtained by electronic reading and/or GPS")
     income_km = fields.Float(
@@ -979,7 +979,7 @@ class TmsExpense(models.Model):
                     expense_line = self.expense_line_ids.create({
                         'name': _("Loan: ") + str(loan.name),
                         'expense_id': self.id,
-                        'line_type': "salary_discount",
+                        'line_type': "loan",
                         'product_id': loan.product_id.id,
                         'product_qty': 1.0,
                         'unit_price': total_discount,
@@ -1076,7 +1076,7 @@ class TmsExpense(models.Model):
             raise ValidationError(
                 _('Error !'),
                 _('There is no expense account defined for this'
-                    ' product: "%s"') % (line.product_id.name))
+                    ' product: "%s") % (line.product_id.name'))
         if not journal_id:
             raise ValidationError(
                 _('Error !',
@@ -1147,13 +1147,18 @@ class TmsExpense(models.Model):
             ('operating_unit_id', '=', self.operating_unit_id.id),
             ('state', '=', 'done'),
             ('unit_id', '=', self.unit_id.id)])
-        self.employee_id = False
+        employee_ids = [x.employee_id.id for x in travels]
+        if self.employee_id.id not in employee_ids:
+            self.employee_id = False
+        tlines_units = [t.unit_id.id for t in self.travel_ids]
+        tlines_drivers = [t.employee_id.id for t in self.travel_ids]
+        if (self.unit_id.id not in tlines_units and
+                self.employee_id.id not in tlines_drivers):
+            self.travel_ids = False
         return {
             'domain': {
                 'employee_id': [
-                    ('id', 'in', [x.employee_id.id for x in travels]),
-                    ('driver', '=', True)
-                ]
+                    ('id', 'in', employee_ids), ('driver', '=', True)],
             }
         }
 
