@@ -5,10 +5,10 @@
 from openerp.tests.common import TransactionCase
 
 
-class TestTmsWaybillTrasnportableLine(TransactionCase):
+class TestTmsWaybillLine(TransactionCase):
 
     def setUp(self):
-        super(TestTmsWaybillTrasnportableLine, self).setUp()
+        super(TestTmsWaybillLine, self).setUp()
         self.waybill = self.env['tms.waybill']
         self.operating_unit = self.env.ref(
             'operating_unit.main_operating_unit')

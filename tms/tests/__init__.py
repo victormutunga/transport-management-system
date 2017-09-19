@@ -10,3 +10,5 @@ from . import test_product_template
 from . import test_tms_expense_line
 from . import test_tms_waybill_transportable_line
 from . import test_tms_waybill_line
+from . import test_fleet_vehicle
+from . import test_fleet_vehicle_log_fuel
