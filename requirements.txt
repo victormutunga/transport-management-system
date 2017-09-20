@@ -5,3 +5,4 @@ Shapely
 sodapy
 num2words
 pyproj
+pyopenssl

@@ -40,7 +40,6 @@ class TmsExtradata(models.Model):
         for value in values:
             if self.type == value[0]:
                 self.value_extra = value[1]
-                return self.value_extra
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form',

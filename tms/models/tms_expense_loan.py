@@ -3,9 +3,8 @@
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-
-from openerp import _, api, exceptions, fields, models
-from openerp.exceptions import ValidationError
+from odoo import _, api, exceptions, fields, models
+from odoo.exceptions import ValidationError
 
 
 class TmsExpenseLoan(models.Model):
@@ -18,7 +17,7 @@ class TmsExpenseLoan(models.Model):
     name = fields.Char()
     date = fields.Date(
         required=True,
-        default=fields.Date.today)
+        default=fields.Date.context_today)
     date_confirmed = fields.Date(
         readonly=True,
         related='move_id.date')
@@ -48,12 +47,10 @@ class TmsExpenseLoan(models.Model):
     amount = fields.Float(required=True)
     percent_discount = fields.Float()
     fixed_discount = fields.Float()
-    balance = fields.Float(
-        compute='_compute_balance',
-        store=True)
     paid = fields.Boolean(
         compute='_compute_paid',
-        store=True)
+        store=True, readonly=True)
+    balance = fields.Float(compute='_compute_balance', store=True)
     active_loan = fields.Boolean()
     lock = fields.Boolean(string='Other discount?')
     amount_discount = fields.Float()

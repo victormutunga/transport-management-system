@@ -67,6 +67,7 @@ class FleetVehicleLogFuel(models.Model):
         domain=[('tms_product_category', '=', 'fuel')])
     currency_id = fields.Many2one(
         'res.currency', string='Currency',
+        required=True,
         default=lambda self: self.env.user.company_id.currency_id)
     expense_control = fields.Boolean(readonly=True)
     ticket_number = fields.Char()
@@ -75,7 +76,7 @@ class FleetVehicleLogFuel(models.Model):
     @api.depends('vehicle_id')
     def _compute_employee_id(self):
         for rec in self:
-            rec.employee_id = rec.vehicle_id.employee_id.id
+            rec.employee_id = rec.travel_id.employee_id
 
     @api.multi
     @api.depends('tax_amount')
@@ -92,6 +93,7 @@ class FleetVehicleLogFuel(models.Model):
             rec.price_unit = 0
             if rec.product_qty and rec.price_subtotal > 0:
                 rec.price_unit = rec.price_subtotal / rec.product_qty
+            return rec.price_unit
 
     @api.multi
     @api.depends('price_subtotal', 'tax_amount', 'price_total')
@@ -121,6 +123,7 @@ class FleetVehicleLogFuel(models.Model):
                     _('Could not cancel Fuel Voucher !'
                         'This Fuel Voucher is already linked to Travel '
                         'Expenses record'))
+            rec.state = 'cancel'
 
     @api.model
     def create(self, values):

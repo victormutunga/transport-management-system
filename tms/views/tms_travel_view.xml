@@ -214,6 +214,20 @@
                                     <field attrs="{'readonly':[('state','in',('done', 'closed'))]}" name="distance_empty"/>
                                     <field name="distance_driver"/>
                                     <field name="odometer" attrs="{'invisible':[('state','!=', 'done', 'closed')]}"/>
+                                    <field name="waybill_ids" attrs="{'readonly':[('state','in',('done', 'closed'))]}" nolabel="1">
+                                        <tree colors="red:state=='cancel';green:state=='approved';blue:state=='confirmed';" string="Waybills">
+                                            <button groups="tms.group_waybill_approve" icon="gtk-go-forward" name="action_approve" states="draft" string="Approve" type="object"/>
+                                            <button groups="tms.group_waybill_confirm" icon="gtk-ok" name="action_confirm" states="approved" string="Confirm" type="object"/>
+                                            <field name="state"/>
+                                            <field name="name"/> 
+                                            <field name="date_order"/>
+                                            <field name="partner_id"/> 
+                                            <field name="product_qty" sum="Product Quantity"/> 
+                                            <field name="amount_untaxed" sum="Amount Untaxed"/>
+                                            <field name="amount_tax" sum="Taxes"/> 
+                                            <field name="amount_total" sum="Total "/> 
+                                        </tree>
+                                    </field>
                                 </group>
                                 <group>
                                     <separator colspan="4" string="Fuel Efficiency"/>
@@ -313,7 +327,6 @@
         <field name="arch" type="xml">
             <gantt color="unit_id" date_start="date_start" date_stop="date_end" default_group_by="unit_id" duration_unit="week" type="consolidate" consolidation="travel_duration" consolidation_label="hours" string="Travels">
                 <field name="name"/>
-                <!-- <field name="distance_route"/> -->
             </gantt>
         </field>
     </record>

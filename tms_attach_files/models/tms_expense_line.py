@@ -28,25 +28,22 @@ class TmsExpenseLine(models.Model):
                 raise ValidationError(_(
                     'Verify that file be .xml, please!'))
             xml_str = base64.decodestring(self.xml_file).lstrip(BOM_UTF8)
-            xml = objectify.fromstring(xml_str)
-            xml_vat_emitter = xml.Emisor.get('rfc', '')
-            xml_name_emitter = xml.Emisor.get('nombre', '')
-            xml_folio = xml.get('folio', '')
-            xml_date = xml.get('fecha', '')
-
+            xml_str_rep = xml_str.replace(
+                'xmlns:schemaLocation', 'xsi:schemaLocation')
+            xml = objectify.fromstring(xml_str_rep)
+            xml_vat_emitter = xml.Emisor.get('rfc', xml.Emisor.get('Rfc', ''))
+            xml_folio = xml.get('folio', xml.get('Folio', ''))
+            xml_date = xml.get('fecha', xml.get('Fecha', ''))
             partner_id = self.env['res.partner'].search(
-                ['|', ('vat', '=', 'MX' + xml_vat_emitter),
-                 ('name', '=ilike', xml_name_emitter)], limit=1)
+                [('vat', '=', 'MX' + xml_vat_emitter)], limit=1)
             date_split = xml_date.split('T')
             strp_date = datetime.strptime(date_split[0], '%Y-%m-%d')
-
             self.invoice_number = xml_folio
             self.date = strp_date
             if not partner_id:
                 raise ValidationError(
-                    _('The supplier %s dont exist in the system'
-                        'please check de supplier list.') %
-                    xml_name_emitter)
+                    _('The supplier dont exist in the system'
+                        'please check de supplier list.'))
             self.partner_id = partner_id.id
         else:
             self.invoice_number = False
