@@ -10,11 +10,9 @@ from odoo import fields, models
 class TmsUnitKit(models.Model):
     _name = "tms.unit.kit"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _order = "unit_id"
+    _order = "unit_id desc"
     _description = "Units Kits"
 
-    operating_unit_id = fields.Many2one(
-        'operating.unit', string='Operating Unit', required=True)
     name = fields.Char(required=True)
     unit_id = fields.Many2one('fleet.vehicle', 'Unit', required=True)
     trailer1_id = fields.Many2one('fleet.vehicle', 'Trailer 1')

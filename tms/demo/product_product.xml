@@ -12,9 +12,6 @@
     <record id="product.consu_delivery_01" model="product.product">
         <field name="active" eval="0"/>
     </record>
-    <record id ="product.consu_delivery_01" model="product.product">
-        <field name="active" eval="0"/>
-    </record>
     <record id ="product.consu_delivery_02" model="product.product">
         <field name="active" eval="0"/>
     </record>

@@ -21,7 +21,7 @@ Configuration
 
 To configure this module, you need to:
 
-#. Go to Freight/Configuration/Retentios.
+#. Go to Freight/Configuration/Retentions.
 #. Create a retention.
 
 

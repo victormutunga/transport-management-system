@@ -160,21 +160,22 @@ class TmsWizardPayment(models.TransientModel):
     def create_moves_and_reconciles(self, move, active_ids):
         move_id = self.env['account.move'].create(move)
         move_id.post()
-        for move_line in move_id.line_ids:
+        journal_id = active_ids.move_id.journal_id.id
+        for move_line in move_id.line_ids.filtered(
+                lambda l: l.account_id.internal_type == 'payable'):
             move_ids = []
-            if move_line.account_id.internal_type == 'payable':
-                line = self.env['account.move.line'].search([
-                    ('name', '=', move_line.name),
-                    ('account_id.internal_type', '=', 'payable'),
-                    ('move_id', '!=', move_id.id)])
-                if len(line) > 1:
-                    raise ValidationError(_(
-                        'The driver advance account is defined as '
-                        'payable. %s ' % line[0].name))
-                move_ids.append(line.id)
-                move_ids.append(move_line.id)
-                reconcile_ids = self.env['account.move.line'].browse(
-                    move_ids)
-                reconcile_ids.reconcile()
-        for obj in active_ids:
-            obj.payment_move_id = move_id
+            line = self.env['account.move.line'].search([
+                ('name', '=', move_line.name),
+                ('account_id.internal_type', '=', 'payable'),
+                ('move_id', '!=', move_id.id),
+                ('journal_id', '=', journal_id)])
+            if len(line) > 1:
+                raise ValidationError(_(
+                    'The driver advance account is defined as '
+                    'payable. %s ' % line[0].name))
+            move_ids.append(line.id)
+            move_ids.append(move_line.id)
+            reconcile_ids = self.env['account.move.line'].browse(
+                move_ids)
+            reconcile_ids.reconcile()
+        active_ids.write({'payment_move_id': move_id.id})

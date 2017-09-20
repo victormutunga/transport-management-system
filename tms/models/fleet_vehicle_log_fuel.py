@@ -67,6 +67,7 @@ class FleetVehicleLogFuel(models.Model):
         domain=[('tms_product_category', '=', 'fuel')])
     currency_id = fields.Many2one(
         'res.currency', string='Currency',
+        required=True,
         default=lambda self: self.env.user.company_id.currency_id)
     expense_control = fields.Boolean(readonly=True)
     ticket_number = fields.Char()
@@ -92,6 +93,7 @@ class FleetVehicleLogFuel(models.Model):
             rec.price_unit = 0
             if rec.product_qty and rec.price_subtotal > 0:
                 rec.price_unit = rec.price_subtotal / rec.product_qty
+            return rec.price_unit
 
     @api.multi
     @api.depends('price_subtotal', 'tax_amount', 'price_total')

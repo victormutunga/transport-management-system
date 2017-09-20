@@ -506,18 +506,16 @@ class TmsExpense(models.Model):
     def prepare_move_line(self, name, ref, account_id,
                           debit, credit, journal_id,
                           partner_id, operating_unit_id):
-        return (
-            0, 0,
-            {
-                'name': name,
-                'ref': ref,
-                'account_id': account_id,
-                'debit': debit,
-                'credit': credit,
-                'journal_id': journal_id,
-                'partner_id': partner_id,
-                'operating_unit_id': operating_unit_id,
-            })
+        return (0, 0, {
+            'name': name,
+            'ref': ref,
+            'account_id': account_id,
+            'debit': debit,
+            'credit': credit,
+            'journal_id': journal_id,
+            'partner_id': partner_id,
+            'operating_unit_id': operating_unit_id,
+        })
 
     @api.model
     def create_fuel_vouchers(self, line):
@@ -630,7 +628,6 @@ class TmsExpense(models.Model):
                   ['salary', 'other_income', 'salary_discount']):
                 continue
             else:
-
                 move_line = rec.prepare_move_line(
                     rec.name + ' ' + line.name,
                     rec.name,
@@ -702,8 +699,10 @@ class TmsExpense(models.Model):
         for rec in self:
             balance = rec.amount_balance
             if (rec.employee_id.outsourcing and rec.expense_line_ids.filtered(
-                    lambda x: x.line_type == 'other_income')):
-                balance = (balance - rec.amount_other_income) - sum(
+                    lambda x: x.line_type in ['other_income', 'salary'])):
+                balance = (
+                    balance - rec.amount_other_income -
+                    rec.amount_salary) - sum(
                     rec.expense_line_ids.filtered(
                         lambda y: y.line_type == 'salary_discount').mapped(
                         'price_total'))
@@ -898,6 +897,7 @@ class TmsExpense(models.Model):
                     'state': 'closed',
                     'expense_id': rec.id
                 })
+        return fuel_expense
 
     @api.multi
     def create_salary_line(self, travel):

@@ -572,7 +572,7 @@ msgstr "Monto Total"
 #: model:ir.ui.view,arch_db:tms.view_tms_travel_form
 #: model:ir.ui.view,arch_db:tms.view_tms_waybill_tree
 msgid "Amount Untaxed"
-msgstr "Monto sin Impuestos"
+msgstr "Cantidad sin impuestos"
 
 #. module: tms
 #: model:ir.model.fields,field_description:tms.field_tms_expense_loan_amount_discount
@@ -4527,3 +4527,12 @@ msgstr "tms.wizard.payment"
 msgid "waybill"
 msgstr "carta porte"
 
+#. module: tms
+#: model:tms.transportable,name:tms.tms_transportable_01
+msgid "Sand"
+msgstr "Arena"
+
+#. module: tms
+#: model:tms.transportable,name:tms.tms_transportable_02
+msgid "Water"
+msgstr "Agua"

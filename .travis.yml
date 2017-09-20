@@ -22,6 +22,7 @@ addons:
       - wkhtmltopdf
       - libgeos-dev
       - postgis
+      - postgresql-9.3-postgis-scripts
       - postgresql-9.3-postgis-2.3
 
 before_install:
