@@ -32,6 +32,7 @@ class TmsExpenseLine(models.Model):
                 'xmlns:schemaLocation', 'xsi:schemaLocation')
             xml = objectify.fromstring(xml_str_rep)
             xml_vat_emitter = xml.Emisor.get('rfc', xml.Emisor.get('Rfc', ''))
+            xml_name_emitter = xml.Emisor.get('nombre', xml.Emisor.get('Nombre', ''))
             xml_folio = xml.get('folio', xml.get('Folio', ''))
             xml_date = xml.get('fecha', xml.get('Fecha', ''))
             partner_id = self.env['res.partner'].search(
