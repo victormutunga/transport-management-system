@@ -11,7 +11,6 @@
     "author": "Jarsa Sistemas, Argil Consulting",
     "website": "https://www.jarsa.com.mx/page/transport-management-system",
     "depends": [
-        "account",
         "account_accountant",
         "fleet",
         "hr",
