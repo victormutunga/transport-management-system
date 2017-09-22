@@ -2,7 +2,7 @@
 # Copyright 2017, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase
 
 
 class TestTmsWaybillTrasnportableLine(TransactionCase):
@@ -30,14 +30,14 @@ class TestTmsWaybillTrasnportableLine(TransactionCase):
                 'transportable_id': self.sand.id,
                 'name': self.sand.name,
                 'transportable_uom_id': self.sand.uom_id.id,
-                })]
+            })]
         })
 
     def test_10_product_template_unique_product_per_category(self):
         waybill = self.create_waybill()
         waybill.transportable_line_ids.write({
             'transportable_id': self.water.id,
-            })
+        })
         line = waybill.transportable_line_ids
         line._onchange_transportable_id()
         self.assertEqual(

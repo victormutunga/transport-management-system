@@ -6,11 +6,12 @@
 import logging
 import urllib as my_urllib
 
-import simplejson as json
 from odoo import _, api, fields
 from odoo.addons.base_geoengine import fields as geo_fields
 from odoo.addons.base_geoengine import geo_model
-from odoo.exceptions import UserError
+from odoo.exceptions import ValidationError
+
+import simplejson as json
 
 _logger = logging.getLogger(__name__)
 try:
@@ -59,7 +60,8 @@ class TmsPlace(geo_model.GeoModel):
                 address = (rec.name + "," + rec.state_id.name + "," +
                            rec.state_id.country_id.name)
             else:
-                raise UserError(_("You need to set a Place and a State Name"))
+                raise ValidationError(
+                    _("You need to set a Place and a State Name"))
             google_url = (
                 'http://maps.googleapis.com/maps/api/geocode/json?' +
                 'address=' + address.encode('utf-8') + '&sensor=false')

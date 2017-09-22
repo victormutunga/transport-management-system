@@ -2,7 +2,7 @@
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase
 
 
 class TestTmsExpenseLine(TransactionCase):
@@ -17,14 +17,24 @@ class TestTmsExpenseLine(TransactionCase):
             'operating_unit.main_operating_unit')
         self.unit = self.env.ref('tms.tms_fleet_vehicle_01')
         self.driver = self.env.ref('tms.tms_hr_employee_01')
+        obj_account = self.env['account.account']
+        advance = obj_account.create({
+            "code": 'X031216',
+            "name": 'Advance',
+            "user_type_id": self.env.ref(
+                "account.data_account_type_current_assets").id
+        })
+        balance = obj_account.create({
+            "code": 'X190217',
+            "name": 'Balance',
+            "user_type_id": self.env.ref(
+                "account.data_account_type_current_assets").id
+        })
         self.driver.write({
             'address_home_id': self.env.ref(
                 'base.res_partner_address_31').id,
-            'tms_advance_account_id': self.env.ref(
-                'tms.tms_account_advance').id,
-            'tms_expense_negative_account_id': self.env.ref(
-                'tms.tms_account_negative').id
-            })
+            'tms_advance_account_id': advance.id,
+            'tms_expense_negative_account_id': balance.id})
         self.advance_1 = self.env.ref(
             'tms.tms_advance_01').state = 'confirmed'
         self.advance_2 = self.env.ref(
@@ -38,8 +48,7 @@ class TestTmsExpenseLine(TransactionCase):
             'expense_line_ids': [(0, 0, {
                 'product_id': self.product.id,
                 'name': self.product.name,
-                'line_type': self.product.tms_product_category,
-                })]
+                'line_type': self.product.tms_product_category})]
         })
         return expense
 
@@ -47,7 +56,7 @@ class TestTmsExpenseLine(TransactionCase):
         expense = self.create_expense()
         expense.expense_line_ids.write({
             'product_id': self.product_fuel.id,
-            })
+        })
         expense_line = expense.expense_line_ids
         expense_line._onchange_product_id()
         self.assertEqual(

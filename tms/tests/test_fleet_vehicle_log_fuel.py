@@ -2,7 +2,7 @@
 # Copyright 2017, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase
 
 
 class TestFleetVehicleLogFuel(TransactionCase):
@@ -22,4 +22,3 @@ class TestFleetVehicleLogFuel(TransactionCase):
         self.fuel_log.product_qty = 0
         price = self.fuel_log.price_unit
         self.assertEqual(price, 0)
-

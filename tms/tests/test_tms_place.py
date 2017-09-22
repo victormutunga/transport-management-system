@@ -5,8 +5,8 @@
 import urllib
 
 from mock import MagicMock
-from odoo import api
-from odoo.exceptions import UserError
+
+from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 
 
@@ -31,7 +31,6 @@ class TestTmsPlace(TransactionCase):
         self.assertEqual(self.place.complete_name, 'San Antonio, Texas',
                          'Full Complete Name')
 
-    @api.depends('name', 'state_id')
     def test_40_tms_place_compute_complete_name(self):
         self.place.write({'name': 'San Francisco'})
         self.place._compute_complete_name()

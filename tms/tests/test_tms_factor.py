@@ -26,7 +26,7 @@ class TestTmsFactor(TransactionCase):
             'name': 'distance',
             'category': 'driver',
             'factor_type': 'distance',
-            })
+        })
         for record in factor_type_list:
             factor.write({'factor_type': record[0]})
             factor._onchange_factor_type()
@@ -38,7 +38,7 @@ class TestTmsFactor(TransactionCase):
             'category': 'driver',
             'factor_type': 'distance',
             'factor': 2,
-            })
+        })
         value = factor.get_amount(distance=100)
         self.assertEqual(value, 200, 'Error in factor calculation (distance)')
 
@@ -50,7 +50,7 @@ class TestTmsFactor(TransactionCase):
             'range_start': 0,
             'range_end': 1000,
             'factor': 2,
-            })
+        })
         factor2 = self.factor.create({
             'name': 'distance',
             'category': 'driver',
@@ -58,7 +58,7 @@ class TestTmsFactor(TransactionCase):
             'range_start': 1001,
             'range_end': 2000,
             'factor': 1,
-            })
+        })
         value = factor.get_amount(distance=100)
         self.assertEqual(value, 200, 'Error in factor calculation (distance)')
         value = factor2.get_amount(distance=1500)
@@ -72,7 +72,7 @@ class TestTmsFactor(TransactionCase):
             'factor': 2,
             'mixed': True,
             'fixed_amount': 100,
-            })
+        })
         value = factor.get_amount(distance=100)
         self.assertEqual(value, 300, 'Error in factor calculation (distance)')
 
@@ -82,7 +82,7 @@ class TestTmsFactor(TransactionCase):
             'category': 'driver',
             'factor_type': 'distance_real',
             'factor': 2,
-            })
+        })
         value = factor.get_amount(distance_real=100)
         self.assertEqual(
             value, 200, 'Error in factor calculation (distance_real)')
@@ -95,7 +95,7 @@ class TestTmsFactor(TransactionCase):
             'range_start': 0,
             'range_end': 1000,
             'factor': 2,
-            })
+        })
         factor2 = self.factor.create({
             'name': 'distance_real',
             'category': 'driver',
@@ -103,7 +103,7 @@ class TestTmsFactor(TransactionCase):
             'range_start': 1001,
             'range_end': 2000,
             'factor': 1,
-            })
+        })
         value = factor.get_amount(distance_real=100)
         self.assertEqual(
             value, 200, 'Error in factor calculation (distance_real)')
@@ -119,7 +119,7 @@ class TestTmsFactor(TransactionCase):
             'factor': 2,
             'mixed': True,
             'fixed_amount': 100,
-            })
+        })
         value = factor.get_amount(distance_real=100)
         self.assertEqual(
             value, 300, 'Error in factor calculation (distance_real)')
@@ -130,7 +130,7 @@ class TestTmsFactor(TransactionCase):
             'category': 'driver',
             'factor_type': 'weight',
             'factor': 2,
-            })
+        })
         value = factor.get_amount(weight=100)
         self.assertEqual(
             value, 200, 'Error in factor calculation (weight)')
@@ -143,7 +143,7 @@ class TestTmsFactor(TransactionCase):
             'range_start': 0,
             'range_end': 1000,
             'factor': 2,
-            })
+        })
         factor2 = self.factor.create({
             'name': 'weight',
             'category': 'driver',
@@ -151,7 +151,7 @@ class TestTmsFactor(TransactionCase):
             'range_start': 1001,
             'range_end': 2000,
             'factor': 1,
-            })
+        })
         value = factor.get_amount(weight=100)
         self.assertEqual(
             value, 200, 'Error in factor calculation (weight)')
@@ -167,7 +167,7 @@ class TestTmsFactor(TransactionCase):
             'factor': 2,
             'mixed': True,
             'fixed_amount': 100,
-            })
+        })
         value = factor.get_amount(weight=100)
         self.assertEqual(
             value, 300, 'Error in factor calculation (weight)')
@@ -178,7 +178,7 @@ class TestTmsFactor(TransactionCase):
             'category': 'driver',
             'factor_type': 'travel',
             'fixed_amount': 100,
-            })
+        })
         value = factor.get_amount()
         self.assertEqual(
             value, 100, 'Error in factor calculation (travel)')
@@ -189,7 +189,7 @@ class TestTmsFactor(TransactionCase):
             'category': 'driver',
             'factor_type': 'qty',
             'factor': 2,
-            })
+        })
         value = factor.get_amount(qty=100)
         self.assertEqual(
             value, 200, 'Error in factor calculation (qty)')
@@ -202,7 +202,7 @@ class TestTmsFactor(TransactionCase):
             'range_start': 0,
             'range_end': 1000,
             'factor': 2,
-            })
+        })
         factor2 = self.factor.create({
             'name': 'qty',
             'category': 'driver',
@@ -210,7 +210,7 @@ class TestTmsFactor(TransactionCase):
             'range_start': 1001,
             'range_end': 2000,
             'factor': 1,
-            })
+        })
         value = factor.get_amount(qty=100)
         self.assertEqual(
             value, 200, 'Error in factor calculation (qty)')
@@ -226,7 +226,7 @@ class TestTmsFactor(TransactionCase):
             'factor': 2,
             'mixed': True,
             'fixed_amount': 100,
-            })
+        })
         value = factor.get_amount(qty=100)
         self.assertEqual(
             value, 300, 'Error in factor calculation (qty)')
@@ -237,7 +237,7 @@ class TestTmsFactor(TransactionCase):
             'category': 'driver',
             'factor_type': 'volume',
             'factor': 2,
-            })
+        })
         value = factor.get_amount(volume=100)
         self.assertEqual(
             value, 200, 'Error in factor calculation (volume)')
@@ -250,7 +250,7 @@ class TestTmsFactor(TransactionCase):
             'range_start': 0,
             'range_end': 1000,
             'factor': 2,
-            })
+        })
         factor2 = self.factor.create({
             'name': 'volume',
             'category': 'driver',
@@ -258,7 +258,7 @@ class TestTmsFactor(TransactionCase):
             'range_start': 1001,
             'range_end': 2000,
             'factor': 1,
-            })
+        })
         value = factor.get_amount(volume=100)
         self.assertEqual(
             value, 200, 'Error in factor calculation (volume)')
@@ -274,7 +274,7 @@ class TestTmsFactor(TransactionCase):
             'factor': 2,
             'mixed': True,
             'fixed_amount': 100,
-            })
+        })
         value = factor.get_amount(volume=100)
         self.assertEqual(
             value, 300, 'Error in factor calculation (volume)')
@@ -285,7 +285,7 @@ class TestTmsFactor(TransactionCase):
             'category': 'driver',
             'factor_type': 'percent',
             'factor': 10,
-            })
+        })
         value = factor.get_amount(income=1000)
         self.assertEqual(
             value, 100, 'Error in factor calculation (percent)')
@@ -298,7 +298,7 @@ class TestTmsFactor(TransactionCase):
             'factor': 10,
             'mixed': True,
             'fixed_amount': 100,
-            })
+        })
         value = factor.get_amount(income=1000)
         self.assertEqual(
             value, 200, 'Error in factor calculation (percent)')

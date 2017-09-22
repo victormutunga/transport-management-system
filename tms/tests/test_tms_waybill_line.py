@@ -2,7 +2,7 @@
 # Copyright 2017, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase
 
 
 class TestTmsWaybillLine(TransactionCase):
@@ -29,14 +29,14 @@ class TestTmsWaybillLine(TransactionCase):
             'waybill_line_ids': [(0, 0, {
                 'product_id': self.freight.id,
                 'name': self.freight.name,
-                })]
+            })]
         })
 
     def test_10_tms_waybill_line_onchange_product_id(self):
         waybill = self.create_waybill()
         waybill.waybill_line_ids.write({
             'product_id': self.insurance.id,
-            })
+        })
         line = waybill.waybill_line_ids[0]
         line.on_change_product_id()
         self.assertEqual(
