@@ -18,9 +18,9 @@ class TestTmsPlace(TransactionCase):
 
     def test_10_tms_place_get_coordinates(self):
         self.place.get_coordinates()
-        self.assertEqual(self.place.latitude, float('29.4241219000'),
+        self.assertEqual(self.place.latitude, float('29.4241219'),
                          'Latitude is done')
-        self.assertEqual(self.place.longitude, float('-98.4936282000'),
+        self.assertEqual(self.place.longitude, float('-98.4936282'),
                          'Longitude is working')
 
     def test_20_tms_place_open_in_google(self):
