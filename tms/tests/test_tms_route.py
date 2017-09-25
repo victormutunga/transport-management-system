@@ -21,7 +21,7 @@ class TestTmsRoute(TransactionCase):
             'rows': [{
                 'elements': [{
                     'duration': {'text': '8 hours 00 mins', 'value': 29506},
-                    'distance': {'txt': '950 km', 'value': 946887},
+                    'distance': {'text': '950 km', 'value': 946887},
                     'status': 'OK'}]}],
             'origin_addresses': [
                 '501-599 E Mills Ave, El Paso, TX 79901, USA'],
@@ -48,10 +48,10 @@ class TestTmsRoute(TransactionCase):
         json.loads = MagicMock()
         json.loads.return_value = self.result
         self.route.get_route_info()
-        self.assertGreater(self.route.travel_time, 7.43,
-                           msg='Travel time is not correct')
-        self.assertGreater(self.route.distance, 887,
-                           msg='Distance is not correct')
+        self.assertEqual(self.route.travel_time, 8.196100000000001,
+                         msg='Travel time is not correct')
+        self.assertEqual(self.route.distance, 946.8870000000001,
+                         msg='Distance is not correct')
         json.loads.return_value = False
         with self.assertRaisesRegexp(
                 UserError,

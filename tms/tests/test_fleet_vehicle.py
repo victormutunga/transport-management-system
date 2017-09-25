@@ -19,3 +19,5 @@ class TestFleetVehicle(TransactionCase):
         self.unit.write({
             'insurance_expiration': date})
         self.assertEqual(self.unit.insurance_days_to_expire, 10)
+        self.unit.write({'insurance_expiration': datetime.now()})
+        self.assertEqual(self.unit.insurance_days_to_expire, 0)
