@@ -110,7 +110,7 @@ class TmsExpenseLine(models.Model):
                 rec.unit_price, rec.expense_id.currency_id,
                 rec.product_qty,
                 rec.expense_id.employee_id.address_home_id)
-            if taxes:
+            if taxes['taxes']:
                 for tax in taxes['taxes']:
                     rec.tax_amount += tax['amount']
             else:

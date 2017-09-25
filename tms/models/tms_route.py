@@ -111,10 +111,10 @@ class TmsRoute(models.Model):
                     if rec.route_place_ids:
                         for row in result['rows']:
                             distance += (
-                                row['elements'][1]['distance']
+                                row['elements'][0]['distance']
                                    ['value'] / 1000.0)
                             duration += (
-                                row['elements'][1]['duration']
+                                row['elements'][0]['duration']
                                    ['value'] / 3600.0)
                     else:
                         res = result['rows'][0]['elements'][0]

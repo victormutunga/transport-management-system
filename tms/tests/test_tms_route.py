@@ -16,6 +16,11 @@ class TestTmsRoute(TransactionCase):
     def setUp(self):
         super(TestTmsRoute, self).setUp()
         self.route = self.env.ref('tms.tms_route_01')
+        self.place = self.env.ref('tms.tms_place_03')
+        self.route.route_place_ids.create({
+            'route_id': self.route.id,
+            'place_id': self.place.id,
+        })
         self.route1 = self.env.ref('tms.tms_route_02')
         self.vehicle = self.env.ref('tms.tms_fleet_vehicle_01')
         self.result = {
@@ -70,6 +75,24 @@ class TestTmsRoute(TransactionCase):
         with self.assertRaisesRegexp(
                 UserError,
                 'Google Maps is not available.'):
+            self.route.get_route_info()
+
+    def test_31_tms_route_get_route_info(self):
+        with self.assertRaisesRegexp(
+                UserError,
+                "The arrival don't have coordinates."):
+            self.route.arrival_id.write({
+                'latitude': False,
+                'longitude': False,
+            })
+            self.route.get_route_info()
+        with self.assertRaisesRegexp(
+                UserError,
+                "The departure don't have coordinates."):
+            self.route.departure_id.write({
+                'latitude': False,
+                'longitude': False,
+            })
             self.route.get_route_info()
 
     def test_40_tms_route_open_in_google(self):
