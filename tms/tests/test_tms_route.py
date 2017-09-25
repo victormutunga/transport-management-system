@@ -8,6 +8,7 @@ from mock import MagicMock
 
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import TransactionCase
+from odoo import exceptions
 
 
 class TestTmsRoute(TransactionCase):
@@ -15,6 +16,7 @@ class TestTmsRoute(TransactionCase):
     def setUp(self):
         super(TestTmsRoute, self).setUp()
         self.route = self.env.ref('tms.tms_route_01')
+        self.route1 = self.env.ref('tms.tms_route_02')
         self.vehicle = self.env.ref('tms.tms_fleet_vehicle_01')
         self.result = {
             'status': 'OK',
@@ -38,6 +40,12 @@ class TestTmsRoute(TransactionCase):
         with self.assertRaises(ValidationError):
             self.route.update({'distance_empty': -10.0})
             self.route.on_change_disance_empty()
+
+    def test_11_tms_route_on_change_distance_empty(self):
+        with self.assertRaises(
+                exceptions.ValidationError):
+            self.route1.write({'distance_empty': -2})
+            self.route1.on_change_disance_empty()
 
     def test_20_tms_route_on_change_distance_loaded(self):
         self.route.write({'distance_loaded': 150.00})
