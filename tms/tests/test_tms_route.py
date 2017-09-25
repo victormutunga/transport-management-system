@@ -6,7 +6,7 @@ import simplejson as json
 
 from mock import MagicMock
 
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import TransactionCase
 
 
@@ -35,6 +35,9 @@ class TestTmsRoute(TransactionCase):
             self.route.distance_loaded,
             737.00,
             'On change works')
+        with self.assertRaises(ValidationError):
+            self.route.update({'distance_empty': -10.0})
+            self.route.on_change_disance_empty()
 
     def test_20_tms_route_on_change_distance_loaded(self):
         self.route.write({'distance_loaded': 150.00})
@@ -43,6 +46,9 @@ class TestTmsRoute(TransactionCase):
             self.route.distance_empty,
             737.00,
             'On change works')
+        with self.assertRaises(ValidationError):
+            self.route.update({'distance_loaded': -10.0})
+            self.route.on_change_disance_loaded()
 
     def test_30_tms_route_get_route_info(self):
         json.loads = MagicMock()
