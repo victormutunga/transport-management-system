@@ -41,7 +41,7 @@ class TestTmsExpenseLine(TransactionCase):
             'tms.tms_advance_01').state = 'confirmed'
         self.advance_2 = self.env.ref(
             'tms.tms_advance_02').state = 'confirmed'
-        self.tax = self.env.ref("l10n_generic_coa.1_purchase_tax_template")
+        self.tax = self.env.ref("l10n_generic_coa.purchase_tax_template")
 
     def create_expense(self):
         expense = self.expense.create({
