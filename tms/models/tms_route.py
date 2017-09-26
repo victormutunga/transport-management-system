@@ -116,10 +116,6 @@ class TmsRoute(models.Model):
                             duration += (
                                 row['elements'][0]['duration']
                                    ['value'] / 3600.0)
-                    else:
-                        res = result['rows'][0]['elements'][0]
-                        distance = res['distance']['value'] / 1000.0
-                        duration = res['duration']['value'] / 3600.0
                 self.distance = distance
                 self.travel_time = duration
             except:
