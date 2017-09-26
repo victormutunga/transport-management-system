@@ -32,6 +32,12 @@ class TestTmsExpenseLine(TransactionCase):
             "user_type_id": self.env.ref(
                 "account.data_account_type_current_assets").id
         })
+        tax_account = obj_account.create({
+            "code": 'X031017',
+            "name": 'Tax Account',
+            "user_type_id": self.env.ref(
+                "account.data_account_type_current_assets").id
+        })
         self.driver.write({
             'address_home_id': self.env.ref(
                 'base.res_partner_address_31').id,
@@ -41,7 +47,15 @@ class TestTmsExpenseLine(TransactionCase):
             'tms.tms_advance_01').state = 'confirmed'
         self.advance_2 = self.env.ref(
             'tms.tms_advance_02').state = 'confirmed'
-        self.tax = self.env.ref("l10n_generic_coa.purchase_tax_template")
+        self.tax = self.env['account.tax'].create({
+            "name": 'IVA 15.0',
+            "description": 'SO-DIC-0316',
+            "amount": 15,
+            "amount_type": 'percent',
+            "type_tax_use": 'purchase',
+            "refund_account_id": tax_account.id,
+            "account_id": tax_account.id,
+        })
 
     def create_expense(self):
         expense = self.expense.create({
@@ -74,7 +88,7 @@ class TestTmsExpenseLine(TransactionCase):
 
     def test_20_tms_expense_line_compute_tax_amount(self):
         expense = self.create_expense()
-        expense.expense_line_ids.tax_ids = self.tax
+        expense.expense_line_ids.tax_ids += self.tax
         self.assertEqual(expense.expense_line_ids.tax_amount, 15.0)
         expense.expense_line_ids.tax_ids = False
         self.assertEqual(expense.expense_line_ids.tax_amount, 0.0)
