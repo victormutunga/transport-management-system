@@ -9,6 +9,7 @@ from . import account_move
 from . import fleet_vehicle
 from . import fleet_vehicle_engine
 from . import fleet_vehicle_log_fuel
+from . import fleet_vehicle_log_fuel_prepaid
 from . import fleet_vehicle_odometer
 from . import hr_employee
 from . import operating_unit
