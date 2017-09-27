@@ -34,6 +34,7 @@
                                 <field name="inv_ref" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                                 <field name="ticket_number" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))]}"/>
                                 <field name="currency_id" attrs="{'readonly':[('state','in',('confirmed','cancel','closed'))], 'required': True}" groups="base.group_multi_currency"/>
+                                <field name="prepaid_id" invisible="1"/>
                             </group>
                         </group>
                         <group>

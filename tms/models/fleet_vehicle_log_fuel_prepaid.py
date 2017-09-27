@@ -20,7 +20,8 @@ class FleetVehicleLogFuelPrepaid(models.Model):
     notes = fields.Char()
     state = fields.Selection([
         ('draft', 'Draft'),
-        ('confirmed', 'Confirmed')],
+        ('confirmed', 'Confirmed'),
+        ('closet', 'Closet')],
         readonly=True,
         default='draft')
     vendor_id = fields.Many2one('res.partner', string="Supplier")
@@ -39,6 +40,7 @@ class FleetVehicleLogFuelPrepaid(models.Model):
         'fleet.vehicle.log.fuel',
         'prepaid_id',
         string='Fuel Vauchers',
+        readonly=True,
     )
     balance = fields.Float(readonly=True, compute="_compute_balance")
 
@@ -69,7 +71,7 @@ class FleetVehicleLogFuelPrepaid(models.Model):
     @api.depends('invoice_id')
     def _compute_invoiced_paid(self):
         for rec in self:
-            if rec.invoice_id:
+            if rec.invoice_id and rec.invoice_id.state == "paid":
                 rec.invoice_paid = True
 
     @api.multi
@@ -81,9 +83,6 @@ class FleetVehicleLogFuelPrepaid(models.Model):
     def create_invoice(self):
         for rec in self:
             obj_invoice = self.env['account.invoice']
-            if rec.balance > 0:
-                raise ValidationError(
-                    _('The balance'))
             if rec.invoice_id:
                 raise ValidationError(
                     _('The record is already invoiced'))
