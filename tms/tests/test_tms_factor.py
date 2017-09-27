@@ -47,8 +47,8 @@ class TestTmsFactor(TransactionCase):
         self.assertEqual(value, 200, 'Error in factor calculation (distance)')
 
     def test_21_get_amount_distance_range(self):
-        factor = self.factor.create_factor()
-        factor2 = self.factor.create_factor()
+        factor = self.create_factor()
+        factor2 = self.create_factor()
         factor2.factor = 1
         value = factor.get_amount(distance=100)
         self.assertEqual(value, 200, 'Error in factor calculation (distance)')
@@ -56,36 +56,30 @@ class TestTmsFactor(TransactionCase):
         self.assertEqual(value, 1500, 'Error in factor calculation (distance)')
 
     def test_22_get_amount_distance_fixed_amount(self):
-        factor = self.factor.create_factor()
+        factor = self.create_factor()
         factor.fixed_amount = 100
         factor.mixed = True
         value = factor.get_amount(distance=100)
         self.assertEqual(value, 300, 'Error in factor calculation (distance)')
 
     def test_30_get_amount_distance_real(self):
-        factor = self.factor.create_factor()
+        factor = self.create_factor()
         factor.factor_type = 'distance_real'
         value = factor.get_amount(distance_real=100)
         self.assertEqual(
             value, 200, 'Error in factor calculation (distance_real)')
 
     def test_31_get_amount_distance_real_range(self):
-        factor = self.factor.create({
-            'name': 'distance_real',
-            'category': 'driver',
-            'factor_type': 'distance_real',
-            'range_start': 0,
-            'range_end': 1000,
-            'factor': 2,
-        })
-        factor2 = self.factor.create({
-            'name': 'distance_real',
-            'category': 'driver',
-            'factor_type': 'distance_real',
-            'range_start': 1001,
-            'range_end': 2000,
-            'factor': 1,
-        })
+        factor = self.create_factor()
+        factor.factor = 2
+        factor.range_start = 0
+        factor.factor_type = 'distance_real'
+        factor.range_end = 1000
+        factor2 = self.create_factor()
+        factor2.factor_type = 'distance_real'
+        factor2.factor = 1
+        factor2.range_start = 1001
+        factor2.range_end = 2000
         value = factor.get_amount(distance_real=100)
         self.assertEqual(
             value, 200, 'Error in factor calculation (distance_real)')
@@ -94,14 +88,11 @@ class TestTmsFactor(TransactionCase):
             value, 1500, 'Error in factor calculation (distance_real)')
 
     def test_32_get_amount_distance_real_fixed_amount(self):
-        factor = self.factor.create({
-            'name': 'distance_real',
-            'category': 'driver',
-            'factor_type': 'distance_real',
-            'factor': 2,
-            'mixed': True,
-            'fixed_amount': 100,
-        })
+        factor = self.create_factor()
+        factor.factor_type = 'distance_real'
+        factor.factor = 2
+        factor.mixed = True
+        factor.fixed_amount = 100
         value = factor.get_amount(distance_real=100)
         self.assertEqual(
             value, 300, 'Error in factor calculation (distance_real)')
