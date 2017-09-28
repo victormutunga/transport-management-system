@@ -8,7 +8,6 @@ from mock import MagicMock
 
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import TransactionCase
-from odoo import exceptions
 
 
 class TestTmsRoute(TransactionCase):
