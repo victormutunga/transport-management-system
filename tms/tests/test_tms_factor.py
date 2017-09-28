@@ -2,6 +2,7 @@
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
+from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 
 
@@ -275,3 +276,32 @@ class TestTmsFactor(TransactionCase):
         value = factor.get_amount(income=1000)
         self.assertEqual(
             value, 200, 'Error in factor calculation (percent)')
+
+    def test_90_get_driver_amount(self):
+        factor = self.create_factor()
+        with self.assertRaises(
+                ValidationError):
+            factor.get_driver_amount(self.employee, 500, 100)
+        self.employee.income_percentage = 500
+        amount = factor.get_driver_amount(self.employee, 500, 100)
+        self.assertEqual(amount, 2600, 'Error in amount')
+        with self.assertRaises(
+                ValidationError):
+            factor.get_driver_amount(False, 500, 100)
+
+    def test_100_get_amount(self):
+        factor = self.create_factor()
+        factor.factor_type = 'percent_driver'
+        self.employee.income_percentage = 500
+        percent = factor.get_amount(
+            employee=self.employee, income=100)
+        self.assertEqual(percent, 500.0, 'Error in amount')
+        factor.factor_type = 'amount_driver'
+        factor.fixed_amount = 100.0
+        amount = factor.get_amount(
+            employee=self.employee)
+        self.assertEqual(amount, 500.0, 'Error in amount')
+        with self.assertRaises(ValidationError):
+            factor.fixed_amount = 0.0
+            factor.factor_type = 'distance'
+            factor.get_amount(employee=self.employee)
