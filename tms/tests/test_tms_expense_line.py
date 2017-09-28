@@ -95,8 +95,9 @@ class TestTmsExpenseLine(TransactionCase):
 
     def test_30_tms_expense_line_create(self):
         expense = self.create_expense()
-        with self.assertRaises(
-                ValidationError):
+        with self.assertRaisesRegexp(
+                ValidationError,
+                'This line type needs a negative value to continue!'):
             expense.expense_line_ids.create({
                 'product_id': self.product_discount.id,
                 'unit_price': -100.0,

@@ -42,13 +42,16 @@ class TestTmsRoute(TransactionCase):
             self.route.distance_loaded,
             737.00,
             'On change works')
-        with self.assertRaises(ValidationError):
+        with self.assertRaisesRegexp(
+                ValidationError, 'The value must be positive and lower '
+                'than the distance route.'):
             self.route.update({'distance_empty': -10.0})
             self.route.on_change_disance_empty()
 
     def test_11_tms_route_on_change_distance_empty(self):
-        with self.assertRaises(
-                exceptions.ValidationError):
+        with self.assertRaisesRegexp(
+                ValidationError, 'The value must be positive and lower than '
+                'the distance route.'):
             self.route1.write({'distance_empty': -2})
             self.route1.on_change_disance_empty()
 
@@ -59,7 +62,9 @@ class TestTmsRoute(TransactionCase):
             self.route.distance_empty,
             737.00,
             'On change works')
-        with self.assertRaises(ValidationError):
+        with self.assertRaisesRegexp(
+                ValidationError, 'The value must be positive and lower than '
+                'the distance route.'):
             self.route.update({'distance_loaded': -10.0})
             self.route.on_change_disance_loaded()
 

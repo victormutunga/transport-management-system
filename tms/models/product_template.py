@@ -34,8 +34,8 @@ class ProductTemplate(models.Model):
     def unique_product_per_category(self):
         for rec in self:
             categorys = [
-                ['freight', 'Freight (Waybill)'],
-                ['move', 'Moves (Waybill)'],
+                ['freight', 'Freight'],
+                ['move', 'Moves'],
                 ['salary', 'Salary'],
                 ['negative_balance', 'Negative Balance'],
                 ['indirect_expense', 'Indirect Expense']
@@ -45,5 +45,5 @@ class ProductTemplate(models.Model):
                     ('tms_product_category', '=', category[0])])
                 if len(product) > 1:
                     raise exceptions.ValidationError(
-                        _('Only there must be a product with category "' +
-                            category[1] + '"'))
+                        _('There is another product with category ' +
+                            category[1]))
