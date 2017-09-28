@@ -57,9 +57,6 @@ class FleetVehicleLogFuel(models.Model):
         ('cancel', 'Cancelled')],
         readonly=True,
         default='draft')
-    no_travel = fields.Boolean(
-        help="Check this if you want to create Fuel Voucher "
-        "with no Travel.")
     vendor_id = fields.Many2one('res.partner')
     product_id = fields.Many2one(
         'product.product',
@@ -185,12 +182,6 @@ class FleetVehicleLogFuel(models.Model):
             rec.invoice_paid = (
                 rec.invoice_id.id and
                 rec.invoice_id.state == 'paid')
-
-    @api.onchange('no_travel')
-    def _onchange_no_travel(self):
-        if self.no_travel:
-            self.travel_id = False
-            self.vehicle_id = False
 
     @api.multi
     def _amount_to_text(self, product_qty):

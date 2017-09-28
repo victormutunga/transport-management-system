@@ -15,6 +15,7 @@ class TestFleetVehicleLogFuel(TransactionCase):
         self.operating_unit = self.env.ref(
             'operating_unit.main_operating_unit')
         self.travel_id = self.env.ref("tms.tms_travel_01")
+        self.travel_id_2 = self.env.ref("tms.tms_travel_02")
 
     def create_log_fuel(self):
         return self.log_fuel.create({
@@ -49,6 +50,8 @@ class TestFleetVehicleLogFuel(TransactionCase):
 
     def test_30_fleet_vehicle_log_fuel_action_cancel(self):
         log_fuel = self.create_log_fuel()
+        log_fuel_cancel = self.create_log_fuel()
+        log_fuel_cancel.action_cancel()
         log_fuel.travel_id.state = 'closed'
         with self.assertRaisesRegexp(
                 ValidationError, 'Could not cancel Fuel Voucher! This Fuel '
@@ -64,3 +67,25 @@ class TestFleetVehicleLogFuel(TransactionCase):
                 'Could not cancel Fuel Voucher! This Fuel Voucher is already '
                 'Invoiced'):
             log_fuel.action_cancel()
+
+    def test_40_fleet_vehicle_log_fuel_action_confirm(self):
+        log_fuel = self.create_log_fuel()
+        log_fuel.product_qty = -1
+        log_fuel.tax_amount = -1
+        log_fuel.price_total = -1
+        with self.assertRaisesRegexp(
+                ValidationError,
+                'Liters, Taxes and Total must be greater than zero.'):
+            log_fuel.action_confirm()
+
+    def test_50_fleet_vehicle_log_fuel_onchange_travel(self):
+        log_fuel = self.create_log_fuel()
+        log_fuel.travel_id = self.travel_id_2.id
+        log_fuel._onchange_travel()
+        self.assertEqual(log_fuel.vehicle_id, self.travel_id_2.unit_id)
+        self.assertEqual(log_fuel.employee_id, self.travel_id.employee_id)
+
+    def test_70_fleet_vehicle_log_fuel_amounttotext(self):
+        log_fuel = self.create_log_fuel()
+        amount = log_fuel._amount_to_text('400.00')
+        self.assertEqual(amount, 'CUATROCIENTOS')
