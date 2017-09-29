@@ -2,6 +2,7 @@
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
+import geojson
 import urllib
 import simplejson as json
 
@@ -47,6 +48,9 @@ class TestTmsPlace(TransactionCase):
                     'place_id': 'ChIJrw7QBK9YXIYRvBagEDvhVgg',
                     'formatted_address': 'San Antonio, TX, USA',
                     'types': ['locality', 'political']}]}
+        self.geo_point = {
+            'coordinates': [1234567.0123456789, 2273030.926987689],
+            'type': 'Point'}
 
     def test_10_tms_place_get_coordinates(self):
         urllib.urlopen = MagicMock()
@@ -98,3 +102,12 @@ class TestTmsPlace(TransactionCase):
         self.place.state_id = False
         self.place.get_country_id()
         self.assertEqual(self.place.country_id.id, False)
+
+    def test_60_tms_place_geopoint(self):
+        self.place.update({'latitude': 20, 'longitude': 20})
+        self.place._compute_point()
+        self.assertTrue(
+            self.place.point, 'Should not have geo_point with no latlon')
+        geojson.loads = MagicMock()
+        geojson.loads.return_value = self.geo_point
+        self.place.set_lang_long()

@@ -100,7 +100,7 @@ class TmsPlace(geo_model.GeoModel):
                 self.env.cr, rec.latitude, rec.longitude).wkb_hex
 
     def set_lang_long(self):
-        point_x, point_y = geojson.loads(self.point).coordinates
+        point_x, point_y = geojson.loads(self.point)['coordinates']
         inproj = Proj(init='epsg:3857')
         outproj = Proj(init='epsg:4326')
         longitude, latitude = transform(inproj, outproj, point_x, point_y)

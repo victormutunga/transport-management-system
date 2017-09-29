@@ -50,7 +50,7 @@ class TestHrEmployee(TransactionCase):
         self.assertEqual(self.employee_id.license_type, 'CATEGORIA A')
         self.assertEqual(self.employee_id.license_valid_from, '2012-06-26')
         self.assertEqual(self.employee_id.license_expiration, '2017-06-26')
-        Socrata.get.return_value = []
+        Socrata.get.return_value = False
         with self.assertRaisesRegexp(
                 ValidationError,
                 'The driver license is not in SCT database'):
