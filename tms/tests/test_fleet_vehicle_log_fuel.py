@@ -89,3 +89,9 @@ class TestFleetVehicleLogFuel(TransactionCase):
         log_fuel = self.create_log_fuel()
         amount = log_fuel._amount_to_text('400.00')
         self.assertEqual(amount, 'CUATROCIENTOS')
+
+    def test_80_fleet_vehicle_set_2_draft(self):
+        log_fuel = self.create_log_fuel()
+        log_fuel.state = "closed"
+        log_fuel.set_2_draft()
+        self.assertEqual(log_fuel.state, 'draft', 'State not equal')

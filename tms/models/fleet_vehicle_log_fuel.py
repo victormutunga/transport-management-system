@@ -188,16 +188,3 @@ class FleetVehicleLogFuel(models.Model):
         total = str(float(product_qty)).split('.')[0]
         total = num2words(float(total), lang='es').upper()
         return '%s' % (total)
-
-    @api.model
-    def default_get(self, field):
-        res = super(FleetVehicleLogFuel, self).default_get(
-            field)
-        if 'active_model' in self.env.context:
-            active_model = self.env.context['active_model']
-            active_id = self.env.context['active_id']
-            prepaid = self.env[active_model].browse(active_id)
-            res['operating_unit_id'] = prepaid.operating_unit_id.id
-            res['vendor_id'] = prepaid.vendor_id.id
-            res['product_id'] = prepaid.product_id.id
-        return res
