@@ -8,8 +8,10 @@ cache:
 python:
   - "2.7"
 
+services:
+  - postgresql
+
 addons:
-  postgresql: 9.3
   apt:
     sources:
       - pov-wkhtmltopdf
@@ -22,8 +24,8 @@ addons:
       - wkhtmltopdf
       - libgeos-dev
       - postgis
-      - postgresql-9.3-postgis-scripts
-      - postgresql-9.3-postgis-2.3
+      - postgresql-9.2-postgis-scripts
+      - postgresql-9.2-postgis-2.3
 
 before_install:
  - "export DISPLAY=:99.0"
