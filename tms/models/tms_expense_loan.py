@@ -101,12 +101,12 @@ class TmsExpenseLoan(models.Model):
                       ' The Amount must be greater than zero.'))
             if rec.discount_type == 'fixed' and rec.fixed_discount <= 0.0:
                 raise exceptions.ValidationError(
-                    _('Could not approve the Loan\n'
+                    _('Could not approve the Loan.'
                       ' The Amount of discount must be greater than zero.'))
             elif (rec.discount_type == 'percent' and
                   rec.percent_discount <= 0.0):
                 raise exceptions.ValidationError(
-                    _('Could not approve the Loan\n'
+                    _('Could not approve the Loan.'
                       ' The Amount of discount must be greater than zero.'))
 
             rec.state = 'approved'
@@ -252,5 +252,5 @@ class TmsExpenseLoan(models.Model):
                     'journal_id': bank.id,
                     'amount_total': rec.amount,
                     'date': rec.date,
-                    })
+                })
             wiz.make_payment()
