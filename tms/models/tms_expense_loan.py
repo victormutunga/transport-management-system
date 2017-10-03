@@ -97,7 +97,7 @@ class TmsExpenseLoan(models.Model):
         for rec in self:
             if rec.amount <= 0.0:
                 raise exceptions.ValidationError(
-                    _('Could not approve the Loan\n'
+                    _('Could not approve the Loan'
                       ' The Amount must be greater than zero.'))
             if rec.discount_type == 'fixed' and rec.fixed_discount <= 0.0:
                 raise exceptions.ValidationError(
@@ -148,12 +148,12 @@ class TmsExpenseLoan(models.Model):
                 if not loan_journal_id:
                     raise exceptions.ValidationError(
                         _('Warning! The loan does not have a journal'
-                          ' assigned. \nCheck if you already set the '
+                          ' assigned. Check if you already set the '
                           'journal for loans in the base.'))
                 if not loan_credit_account_id:
                     raise exceptions.ValidationError(
                         _('Warning! The driver does not have a home address'
-                          ' assigned. \nCheck if you already set the '
+                          ' assigned. Check if you already set the '
                           'home address for the employee.'))
                 if not loan_debit_account_id:
                     raise exceptions.ValidationError(

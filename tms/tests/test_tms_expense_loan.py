@@ -17,7 +17,7 @@ class TestTmsExpenseLoan(TransactionCase):
         address = self.env.ref('base.res_partner_2')
         obj_account = self.env['account.account']
         employee_accont = obj_account.create({
-            "code": 'X031216',
+            "code": 'TestEmployee',
             "name": 'Test Employee',
             "user_type_id": self.env.ref(
                 "account.data_account_type_current_assets").id
@@ -28,10 +28,9 @@ class TestTmsExpenseLoan(TransactionCase):
             'tms_expense_negative_account_id': employee_accont.id,
             'tms_loan_account_id': employee_accont.id,
         })
-        self.employee_id.address_home_id = address.id
         account_bank = obj_account.create({
-            "code": 'TestEmployee',
-            "name": 'Advance',
+            "code": 'TestBank',
+            "name": 'Test Bank',
             "user_type_id": self.env.ref(
                 "account.data_account_type_current_assets").id
         })
@@ -52,6 +51,19 @@ class TestTmsExpenseLoan(TransactionCase):
             "discount_type": "fixed",
             "discount_method": "each"
         })
+
+    def create_expense(self):
+        expense = self.expense.create({
+            'operating_unit_id': self.operating_unit.id,
+            'unit_id': self.unit.id,
+            'employee_id': self.driver.id,
+            'expense_line_ids': [(0, 0, {
+                'product_id': self.product.id,
+                'name': self.product.name,
+                'line_type': self.product.tms_product_category,
+                'unit_price': 100.0, })]
+        })
+        return expense
 
     def test_10_tms_expense_loan_create(self):
         self.operating_unit.loan_sequence_id = False
@@ -75,6 +87,15 @@ class TestTmsExpenseLoan(TransactionCase):
         with self.assertRaisesRegexp(ValidationError, msg):
             loan.action_approve()
 
+    def test_31_tms_expense_loan_action_approve(self):
+        loan = self.create_expense_loan()
+        loan.amount = -1
+        with self.assertRaisesRegexp(
+                ValidationError,
+                'Could not approve the Loan'
+                ' The Amount must be greater than zero.'):
+            loan.action_approve()
+
     def test_40_tms_expense_loan_action_cancel(self):
         loan = self.create_expense_loan()
         loan.fixed_discount = 10.0
@@ -96,6 +117,26 @@ class TestTmsExpenseLoan(TransactionCase):
             loan.action_cancel()
 
     def test_50_tms_expense_loan_action_confirm(self):
+        loan = self.create_expense_loan()
+        loan.operating_unit_id.loan_journal_id = False
+        with self.assertRaisesRegexp(
+                ValidationError,
+                'Warning! The loan does not have a journal'
+                ' assigned. Check if you already set the '
+                'journal for loans in the base.'):
+            loan.action_confirm()
+
+    def test_51_tms_expense_loan_action_confirm(self):
+        loan = self.create_expense_loan()
+        loan.employee_id.address_home_id.property_account_payable_id = False
+        with self.assertRaisesRegexp(
+                ValidationError,
+                'Warning! The driver does not have a home address'
+                ' assigned. Check if you already set the '
+                'home address for the employee.'):
+            loan.action_confirm()
+
+    def test_52_tms_expense_loan_action_confirm(self):
         loan = self.create_expense_loan()
         loan.employee_id.tms_loan_account_id = False
         with self.assertRaisesRegexp(
