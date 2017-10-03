@@ -181,23 +181,18 @@ class TmsExpenseLoan(models.Model):
                     'date': fields.Date.today(),
                     'journal_id': loan_journal_id,
                     'name': _('Loan: %s') % (loan.name),
-                    'line_ids': [line for line in move_lines],
+                    'line_ids': move_lines,
                     'operating_unit_id': loan.operating_unit_id.id
                 }
                 move_id = obj_account_move.create(move)
-                if not move_id:
-                    raise exceptions.ValidationError(
-                        _('An error has occurred in the creation'
-                            ' of the accounting move.'))
-                else:
-                    move_id.post()
-                    self.write(
-                        {
-                            'move_id': move_id.id,
-                            'state': 'confirmed',
-                        })
-                    self.message_post(
-                        _('<strong>Loan confirmed.</strong>'))
+                move_id.post()
+                self.write(
+                    {
+                        'move_id': move_id.id,
+                        'state': 'confirmed',
+                    })
+                self.message_post(
+                    _('<strong>Loan confirmed.</strong>'))
 
     @api.multi
     def action_cancel_draft(self):
