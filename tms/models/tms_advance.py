@@ -90,7 +90,7 @@ class TmsAdvance(models.Model):
         else:
             raise ValidationError(
                 _('The sequence is not '
-                    'defined in operating unit %s',
+                    'defined in operating unit %s' %
                     res.operating_unit_id.name))
         if res.amount <= 0:
             raise ValidationError(
@@ -146,12 +146,12 @@ class TmsAdvance(models.Model):
                 if not advance_journal_id:
                     raise ValidationError(
                         _('Warning! The advance does not have a journal'
-                          ' assigned. \nCheck if you already set the '
+                          ' assigned. Check if you already set the '
                           'journal for advances in the base.'))
                 if not advance_credit_account_id:
                     raise ValidationError(
                         _('Warning! The driver does not have a home address'
-                          ' assigned. \nCheck if you already set the '
+                          ' assigned. Check if you already set the '
                           'home address for the employee.'))
                 if not advance_debit_account_id:
                     raise ValidationError(
@@ -195,16 +195,11 @@ class TmsAdvance(models.Model):
                         'operating_unit_id': rec.operating_unit_id.id
                     }
                     move_id = obj_account_move.create(move)
-                    if not move_id:
-                        raise ValidationError(
-                            _('An error has occurred in the creation'
-                                ' of the accounting move. '))
-                    else:
-                        move_id.post()
-                        rec.move_id = move_id.id
-                        rec.state = 'confirmed'
-                        rec.message_post(
-                            _('<strong>Advance confirmed.</strong>'))
+                    move_id.post()
+                    rec.move_id = move_id.id
+                    rec.state = 'confirmed'
+                    rec.message_post(
+                        _('<strong>Advance confirmed.</strong>'))
 
     @api.multi
     def action_cancel(self):
@@ -246,5 +241,5 @@ class TmsAdvance(models.Model):
                     'journal_id': bank.id,
                     'amount_total': rec.amount,
                     'date': rec.date,
-                    })
+                })
             wiz.make_payment()
