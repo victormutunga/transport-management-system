@@ -14,9 +14,23 @@ class TestTmsExpenseLoan(TransactionCase):
         self.operating_unit = self.env.ref(
             'operating_unit.main_operating_unit')
         self.employee_id = self.env.ref('tms.tms_hr_employee_01')
+        address = self.env.ref('base.res_partner_2')
         obj_account = self.env['account.account']
-        account_bank = obj_account.create({
+        employee_accont = obj_account.create({
             "code": 'X031216',
+            "name": 'Test Employee',
+            "user_type_id": self.env.ref(
+                "account.data_account_type_current_assets").id
+        })
+        self.employee_id.write({
+            'address_home_id': address.id,
+            'tms_advance_account_id': employee_accont.id,
+            'tms_expense_negative_account_id': employee_accont.id,
+            'tms_loan_account_id': employee_accont.id,
+        })
+        self.employee_id.address_home_id = address.id
+        account_bank = obj_account.create({
+            "code": 'TestEmployee',
             "name": 'Advance',
             "user_type_id": self.env.ref(
                 "account.data_account_type_current_assets").id
@@ -103,9 +117,3 @@ class TestTmsExpenseLoan(TransactionCase):
         loan.action_cancel()
         loan.action_cancel_draft()
         loan.unlink()
-
-    # def test_70_tms_expense_loan_compute_balance(self):
-    #     loan = self.create_expense_loan()
-    #     loan.fixed_discount = 50.0
-    #     loan.expense_ids.create({
-    #         })
