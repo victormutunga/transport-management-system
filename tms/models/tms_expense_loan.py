@@ -95,10 +95,6 @@ class TmsExpenseLoan(models.Model):
     @api.multi
     def action_approve(self):
         for rec in self:
-            if rec.amount <= 0.0:
-                raise exceptions.ValidationError(
-                    _('Could not approve the Loan'
-                      ' The Amount must be greater than zero.'))
             if rec.discount_type == 'fixed' and rec.fixed_discount <= 0.0:
                 raise exceptions.ValidationError(
                     _('Could not approve the Loan.'
@@ -130,82 +126,78 @@ class TmsExpenseLoan(models.Model):
     @api.multi
     def action_confirm(self):
         for loan in self:
-            if loan.amount <= 0:
+            obj_account_move = self.env['account.move']
+            loan_journal_id = (
+                loan.operating_unit_id.loan_journal_id.id)
+            loan_debit_account_id = (
+                loan.employee_id.
+                tms_loan_account_id.id
+            )
+            loan_credit_account_id = (
+                loan.employee_id.
+                address_home_id.property_account_payable_id.id
+            )
+            if not loan_journal_id:
                 raise exceptions.ValidationError(
-                    _('The amount must be greater than zero.'))
-            else:
-                obj_account_move = self.env['account.move']
-                loan_journal_id = (
-                    loan.operating_unit_id.loan_journal_id.id)
-                loan_debit_account_id = (
-                    loan.employee_id.
-                    tms_loan_account_id.id
-                )
-                loan_credit_account_id = (
-                    loan.employee_id.
-                    address_home_id.property_account_payable_id.id
-                )
-                if not loan_journal_id:
-                    raise exceptions.ValidationError(
-                        _('Warning! The loan does not have a journal'
-                          ' assigned. Check if you already set the '
-                          'journal for loans in the base.'))
-                if not loan_credit_account_id:
-                    raise exceptions.ValidationError(
-                        _('Warning! The driver does not have a home address'
-                          ' assigned. Check if you already set the '
-                          'home address for the employee.'))
-                if not loan_debit_account_id:
-                    raise exceptions.ValidationError(
-                        _('Warning! You must have configured the accounts '
-                          'of the tms'))
-                move_lines = []
-                notes = _('* Base: %s \n'
-                          '* Loan: %s \n'
-                          '* Driver: %s \n') % (
-                              loan.operating_unit_id.name,
-                              loan.name,
-                              loan.employee_id.name)
-                total = loan.currency_id.compute(
-                    loan.amount,
-                    self.env.user.currency_id)
-                if total > 0.0:
-                    accounts = {'credit': loan_credit_account_id,
-                                'debit': loan_debit_account_id}
-                    for name, account in accounts.items():
-                        move_line = (0, 0, {
-                            'name': loan.name,
-                            'partner_id': (
-                                loan.employee_id.address_home_id.id),
-                            'account_id': account,
-                            'narration': notes,
-                            'debit': (total if name == 'debit' else 0.0),
-                            'credit': (total if name == 'credit' else 0.0),
-                            'journal_id': loan_journal_id,
-                            'operating_unit_id': loan.operating_unit_id.id,
-                        })
-                        move_lines.append(move_line)
-                    move = {
-                        'date': fields.Date.today(),
+                    _('Warning! The loan does not have a journal'
+                      ' assigned. Check if you already set the '
+                      'journal for loans in the base.'))
+            if not loan_credit_account_id:
+                raise exceptions.ValidationError(
+                    _('Warning! The driver does not have a home address'
+                      ' assigned. Check if you already set the '
+                      'home address for the employee.'))
+            if not loan_debit_account_id:
+                raise exceptions.ValidationError(
+                    _('Warning! You must have configured the accounts '
+                      'of the tms'))
+            move_lines = []
+            notes = _('* Base: %s \n'
+                      '* Loan: %s \n'
+                      '* Driver: %s \n') % (
+                          loan.operating_unit_id.name,
+                          loan.name,
+                          loan.employee_id.name)
+            total = loan.currency_id.compute(
+                loan.amount,
+                self.env.user.currency_id)
+            if total > 0.0:
+                accounts = {'credit': loan_credit_account_id,
+                            'debit': loan_debit_account_id}
+                for name, account in accounts.items():
+                    move_line = (0, 0, {
+                        'name': loan.name,
+                        'partner_id': (
+                            loan.employee_id.address_home_id.id),
+                        'account_id': account,
+                        'narration': notes,
+                        'debit': (total if name == 'debit' else 0.0),
+                        'credit': (total if name == 'credit' else 0.0),
                         'journal_id': loan_journal_id,
-                        'name': _('Loan: %s') % (loan.name),
-                        'line_ids': [line for line in move_lines],
-                        'operating_unit_id': loan.operating_unit_id.id
-                    }
-                    move_id = obj_account_move.create(move)
-                    if not move_id:
-                        raise exceptions.ValidationError(
-                            _('An error has occurred in the creation'
-                                ' of the accounting move.'))
-                    else:
-                        move_id.post()
-                        self.write(
-                            {
-                                'move_id': move_id.id,
-                                'state': 'confirmed',
-                            })
-                        self.message_post(
-                            _('<strong>Loan confirmed.</strong>'))
+                        'operating_unit_id': loan.operating_unit_id.id,
+                    })
+                    move_lines.append(move_line)
+                move = {
+                    'date': fields.Date.today(),
+                    'journal_id': loan_journal_id,
+                    'name': _('Loan: %s') % (loan.name),
+                    'line_ids': [line for line in move_lines],
+                    'operating_unit_id': loan.operating_unit_id.id
+                }
+                move_id = obj_account_move.create(move)
+                if not move_id:
+                    raise exceptions.ValidationError(
+                        _('An error has occurred in the creation'
+                            ' of the accounting move.'))
+                else:
+                    move_id.post()
+                    self.write(
+                        {
+                            'move_id': move_id.id,
+                            'state': 'confirmed',
+                        })
+                    self.message_post(
+                        _('<strong>Loan confirmed.</strong>'))
 
     @api.multi
     def action_cancel_draft(self):

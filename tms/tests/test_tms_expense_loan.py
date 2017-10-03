@@ -14,6 +14,8 @@ class TestTmsExpenseLoan(TransactionCase):
         self.operating_unit = self.env.ref(
             'operating_unit.main_operating_unit')
         self.employee_id = self.env.ref('tms.tms_hr_employee_01')
+        self.unit = self.env.ref('tms.tms_fleet_vehicle_01')
+        self.product = self.env.ref('tms.product_loan')
         address = self.env.ref('base.res_partner_2')
         obj_account = self.env['account.account']
         employee_accont = obj_account.create({
@@ -53,15 +55,15 @@ class TestTmsExpenseLoan(TransactionCase):
         })
 
     def create_expense(self):
-        expense = self.expense.create({
+        expense = self.env['tms.expense'].create({
             'operating_unit_id': self.operating_unit.id,
             'unit_id': self.unit.id,
-            'employee_id': self.driver.id,
+            'employee_id': self.employee_id.id,
             'expense_line_ids': [(0, 0, {
                 'product_id': self.product.id,
                 'name': self.product.name,
                 'line_type': self.product.tms_product_category,
-                'unit_price': 100.0, })]
+                'unit_price': 10.0, })]
         })
         return expense
 
@@ -85,15 +87,6 @@ class TestTmsExpenseLoan(TransactionCase):
             loan.action_approve()
         loan.discount_type = 'percent'
         with self.assertRaisesRegexp(ValidationError, msg):
-            loan.action_approve()
-
-    def test_31_tms_expense_loan_action_approve(self):
-        loan = self.create_expense_loan()
-        loan.amount = -1
-        with self.assertRaisesRegexp(
-                ValidationError,
-                'Could not approve the Loan'
-                ' The Amount must be greater than zero.'):
             loan.action_approve()
 
     def test_40_tms_expense_loan_action_cancel(self):
@@ -158,3 +151,20 @@ class TestTmsExpenseLoan(TransactionCase):
         loan.action_cancel()
         loan.action_cancel_draft()
         loan.unlink()
+
+    def test_70_tms_expense_loan_compute_balance(self):
+        loan = self.create_expense_loan()
+        expense = self.create_expense()
+        loan.expense_ids = expense.expense_line_ids
+        loan._compute_balance()
+        self.assertEqual(loan.balance, 90.0)
+        loan.expense_ids.update({
+            'product_id': self.product.id,
+            'unit_price': 100.0,
+            'line_type': self.product.tms_product_category,
+            'name': self.product.name,
+            'price_total': -100.00
+        })
+        loan._compute_balance()
+        self.assertEqual(loan.balance, 0.0)
+        self.assertEqual(loan.state, 'closed')
