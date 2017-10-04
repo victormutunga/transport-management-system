@@ -21,6 +21,21 @@ class TestTmsWaybill(TransactionCase):
         self.insurance = self.env.ref('tms.product_insurance')
         self.travel_id1 = self.env.ref("tms.tms_travel_01")
         self.transportable = self.env.ref('tms.tms_transportable_01')
+        tax_account = self.env['account.account'].create({
+            "code": 'X031017',
+            "name": 'Tax Account',
+            "user_type_id": self.env.ref(
+                "account.data_account_type_current_assets").id
+        })
+        self.tax = self.env['account.tax'].create({
+            "name": 'IVA 15.0',
+            "description": 'SO-DIC-0316',
+            "amount": 15,
+            "amount_type": 'percent',
+            "type_tax_use": 'purchase',
+            "refund_account_id": tax_account.id,
+            "account_id": tax_account.id,
+        })
 
     def create_waybill(self):
         return self.waybill.create({
@@ -69,3 +84,55 @@ class TestTmsWaybill(TransactionCase):
         waybill = self.create_waybill()
         waybill._onchange_waybill_line_ids()
         self.assertEqual(waybill.waybill_line_ids.unit_price, 100.0)
+
+    def test_40_tms_waybill_amount(self):
+        waybill = self.create_waybill()
+        products = [
+            ('freight', '_compute_amount_freight', 'amount_freight'),
+            ('move', '_compute_amount_move', 'amount_move'),
+            ('tolls', '_compute_amount_highway_tolls', 'amount_highway_tolls'),
+            ('insurance', '_compute_amount_insurance', 'amount_insurance'),
+            ('other', '_compute_amount_other', 'amount_other')
+        ]
+        for product in products:
+            product_id = self.env['product.product'].search([
+                ('tms_product_category', '=', product[0])])
+            waybill.waybill_line_ids.product_id = product_id.id
+            getattr(waybill, product[1])()
+            amount = getattr(waybill, product[2])
+            self.assertEqual(amount, 100.0)
+
+    def test_50_tms_waybill_action_confirm(self):
+        waybill = self.create_waybill()
+        waybill.travel_ids = False
+        waybill.action_approve()
+        with self.assertRaisesRegexp(
+                ValidationError,
+                'Could not confirm Waybill !'
+                'Waybill must be assigned to a Travel before '
+                'confirming.'):
+            waybill.action_confirm()
+
+    def test_60_tms_waybill_onchange_waybill_line_ids(self):
+        waybill = self.create_waybill()
+        waybill.waybill_line_ids.tax_ids = self.tax
+        waybill.onchange_waybill_line_ids()
+        self.assertEqual(waybill.tax_line_ids[0].tax_id, self.tax)
+        self.assertEqual(waybill.tax_line_ids[0].tax_amount, 15.0)
+
+    def test_70_tms_waybill_action_cancel_draft(self):
+        waybill = self.create_waybill()
+        waybill.action_approve()
+        waybill.action_cancel()
+        with self.assertRaisesRegexp(
+                ValidationError,
+                'Could not set to draft this Waybill !'
+                'Travel is Cancelled !!!'):
+            waybill.travel_ids.state = 'cancel'
+            waybill.action_cancel_draft()
+
+    def test_80_tms_waybill_amount_to_text(self):
+        waybill = self.create_waybill()
+        mxn = self.env.ref('base.MXN').name
+        amount = waybill._amount_to_text(1500.00, mxn)
+        self.assertEqual(amount, 'MIL QUINIENTOS PESOS 0/100 M.N.')

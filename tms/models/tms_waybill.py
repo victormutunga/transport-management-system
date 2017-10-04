@@ -206,7 +206,7 @@ class TmsWaybill(models.Model):
                 'tax_ids': [(
                     6, 0, [x.id for x in (
                         product.taxes_id)]
-                    )],
+                )],
                 'name': product.name,
                 'waybill_id': waybill.id,
                 'product_id': product.id,
@@ -343,7 +343,7 @@ class TmsWaybill(models.Model):
         for waybill in self:
             if not waybill.travel_ids:
                 raise exceptions.ValidationError(
-                    _('Could not confirm Waybill !\n'
+                    _('Could not confirm Waybill !'
                       'Waybill must be assigned to a Travel before '
                       'confirming.'))
             waybill.state = 'confirmed'
@@ -353,7 +353,6 @@ class TmsWaybill(models.Model):
         for waybill in self:
             tax_grouped = {}
             for line in waybill.waybill_line_ids:
-
                 unit_price = (
                     line.unit_price * (1 - (line.discount or 0.0) / 100.0))
                 taxes = line.tax_ids.compute_all(
@@ -363,12 +362,12 @@ class TmsWaybill(models.Model):
                     val = {
                         'tax_id': tax['id'], 'base': taxes['base'],
                         'tax_amount': tax['amount']}
-                    key = waybill.env['account.tax'].browse(tax['id']).id
-                    if key not in tax_grouped:
-                        tax_grouped[key] = val
+                    if tax['id'] not in tax_grouped:
+                        tax_grouped[tax['id']] = val
                     else:
-                        tax_grouped[key]['tax_amount'] += val['tax_amount']
-                        tax_grouped[key]['base'] += val['base']
+                        tax_grouped[
+                            tax['id']]['tax_amount'] += val['tax_amount']
+                        tax_grouped[tax['id']]['base'] += val['base']
             tax_lines = waybill.tax_line_ids.browse([])
             for tax in tax_grouped.values():
                 tax_lines += tax_lines.new(tax)
@@ -380,7 +379,7 @@ class TmsWaybill(models.Model):
             for travel in waybill.travel_ids:
                 if travel.state == 'cancel':
                     raise exceptions.ValidationError(
-                        _('Could not set to draft this Waybill !\n'
+                        _('Could not set to draft this Waybill !'
                           'Travel is Cancelled !!!'))
             waybill.message_post(
                 body=_("<h5><strong>Cancel to Draft</strong></h5>"))
