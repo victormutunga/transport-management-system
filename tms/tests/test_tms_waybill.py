@@ -2,9 +2,10 @@
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
+import json
+
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
-import json
 
 
 class TestTmsWaybill(TransactionCase):
@@ -87,6 +88,7 @@ class TestTmsWaybill(TransactionCase):
 
     def create_waybill_invoice_paid(self):
         waybill = self.create_waybill()
+        waybill.action_approve()
         waybill.action_confirm()
         wizard = self.env['tms.wizard.invoice'].with_context({
             'active_model': 'tms.waybill',
@@ -95,25 +97,20 @@ class TestTmsWaybill(TransactionCase):
         waybill.invoice_id.action_invoice_open()
         obj_payment = self.env['account.payment']
         payment = obj_payment.create({
-            'partner_type': 'supplier',
+            'partner_type': 'customer',
             'journal_id': self.journal_id.id,
             'partner_id': self.customer.id,
             'amount': waybill.amount_total,
-            'payment_type': 'outbound',
+            'payment_type': 'inbound',
             'payment_method_id': 1,
         })
         payment.post()
+        waybill.invoice_id._get_outstanding_info_JSON()
         invoice = json.loads(
             waybill.invoice_id.outstanding_credits_debits_widget)
-        waybill.invoice_id._get_outstanding_info_JSON()
         waybill.invoice_id.assign_outstanding_credit(
             invoice['content'][0]['id'])
         return waybill
-
-    def test_20_tms_waybill_compute_invoice_paid(self):
-        waybill = self.create_waybill_invoice_paid()
-        waybill._compute_invoice_paid()
-        self.assertEqual(waybill.invoice_paid, True)
 
     def test_30_tms_waybill_onchange_waybill_line_ids(self):
         waybill = self.create_waybill()
@@ -204,22 +201,15 @@ class TestTmsWaybill(TransactionCase):
         self.assertEqual(waybill.product_volume, 10)
 
     def test_100_tms_waybill_action_cancel(self):
-        waybill = self.create_waybill_invoice_paid()
-        with self.assertRaisesRegexp(
-                ValidationError,
-                'Could not cancel this waybill because'
-                'the waybill is already paid.'):
-            waybill.action_cancel()
-        waybill2 = self.create_waybill()
-        waybill2.action_confirm()
+        waybill = self.create_waybill()
+        waybill.action_confirm()
         wizard = self.env['tms.wizard.invoice'].with_context({
             'active_model': 'tms.waybill',
-            'active_ids': [waybill2.id]}).create({})
+            'active_ids': [waybill.id]}).create({})
         wizard.make_invoices()
-        waybill2.invoice_id.action_invoice_cancel()
         with self.assertRaisesRegexp(
                 ValidationError,
                 'You cannot unlink the invoice of this waybill'
                 ' because the invoice is still valid, '
                 'please check it.'):
-            waybill2.action_cancel()
+            waybill.action_cancel()

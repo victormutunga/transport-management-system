@@ -90,8 +90,7 @@ class TmsWaybill(models.Model):
         compute="_compute_invoice_paid", readonly=True)
     supplier_invoice_id = fields.Many2one(
         'account.invoice', string='Supplier Invoice', readonly=True)
-    supplier_invoice_paid = fields.Boolean(
-        compute='_compute_supplier_invoice_paid')
+    supplier_invoice_paid = fields.Boolean()
     waybill_line_ids = fields.One2many(
         'tms.waybill.line', 'waybill_id',
         string='Waybill Lines')
@@ -376,11 +375,7 @@ class TmsWaybill(models.Model):
     @api.multi
     def action_cancel(self):
         for waybill in self:
-            if waybill.invoice_paid:
-                raise exceptions.ValidationError(
-                    _('Could not cancel this waybill because'
-                      'the waybill is already paid.'))
-            elif waybill.invoice_id and waybill.invoice_id.state != 'cancel':
+            if waybill.invoice_id and waybill.invoice_id.state != 'cancel':
                 raise exceptions.ValidationError(
                     _('You cannot unlink the invoice of this waybill'
                         ' because the invoice is still valid, '
