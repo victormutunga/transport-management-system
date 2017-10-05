@@ -12,6 +12,7 @@
     "website": "https://www.jarsa.com.mx/page/transport-management-system",
     "depends": [
         "account_accountant",
+        "account_cancel",
         "fleet",
         "hr",
         "purchase",

@@ -4,6 +4,7 @@
 
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
+import json
 
 
 class TestTmsWaybill(TransactionCase):
@@ -21,6 +22,7 @@ class TestTmsWaybill(TransactionCase):
         self.insurance = self.env.ref('tms.product_insurance')
         self.travel_id1 = self.env.ref("tms.tms_travel_01")
         self.transportable = self.env.ref('tms.tms_transportable_01')
+        self.transportable2 = self.env.ref('tms.tms_transportable_02')
         tax_account = self.env['account.account'].create({
             "code": 'X031017',
             "name": 'Tax Account',
@@ -35,6 +37,20 @@ class TestTmsWaybill(TransactionCase):
             "type_tax_use": 'purchase',
             "refund_account_id": tax_account.id,
             "account_id": tax_account.id,
+        })
+        account_bank = self.env['account.account'].create({
+            "code": 'TestBank',
+            "name": 'Test Bank',
+            "user_type_id": self.env.ref(
+                "account.data_account_type_current_assets").id
+        })
+        self.journal_id = self.env['account.journal'].create({
+            'name': 'Test Bank',
+            'type': 'bank',
+            'code': 'TESTBANK',
+            'default_debit_account_id': account_bank.id,
+            'default_credit_account_id': account_bank.id,
+            'update_posted': True,
         })
 
     def create_waybill(self):
@@ -69,14 +85,33 @@ class TestTmsWaybill(TransactionCase):
         self.assertEqual(waybill.partner_order_id.id, address)
         self.assertEqual(waybill.partner_invoice_id.id, address)
 
-    def test_20_tms_waybill_compute_invoice_paid(self):
+    def create_waybill_invoice_paid(self):
         waybill = self.create_waybill()
         waybill.action_confirm()
         wizard = self.env['tms.wizard.invoice'].with_context({
             'active_model': 'tms.waybill',
             'active_ids': [waybill.id]}).create({})
         wizard.make_invoices()
-        waybill.invoice_id.state = "paid"
+        waybill.invoice_id.action_invoice_open()
+        obj_payment = self.env['account.payment']
+        payment = obj_payment.create({
+            'partner_type': 'supplier',
+            'journal_id': self.journal_id.id,
+            'partner_id': self.customer.id,
+            'amount': waybill.amount_total,
+            'payment_type': 'outbound',
+            'payment_method_id': 1,
+        })
+        payment.post()
+        invoice = json.loads(
+            waybill.invoice_id.outstanding_credits_debits_widget)
+        waybill.invoice_id._get_outstanding_info_JSON()
+        waybill.invoice_id.assign_outstanding_credit(
+            invoice['content'][0]['id'])
+        return waybill
+
+    def test_20_tms_waybill_compute_invoice_paid(self):
+        waybill = self.create_waybill_invoice_paid()
         waybill._compute_invoice_paid()
         self.assertEqual(waybill.invoice_paid, True)
 
@@ -119,6 +154,16 @@ class TestTmsWaybill(TransactionCase):
         waybill.onchange_waybill_line_ids()
         self.assertEqual(waybill.tax_line_ids[0].tax_id, self.tax)
         self.assertEqual(waybill.tax_line_ids[0].tax_amount, 15.0)
+        waybill.waybill_line_ids.create({
+            'product_id': self.insurance.id,
+            'name': self.insurance.name,
+            'unit_price': 100.0,
+            'tax_ids': [(4, self.tax.id)],
+            'price_subtotal': 100.0,
+            'waybill_id': waybill.id
+        })
+        waybill.onchange_waybill_line_ids()
+        self.assertEqual(waybill.tax_line_ids[0].tax_amount, 30.0)
 
     def test_70_tms_waybill_action_cancel_draft(self):
         waybill = self.create_waybill()
@@ -130,9 +175,51 @@ class TestTmsWaybill(TransactionCase):
                 'Travel is Cancelled !!!'):
             waybill.travel_ids.state = 'cancel'
             waybill.action_cancel_draft()
+        waybill.action_cancel()
 
     def test_80_tms_waybill_amount_to_text(self):
         waybill = self.create_waybill()
         mxn = self.env.ref('base.MXN').name
         amount = waybill._amount_to_text(1500.00, mxn)
         self.assertEqual(amount, 'MIL QUINIENTOS PESOS 0/100 M.N.')
+        usd = self.env.ref('base.USD').name
+        amount = waybill._amount_to_text(1500.00, usd, partner_lang="es_USD")
+        self.assertEqual(amount, 'ONE THOUSAND, FIVE HUNDRED USD 0/100 M.E.')
+
+    def test_90_tms_waybill_transportable_product(self):
+        waybill = self.create_waybill()
+        waybill.transportable_line_ids.transportable_id = (
+            self.transportable2.id)
+        waybill.transportable_line_ids._onchange_transportable_id()
+        waybill.customer_factor_ids.update({
+            'factor_type': 'volume',
+            'name': 'Volume',
+            'fixed_amount': 0.0,
+            'category': 'customer',
+            'factor': 100,
+            'range_start': 1,
+            'range_end': 200,
+        })
+        waybill._compute_transportable_product()
+        self.assertEqual(waybill.product_volume, 10)
+
+    def test_100_tms_waybill_action_cancel(self):
+        waybill = self.create_waybill_invoice_paid()
+        with self.assertRaisesRegexp(
+                ValidationError,
+                'Could not cancel this waybill because'
+                'the waybill is already paid.'):
+            waybill.action_cancel()
+        waybill2 = self.create_waybill()
+        waybill2.action_confirm()
+        wizard = self.env['tms.wizard.invoice'].with_context({
+            'active_model': 'tms.waybill',
+            'active_ids': [waybill2.id]}).create({})
+        wizard.make_invoices()
+        waybill2.invoice_id.action_invoice_cancel()
+        with self.assertRaisesRegexp(
+                ValidationError,
+                'You cannot unlink the invoice of this waybill'
+                ' because the invoice is still valid, '
+                'please check it.'):
+            waybill2.action_cancel()

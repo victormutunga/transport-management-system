@@ -181,18 +181,6 @@ class TmsWaybill(models.Model):
         'tms.customs',
         'waybill_id',
         string="Customs")
-    expense_ids = fields.Many2many(
-        'tms.expense',
-        compute="_compute_waybill_expense",
-        string='Expenses')
-
-    @api.depends('travel_ids')
-    def _compute_waybill_expense(self):
-        for rec in self:
-            rec.expense_ids = []
-            for travel in rec.travel_ids:
-                if travel.expense_id:
-                    rec.expense_ids += travel.expense_id
 
     @api.model
     def create(self, values):
@@ -402,11 +390,6 @@ class TmsWaybill(models.Model):
                 waybill.state = 'cancel'
                 waybill.message_post(
                     body=_("<h5><strong>Cancelled</strong></h5>"))
-
-    @api.depends('supplier_invoice_id')
-    def _compute_supplier_invoice_paid(self):
-        for rec in self:
-            rec.supplier_invoice_paid = False
 
     @api.multi
     def _amount_to_text(self, amount_total, currency, partner_lang='es_MX'):
