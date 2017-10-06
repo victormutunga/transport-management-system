@@ -112,6 +112,12 @@ class TestTmsWaybill(TransactionCase):
             invoice['content'][0]['id'])
         return waybill
 
+    def test_20_tms_waybill_compute_invoice_paid(self):
+        waybill = self.create_waybill_invoice_paid()
+        waybill.invoice_id.state = "paid"
+        waybill._compute_invoice_paid()
+        self.assertTrue(waybill.invoice_paid, 'she have invoice paid')
+
     def test_30_tms_waybill_onchange_waybill_line_ids(self):
         waybill = self.create_waybill()
         waybill._onchange_waybill_line_ids()
@@ -172,6 +178,7 @@ class TestTmsWaybill(TransactionCase):
                 'Travel is Cancelled !!!'):
             waybill.travel_ids.state = 'cancel'
             waybill.action_cancel_draft()
+        waybill.travel_ids.state = 'draft'
         waybill.action_cancel()
 
     def test_80_tms_waybill_amount_to_text(self):
