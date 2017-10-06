@@ -7,6 +7,7 @@ from . import test_fleet_vehicle_log_fuel
 from . import test_hr_employee
 from . import test_product_template
 from . import test_tms_advance
+from . import test_tms_event
 from . import test_tms_expense_line
 from . import test_tms_expense_loan
 from . import test_tms_factor
