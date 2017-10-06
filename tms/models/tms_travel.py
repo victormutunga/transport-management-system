@@ -319,8 +319,8 @@ class TmsTravel(models.Model):
             if rec.employee_id.days_to_expire <= days:
                 raise ValidationError(
                     _("You can not Dispatch this Travel because %s "
-                      "Driver's License Validity (%s) is expired or"
-                      " about to expire in next %s day(s)") % (
+                      "Driver s License Validity %s is expired or"
+                      " about to expire in next %s days") % (
                         rec.employee_id.name,
                         rec.employee_id.license_expiration, val))
 
@@ -339,8 +339,8 @@ class TmsTravel(models.Model):
                             '%Y-%m-%d')):
                     raise ValidationError(_(
                         "You can not Dispatch this Travel because this Vehicle"
-                        "(%s) Insurance (%s) is expired or about to expire in "
-                        "next %s day(s)") % (
+                        " %s Insurance %s is expired or about to expire in "
+                        "next %s days") % (
                         rec.unit_id.name, rec.unit_id.insurance_expiration,
                         val))
 
