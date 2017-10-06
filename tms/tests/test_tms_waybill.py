@@ -179,7 +179,7 @@ class TestTmsWaybill(TransactionCase):
             waybill.travel_ids.state = 'cancel'
             waybill.action_cancel_draft()
         waybill.travel_ids.state = 'draft'
-        waybill.action_cancel()
+        waybill.action_cancel_draft()
 
     def test_80_tms_waybill_amount_to_text(self):
         waybill = self.create_waybill()
