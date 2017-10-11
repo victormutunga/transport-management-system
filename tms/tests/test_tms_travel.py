@@ -129,8 +129,9 @@ class TestTmsTravel(TransactionCase):
         with self.assertRaisesRegexp(
                 ValidationError,
                 "You can not Dispatch this Travel because Fernando Bedoya "
-                "Driver s License Validity 2018-10-06 is expired or about "
-                "to expire in next 5 days"):
+                "Driver s License Validity %s is expired or about "
+                "to expire in next 5 days" %
+                self.travel_id.employee_id.license_expiration):
             self.travel_id.validate_driver_license()
 
     def test_120_tms_travel_validate_vehicle_insurance(self):
@@ -138,6 +139,6 @@ class TestTmsTravel(TransactionCase):
         with self.assertRaisesRegexp(
                 ValidationError,
                 'You can not Dispatch this Travel because this Vehicle T1 '
-                'Insurance 2017-10-06 is expired or about to expire in '
-                'next 5 days'):
+                'Insurance %s is expired or about to expire in '
+                'next 5 days' % self.travel_id.unit_id.insurance_expiration):
             self.travel_id.validate_vehicle_insurance()
