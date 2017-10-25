@@ -21,7 +21,7 @@ class TmsExpense(models.Model):
     operating_unit_id = fields.Many2one(
         'operating.unit', string="Operating Unit", required=True)
     employee_id = fields.Many2one(
-        'hr.employee', 'Driver', required=True)
+        'hr.employee', 'Driver', required=True,)
     travel_ids = fields.Many2many(
         'tms.travel',
         string='Travels')
@@ -130,7 +130,8 @@ class TmsExpense(models.Model):
     notes = fields.Text()
     move_id = fields.Many2one(
         'account.move', 'Journal Entry', readonly=True,
-        help="Link to the automatically generated Journal Items.")
+        help="Link to the automatically generated Journal Items.",
+        ondelete='restrict',)
     paid = fields.Boolean(
         compute='_compute_paid',
         store=True,
@@ -157,7 +158,8 @@ class TmsExpense(models.Model):
         readonly=True,
         compute="_compute_fuel_efficiency")
     payment_move_id = fields.Many2one(
-        'account.move', string='Payment Entry', readonly=True)
+        'account.move', string='Payment Entry',
+        readonly=True, ondelete='restrict',)
     travel_days = fields.Char(
         compute='_compute_travel_days',
     )

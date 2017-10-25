@@ -48,7 +48,8 @@ class TmsAdvance(models.Model):
         'account.move', 'Journal Entry',
         help="Link to the automatically generated Journal Items.\nThis move "
         "is only for Travel Expense Records with balance < 0.0",
-        readonly=True)
+        readonly=True,
+        ondelete='restrict',)
     paid = fields.Boolean(
         compute='_compute_paid',
         readonly=True,
@@ -56,7 +57,8 @@ class TmsAdvance(models.Model):
     payment_move_id = fields.Many2one(
         'account.move',
         string="Payment Entry",
-        readonly=True)
+        readonly=True,
+        ondelete='restrict',)
     currency_id = fields.Many2one(
         'res.currency',
         'Currency',

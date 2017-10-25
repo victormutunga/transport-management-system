@@ -63,7 +63,8 @@ class TmsExpenseLoan(models.Model):
     payment_move_id = fields.Many2one(
         'account.move',
         string="Payment Entry",
-        readonly=True)
+        readonly=True,
+        ondelete='restrict',)
     currency_id = fields.Many2one(
         'res.currency',
         'Currency',
@@ -73,7 +74,8 @@ class TmsExpenseLoan(models.Model):
         'account.move', 'Journal Entry',
         help="Link to the automatically generated Journal Items.\nThis move "
         "is only for Loan Expense Records with balance < 0.0",
-        readonly=True)
+        readonly=True,
+        ondelete='restrict',)
 
     @api.model
     def create(self, values):
