@@ -68,7 +68,7 @@ class HrEmployee(models.Model):
                     'license_expiration': license_expiration,
                 })
                 client.close()
-            except:
+            except Exception:
                 client.close()
                 raise ValidationError(_(
                     'The driver license is not in SCT database'))

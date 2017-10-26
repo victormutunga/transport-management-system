@@ -118,7 +118,7 @@ class TmsRoute(models.Model):
                                    ['value'] / 3600.0)
                 self.distance = distance
                 self.travel_time = duration
-            except:
+            except Exception:
                 raise exceptions.UserError(_("Google Maps is not available."))
 
     @api.multi

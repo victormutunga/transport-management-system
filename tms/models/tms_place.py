@@ -71,7 +71,7 @@ class TmsPlace(geo_model.GeoModel):
                     location = result['results'][0]['geometry']['location']
                     self.latitude = location['lat']
                     self.longitude = location['lng']
-            except:
+            except Exception:
                 raise ValidationError(_("Google Maps is not available."))
 
     @api.multi
