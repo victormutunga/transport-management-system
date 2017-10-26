@@ -209,16 +209,20 @@ class TmsAdvance(models.Model):
             if rec.paid:
                 group = self.env.ref('account.group_account_manager')
                 if self.env.user.id in group.users.ids:
-                    rec.payment_move_id.button_cancel()
-                    rec.payment_move_id.line_ids.remove_move_reconcile()
-                    rec.payment_move_id.unlink()
+                    payment_move_id = rec.payment_move_id
+                    rec.payment_move_id = False
+                    payment_move_id.button_cancel()
+                    payment_move_id.line_ids.remove_move_reconcile()
+                    payment_move_id.unlink()
                 else:
                     raise ValidationError(
                         _('Could not cancel this advance because'
                             ' the advance is already paid. '
                             'Please cancel the payment first.'))
-            rec.move_id.button_cancel()
-            rec.move_id.unlink()
+            move_id = rec.move_id
+            rec.move_id = False
+            move_id.button_cancel()
+            move_id.unlink()
             rec.state = 'cancel'
             rec.message_post(_('<strong>Advance cancelled.</strong>'))
 

@@ -119,9 +119,11 @@ class TmsExpenseLoan(models.Model):
                       ' the loan is already paid. '
                       'Please cancel the payment first.'))
             else:
+                move_id = rec.move_id
+                rec.move_id = False
                 if rec.move_id.state == 'posted':
-                    rec.move_id.button_cancel()
-                rec.move_id.unlink()
+                    move_id.button_cancel()
+                move_id.unlink()
                 rec.state = 'cancel'
                 rec.message_post(_('<strong>Loan cancelled.</strong>'))
 
