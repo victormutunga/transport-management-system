@@ -13,6 +13,9 @@ class TestTmsExpenseLoan(TransactionCase):
         self.expense_loan = self.env['tms.expense.loan']
         self.operating_unit = self.env.ref(
             'operating_unit.main_operating_unit')
+        self.operating_unit.loan_journal_id.write({
+            'update_posted': True,
+        })
         self.employee_id = self.env.ref('tms.tms_hr_employee_01')
         self.unit = self.env.ref('tms.tms_fleet_vehicle_01')
         self.product = self.env.ref('tms.product_loan')
@@ -42,6 +45,7 @@ class TestTmsExpenseLoan(TransactionCase):
             'code': 'TESTBANK',
             'default_debit_account_id': account_bank.id,
             'default_credit_account_id': account_bank.id,
+            'update_posted': True,
         })
 
     def create_expense_loan(self):
@@ -102,12 +106,7 @@ class TestTmsExpenseLoan(TransactionCase):
                 'amount_total': loan.amount,
             })
         wizard.make_payment()
-        with self.assertRaisesRegexp(
-                ValidationError,
-                'Could not cancel this loan because'
-                ' the loan is already paid. '
-                'Please cancel the payment first.'):
-            loan.action_cancel()
+        loan.action_cancel()
 
     def test_50_tms_expense_loan_action_confirm(self):
         loan = self.create_expense_loan()
