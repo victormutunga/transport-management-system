@@ -114,18 +114,19 @@ class TmsExpenseLoan(models.Model):
     def action_cancel(self):
         for rec in self:
             if rec.paid:
-                raise exceptions.ValidationError(
-                    _('Could not cancel this loan because'
-                      ' the loan is already paid. '
-                      'Please cancel the payment first.'))
-            else:
-                move_id = rec.move_id
-                rec.move_id = False
-                if rec.move_id.state == 'posted':
-                    move_id.button_cancel()
-                move_id.unlink()
-                rec.state = 'cancel'
-                rec.message_post(_('<strong>Loan cancelled.</strong>'))
+                payment_move_id = rec.payment_move_id
+                rec.payment_move_id = False
+                payment_move_id.button_cancel()
+                payment_move_id.line_ids.remove_move_reconcile()
+                payment_move_id.unlink()
+
+            move_id = rec.move_id
+            rec.move_id = False
+            if move_id.state == 'posted':
+                move_id.button_cancel()
+            move_id.unlink()
+            rec.state = 'cancel'
+            rec.message_post(_('<strong>Loan cancelled.</strong>'))
 
     @api.multi
     def action_confirm(self):
