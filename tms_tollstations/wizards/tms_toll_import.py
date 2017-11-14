@@ -5,7 +5,7 @@
 
 import base64
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 
 import pytz
 from odoo import _, api, fields, models
