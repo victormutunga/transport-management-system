@@ -35,7 +35,7 @@ class TmsExpenseLine(models.Model):
             xml_folio = xml.get('folio', xml.get('Folio', ''))
             xml_date = xml.get('fecha', xml.get('Fecha', ''))
             partner_id = self.env['res.partner'].search(
-                [('vat', '=', 'MX' + xml_vat_emitter)], limit=1)
+                [('vat', '=', xml_vat_emitter)], limit=1)
             date_split = xml_date.split('T')
             strp_date = datetime.strptime(date_split[0], '%Y-%m-%d')
             self.invoice_number = xml_folio
