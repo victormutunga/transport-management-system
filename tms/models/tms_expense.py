@@ -1135,9 +1135,8 @@ class TmsExpense(models.Model):
                     _('Error ! Move line was not found,'
                         ' please check your data.'))
             move_ids.append(expense_move_line.id)
-            for move_line in invoice.move_id.line_ids:
-                if move_line.account_id.internal_type == 'payable':
-                    invoice_move_line_id = move_line
+            invoice_move_line_id = invoice.move_id.line_ids.filtered(
+                lambda x: x.account_id.internal_type == 'payable').id
             move_ids.append(invoice_move_line_id.id)
             reconcile_ids = move_line_obj.browse(move_ids)
             reconcile_ids.reconcile()
