@@ -44,19 +44,15 @@ class AccountInvoice(models.Model):
                   'Expense line: ' + expense_line.name + '\nTravel: ' +
                   expense_line.travel_id.name))
         if xml_uuid:
-            xml_exists = self.search([('cfdi_fiscal_folio', '=', xml_uuid)])
+            xml_exists = self.search([('cfdi_uuid', '=', xml_uuid)])
             if xml_exists:
                 raise ValidationError(_(
                     'Can not attach this XML because other invoice already '
                     'have the same UUID that this XML. \n Invoice: %s'
                     '\n Line: %s') % (
                     xml_exists.number, expense_line.name))
-        inv_vat_receiver = (
-            self.company_id.address_parent_company_id.vat_split or
-            self.company_id.address_parent_company_id.vat)
-        inv_vat_emitter = (
-            self.commercial_partner_id.vat_split or
-            self.commercial_partner_id.vat)
+        inv_vat_receiver = self.company_id.address_parent_company_id.vat
+        inv_vat_emitter = self.commercial_partner_id.vat
         inv_amount = self.amount_total or 0.0
         msg = ''
         if not inv_vat_emitter:
@@ -89,7 +85,7 @@ class AccountInvoice(models.Model):
         if msg:
             raise ValidationError(msg)
         self.write({
-            'cfdi_fiscal_folio': xml_uuid,
+            'cfdi_uuid': xml_uuid,
             'xml_signed': base64.decodestring(xml_signed)})
         name = expense_line.xml_filename
         if not self.xml_signed:
