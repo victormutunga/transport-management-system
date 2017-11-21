@@ -770,9 +770,20 @@ class TmsExpense(models.Model):
 
     @api.multi
     def action_cancel(self):
+        self.ensure_one()
         if self.paid:
-            raise ValidationError(
-                _('You cannot cancel an expense that is paid.'))
+            payment_move_id = self.payment_move_id
+            self.payment_move_id = False
+            # We only remove the reonciliation only of the expense line
+            payment_move_id.line_ids.with_context(
+                filter_name=self.name).filtered(
+                lambda l: l.name == l._context['filter_name']
+                ).remove_move_reconcile()
+            # If the payment is only for this expense we unlink it
+            if len(payment_move_id.line_ids.filtered(
+                    lambda a: a.account_id.reconcile)) == 1:
+                payment_move_id.button_cancel()
+                payment_move_id.unlink()
         if self.state == 'confirmed':
             for line in self.expense_line_ids:
                 if line.invoice_id and line.line_type != 'fuel':
@@ -789,7 +800,9 @@ class TmsExpense(models.Model):
                     line.invoice_id = False
             if self.move_id.state == 'posted':
                 self.move_id.button_cancel()
-            self.move_id.unlink()
+            move_id = self.move_id
+            self.move_id = False
+            move_id.unlink()
         self.state = 'cancel'
 
     @api.multi
