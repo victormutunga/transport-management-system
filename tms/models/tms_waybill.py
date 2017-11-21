@@ -187,7 +187,7 @@ class TmsWaybill(models.Model):
         sequence = waybill.operating_unit_id.waybill_sequence_id
         waybill.name = sequence.next_by_id()
         product = self.env['product.product'].search([
-            ('tms_product_category', '=', 'freight')])
+            ('tms_product_category', '=', 'freight')], limit=1)
         if product:
             self.waybill_line_ids.create({
                 'tax_ids': [(
