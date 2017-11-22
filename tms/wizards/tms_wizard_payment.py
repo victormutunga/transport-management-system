@@ -160,7 +160,7 @@ class TmsWizardPayment(models.TransientModel):
     def create_moves_and_reconciles(self, move, active_ids):
         move_id = self.env['account.move'].create(move)
         move_id.post()
-        journal_id = active_ids.move_id.journal_id.id
+        journal_id = active_ids.mapped('move_id.journal_id')
         for move_line in move_id.line_ids.filtered(
                 lambda l: l.account_id.internal_type == 'payable'):
             move_ids = []
@@ -168,7 +168,7 @@ class TmsWizardPayment(models.TransientModel):
                 ('name', '=', move_line.name),
                 ('account_id.internal_type', '=', 'payable'),
                 ('move_id', '!=', move_id.id),
-                ('journal_id', '=', journal_id)])
+                ('journal_id', '=', journal_id.id)])
             if len(line) > 1:
                 raise ValidationError(_(
                     'The driver advance account is defined as '
