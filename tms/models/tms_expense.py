@@ -608,7 +608,7 @@ class TmsExpense(models.Model):
             inv_id = False
             if line.is_invoice:
                 inv_id = rec.create_supplier_invoice(line)
-                inv_id.signal_workflow('invoice_open')
+                inv_id.action_invoice_open()
                 result['invoices'].append(inv_id)
                 move_line = rec.prepare_move_line(
                     (rec.name + ' ' + line.name +
@@ -1149,7 +1149,7 @@ class TmsExpense(models.Model):
                         ' please check your data.'))
             move_ids.append(expense_move_line.id)
             invoice_move_line_id = invoice.move_id.line_ids.filtered(
-                lambda x: x.account_id.internal_type == 'payable').id
+                lambda x: x.account_id.reconcile)
             move_ids.append(invoice_move_line_id.id)
             reconcile_ids = move_line_obj.browse(move_ids)
             reconcile_ids.reconcile()
