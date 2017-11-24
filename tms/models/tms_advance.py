@@ -57,8 +57,7 @@ class TmsAdvance(models.Model):
     payment_move_id = fields.Many2one(
         'account.move',
         string="Payment Entry",
-        readonly=True,
-        ondelete='restrict',)
+        readonly=True,)
     currency_id = fields.Many2one(
         'res.currency',
         'Currency',
@@ -207,18 +206,10 @@ class TmsAdvance(models.Model):
     def action_cancel(self):
         for rec in self:
             if rec.paid:
-                group = self.env.ref('account.group_account_manager')
-                if self.env.user.id in group.users.ids:
-                    payment_move_id = rec.payment_move_id
-                    rec.payment_move_id = False
-                    payment_move_id.button_cancel()
-                    payment_move_id.line_ids.remove_move_reconcile()
-                    payment_move_id.unlink()
-                else:
-                    raise ValidationError(
-                        _('Could not cancel this advance because'
-                            ' the advance is already paid. '
-                            'Please cancel the payment first.'))
+                raise ValidationError(
+                    _('Could not cancel this advance because'
+                        ' the advance is already paid. '
+                        'Please cancel the payment first.'))
             move_id = rec.move_id
             rec.move_id = False
             move_id.button_cancel()

@@ -159,7 +159,7 @@ class TmsExpense(models.Model):
         compute="_compute_fuel_efficiency")
     payment_move_id = fields.Many2one(
         'account.move', string='Payment Entry',
-        readonly=True, ondelete='restrict',)
+        readonly=True,)
     travel_days = fields.Char(
         compute='_compute_travel_days',
     )
@@ -772,18 +772,8 @@ class TmsExpense(models.Model):
     def action_cancel(self):
         self.ensure_one()
         if self.paid:
-            payment_move_id = self.payment_move_id
-            self.payment_move_id = False
-            # We only remove the reonciliation only of the expense line
-            payment_move_id.line_ids.with_context(
-                filter_name=self.name).filtered(
-                lambda l: l.name == l._context['filter_name']
-                ).remove_move_reconcile()
-            # If the payment is only for this expense we unlink it
-            if len(payment_move_id.line_ids.filtered(
-                    lambda a: a.account_id.reconcile)) == 1:
-                payment_move_id.button_cancel()
-                payment_move_id.unlink()
+            raise ValidationError(
+                _('You cannot cancel an expense that is paid.'))
         if self.state == 'confirmed':
             for line in self.expense_line_ids:
                 if line.invoice_id and line.line_type != 'fuel':
