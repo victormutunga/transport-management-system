@@ -205,7 +205,7 @@ class TmsExpenseLoan(models.Model):
             rec.state = 'draft'
             rec.message_post(_('<strong>Loan drafted.</strong>'))
 
-    @api.depends('amount')
+    @api.depends('expense_ids')
     def _compute_balance(self):
         for loan in self:
             line_amount = 0.0
