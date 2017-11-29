@@ -10,7 +10,8 @@ class TmsWizardInvoice(models.TransientModel):
     _name = 'tms.wizard.invoice'
 
     @api.model
-    def prepare_lines(self, product, quantity, price_unit, tax, account):
+    def prepare_lines(self, product, quantity, 
+                      price_unit, tax, account, origin):
         return {
             'product_id': product.id,
             'quantity': quantity,
@@ -18,6 +19,7 @@ class TmsWizardInvoice(models.TransientModel):
             'uom_id': product.uom_id.id,
             'invoice_line_tax_ids': [(6, 0, [x.id for x in tax])],
             'name': product.name,
+            'origin': origin,
             'account_id': account.id,
         }
 
@@ -51,7 +53,7 @@ class TmsWizardInvoice(models.TransientModel):
                 lines.append(
                     (0, 0, self.prepare_lines
                         (line.product_id, line.product_qty,
-                         line.price_subtotal, tax, account)))
+                         line.price_subtotal, tax, account, record.name)))
         res['lines'] = lines
         return res
 
@@ -88,7 +90,8 @@ class TmsWizardInvoice(models.TransientModel):
                 lines.append(
                     (0, 0, self.prepare_lines
                         (record.operating_unit_id.ieps_product_id, 1.0,
-                         record.special_tax_amount, tax, account)))
+                         record.special_tax_amount, tax,
+                         account, record.name)))
         res['lines'] = lines
         return res
 
