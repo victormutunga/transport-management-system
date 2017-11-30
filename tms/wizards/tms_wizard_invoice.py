@@ -10,7 +10,7 @@ class TmsWizardInvoice(models.TransientModel):
     _name = 'tms.wizard.invoice'
 
     @api.model
-    def prepare_lines(self, product, quantity, 
+    def prepare_lines(self, product, quantity,
                       price_unit, tax, account, origin):
         return {
             'product_id': product.id,
@@ -85,7 +85,7 @@ class TmsWizardInvoice(models.TransientModel):
                 lines.append(
                     (0, 0, self.prepare_lines
                         (product, record.product_qty,
-                         record.price_unit, tax, account)))
+                         record.price_unit, tax, account, record.name)))
             elif product.id == ieps.id:
                 lines.append(
                     (0, 0, self.prepare_lines

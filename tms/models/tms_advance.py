@@ -132,6 +132,9 @@ class TmsAdvance(models.Model):
             if rec.amount <= 0:
                 raise ValidationError(
                     _('The amount must be greater than zero.'))
+            if rec.move_id:
+                raise ValidationError(
+                    _('You can not confirm a confirmed advance.'))
             else:
                 obj_account_move = self.env['account.move']
                 advance_journal_id = (

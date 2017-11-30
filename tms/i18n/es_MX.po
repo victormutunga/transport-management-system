@@ -4536,3 +4536,15 @@ msgstr "Arena"
 #: model:tms.transportable,name:tms.tms_transportable_02
 msgid "Water"
 msgstr "Agua"
+
+#. module: tms
+#: code:addons/tms/models/tms_advance.py:137
+#, python-format
+msgid "You can not confirm a confirmed advance."
+msgstr "No puede confirmar un anticipo ya confirmado."
+
+#. module: tms
+#: code:addons/tms/models/tms_expense.py:764
+#, python-format
+msgid "You can not confirm a confirmed expense."
+msgstr "No puede confirmar una liquidación ya confirmada."

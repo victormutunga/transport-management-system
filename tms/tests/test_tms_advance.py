@@ -147,10 +147,17 @@ class TestTmsAdvance(TransactionCase):
         advance.move_id.journal_id.update({'update_posted': True})
         return advance
 
+    def cancel_advance(self, advance):
+        advance.payment_move_id.line_ids.remove_move_reconcile()
+        advance.payment_move_id.button_cancel()
+        advance.payment_move_id.unlink()
+        advance.action_cancel()
+        return advance
+
     def test_60_tms_advance_action_cancel(self):
         advance = self.create_advance_cancel()
-        advance.action_cancel()
-        self.assertEqual(advance.state, 'cancel')
+        cancel_advance = self.cancel_advance(advance)
+        self.assertEqual(cancel_advance.state, 'cancel')
 
     def test_61_tms_advance_action_cancel(self):
         advance = self.create_advance_cancel()
@@ -164,8 +171,8 @@ class TestTmsAdvance(TransactionCase):
 
     def test_70_tms_advance_action_cancel_draft(self):
         advance = self.create_advance_cancel()
-        advance.action_cancel()
-        advance.travel_id.update({'state': 'cancel'})
+        cancel_advance = self.cancel_advance(advance)
+        cancel_advance.travel_id.update({'state': 'cancel'})
         with self.assertRaisesRegexp(
                 ValidationError,
                 'Could not set this advance to draft because'
@@ -174,6 +181,6 @@ class TestTmsAdvance(TransactionCase):
 
     def test_71_tms_advance_action_cancel_draft(self):
         advance = self.create_advance_cancel()
-        advance.action_cancel()
-        advance.action_cancel_draft()
-        self.assertEqual(advance.state, 'draft')
+        cancel_advance = self.cancel_advance(advance)
+        cancel_advance.action_cancel_draft()
+        self.assertEqual(cancel_advance.state, 'draft')

@@ -15,7 +15,7 @@ class TestProductTemplate(TransactionCase):
     def test_10_product_template_unique_product_per_category(self):
         with self.assertRaisesRegexp(
                 ValidationError,
-                'There is another product with category Moves'):
+                'Only there must be a product with category "Moves"'):
             self.product.write({
                 'tms_product_category': 'move'
             })

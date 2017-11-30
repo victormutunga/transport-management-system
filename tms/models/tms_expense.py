@@ -759,6 +759,9 @@ class TmsExpense(models.Model):
     @api.multi
     def action_confirm(self):
         for rec in self:
+            if rec.move_id:
+                raise ValidationError(
+                    _('You can not confirm a confirmed expense.'))
             result = rec.higher_than_zero_move()
             for line in rec.expense_line_ids:
                 rec.create_expense_line_move_line(line, result)
