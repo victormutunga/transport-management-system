@@ -88,7 +88,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 amount_untaxed -= (
                     abs(amount_untaxed) / (tax_rate + 1.0) * tax_rate)
             items.append(
-                [line.account_id.id, line.move_id.name,
+                [line.account_id.code, line.move_id.name,
                  line.ref, round(amount_untaxed, 4)])
         return items
 
@@ -124,9 +124,9 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                         'F': item[3] if aml.debit > 0.0 else 0.0,
                         'G': item[3] if aml.credit > 0.0 else 0.0,
                     })
-                if aml.account_id.id not in res.keys():
-                    res[aml.account_id.id] = []
-                res[aml.account_id.id].append({
+                if aml.account_id.code not in res.keys():
+                    res[aml.account_id.code] = []
+                res[aml.account_id.code].append({
                     'B': aml.move_id.name,
                     'C': aml.ref,
                     'D': aml.date,
@@ -135,9 +135,9 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     'G': aml.credit if aml.credit > 0.0 else 0.0,
                 })
             else:
-                if aml.account_id.id not in res.keys():
-                    res[aml.account_id.id] = []
-                res[aml.account_id.id].append({
+                if aml.account_id.code not in res.keys():
+                    res[aml.account_id.code] = []
+                res[aml.account_id.code].append({
                     'B': aml.move_id.name,
                     'C': aml.ref,
                     'D': aml.date,
@@ -145,19 +145,20 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     'F': aml.debit if aml.debit > 0.0 else 0.0,
                     'G': aml.credit if aml.credit > 0.0 else 0.0,
                 })
-        for key, value in res.items():
-            account_id = account_obj.browse(key)
+        dictio_keys = sorted(res.keys())
+        for key in dictio_keys:
+            account_id = account_obj.search([('code', '=', key)])
             balance = 0.0
             ws1.append({
                 'A': account_id.code + ' ' + account_id.name
             })
-            for item in value:
+            for item in res[key]:
                 balance += (item['F'] - item['G'])
                 item['H'] = balance
                 ws1.append(item)
             ws1.append({
-                'F': sum([x['F'] for x in value]),
-                'G': sum([x['G'] for x in value]),
+                'F': sum([x['F'] for x in res[key]]),
+                'G': sum([x['G'] for x in res[key]]),
                 'H': balance,
             })
         for row in ws1.iter_rows():
