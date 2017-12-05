@@ -1,0 +1,176 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* l10n_mx_tms_general_ledger
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-12-05 19:47+0000\n"
+"PO-Revision-Date: 2017-12-05 19:47+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_mx_tms_general_ledger
+#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:106
+#, python-format
+msgid "Account"
+msgstr "Cuenta"
+
+#. module: l10n_mx_tms_general_ledger
+#: model:ir.actions.act_window,name:l10n_mx_tms_general_ledger.action_tms_general_ledger
+msgid "Account TMS General Ledger"
+msgstr "Contabilidad General para Transporte"
+
+#. module: l10n_mx_tms_general_ledger
+#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:113
+#, python-format
+msgid "Balance"
+msgstr "Balance"
+
+#. module: l10n_mx_tms_general_ledger
+#: model:ir.ui.view,arch_db:l10n_mx_tms_general_ledger.view_general_ledger_form
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: l10n_mx_tms_general_ledger
+#: model:ir.ui.view,arch_db:l10n_mx_tms_general_ledger.view_general_ledger_form
+msgid "Confirm"
+msgstr "Confirmar"
+
+#. module: l10n_mx_tms_general_ledger
+#: model:ir.model.fields,field_description:l10n_mx_tms_general_ledger.field_account_general_ledger_wizard_create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: l10n_mx_tms_general_ledger
+#: model:ir.model.fields,field_description:l10n_mx_tms_general_ledger.field_account_general_ledger_wizard_create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: l10n_mx_tms_general_ledger
+#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:112
+#, python-format
+msgid "Credit"
+msgstr "Credit"
+
+#. module: l10n_mx_tms_general_ledger
+#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:109
+#, python-format
+msgid "Date"
+msgstr "Fecha"
+
+#. module: l10n_mx_tms_general_ledger
+#: model:ir.model.fields,field_description:l10n_mx_tms_general_ledger.field_account_general_ledger_wizard_date_end
+msgid "Date end"
+msgstr "Fecha Final"
+
+#. module: l10n_mx_tms_general_ledger
+#: model:ir.model.fields,field_description:l10n_mx_tms_general_ledger.field_account_general_ledger_wizard_date_start
+msgid "Date start"
+msgstr "Fecha de inicio"
+
+#. module: l10n_mx_tms_general_ledger
+#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:111
+#, python-format
+msgid "Debit"
+msgstr "Debe"
+
+#. module: l10n_mx_tms_general_ledger
+#: model:ir.model.fields,field_description:l10n_mx_tms_general_ledger.field_account_general_ledger_wizard_display_name
+msgid "Display Name"
+msgstr "Nombre a mostrar"
+
+#. module: l10n_mx_tms_general_ledger
+#: selection:account.general.ledger.wizard,state:0
+msgid "Error"
+msgstr "Error"
+
+#. module: l10n_mx_tms_general_ledger
+#: selection:account.general.ledger.wizard,state:0
+msgid "Get"
+msgstr "Get"
+
+#. module: l10n_mx_tms_general_ledger
+#: model:ir.model.fields,field_description:l10n_mx_tms_general_ledger.field_account_general_ledger_wizard_id
+msgid "ID"
+msgstr "ID"
+
+#. module: l10n_mx_tms_general_ledger
+#: model:ir.model,name:l10n_mx_tms_general_ledger.model_account_journal
+msgid "Journal"
+msgstr "Diario"
+
+#. module: l10n_mx_tms_general_ledger
+#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:107
+#, python-format
+msgid "Journal Entry"
+msgstr "Póliza Contable"
+
+#. module: l10n_mx_tms_general_ledger
+#: model:ir.model.fields,field_description:l10n_mx_tms_general_ledger.field_account_general_ledger_wizard___last_update
+msgid "Last Modified on"
+msgstr "Última modificación en"
+
+#. module: l10n_mx_tms_general_ledger
+#: model:ir.model.fields,field_description:l10n_mx_tms_general_ledger.field_account_general_ledger_wizard_write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: l10n_mx_tms_general_ledger
+#: model:ir.model.fields,field_description:l10n_mx_tms_general_ledger.field_account_general_ledger_wizard_write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: l10n_mx_tms_general_ledger
+#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:110
+#, python-format
+msgid "Partner"
+msgstr "Socio"
+
+#. module: l10n_mx_tms_general_ledger
+#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:108
+#, python-format
+msgid "Reference"
+msgstr "Referencia"
+
+#. module: l10n_mx_tms_general_ledger
+#: model:ir.model.fields,field_description:l10n_mx_tms_general_ledger.field_account_general_ledger_wizard_state
+msgid "State"
+msgstr "Estado"
+
+#. module: l10n_mx_tms_general_ledger
+#: model:ir.ui.menu,name:l10n_mx_tms_general_ledger.menu_account_general_ledger
+msgid "TMS General Ledger"
+msgstr "Contabilidad General TMS"
+
+#. module: l10n_mx_tms_general_ledger
+#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:178
+#, python-format
+msgid "TMS General Ledger.xlsx"
+msgstr "Contabilidad General TMS.xlsx"
+
+#. module: l10n_mx_tms_general_ledger
+#: model:ir.model.fields,field_description:l10n_mx_tms_general_ledger.field_account_general_ledger_wizard_xlsx_file
+msgid "Xlsx file"
+msgstr "Archivo xlsx"
+
+#. module: l10n_mx_tms_general_ledger
+#: model:ir.model.fields,field_description:l10n_mx_tms_general_ledger.field_account_general_ledger_wizard_xlsx_filename
+msgid "Xlsx filename"
+msgstr "Nombre Archivo xlsx"
+
+#. module: l10n_mx_tms_general_ledger
+#: model:ir.ui.view,arch_db:l10n_mx_tms_general_ledger.view_general_ledger_form
+msgid "Your file is ready to download"
+msgstr "Su archivo está listo para ser descargado"
+
+#. module: l10n_mx_tms_general_ledger
+#: model:ir.model,name:l10n_mx_tms_general_ledger.model_account_general_ledger_wizard
+msgid "account.general.ledger.wizard"
+msgstr "account.general.ledger.wizard"
+

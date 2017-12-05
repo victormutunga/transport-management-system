@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_general_ledger_form" model="ir.ui.view">
+        <field name="name">TMS General Ledger</field>
+        <field name="model">account.general.ledger.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group states="get">
+                        <field name="state" invisible="1"/>
+                        <group>
+                            <field name="date_start"/>
+                        </group>
+                        <group>
+                            <field name="date_end"/>
+                        </group>
+                    </group>
+                    <group states="print">
+                        <div>
+                            <h2>Your file is ready to download</h2>
+                        </div>
+                        <group>
+                            <field filename="xlsx_filename" name="xlsx_file" readonly="1" nolabel="1"/>
+                        </group>
+                        <group>
+                            <field invisible="1" name="xlsx_filename"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button class="oe_highlight" icon="gtk-print" name="print_report" string="Confirm" type="object" states="get"/>
+                    <button special="cancel" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_tms_general_ledger" model="ir.actions.act_window">
+        <field name="name">Account TMS General Ledger</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.general.ledger.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <menuitem action="action_tms_general_ledger" id="menu_account_general_ledger" name="TMS General Ledger" parent="account.account_reports_business_intelligence_menu" sequence="99"/>
+</odoo>
