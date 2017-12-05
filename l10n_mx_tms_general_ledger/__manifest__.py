@@ -12,9 +12,6 @@
     'summary': (
         'This module creates a general ledger based on mexican legislations '
         'for freights'),
-    'description': (
-        'This module creates a general ledger based on mexican legislations '
-        'for freights'),
     'license': 'AGPL-3',
     'data': [
         'wizards/account_general_ledger_view.xml',

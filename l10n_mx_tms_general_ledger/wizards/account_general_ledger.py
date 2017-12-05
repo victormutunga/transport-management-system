@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
 # Copyright 2017, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+from __future__ import division
+from datetime import datetime
 
 import base64
+import calendar
 import logging
 
 from odoo import api, fields, models
 from odoo.tools.translate import _
 
-import calendar
-from datetime import datetime
-
 _logger = logging.getLogger(__name__)
 try:
     from openpyxl import Workbook
     from openpyxl.writer.excel import save_virtual_workbook
-    from openpyxl.styles import colors
-    from openpyxl.styles import Font, Color
+    from openpyxl.styles import Font
 except ImportError:
     _logger.debug('Cannot `import openpyxl`.')
 
@@ -40,21 +39,20 @@ class AccountGeneralLedgerWizard(models.TransientModel):
     @api.model
     def get_month_start(self):
         today = datetime.now()
-        dateMonthStart = "%s-%s-01" % (today.year, today.month)
-        return dateMonthStart
+        month_start = "%s-%s-01" % (today.year, today.month)
+        return month_start
 
     @api.model
     def get_month_end(self):
         today = datetime.now()
-        dateMonthEnd = "%s-%s-%s" % (
+        month_end = "%s-%s-%s" % (
             today.year, today.month, calendar.monthrange(
                 today.year-1, today.month)[1])
-        return dateMonthEnd
+        return month_end
 
     @api.model
     def get_amls_info(self):
         self.ensure_one()
-        aml_obj = self.env['account.move.line']
         self._cr.execute("""
             SELECT aml.id
             FROM account_move_line aml
@@ -69,7 +67,6 @@ class AccountGeneralLedgerWizard(models.TransientModel):
     def get_cash_info(self, aml):
         # Query to get the payments in aml
         items = []
-        aml_obj = self.env['account.move.line']
         inv_obj = self.env['account.invoice']
         self._cr.execute("""
             SELECT account_invoice_id
@@ -101,7 +98,6 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         res = {}
         wb = Workbook()
         ws1 = wb.active
-        ft = Font(color=colors.RED)
         ws1.append({
             'A': _('Account'),
             'B': _('Journal Entry'),
@@ -129,7 +125,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                         'G': item[3] if aml.credit > 0.0 else 0.0,
                     })
                 if aml.account_id.id not in res.keys():
-                        res[aml.account_id.id] = []
+                    res[aml.account_id.id] = []
                 res[aml.account_id.id].append({
                     'B': aml.move_id.name,
                     'C': aml.ref,
@@ -152,7 +148,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         for key, value in res.items():
             account_id = account_obj.browse(key)
             balance = 0.0
-            cell = ws1.append({
+            ws1.append({
                 'A': account_id.code + ' ' + account_id.name
             })
             for item in value:
@@ -169,10 +165,10 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 ws1[row[0].coordinate].font = Font(
                     bold=True, color='7CB7EA')
             if not row[1].value and row[7].value:
-                range = row[5].coordinate + ':' + row[7].coordinate
-                for i, RowCellObjet in enumerate(ws1[range]):
-                    for n, cellObjet in enumerate(RowCellObjet):
-                        cellObjet.font = Font(bold=True)
+                ws_range = row[5].coordinate + ':' + row[7].coordinate
+                for row_cell in enumerate(ws1[ws_range]):
+                    for cell in enumerate(row_cell[1]):
+                        cell[1].font = Font(bold=True)
         xlsx_file = save_virtual_workbook(wb)
         self.xlsx_file = base64.encodestring(xlsx_file)
         self.xlsx_filename = _('TMS General Ledger.xlsx')
