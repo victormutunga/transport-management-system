@@ -75,12 +75,11 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         invoice_ids = self._cr.fetchall()
         if not invoice_ids:
             return []
-        for line in inv_obj.browse([x[0] for x in invoice_ids]).mapped(
+        lines = inv_obj.browse([x[0] for x in invoice_ids]).mapped(
                 'move_id.line_ids').filtered(
-                lambda r: r.account_id.user_type_id.id in [14, 15, 16, 17]):
-            root_amount = round(abs(line.move_id.line_ids.filtered(
-                lambda x: x.account_id.reconcile).balance), 4)
-            line_rate = round((abs(line.balance) * 100) / root_amount, 4) / 100
+                lambda r: r.account_id.user_type_id.id in [14, 15, 16, 17])
+        for line in lines:
+            line_rate = 1 / len(lines)
             taxes = line.mapped('tax_ids.amount')
             amount_untaxed = abs(aml.balance) * line_rate
             for tax in taxes:
