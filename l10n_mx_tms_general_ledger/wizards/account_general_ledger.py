@@ -58,37 +58,73 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             FROM account_move_line aml
             JOIN account_account aa ON aa.id = aml.account_id
             WHERE aml.date BETWEEN %s AND %s
-                AND aa.user_type_id NOT IN (14, 15, 16, 17)
+                AND aa.user_type_id NOT IN (13, 14, 15, 16, 17)
             ORDER BY aml.account_id""", (self.date_start, self.date_end))
         amls = self._cr.fetchall()
         return amls
 
     @api.model
     def get_cash_info(self, aml):
-        # Query to get the payments in aml
+        am_obj = self.env['account.move']
+        aml_obj = self.env['account.move.line']
         items = []
-        inv_obj = self.env['account.invoice']
-        self._cr.execute("""
-            SELECT account_invoice_id
-            FROM account_invoice_account_move_line_rel
-            WHERE account_move_line_id = %s""", (aml.id,))
-        invoice_ids = self._cr.fetchall()
-        if not invoice_ids:
+        self._cr.execute(
+            """
+            SELECT CASE WHEN pr.debit_move_id = %s THEN
+                pr.credit_move_id ELSE pr.debit_move_id END AS inv_aml,
+                pr.amount
+            FROM account_partial_reconcile pr
+            WHERE pr.credit_move_id = %s OR pr.debit_move_id = %s""",
+            (aml.id, aml.id, aml.id,))
+        partials = self._cr.dictfetchall()
+        if not partials:
             return []
-        lines = inv_obj.browse([x[0] for x in invoice_ids]).mapped(
-                'move_id.line_ids').filtered(
-                lambda r: r.account_id.user_type_id.id in [14, 15, 16, 17])
-        for line in lines:
-            line_rate = 1 / len(lines)
-            taxes = line.mapped('tax_ids.amount')
-            amount_untaxed = abs(aml.balance) * line_rate
-            for tax in taxes:
-                tax_rate = tax / 100
-                amount_untaxed -= (
-                    abs(amount_untaxed) / (tax_rate + 1.0) * tax_rate)
-            items.append(
-                [line.account_id.code, line.move_id.name,
-                 line.ref, round(amount_untaxed, 4)])
+        for partial in partials:
+            move = am_obj.search([('line_ids', 'in', partial['inv_aml'])])
+            # Exchange currency
+            if move.journal_id.id == 4:
+                line = aml_obj.browse(partial['inv_aml'])
+                items.append(
+                    [line.account_id.code, line.move_id.name,
+                     line.ref, round(abs(line.balance), 4)])
+                continue
+            lines = move.line_ids.filtered(
+                lambda r: r.account_id.user_type_id.id in
+                [13, 14, 15, 16, 17] and not r.tax_line_id)
+            for line in lines:
+                taxes = line.mapped('tax_ids.amount')
+                tax_lines = move.line_ids.filtered(
+                    lambda r: r.tax_ids)
+                base_total = sum([abs(x.balance) for x in tax_lines])
+                # Invoice wo taxes
+                if not base_total:
+                    line_rate = ((abs(
+                        line.balance) * 100) / partial['amount']) / 100
+                    amount_untaxed = partial['amount'] * line_rate
+                    items.append(
+                        [line.account_id.code, line.move_id.name,
+                         line.ref, round(amount_untaxed, 4)])
+                    continue
+                # Invoice with taxes
+                line_rate = ((abs(line.balance) * 100) / base_total) / 100
+                amount_untaxed = partial['amount']
+                for tax in taxes:
+                    tax_rate = tax / 100
+                    amount_untaxed -= round(
+                        abs(amount_untaxed) / (tax_rate + 1.0) * tax_rate, 2)
+                    if tax == 15.6622:
+                        amount_untaxed = partial['amount'] * line_rate
+                        tax_id = self.env['account.tax'].search(
+                            [('amount', '=', 15.6622)])
+                        tax_line = move.line_ids.filtered(
+                            lambda r: r.tax_line_id == tax_id)
+                        tax_rate = (
+                            (abs(tax_line.balance)) * 100 / base_total / 100)
+                        amount_untaxed -= (
+                            abs(amount_untaxed) / (tax_rate + 1.0) * tax_rate)
+                items.append(
+                    [line.account_id.code, line.move_id.name,
+                     line.ref, round(amount_untaxed, 4)])
         return items
 
     @api.multi
