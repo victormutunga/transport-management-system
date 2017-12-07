@@ -124,7 +124,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                             abs(amount_untaxed) / (tax_rate + 1.0) * tax_rate)
                 items.append(
                     [line.account_id.code, line.move_id.name,
-                     line.ref, round(amount_untaxed, 4)])
+                     line.ref, round((amount_untaxed * line_rate), 4)])
         return items
 
     @api.multi

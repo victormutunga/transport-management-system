@@ -56,7 +56,7 @@ msgstr "Creado el"
 #: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:112
 #, python-format
 msgid "Credit"
-msgstr "Credit"
+msgstr "Haber"
 
 #. module: l10n_mx_tms_general_ledger
 #: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:109
