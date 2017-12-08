@@ -108,10 +108,21 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 # Invoice with taxes
                 line_rate = ((abs(line.balance) * 100) / base_total) / 100
                 amount_untaxed = partial['amount']
-                for tax in taxes:
-                    tax_rate = tax / 100
+                amount_taxed = partial['amount']
+                if -4.0 in taxes:
+                    tax_rate = sum(taxes) / 100
                     amount_untaxed -= round(
-                        abs(amount_untaxed) / (tax_rate + 1.0) * tax_rate, 2)
+                        (abs(amount_taxed) / (abs(tax_rate) + 1.0)) * tax_rate,
+                        2)
+                    items.append(
+                        [line.account_id.code, line.move_id.name,
+                         line.ref, round((amount_untaxed * line_rate), 4)])
+                    continue
+                for tax in taxes:
+                    tax_rate = abs(tax) / 100
+                    amount_untaxed -= round(
+                        abs(amount_taxed) / (abs(tax_rate) + 1.0) *
+                        tax_rate, 2)
                     if tax == 15.6622:
                         amount_untaxed = partial['amount'] * line_rate
                         tax_id = self.env['account.tax'].search(
@@ -121,7 +132,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                         tax_rate = (
                             (abs(tax_line.balance)) * 100 / base_total / 100)
                         amount_untaxed -= (
-                            abs(amount_untaxed) / (tax_rate + 1.0) * tax_rate)
+                            abs(amount_taxed) / (tax_rate + 1.0) * tax_rate)
                 items.append(
                     [line.account_id.code, line.move_id.name,
                      line.ref, round((amount_untaxed * line_rate), 4)])
