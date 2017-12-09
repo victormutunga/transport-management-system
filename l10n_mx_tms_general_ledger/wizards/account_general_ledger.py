@@ -72,7 +72,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             """
             SELECT CASE WHEN pr.debit_move_id = %s THEN
                 pr.credit_move_id ELSE pr.debit_move_id END AS inv_aml,
-                pr.amount
+                pr.amount, pr.amount_currency
             FROM account_partial_reconcile pr
             WHERE pr.credit_move_id = %s OR pr.debit_move_id = %s""",
             (aml.id, aml.id, aml.id,))
@@ -88,15 +88,28 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     [line.account_id.code, line.move_id.name,
                      line.ref, round(abs(line.balance), 4)])
                 continue
+            # Normal case
             inv_aml = aml_obj.browse(partial['inv_aml'])
             inv_balance = abs(inv_aml.balance)
+            partial_amount = partial['amount']
+            # Case USD
+            if partial['amount_currency'] and inv_aml.amount_currency:
+                inv_balance = abs(inv_aml.amount_currency)
+                partial_amount = partial['amount_currency']
             paid_rate = round(
-                (partial['amount'] * 100) / inv_balance, 4) / 100
+                (partial_amount * 100) / inv_balance, 4) / 100
             lines = move.line_ids.filtered(
                 lambda r: r.account_id.user_type_id.id in
                 [13, 14, 15, 16, 17] and not r.tax_line_id)
             for line in lines:
-                amount_untaxed = round(abs(line.balance) * paid_rate, 4)
+                balance = abs(line.balance)
+                if partial['amount_currency'] and inv_aml.amount_currency:
+                    usd_currency = self.env.ref('base.USD').with_context(
+                        date=aml.date)
+                    mxn_currency = self.env.ref('base.MXN')
+                    balance = usd_currency.compute(
+                        abs(line.amount_currency), mxn_currency)
+                amount_untaxed = round(balance * paid_rate, 4)
                 items.append(
                     [line.account_id.code, line.move_id.name,
                      line.ref, amount_untaxed])
