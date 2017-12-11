@@ -64,10 +64,24 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         return amls
 
     @api.model
+    def get_miscellaneous_cash_info(self, aml):
+        items = []
+        lines = aml.move_id.line_ids.filtered(
+            lambda m: m.user_type_id.id in [13, 14, 15, 16, 17])
+        for line in lines:
+            items.append(
+                [line.account_id.code, line.move_id.name,
+                 line.ref, round(abs(line.balance), 4)])
+        return items
+
+    @api.model
     def get_cash_info(self, aml):
         am_obj = self.env['account.move']
         aml_obj = self.env['account.move.line']
         items = []
+        if aml.journal_id.type == 'general':
+            return self.get_miscellaneous_cash_info(aml)
+
         self._cr.execute(
             """
             SELECT CASE WHEN pr.debit_move_id = %s THEN
@@ -109,6 +123,10 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     mxn_currency = self.env.ref('base.MXN')
                     balance = usd_currency.compute(
                         abs(line.amount_currency), mxn_currency)
+                    if aml.move_id.usd_currency_rate:
+                        balance = (
+                            abs(line.amount_currency) *
+                            aml.move_id.usd_currency_rate)
                 amount_untaxed = round(balance * paid_rate, 4)
                 items.append(
                     [line.account_id.code, line.move_id.name,
@@ -134,7 +152,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         data = self.get_amls_info()
         account_obj = self.env['account.account']
         for aml in self.env['account.move.line'].browse([x[0] for x in data]):
-            if aml.journal_id.type in ['bank', 'cash']:
+            if (aml.journal_id.type in ['bank', 'cash'] or
+                    aml.account_id.user_type_id.id == 3):
                 aml_info = self.get_cash_info(aml)
                 for item in aml_info:
                     if item[0] not in res.keys():

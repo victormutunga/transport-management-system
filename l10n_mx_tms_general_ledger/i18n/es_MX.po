@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-05 19:47+0000\n"
-"PO-Revision-Date: 2017-12-05 19:47+0000\n"
+"POT-Creation-Date: 2017-12-11 22:31+0000\n"
+"PO-Revision-Date: 2017-12-11 22:31+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,10 +16,15 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_mx_tms_general_ledger
-#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:106
+#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:140
 #, python-format
 msgid "Account"
 msgstr "Cuenta"
+
+#. module: l10n_mx_tms_general_ledger
+#: model:ir.model,name:l10n_mx_tms_general_ledger.model_account_move
+msgid "Account Entry"
+msgstr "Entrada contable"
 
 #. module: l10n_mx_tms_general_ledger
 #: model:ir.actions.act_window,name:l10n_mx_tms_general_ledger.action_tms_general_ledger
@@ -27,7 +32,7 @@ msgid "Account TMS General Ledger"
 msgstr "Contabilidad General para Transporte"
 
 #. module: l10n_mx_tms_general_ledger
-#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:113
+#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:147
 #, python-format
 msgid "Balance"
 msgstr "Balance"
@@ -35,7 +40,7 @@ msgstr "Balance"
 #. module: l10n_mx_tms_general_ledger
 #: model:ir.ui.view,arch_db:l10n_mx_tms_general_ledger.view_general_ledger_form
 msgid "Cancel"
-msgstr "Cancelar"
+msgstr "Cancelado"
 
 #. module: l10n_mx_tms_general_ledger
 #: model:ir.ui.view,arch_db:l10n_mx_tms_general_ledger.view_general_ledger_form
@@ -53,13 +58,13 @@ msgid "Created on"
 msgstr "Creado el"
 
 #. module: l10n_mx_tms_general_ledger
-#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:112
+#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:146
 #, python-format
 msgid "Credit"
 msgstr "Haber"
 
 #. module: l10n_mx_tms_general_ledger
-#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:109
+#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:143
 #, python-format
 msgid "Date"
 msgstr "Fecha"
@@ -67,15 +72,15 @@ msgstr "Fecha"
 #. module: l10n_mx_tms_general_ledger
 #: model:ir.model.fields,field_description:l10n_mx_tms_general_ledger.field_account_general_ledger_wizard_date_end
 msgid "Date end"
-msgstr "Fecha Final"
+msgstr "Fecha de Finalización"
 
 #. module: l10n_mx_tms_general_ledger
 #: model:ir.model.fields,field_description:l10n_mx_tms_general_ledger.field_account_general_ledger_wizard_date_start
 msgid "Date start"
-msgstr "Fecha de inicio"
+msgstr "Fecha de Inicio"
 
 #. module: l10n_mx_tms_general_ledger
-#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:111
+#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:145
 #, python-format
 msgid "Debit"
 msgstr "Debe"
@@ -83,7 +88,7 @@ msgstr "Debe"
 #. module: l10n_mx_tms_general_ledger
 #: model:ir.model.fields,field_description:l10n_mx_tms_general_ledger.field_account_general_ledger_wizard_display_name
 msgid "Display Name"
-msgstr "Nombre a mostrar"
+msgstr "Nombre desplegado"
 
 #. module: l10n_mx_tms_general_ledger
 #: selection:account.general.ledger.wizard,state:0
@@ -106,7 +111,7 @@ msgid "Journal"
 msgstr "Diario"
 
 #. module: l10n_mx_tms_general_ledger
-#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:107
+#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:141
 #, python-format
 msgid "Journal Entry"
 msgstr "Póliza Contable"
@@ -114,26 +119,26 @@ msgstr "Póliza Contable"
 #. module: l10n_mx_tms_general_ledger
 #: model:ir.model.fields,field_description:l10n_mx_tms_general_ledger.field_account_general_ledger_wizard___last_update
 msgid "Last Modified on"
-msgstr "Última modificación en"
+msgstr "Ultima modificacion realizada"
 
 #. module: l10n_mx_tms_general_ledger
 #: model:ir.model.fields,field_description:l10n_mx_tms_general_ledger.field_account_general_ledger_wizard_write_uid
 msgid "Last Updated by"
-msgstr "Última actualización por"
+msgstr "Ultima actualizacion por"
 
 #. module: l10n_mx_tms_general_ledger
 #: model:ir.model.fields,field_description:l10n_mx_tms_general_ledger.field_account_general_ledger_wizard_write_date
 msgid "Last Updated on"
-msgstr "Última actualización el"
+msgstr "Ultima actualización realizada"
 
 #. module: l10n_mx_tms_general_ledger
-#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:110
+#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:144
 #, python-format
 msgid "Partner"
 msgstr "Socio"
 
 #. module: l10n_mx_tms_general_ledger
-#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:108
+#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:142
 #, python-format
 msgid "Reference"
 msgstr "Referencia"
@@ -149,10 +154,20 @@ msgid "TMS General Ledger"
 msgstr "Contabilidad General TMS"
 
 #. module: l10n_mx_tms_general_ledger
-#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:178
+#: code:addons/l10n_mx_tms_general_ledger/wizards/account_general_ledger.py:214
 #, python-format
 msgid "TMS General Ledger.xlsx"
 msgstr "Contabilidad General TMS.xlsx"
+
+#. module: l10n_mx_tms_general_ledger
+#: model:ir.model.fields,help:l10n_mx_tms_general_ledger.field_account_move_usd_currency_rate
+msgid "This special field represents the usd currency rate for journal entries that the currency rate is different that the date rate"
+msgstr "Este campo especial representa la tasa de tipo de cambio para pólizas donde esta tasa es diferente a la dada por la fecha."
+
+#. module: l10n_mx_tms_general_ledger
+#: model:ir.model.fields,field_description:l10n_mx_tms_general_ledger.field_account_move_usd_currency_rate
+msgid "Usd currency rate"
+msgstr "Tipo de Cambio"
 
 #. module: l10n_mx_tms_general_ledger
 #: model:ir.model.fields,field_description:l10n_mx_tms_general_ledger.field_account_general_ledger_wizard_xlsx_file

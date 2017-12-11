@@ -15,6 +15,7 @@
     'license': 'AGPL-3',
     'data': [
         'wizards/account_general_ledger_view.xml',
+        'views/account_move_view.xml',
     ],
     'application': False,
     'installable': True,
