@@ -53,6 +53,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
     @api.model
     def get_amls_info(self, report_type):
         self.ensure_one()
+        # We get all the amls in the month range given by the user except
+        # the income statement accounts
         if report_type == 'normal':
             self._cr.execute(
                 """SELECT aml.id
@@ -65,6 +67,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 ORDER BY aml.account_id""",
                 (self.date_start, self.date_end, 'general'))
             amls = self._cr.fetchall()
+        # We get all the amls in the month range given by the user of the
+        # miscellanous journal entries
         else:
             self._cr.execute(
                 """SELECT aml.id
@@ -80,9 +84,11 @@ class AccountGeneralLedgerWizard(models.TransientModel):
 
     @api.model
     def get_cash_info(self, aml):
+        """This method get the cash basis amounts based on the payments"""
         am_obj = self.env['account.move']
         aml_obj = self.env['account.move.line']
         items = []
+        # This method search the aml linked to the invoice
         self._cr.execute(
             """
             SELECT CASE WHEN pr.debit_move_id = %s THEN
@@ -111,8 +117,10 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             if partial['amount_currency'] and inv_aml.amount_currency:
                 inv_balance = abs(inv_aml.amount_currency)
                 partial_amount = partial['amount_currency']
+            # Get the payment rate
             paid_rate = round(
                 (partial_amount * 100) / inv_balance, 4) / 100
+            # Get the income statement amls of the invoice
             lines = move.line_ids.filtered(
                 lambda r: r.account_id.user_type_id.id in
                 [13, 14, 15, 16, 17] and not r.tax_line_id)
@@ -136,13 +144,19 @@ class AccountGeneralLedgerWizard(models.TransientModel):
 
     @api.multi
     def prepare_data(self):
+        """ This method prepare the report data into a dictionary ordered by
+        the account code"""
         res = {}
+        # First get the amls without income statement accounts
         data = self.get_amls_info('normal')
         for aml in self.env['account.move.line'].browse([x[0] for x in data]):
+            # If the aml is of bank or cash is called the method to get the
+            # cash basis info
             if (aml.journal_id.type in ['bank', 'cash'] or
                     aml.account_id.user_type_id.id == 3):
                 aml_info = self.get_cash_info(aml)
                 for item in aml_info:
+                    # Set the results to the main dictionary
                     if item[0] not in res.keys():
                         res[item[0]] = []
                     res[item[0]].append({
@@ -153,8 +167,9 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                         'F': item[3] if aml.debit > 0.0 else 0.0,
                         'G': item[3] if aml.credit > 0.0 else 0.0,
                     })
-                if aml.account_id.code not in res.keys():
-                    res[aml.account_id.code] = []
+            # Set the  aml to the main dictionary
+            if aml.account_id.code not in res.keys():
+                res[aml.account_id.code] = []
                 res[aml.account_id.code].append({
                     'B': aml.move_id.name,
                     'C': aml.ref,
@@ -163,18 +178,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     'F': aml.debit if aml.debit > 0.0 else 0.0,
                     'G': aml.credit if aml.credit > 0.0 else 0.0,
                 })
-            else:
-                if aml.account_id.code not in res.keys():
-                    res[aml.account_id.code] = []
-                res[aml.account_id.code].append({
-                    'B': aml.move_id.name,
-                    'C': aml.ref,
-                    'D': aml.date,
-                    'E': aml.partner_id.name if aml.partner_id else '',
-                    'F': aml.debit if aml.debit > 0.0 else 0.0,
-                    'G': aml.credit if aml.credit > 0.0 else 0.0,
-                })
-        # Miscellanous
+        # Finally get the amls of miscellanous journal entries
         data = self.get_amls_info('miscellanous')
         for aml in self.env['account.move.line'].browse([x[0] for x in data]):
             if aml.account_id.code not in res.keys():
@@ -207,6 +211,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             'H': _('Balance'),
         })
         res, dictio_keys = self.prepare_data()
+        # Loop the sorted dictionary keys and fill the xlsx file
         for key in dictio_keys:
             account_id = account_obj.search([('code', '=', key)])
             balance = 0.0
@@ -222,6 +227,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 'G': sum([x['G'] for x in res[key]]),
                 'H': balance,
             })
+        # Apply styles to the xlsx file
         for row in ws1.iter_rows():
             if row[0].value and not row[1].value:
                 ws1[row[0].coordinate].font = Font(
