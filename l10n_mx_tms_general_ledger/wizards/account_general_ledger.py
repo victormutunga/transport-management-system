@@ -179,14 +179,14 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         for aml in self.env['account.move.line'].browse([x[0] for x in data]):
             if aml.account_id.code not in res.keys():
                 res[aml.account_id.code] = []
-                res[aml.account_id.code].append({
-                    'B': aml.move_id.name,
-                    'C': aml.ref,
-                    'D': aml.date,
-                    'E': aml.partner_id.name if aml.partner_id else '',
-                    'F': aml.debit if aml.debit > 0.0 else 0.0,
-                    'G': aml.credit if aml.credit > 0.0 else 0.0,
-                })
+            res[aml.account_id.code].append({
+                'B': aml.move_id.name,
+                'C': aml.ref,
+                'D': aml.date,
+                'E': aml.partner_id.name if aml.partner_id else '',
+                'F': aml.debit if aml.debit > 0.0 else 0.0,
+                'G': aml.credit if aml.credit > 0.0 else 0.0,
+            })
         dictio_keys = sorted(res.keys())
         return res, dictio_keys
 
