@@ -93,7 +93,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             """
             SELECT CASE WHEN pr.debit_move_id = %s THEN
                 pr.credit_move_id ELSE pr.debit_move_id END AS inv_aml,
-                pr.amount, pr.amount_currency
+                pr.amount, pr.amount_currency, currency_id
             FROM account_partial_reconcile pr
             WHERE pr.credit_move_id = %s OR pr.debit_move_id = %s""",
             (aml.id, aml.id, aml.id,))
@@ -101,6 +101,11 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         if not partials:
             return []
         for partial in partials:
+            # If the partial is in currency id but don't has amount currency is
+            # not necessary the loop to avoid wrong moves in the report
+            if (partial['currency_id'] and not partial['amount_currency'] and
+                    partial['amount']):
+                continue
             move = am_obj.search([('line_ids', 'in', partial['inv_aml'])])
             # Exchange currency
             if move.journal_id.id == 4:
@@ -147,6 +152,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         """ This method prepare the report data into a dictionary ordered by
         the account code"""
         res = {}
+        company_tax_journal = (
+            self.env.user.company_id.tax_cash_basis_journal_id)
         # First get the amls without income statement accounts
         data = self.get_amls_info('normal')
         for aml in self.env['account.move.line'].browse([x[0] for x in data]):
@@ -167,20 +174,25 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                         'F': item[3] if aml.debit > 0.0 else 0.0,
                         'G': item[3] if aml.credit > 0.0 else 0.0,
                     })
-            # Set the  aml to the main dictionary
+            # Set the aml to the main dictionary
             if aml.account_id.code not in res.keys():
                 res[aml.account_id.code] = []
-                res[aml.account_id.code].append({
-                    'B': aml.move_id.name,
-                    'C': aml.ref,
-                    'D': aml.date,
-                    'E': aml.partner_id.name if aml.partner_id else '',
-                    'F': aml.debit if aml.debit > 0.0 else 0.0,
-                    'G': aml.credit if aml.credit > 0.0 else 0.0,
-                })
+            res[aml.account_id.code].append({
+                'B': aml.move_id.name,
+                'C': aml.ref,
+                'D': aml.date,
+                'E': aml.partner_id.name if aml.partner_id else '',
+                'F': aml.debit if aml.debit > 0.0 else 0.0,
+                'G': aml.credit if aml.credit > 0.0 else 0.0,
+            })
         # Finally get the amls of miscellanous journal entries
         data = self.get_amls_info('miscellanous')
         for aml in self.env['account.move.line'].browse([x[0] for x in data]):
+            # If the account is an income statement account and his journal is
+            # the company tax cash basis journal the aml is not necessary
+            if (aml.account_id.user_type_id.id in [13, 14, 15, 16, 17] and
+                    aml.journal_id == company_tax_journal):
+                continue
             if aml.account_id.code not in res.keys():
                 res[aml.account_id.code] = []
             res[aml.account_id.code].append({
