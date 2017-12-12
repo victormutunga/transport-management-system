@@ -51,37 +51,38 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         return month_end
 
     @api.model
-    def get_amls_info(self):
+    def get_amls_info(self, report_type):
         self.ensure_one()
-        self._cr.execute("""
-            SELECT aml.id
-            FROM account_move_line aml
-            JOIN account_account aa ON aa.id = aml.account_id
-            WHERE aml.date BETWEEN %s AND %s
-                AND aa.user_type_id NOT IN (13, 14, 15, 16, 17)
-            ORDER BY aml.account_id""", (self.date_start, self.date_end))
-        amls = self._cr.fetchall()
+        if report_type == 'normal':
+            self._cr.execute(
+                """SELECT aml.id
+                FROM account_move_line aml
+                JOIN account_account aa ON aa.id = aml.account_id
+                JOIN account_journal aj ON aj.id = aml.journal_id
+                WHERE aml.date BETWEEN %s AND %s
+                    AND aa.user_type_id NOT IN (13, 14, 15, 16, 17)
+                    AND aj.type != %s
+                ORDER BY aml.account_id""",
+                (self.date_start, self.date_end, 'general'))
+            amls = self._cr.fetchall()
+        else:
+            self._cr.execute(
+                """SELECT aml.id
+                FROM account_move_line aml
+                JOIN account_account aa ON aa.id = aml.account_id
+                JOIN account_journal aj ON aj.id = aml.journal_id
+                WHERE aml.date BETWEEN %s AND %s
+                    AND aj.type = %s
+                ORDER BY aml.account_id""",
+                (self.date_start, self.date_end, 'general'))
+            amls = self._cr.fetchall()
         return amls
-
-    @api.model
-    def get_miscellaneous_cash_info(self, aml):
-        items = []
-        lines = aml.move_id.line_ids.filtered(
-            lambda m: m.user_type_id.id in [13, 14, 15, 16, 17])
-        for line in lines:
-            items.append(
-                [line.account_id.code, line.move_id.name,
-                 line.ref, round(abs(line.balance), 4)])
-        return items
 
     @api.model
     def get_cash_info(self, aml):
         am_obj = self.env['account.move']
         aml_obj = self.env['account.move.line']
         items = []
-        if aml.journal_id.type == 'general':
-            return self.get_miscellaneous_cash_info(aml)
-
         self._cr.execute(
             """
             SELECT CASE WHEN pr.debit_move_id = %s THEN
@@ -134,23 +135,9 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         return items
 
     @api.multi
-    def print_report(self):
-        self.ensure_one()
+    def prepare_data(self):
         res = {}
-        wb = Workbook()
-        ws1 = wb.active
-        ws1.append({
-            'A': _('Account'),
-            'B': _('Journal Entry'),
-            'C': _('Reference'),
-            'D': _('Date'),
-            'E': _('Partner'),
-            'F': _('Debit'),
-            'G': _('Credit'),
-            'H': _('Balance'),
-        })
-        data = self.get_amls_info()
-        account_obj = self.env['account.account']
+        data = self.get_amls_info('normal')
         for aml in self.env['account.move.line'].browse([x[0] for x in data]):
             if (aml.journal_id.type in ['bank', 'cash'] or
                     aml.account_id.user_type_id.id == 3):
@@ -187,7 +174,39 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     'F': aml.debit if aml.debit > 0.0 else 0.0,
                     'G': aml.credit if aml.credit > 0.0 else 0.0,
                 })
+        # Miscellanous
+        data = self.get_amls_info('miscellanous')
+        for aml in self.env['account.move.line'].browse([x[0] for x in data]):
+            if aml.account_id.code not in res.keys():
+                res[aml.account_id.code] = []
+                res[aml.account_id.code].append({
+                    'B': aml.move_id.name,
+                    'C': aml.ref,
+                    'D': aml.date,
+                    'E': aml.partner_id.name if aml.partner_id else '',
+                    'F': aml.debit if aml.debit > 0.0 else 0.0,
+                    'G': aml.credit if aml.credit > 0.0 else 0.0,
+                })
         dictio_keys = sorted(res.keys())
+        return res, dictio_keys
+
+    @api.multi
+    def print_report(self):
+        self.ensure_one()
+        account_obj = self.env['account.account']
+        wb = Workbook()
+        ws1 = wb.active
+        ws1.append({
+            'A': _('Account'),
+            'B': _('Journal Entry'),
+            'C': _('Reference'),
+            'D': _('Date'),
+            'E': _('Partner'),
+            'F': _('Debit'),
+            'G': _('Credit'),
+            'H': _('Balance'),
+        })
+        res, dictio_keys = self.prepare_data()
         for key in dictio_keys:
             account_id = account_obj.search([('code', '=', key)])
             balance = 0.0
