@@ -223,7 +223,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             # information
             if (aml.account_id.reconcile and
                     aml.journal_id.id in expense_journals and
-                    aml.name != aml.move_id.name):
+                    aml.name != aml.move_id.name and not aml.invoice_id):
                 aml_info = self.get_tms_expense_info(aml)
                 for item in aml_info:
                     # Set the results to the main dictionary
