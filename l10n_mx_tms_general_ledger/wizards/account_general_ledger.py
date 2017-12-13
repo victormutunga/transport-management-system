@@ -88,6 +88,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         am_obj = self.env['account.move']
         aml_obj = self.env['account.move.line']
         items = []
+        company_currency = aml.company_id.currency_id.id
         # This method search the aml linked to the invoice
         self._cr.execute(
             """
@@ -103,8 +104,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         for partial in partials:
             # If the partial is in currency id but don't has amount currency is
             # not necessary the loop to avoid wrong moves in the report
-            if (partial['currency_id'] and not partial['amount_currency'] and
-                    partial['amount']):
+            if (partial['currency_id'] != company_currency and not
+                    partial['amount_currency'] and partial['amount']):
                 continue
             move = am_obj.search([('line_ids', 'in', partial['inv_aml'])])
             # Exchange currency
@@ -147,6 +148,29 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                      line.ref, amount_untaxed])
         return items
 
+    @api.model
+    def get_tms_expense_info(self, aml):
+        items = []
+        am_obj = self.env['account.move']
+        expense_payment = self.env['tms.expense'].search(
+            [('move_id', '=', aml.move_id.id)]).mapped('payment_move_id')
+        self._cr.execute(
+            """
+            SELECT CASE WHEN pr.debit_move_id = %s THEN
+                pr.credit_move_id ELSE pr.debit_move_id END AS inv_aml,
+                pr.amount, pr.amount_currency, currency_id
+            FROM account_partial_reconcile pr
+            WHERE pr.credit_move_id = %s OR pr.debit_move_id = %s""",
+            (aml.id, aml.id, aml.id,))
+        partial = self._cr.dictfetchone()
+        inv_lines = am_obj.search(
+            [('line_ids', 'in', partial['inv_aml'])]).mapped('line_ids')
+        for line in inv_lines:
+            items.append(
+                [line.account_id.code, line.move_id.name,
+                 line.ref, round(abs(line.balance), 4), expense_payment.date])
+        return items
+
     @api.multi
     def prepare_data(self):
         """ This method prepare the report data into a dictionary ordered by
@@ -187,12 +211,32 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             })
         # Finally get the amls of miscellanous journal entries
         data = self.get_amls_info('miscellanous')
+        expense_journals = self.env['operating.unit'].search([]).mapped(
+            'expense_journal_id.id')
         for aml in self.env['account.move.line'].browse([x[0] for x in data]):
             # If the account is an income statement account and his journal is
             # the company tax cash basis journal the aml is not necessary
             if (aml.account_id.user_type_id.id in [13, 14, 15, 16, 17] and
                     aml.journal_id == company_tax_journal):
                 continue
+            # if the aml is of an expense is called a method to get the invoice
+            # information
+            if (aml.account_id.reconcile and
+                    aml.journal_id.id in expense_journals and
+                    aml.name != aml.move_id.name):
+                aml_info = self.get_tms_expense_info(aml)
+                for item in aml_info:
+                    # Set the results to the main dictionary
+                    if item[0] not in res.keys():
+                        res[item[0]] = []
+                    res[item[0]].append({
+                        'B': item[1],
+                        'C': item[2],
+                        'D': item[4],
+                        'E': aml.partner_id.name if aml.partner_id else '',
+                        'F': item[3] if aml.debit > 0.0 else 0.0,
+                        'G': item[3] if aml.credit > 0.0 else 0.0,
+                    })
             if aml.account_id.code not in res.keys():
                 res[aml.account_id.code] = []
             res[aml.account_id.code].append({
