@@ -287,9 +287,9 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 item['I'] = balance
                 ws1.append(item)
             ws1.append({
-                'F': sum([x['G'] for x in res[key]]),
-                'G': sum([x['H'] for x in res[key]]),
-                'H': balance,
+                'G': sum([x['G'] for x in res[key]]),
+                'H': sum([x['H'] for x in res[key]]),
+                'I': balance,
             })
         # Apply styles to the xlsx file
         for row in ws1.iter_rows():
