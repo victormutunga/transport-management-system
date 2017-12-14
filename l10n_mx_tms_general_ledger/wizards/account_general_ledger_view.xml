@@ -28,7 +28,7 @@
                     </group>
                 </sheet>
                 <footer>
-                    <button class="oe_highlight" icon="gtk-print" name="print_report" string="Confirm" type="object" states="get"/>
+                    <button class="oe_highlight" name="print_report" string="Confirm" type="object" states="get"/>
                     <button special="cancel" string="Cancel"/>
                 </footer>
             </form>

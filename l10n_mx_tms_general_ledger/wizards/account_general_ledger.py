@@ -70,6 +70,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         # We get all the amls in the month range given by the user of the
         # miscellanous journal entries
         else:
+            expense_journals = self.env['operating.unit'].search([]).mapped(
+                'expense_journal_id.id')
             self._cr.execute(
                 """SELECT aml.id
                 FROM account_move_line aml
@@ -77,10 +79,48 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 JOIN account_journal aj ON aj.id = aml.journal_id
                 WHERE aml.date BETWEEN %s AND %s
                     AND aj.type = %s
+                    AND aj.id NOT IN %s
                 ORDER BY aml.account_id""",
-                (self.date_start, self.date_end, 'general'))
+                (self.date_start, self.date_end,
+                 'general', tuple(expense_journals,),))
             amls = self._cr.fetchall()
         return amls
+
+    @api.model
+    def get_tms_expense_info(self, aml, expenses):
+        """Method to get the tms expense info"""
+        items = []
+        am_obj = self.env['account.move']
+        lines = expenses.mapped('move_id').mapped('line_ids')
+        expense_names = expenses.mapped('name')
+        for line in lines:
+            # if the aml is not reconcile or is the root aml itpass directly
+            if not line.account_id.reconcile or line.name in expense_names:
+                items.append(
+                    [line.account_id.code, line.move_id.name,
+                     line.name, line.ref, round(abs(line.balance), 4)])
+                continue
+            self._cr.execute(
+                """
+                SELECT CASE WHEN pr.debit_move_id = %s THEN
+                    pr.credit_move_id ELSE pr.debit_move_id END AS inv_aml,
+                    pr.amount, pr.amount_currency, currency_id
+                FROM account_partial_reconcile pr
+                WHERE pr.credit_move_id = %s OR pr.debit_move_id = %s""",
+                (line.id, line.id, line.id,))
+            partial = self._cr.dictfetchone()
+            if not partial:
+                items.append(
+                    [line.account_id.code, line.move_id.name,
+                     line.name, line.ref, round(abs(line.balance), 4)])
+                continue
+            inv_lines = am_obj.search(
+                [('line_ids', 'in', partial['inv_aml'])]).mapped('line_ids')
+            for inv_line in inv_lines:
+                items.append(
+                    [inv_line.account_id.code, inv_line.move_id.name,
+                     line.name, inv_line.ref, round(abs(inv_line.balance), 4)])
+        return items
 
     @api.model
     def get_cash_info(self, aml):
@@ -99,6 +139,13 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             WHERE pr.credit_move_id = %s OR pr.debit_move_id = %s""",
             (aml.id, aml.id, aml.id,))
         partials = self._cr.dictfetchall()
+        if not partials and aml.account_id.reconcile:
+            expense = self.env['tms.expense'].search([
+                ('payment_move_id', '=', aml.move_id.id)])
+            # if the aml is of an expense is called a method to get the invoice
+            # information
+            if expense:
+                return self.get_tms_expense_info(aml, expense)
         if not partials:
             return []
         for partial in partials:
@@ -113,7 +160,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 line = aml_obj.browse(partial['inv_aml'])
                 items.append(
                     [line.account_id.code, line.move_id.name,
-                     line.ref, round(abs(line.balance), 4)])
+                     line.name, line.ref, round(abs(line.balance), 4)])
                 continue
             # Normal case
             inv_aml = aml_obj.browse(partial['inv_aml'])
@@ -145,30 +192,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 amount_untaxed = round(balance * paid_rate, 4)
                 items.append(
                     [line.account_id.code, line.move_id.name,
-                     line.ref, amount_untaxed])
-        return items
-
-    @api.model
-    def get_tms_expense_info(self, aml):
-        items = []
-        am_obj = self.env['account.move']
-        expense_payment = self.env['tms.expense'].search(
-            [('move_id', '=', aml.move_id.id)]).mapped('payment_move_id')
-        self._cr.execute(
-            """
-            SELECT CASE WHEN pr.debit_move_id = %s THEN
-                pr.credit_move_id ELSE pr.debit_move_id END AS inv_aml,
-                pr.amount, pr.amount_currency, currency_id
-            FROM account_partial_reconcile pr
-            WHERE pr.credit_move_id = %s OR pr.debit_move_id = %s""",
-            (aml.id, aml.id, aml.id,))
-        partial = self._cr.dictfetchone()
-        inv_lines = am_obj.search(
-            [('line_ids', 'in', partial['inv_aml'])]).mapped('line_ids')
-        for line in inv_lines:
-            items.append(
-                [line.account_id.code, line.move_id.name,
-                 line.ref, round(abs(line.balance), 4), expense_payment.date])
+                     line.name, line.ref, amount_untaxed])
         return items
 
     @api.multi
@@ -193,59 +217,42 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     res[item[0]].append({
                         'B': item[1],
                         'C': item[2],
-                        'D': aml.date,
-                        'E': aml.partner_id.name if aml.partner_id else '',
-                        'F': item[3] if aml.debit > 0.0 else 0.0,
-                        'G': item[3] if aml.credit > 0.0 else 0.0,
+                        'D': item[3],
+                        'E': aml.date,
+                        'F': aml.partner_id.name if aml.partner_id else '',
+                        'G': item[4] if aml.debit > 0.0 else 0.0,
+                        'H': item[4] if aml.credit > 0.0 else 0.0,
                     })
             # Set the aml to the main dictionary
             if aml.account_id.code not in res.keys():
                 res[aml.account_id.code] = []
             res[aml.account_id.code].append({
                 'B': aml.move_id.name,
-                'C': aml.ref,
-                'D': aml.date,
-                'E': aml.partner_id.name if aml.partner_id else '',
-                'F': aml.debit if aml.debit > 0.0 else 0.0,
-                'G': aml.credit if aml.credit > 0.0 else 0.0,
+                'C': aml.name,
+                'D': aml.ref,
+                'E': aml.date,
+                'F': aml.partner_id.name if aml.partner_id else '',
+                'G': aml.debit if aml.debit > 0.0 else 0.0,
+                'H': aml.credit if aml.credit > 0.0 else 0.0,
             })
         # Finally get the amls of miscellanous journal entries
         data = self.get_amls_info('miscellanous')
-        expense_journals = self.env['operating.unit'].search([]).mapped(
-            'expense_journal_id.id')
         for aml in self.env['account.move.line'].browse([x[0] for x in data]):
             # If the account is an income statement account and his journal is
             # the company tax cash basis journal the aml is not necessary
             if (aml.account_id.user_type_id.id in [13, 14, 15, 16, 17] and
                     aml.journal_id == company_tax_journal):
                 continue
-            # if the aml is of an expense is called a method to get the invoice
-            # information
-            if (aml.account_id.reconcile and
-                    aml.journal_id.id in expense_journals and
-                    aml.name != aml.move_id.name and not aml.invoice_id):
-                aml_info = self.get_tms_expense_info(aml)
-                for item in aml_info:
-                    # Set the results to the main dictionary
-                    if item[0] not in res.keys():
-                        res[item[0]] = []
-                    res[item[0]].append({
-                        'B': item[1],
-                        'C': item[2],
-                        'D': item[4],
-                        'E': aml.partner_id.name if aml.partner_id else '',
-                        'F': item[3] if aml.debit > 0.0 else 0.0,
-                        'G': item[3] if aml.credit > 0.0 else 0.0,
-                    })
             if aml.account_id.code not in res.keys():
                 res[aml.account_id.code] = []
             res[aml.account_id.code].append({
                 'B': aml.move_id.name,
-                'C': aml.ref,
-                'D': aml.date,
-                'E': aml.partner_id.name if aml.partner_id else '',
-                'F': aml.debit if aml.debit > 0.0 else 0.0,
-                'G': aml.credit if aml.credit > 0.0 else 0.0,
+                'C': aml.name,
+                'D': aml.ref,
+                'E': aml.date,
+                'F': aml.partner_id.name if aml.partner_id else '',
+                'G': aml.debit if aml.debit > 0.0 else 0.0,
+                'H': aml.credit if aml.credit > 0.0 else 0.0,
             })
         dictio_keys = sorted(res.keys())
         return res, dictio_keys
@@ -259,12 +266,13 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         ws1.append({
             'A': _('Account'),
             'B': _('Journal Entry'),
-            'C': _('Reference'),
-            'D': _('Date'),
-            'E': _('Partner'),
-            'F': _('Debit'),
-            'G': _('Credit'),
-            'H': _('Balance'),
+            'C': _('Name'),
+            'D': _('Reference'),
+            'E': _('Date'),
+            'F': _('Partner'),
+            'G': _('Debit'),
+            'H': _('Credit'),
+            'I': _('Balance'),
         })
         res, dictio_keys = self.prepare_data()
         # Loop the sorted dictionary keys and fill the xlsx file
@@ -275,12 +283,12 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 'A': account_id.code + ' ' + account_id.name
             })
             for item in res[key]:
-                balance += (item['F'] - item['G'])
-                item['H'] = balance
+                balance += (item['G'] - item['H'])
+                item['I'] = balance
                 ws1.append(item)
             ws1.append({
-                'F': sum([x['F'] for x in res[key]]),
-                'G': sum([x['G'] for x in res[key]]),
+                'F': sum([x['G'] for x in res[key]]),
+                'G': sum([x['H'] for x in res[key]]),
                 'H': balance,
             })
         # Apply styles to the xlsx file
@@ -289,7 +297,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 ws1[row[0].coordinate].font = Font(
                     bold=True, color='7CB7EA')
             if not row[1].value and row[7].value:
-                ws_range = row[5].coordinate + ':' + row[7].coordinate
+                ws_range = row[6].coordinate + ':' + row[8].coordinate
                 for row_cell in enumerate(ws1[ws_range]):
                     for cell in enumerate(row_cell[1]):
                         cell[1].font = Font(bold=True)
