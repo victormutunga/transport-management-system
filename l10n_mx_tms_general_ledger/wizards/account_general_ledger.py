@@ -87,7 +87,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         return amls
 
     @api.model
-    def get_tms_expense_info(self, aml, expense):
+    def get_tms_expense_info(self, expense):
         """Method to get the tms expense info"""
         items = []
         am_obj = self.env['account.move']
@@ -144,7 +144,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         # if the aml is of an expense is called a method to get the invoice
         # information
         if expense:
-            return self.get_tms_expense_info(aml, expense)
+            return self.get_tms_expense_info(expense)
         if not partials:
             return []
         for partial in partials:
@@ -199,11 +199,13 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         """ This method prepare the report data into a dictionary ordered by
         the account code"""
         res = {}
+        aml_obj = self.env['account.move.line']
+        expense_obj = self.env['tms.expense']
         company_tax_journal = (
             self.env.user.company_id.tax_cash_basis_journal_id)
         # First get the amls without income statement accounts
         data = self.get_amls_info('normal')
-        for aml in self.env['account.move.line'].browse([x[0] for x in data]):
+        for aml in aml_obj.browse([x[0] for x in data]):
             # If the aml is of bank or cash is called the method to get the
             # cash basis info
             if (aml.journal_id.type in ['bank', 'cash'] or
@@ -236,7 +238,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             })
         # Finally get the amls of miscellanous journal entries
         data = self.get_amls_info('miscellanous')
-        for aml in self.env['account.move.line'].browse([x[0] for x in data]):
+        for aml in aml_obj.browse([x[0] for x in data]):
             # If the account is an income statement account and his journal is
             # the company tax cash basis journal the aml is not necessary
             if (aml.account_id.user_type_id.id in [13, 14, 15, 16, 17] and
@@ -253,6 +255,26 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 'G': aml.debit if aml.debit > 0.0 else 0.0,
                 'H': aml.credit if aml.credit > 0.0 else 0.0,
             })
+        # We get the expense info of the negative expenses
+        data = expense_obj.search([
+            ('amount_balance', '<', 0.0), ('state', '=', 'confirmed'),
+            ('move_id.date', '>=', self.date_start),
+            ('move_id.date', '<=', self.date_end)])
+        for expense in data:
+            aml_info = self.get_tms_expense_info(expense)
+            for item in aml_info:
+                # Set the results to the main dictionary
+                if item[0] not in res.keys():
+                    res[item[0]] = []
+                res[item[0]].append({
+                    'B': item[1],
+                    'C': item[2],
+                    'D': item[3],
+                    'E': aml.date,
+                    'F': aml.partner_id.name if aml.partner_id else '',
+                    'G': item[4] if aml.debit > 0.0 else 0.0,
+                    'H': item[4] if aml.credit > 0.0 else 0.0,
+                })
         dictio_keys = sorted(res.keys())
         return res, dictio_keys
 
