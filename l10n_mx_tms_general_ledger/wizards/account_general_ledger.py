@@ -87,15 +87,14 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         return amls
 
     @api.model
-    def get_tms_expense_info(self, aml, expenses):
+    def get_tms_expense_info(self, aml, expense):
         """Method to get the tms expense info"""
         items = []
         am_obj = self.env['account.move']
-        lines = expenses.mapped('move_id').mapped('line_ids')
-        expense_names = expenses.mapped('name')
+        lines = expense.move_id.line_ids
         for line in lines:
             # if the aml is not reconcile or is the root aml itpass directly
-            if not line.account_id.reconcile or line.name in expense_names:
+            if not line.account_id.reconcile or line.name == expense.name:
                 items.append(
                     [line.account_id.code, line.move_id.name,
                      line.name, line.ref, round(abs(line.balance), 4)])
@@ -141,7 +140,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         partials = self._cr.dictfetchall()
         if not partials and aml.account_id.reconcile:
             expense = self.env['tms.expense'].search([
-                ('payment_move_id', '=', aml.move_id.id)])
+                ('payment_move_id', '=', aml.move_id.id),
+                ('name', '=', aml.name)])
             # if the aml is of an expense is called a method to get the invoice
             # information
             if expense:
