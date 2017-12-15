@@ -138,14 +138,13 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             WHERE pr.credit_move_id = %s OR pr.debit_move_id = %s""",
             (aml.id, aml.id, aml.id,))
         partials = self._cr.dictfetchall()
-        if not partials and aml.account_id.reconcile:
-            expense = self.env['tms.expense'].search([
-                ('payment_move_id', '=', aml.move_id.id),
-                ('name', '=', aml.name)])
-            # if the aml is of an expense is called a method to get the invoice
-            # information
-            if expense:
-                return self.get_tms_expense_info(aml, expense)
+        expense = self.env['tms.expense'].search([
+            ('payment_move_id', '=', aml.move_id.id),
+            ('name', '=', aml.name)])
+        # if the aml is of an expense is called a method to get the invoice
+        # information
+        if expense:
+            return self.get_tms_expense_info(aml, expense)
         if not partials:
             return []
         for partial in partials:
