@@ -150,7 +150,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         for partial in partials:
             # If the partial is in currency id but don't has amount currency is
             # not necessary the loop to avoid wrong moves in the report
-            if (partial['currency_id'] != company_currency and not
+            if ((partial['currency_id'] and partial['currency_id'] !=
+                company_currency) and not
                     partial['amount_currency'] and partial['amount']):
                 continue
             move = am_obj.search([('line_ids', 'in', partial['inv_aml'])])
@@ -192,6 +193,16 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 items.append(
                     [line.account_id.code, line.move_id.name,
                      line.name, line.ref, amount_untaxed])
+            # Special case of refunds
+            if (aml.invoice_id and aml.invoice_id.type in [
+                    'in_refund', 'out_refund']):
+                refund_lines = aml.move_id.line_ids.filtered(
+                    lambda r: r.account_id.user_type_id.id in [
+                     13, 14, 15, 16, 17] and not r.tax_line_id)
+                for line in refund_lines:
+                    items.append(
+                        [line.account_id.code, line.move_id.name,
+                         line.name, line.ref, abs(line.balance)])
         return items
 
     @api.multi
@@ -209,7 +220,9 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             # If the aml is of bank or cash is called the method to get the
             # cash basis info
             if (aml.journal_id.type in ['bank', 'cash'] or
-                    aml.account_id.user_type_id.id == 3):
+                    aml.account_id.user_type_id.id == 3 or
+                    (aml.invoice_id and aml.invoice_id.type in [
+                        'in_refund', 'out_refund'])):
                 aml_info = self.get_cash_info(aml)
                 for item in aml_info:
                     # Set the results to the main dictionary
