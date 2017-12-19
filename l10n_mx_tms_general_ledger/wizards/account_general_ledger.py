@@ -197,8 +197,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             if (aml.invoice_id and aml.invoice_id.type in [
                     'in_refund', 'out_refund']):
                 refund_lines = aml.move_id.line_ids.filtered(
-                    lambda r: r.account_id.user_type_id.id in [
-                     13, 14, 15, 16, 17] and not r.tax_line_id)
+                    lambda r: r.account_id.user_type_id.id in
+                    [13, 14, 15, 16, 17] and not r.tax_line_id)
                 for line in refund_lines:
                     items.append(
                         [line.account_id.code, line.move_id.name,
