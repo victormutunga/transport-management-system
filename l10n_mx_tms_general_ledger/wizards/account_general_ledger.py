@@ -90,6 +90,9 @@ class AccountGeneralLedgerWizard(models.TransientModel):
     def get_tms_expense_info(self, expense):
         """Method to get the tms expense info"""
         items = []
+        if (expense.amount_balance < 0.0 and expense.payment_move_id and not
+                self._context.get('expense', False)):
+            return items
         am_obj = self.env['account.move']
         lines = expense.move_id.line_ids
         for line in lines:
@@ -97,7 +100,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             if not line.account_id.reconcile or line.name == expense.name:
                 items.append(
                     [line.account_id.code, line.move_id.name,
-                     line.name, line.ref, round(abs(line.balance), 4)])
+                     line.name, line.ref, round(abs(line.balance), 4),
+                     'debit' if line.debit > 0.0 else 'credit'])
                 continue
             self._cr.execute(
                 """
@@ -118,7 +122,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             for inv_line in inv_lines:
                 items.append(
                     [inv_line.account_id.code, inv_line.move_id.name,
-                     line.name, inv_line.ref, round(abs(inv_line.balance), 4)])
+                     line.name, inv_line.ref, round(abs(inv_line.balance), 4),
+                     'debit' if line.debit > 0.0 else 'credit'])
         return items
 
     @api.model
@@ -138,13 +143,6 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             WHERE pr.credit_move_id = %s OR pr.debit_move_id = %s""",
             (aml.id, aml.id, aml.id,))
         partials = self._cr.dictfetchall()
-        expense = self.env['tms.expense'].search([
-            ('payment_move_id', '=', aml.move_id.id),
-            ('name', '=', aml.name)])
-        # if the aml is of an expense is called a method to get the invoice
-        # information
-        if expense:
-            return self.get_tms_expense_info(expense)
         if not partials:
             return []
         for partial in partials:
@@ -155,12 +153,19 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     partial['amount_currency'] and partial['amount']):
                 continue
             move = am_obj.search([('line_ids', 'in', partial['inv_aml'])])
+            expense = self.env['tms.expense'].search([
+                ('move_id', '=', move.id)])
+            # if the aml is of an expense is called a method to get the invoice
+            # information
+            if expense:
+                return self.get_tms_expense_info(expense)
             # Exchange currency
             if move.journal_id.id == 4:
                 line = aml_obj.browse(partial['inv_aml'])
                 items.append(
                     [line.account_id.code, line.move_id.name,
-                     line.name, line.ref, round(abs(line.balance), 4)])
+                     line.name, line.ref, round(abs(line.balance), 4),
+                     'debit' if line.debit > 0.0 else 'credit'])
                 continue
             # Normal case
             inv_aml = aml_obj.browse(partial['inv_aml'])
@@ -192,7 +197,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 amount_untaxed = round(balance * paid_rate, 4)
                 items.append(
                     [line.account_id.code, line.move_id.name,
-                     line.name, line.ref, amount_untaxed])
+                     line.name, line.ref, amount_untaxed,
+                     'debit' if line.debit > 0.0 else 'credit'])
         return items
 
     @api.multi
@@ -222,8 +228,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                         'D': item[3],
                         'E': aml.date,
                         'F': aml.partner_id.name if aml.partner_id else '',
-                        'G': item[4] if aml.debit > 0.0 else 0.0,
-                        'H': item[4] if aml.credit > 0.0 else 0.0,
+                        'G': item[4] if item[5] == 'debit' else 0.0,
+                        'H': item[4] if item[5] == 'credit' else 0.0,
                     })
             # Set the aml to the main dictionary
             if aml.account_id.code not in res.keys():
@@ -262,7 +268,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             ('move_id.date', '>=', self.date_start),
             ('move_id.date', '<=', self.date_end)])
         for expense in data:
-            aml_info = self.get_tms_expense_info(expense)
+            aml_info = self.with_context(expense=True).get_tms_expense_info(
+                expense)
             for item in aml_info:
                 # Set the results to the main dictionary
                 if item[0] not in res.keys():
@@ -273,8 +280,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     'D': item[3],
                     'E': aml.date,
                     'F': aml.partner_id.name if aml.partner_id else '',
-                    'G': item[4] if aml.debit > 0.0 else 0.0,
-                    'H': item[4] if aml.credit > 0.0 else 0.0,
+                    'G': item[4] if item[5] == 'debit' else 0.0,
+                    'H': item[4] if item[5] == 'credit' else 0.0,
                 })
         dictio_keys = sorted(res.keys())
         return res, dictio_keys
