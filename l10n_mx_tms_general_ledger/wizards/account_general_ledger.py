@@ -51,6 +51,16 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         return month_end
 
     @api.model
+    def get_initial_balances(self):
+        self._cr.execute(
+            """SELECT aa.code, SUM(aml.balance) AS balance
+            FROM account_move_line aml
+            JOIN account_account aa ON aa.id = aml.account_id
+            WHERE date < %s AND aa.user_type_id = 3
+            GROUP BY aa.code""", (self.date_start, ))
+        return self._cr.fetchall()
+
+    @api.model
     def get_amls_info(self, report_type):
         self.ensure_one()
         # We get all the amls in the month range given by the user except
@@ -210,6 +220,16 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         expense_obj = self.env['tms.expense']
         company_tax_journal = (
             self.env.user.company_id.tax_cash_basis_journal_id)
+        initial_balances = self.get_initial_balances()
+        for item in initial_balances:
+            if item[0] not in res.keys():
+                res[item[0]] = []
+            res[item[0]].append({
+                'C': _('Initial Balance'),
+                'G': 0.0,
+                'H': 0.0,
+                'I': item[1],
+            })
         # First get the amls without income statement accounts
         data = self.get_amls_info('normal')
         for aml in aml_obj.browse([x[0] for x in data]):
@@ -312,6 +332,10 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 'A': account_id.code + ' ' + account_id.name
             })
             for item in res[key]:
+                if item['C'] == _('Initial Balance'):
+                    ws1.append(item)
+                    balance = item['I']
+                    continue
                 balance += (item['G'] - item['H'])
                 item['I'] = balance
                 ws1.append(item)
@@ -325,11 +349,13 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             if row[0].value and not row[1].value:
                 ws1[row[0].coordinate].font = Font(
                     bold=True, color='7CB7EA')
-            if not row[1].value and row[7].value:
+            if not row[1].value and row[8].value and not row[2].value:
                 ws_range = row[6].coordinate + ':' + row[8].coordinate
                 for row_cell in enumerate(ws1[ws_range]):
                     for cell in enumerate(row_cell[1]):
                         cell[1].font = Font(bold=True)
+            if not row[1].value and row[8].value and row[2].value:
+                row[8].font = Font(bold=True)
         xlsx_file = save_virtual_workbook(wb)
         self.xlsx_file = base64.encodestring(xlsx_file)
         self.xlsx_filename = _('TMS General Ledger.xlsx')
