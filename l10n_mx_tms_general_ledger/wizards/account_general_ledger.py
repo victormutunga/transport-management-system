@@ -97,7 +97,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         return amls
 
     @api.model
-    def get_tms_expense_info(self, expense):
+    def get_tms_expense_info(self, expense, aml):
         """Method to get the tms expense info"""
         items = []
         if (expense.amount_balance < 0.0 and expense.payment_move_id and not
@@ -105,6 +105,15 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             return items
         am_obj = self.env['account.move']
         lines = expense.move_id.line_ids
+        # If the expense is not reconciled we reconcile it
+        if aml and not aml.reconciled:
+            line_to_reconcile = expense.move_id.line_ids.filtered(
+                lambda x: x.account_id.reconcile and x.name == expense.name and
+                not x.reconciled)
+            if not line_to_reconcile:
+                pass
+            aml |= line_to_reconcile
+            aml.reconcile()
         for line in lines:
             # if the aml is not reconcile or is the root aml itpass directly
             if not line.account_id.reconcile or line.name == expense.name:
@@ -125,7 +134,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             if not partial:
                 items.append(
                     [line.account_id.code, line.move_id.name,
-                     line.name, line.ref, round(abs(line.balance), 4)])
+                     line.name, line.ref, round(abs(line.balance), 4),
+                     'debit' if line.debit > 0.0 else 'credit'])
                 continue
             inv_lines = am_obj.search(
                 [('line_ids', 'in', partial['inv_aml'])]).mapped('line_ids')
@@ -153,8 +163,14 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             WHERE pr.credit_move_id = %s OR pr.debit_move_id = %s""",
             (aml.id, aml.id, aml.id,))
         partials = self._cr.dictfetchall()
-        if not partials:
+        expense = self.env['tms.expense'].search([
+            ('name', '=', aml.name)])
+        if not partials and not expense:
             return []
+        # if the aml is of an expense is called a method to get the invoice
+        # information
+        if not partials and expense:
+            return self.get_tms_expense_info(expense, aml)
         for partial in partials:
             # If the partial is in currency id but don't has amount currency is
             # not necessary the loop to avoid wrong moves in the report
@@ -163,12 +179,6 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     partial['amount_currency'] and partial['amount']):
                 continue
             move = am_obj.search([('line_ids', 'in', partial['inv_aml'])])
-            expense = self.env['tms.expense'].search([
-                ('move_id', '=', move.id)])
-            # if the aml is of an expense is called a method to get the invoice
-            # information
-            if expense:
-                return self.get_tms_expense_info(expense)
             # Exchange currency
             if move.journal_id.id == 4:
                 line = aml_obj.browse(partial['inv_aml'])
@@ -289,7 +299,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             ('move_id.date', '<=', self.date_end)])
         for expense in data:
             aml_info = self.with_context(expense=True).get_tms_expense_info(
-                expense)
+                expense, False)
             for item in aml_info:
                 # Set the results to the main dictionary
                 if item[0] not in res.keys():
