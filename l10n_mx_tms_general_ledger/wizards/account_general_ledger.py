@@ -9,6 +9,7 @@ import calendar
 import logging
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -113,7 +114,11 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             if not line_to_reconcile:
                 pass
             aml |= line_to_reconcile
-            aml.reconcile()
+            try:
+                aml.reconcile()
+            except Exception as e:
+                raise ValidationError(
+                    _(e.name + '\n' + 'TMS Expense: ' + expense.name))
         for line in lines:
             # if the aml is not reconcile or is the root aml itpass directly
             if not line.account_id.reconcile or line.name == expense.name:
