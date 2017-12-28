@@ -104,7 +104,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         if (expense.amount_balance < 0.0 and expense.payment_move_id and not
                 self._context.get('expense', False)):
             return items
-        elif not aml.account_id.reconcile:
+        elif aml.account_id and not aml.account_id.reconcile:
             return items
         am_obj = self.env['account.move']
         lines = expense.move_id.line_ids
