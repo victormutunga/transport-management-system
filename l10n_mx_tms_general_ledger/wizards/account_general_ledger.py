@@ -176,7 +176,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             return []
         # if the aml is of an expense is called a method to get the invoice
         # information
-        if not partials and expense:
+        if expense:
             return self.get_tms_expense_info(expense, aml)
         for partial in partials:
             # If the partial is in currency id but don't has amount currency is
