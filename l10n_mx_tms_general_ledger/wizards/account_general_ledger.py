@@ -108,6 +108,11 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             return items
         am_obj = self.env['account.move']
         lines = expense.move_id.line_ids
+        paid_rate = 1
+        if aml:
+            # Get the payment rate
+            paid_rate = round(
+                (abs(aml.balance) * 100) / expense.amount_balance, 4) / 100
         # If the expense is not reconciled we reconcile it
         if aml and not aml.reconciled:
             line_to_reconcile = expense.move_id.line_ids.filtered(
@@ -122,11 +127,13 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 raise ValidationError(
                     _(e.name + '\n' + 'TMS Expense: ' + expense.name))
         for line in lines:
+            amount = 0.0
             # if the aml is not reconcile or is the root aml itpass directly
             if not line.account_id.reconcile or line.name == expense.name:
+                amount = round(abs(line.balance) * paid_rate, 4)
                 items.append(
                     [line.account_id.code, line.move_id.name,
-                     line.name, line.ref, round(abs(line.balance), 4),
+                     line.name, line.ref, amount,
                      'debit' if line.debit > 0.0 else 'credit'])
                 continue
             self._cr.execute(
@@ -139,17 +146,19 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 (line.id, line.id, line.id,))
             partial = self._cr.dictfetchone()
             if not partial:
+                amount = round(abs(line.balance) * paid_rate, 4)
                 items.append(
                     [line.account_id.code, line.move_id.name,
-                     line.name, line.ref, round(abs(line.balance), 4),
+                     line.name, line.ref, amount,
                      'debit' if line.debit > 0.0 else 'credit'])
                 continue
             inv_lines = am_obj.search(
                 [('line_ids', 'in', partial['inv_aml'])]).mapped('line_ids')
             for inv_line in inv_lines:
+                amount = round(abs(inv_line.balance) * paid_rate, 4)
                 items.append(
                     [inv_line.account_id.code, inv_line.move_id.name,
-                     line.name, inv_line.ref, round(abs(inv_line.balance), 4),
+                     line.name, inv_line.ref, amount,
                      'debit' if line.debit > 0.0 else 'credit'])
         return items
 
