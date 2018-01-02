@@ -40,15 +40,23 @@ class AccountGeneralLedgerWizard(models.TransientModel):
     @api.model
     def get_month_start(self):
         today = datetime.now()
-        month_start = "%s-%s-01" % (today.year, today.month)
+        month = today.month
+        date_string = "%s-%s-01"
+        if month < 10:
+            date_string = "%s-0%s-01"
+        month_start = date_string % (today.year, month)
         return month_start
 
     @api.model
     def get_month_end(self):
         today = datetime.now()
-        month_end = "%s-%s-%s" % (
+        month = today.month
+        date_string = "%s-%s-%s"
+        if month < 10:
+            date_string = "%s-0%s-%s"
+        month_end = date_string % (
             today.year, today.month, calendar.monthrange(
-                today.year-1, today.month)[1])
+                today.year-1, month)[1])
         return month_end
 
     @api.model
