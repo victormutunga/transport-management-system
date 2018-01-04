@@ -142,7 +142,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 items.append(
                     [line.account_id.code, line.move_id.name,
                      line.name, line.ref, amount,
-                     'debit' if line.debit > 0.0 else 'credit'])
+                     'debit' if line.debit > 0.0 else 'credit',
+                     line.journal_id])
                 continue
             self._cr.execute(
                 """
@@ -158,7 +159,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 items.append(
                     [line.account_id.code, line.move_id.name,
                      line.name, line.ref, amount,
-                     'debit' if line.debit > 0.0 else 'credit'])
+                     'debit' if line.debit > 0.0 else 'credit',
+                     line.journal_id])
                 continue
             inv_lines = am_obj.search(
                 [('line_ids', 'in', partial['inv_aml'])]).mapped('line_ids')
@@ -167,7 +169,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 items.append(
                     [inv_line.account_id.code, inv_line.move_id.name,
                      line.name, inv_line.ref, amount,
-                     'debit' if line.debit > 0.0 else 'credit'])
+                     'debit' if line.debit > 0.0 else 'credit',
+                     inv_line.journal_id])
         return items
 
     @api.model
@@ -209,7 +212,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 items.append(
                     [line.account_id.code, line.move_id.name,
                      line.name, line.ref, round(abs(line.balance), 4),
-                     'debit' if line.debit > 0.0 else 'credit'])
+                     'debit' if line.debit > 0.0 else 'credit',
+                     line.journal_id])
                 continue
             # Normal case
             inv_aml = aml_obj.browse(partial['inv_aml'])
@@ -242,7 +246,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 items.append(
                     [line.account_id.code, line.move_id.name,
                      line.name, line.ref, amount_untaxed,
-                     'debit' if line.debit > 0.0 else 'credit'])
+                     'debit' if line.debit > 0.0 else 'credit',
+                     line.journal_id])
         return items
 
     @api.multi
@@ -266,6 +271,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             })
         # First get the amls without income statement accounts
         data = self.get_amls_info('normal')
+        expense_journals = self.env['operating.unit'].search([]).mapped(
+            'expense_journal_id.id')
         for aml in aml_obj.browse([x[0] for x in data]):
             # If the aml is of bank or cash is called the method to get the
             # cash basis info
@@ -273,6 +280,9 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     aml.account_id.user_type_id.id == 3):
                 aml_info = self.get_cash_info(aml)
                 for item in aml_info:
+                    if (item[6].type == 'general' and item[6].id not in
+                            expense_journals):
+                        continue
                     # Set the results to the main dictionary
                     if item[0] not in res.keys():
                         res[item[0]] = []
