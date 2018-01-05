@@ -143,7 +143,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     [line.account_id.code, line.move_id.name,
                      line.name, line.ref, amount,
                      'debit' if line.debit > 0.0 else 'credit',
-                     line.journal_id])
+                     line.journal_id, ''])
                 continue
             self._cr.execute(
                 """
@@ -160,7 +160,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     [line.account_id.code, line.move_id.name,
                      line.name, line.ref, amount,
                      'debit' if line.debit > 0.0 else 'credit',
-                     line.journal_id])
+                     line.journal_id, ''])
                 continue
             inv_lines = am_obj.search(
                 [('line_ids', 'in', partial['inv_aml'])]).mapped('line_ids')
@@ -170,7 +170,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     [inv_line.account_id.code, inv_line.move_id.name,
                      line.name, inv_line.ref, amount,
                      'debit' if line.debit > 0.0 else 'credit',
-                     inv_line.journal_id])
+                     inv_line.journal_id, ''])
         return items
 
     @api.model
@@ -247,7 +247,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     [line.account_id.code, line.move_id.name,
                      line.name, line.ref, amount_untaxed,
                      'debit' if line.debit > 0.0 else 'credit',
-                     line.journal_id])
+                     line.journal_id,
+                     (', ').join(line.mapped('tax_ids.name'))])
         return items
 
     @api.multi
@@ -294,6 +295,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                         'F': aml.partner_id.name if aml.partner_id else '',
                         'G': item[4] if item[5] == 'debit' else 0.0,
                         'H': item[4] if item[5] == 'credit' else 0.0,
+                        'J': item[7],
                     })
             # Set the aml to the main dictionary
             if aml.account_id.code not in res.keys():
@@ -346,6 +348,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     'F': aml.partner_id.name if aml.partner_id else '',
                     'G': item[4] if item[5] == 'debit' else 0.0,
                     'H': item[4] if item[5] == 'credit' else 0.0,
+                    'I': item[7],
                 })
         dictio_keys = sorted(res.keys())
         return res, dictio_keys
@@ -366,6 +369,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             'G': _('Debit'),
             'H': _('Credit'),
             'I': _('Balance'),
+            'J': _('Tax'),
         })
         res, dictio_keys = self.prepare_data()
         # Loop the sorted dictionary keys and fill the xlsx file
