@@ -106,6 +106,18 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         return amls
 
     @api.model
+    def get_tax_info(self, aml):
+        vat = ''
+        taxes = ''
+        if aml.partner_id:
+            vat = aml.partner_id.vat or ''
+        if aml.tax_line_id:
+            taxes = (', ').join(aml.mapped('tax_line_id.name'))
+        elif aml.tax_ids:
+            taxes = (', ').join(aml.mapped('tax_ids.name'))
+        return taxes, vat
+
+    @api.model
     def get_tms_expense_info(self, expense, aml):
         """Method to get the tms expense info"""
         items = []
@@ -165,12 +177,13 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             inv_lines = am_obj.search(
                 [('line_ids', 'in', partial['inv_aml'])]).mapped('line_ids')
             for inv_line in inv_lines:
+                taxes, vat = self.get_tax_info(inv_line)
                 amount = round(abs(inv_line.balance) * paid_rate, 4)
                 items.append(
                     [inv_line.account_id.code, inv_line.move_id.name,
                      line.name, inv_line.ref, amount,
                      'debit' if line.debit > 0.0 else 'credit',
-                     inv_line.journal_id, '', ''])
+                     inv_line.journal_id, taxes, vat])
         return items
 
     @api.model
@@ -244,14 +257,12 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                             abs(line.amount_currency) *
                             aml.move_id.usd_currency_rate)
                 amount_untaxed = round(balance * paid_rate, 4)
-                if line.move_id.partner_id:
-                    vat = line.move_id.partner_id.vat or ''
+                taxes, vat = self.get_tax_info(line)
                 items.append(
                     [line.account_id.code, line.move_id.name,
                      line.name, line.ref, amount_untaxed,
                      'debit' if line.debit > 0.0 else 'credit',
-                     line.journal_id,
-                     (', ').join(line.mapped('tax_ids.name')), vat])
+                     line.journal_id, taxes, vat])
         return items
 
     @api.multi
@@ -278,6 +289,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         expense_journals = self.env['operating.unit'].search([]).mapped(
             'expense_journal_id.id')
         for aml in aml_obj.browse([x[0] for x in data]):
+            vat = ''
+            taxes = ''
             # If the aml is of bank or cash is called the method to get the
             # cash basis info
             if (aml.journal_id.type in ['bank', 'cash'] or
@@ -301,6 +314,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                         'J': item[7],
                         'K': item[8],
                     })
+            # DIOT
+            taxes, vat = self.get_tax_info(aml)
             # Set the aml to the main dictionary
             if aml.account_id.code not in res.keys():
                 res[aml.account_id.code] = []
@@ -312,6 +327,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 'F': aml.partner_id.name if aml.partner_id else '',
                 'G': aml.debit if aml.debit > 0.0 else 0.0,
                 'H': aml.credit if aml.credit > 0.0 else 0.0,
+                'J': taxes,
+                'K': vat,
             })
         # Finally get the amls of miscellanous journal entries
         data = self.get_amls_info('miscellanous')
@@ -321,6 +338,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             if (aml.account_id.user_type_id.id in [13, 14, 15, 16, 17] and
                     aml.journal_id == company_tax_journal):
                 continue
+            # DIOT
+            taxes, vat = self.get_tax_info(aml)
             if aml.account_id.code not in res.keys():
                 res[aml.account_id.code] = []
             res[aml.account_id.code].append({
@@ -331,6 +350,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 'F': aml.partner_id.name if aml.partner_id else '',
                 'G': aml.debit if aml.debit > 0.0 else 0.0,
                 'H': aml.credit if aml.credit > 0.0 else 0.0,
+                'J': taxes,
+                'K': vat,
             })
         # We get the expense info of the negative expenses
         data = expense_obj.search([
