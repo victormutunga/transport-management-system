@@ -143,7 +143,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     [line.account_id.code, line.move_id.name,
                      line.name, line.ref, amount,
                      'debit' if line.debit > 0.0 else 'credit',
-                     line.journal_id, ''])
+                     line.journal_id, '', ''])
                 continue
             self._cr.execute(
                 """
@@ -160,7 +160,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     [line.account_id.code, line.move_id.name,
                      line.name, line.ref, amount,
                      'debit' if line.debit > 0.0 else 'credit',
-                     line.journal_id, ''])
+                     line.journal_id, '', ''])
                 continue
             inv_lines = am_obj.search(
                 [('line_ids', 'in', partial['inv_aml'])]).mapped('line_ids')
@@ -170,7 +170,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     [inv_line.account_id.code, inv_line.move_id.name,
                      line.name, inv_line.ref, amount,
                      'debit' if line.debit > 0.0 else 'credit',
-                     inv_line.journal_id, ''])
+                     inv_line.journal_id, '', ''])
         return items
 
     @api.model
@@ -232,6 +232,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 [13, 14, 15, 16, 17] and not r.tax_line_id)
             for line in lines:
                 balance = abs(line.balance)
+                vat = ''
                 if partial['amount_currency'] and inv_aml.amount_currency:
                     usd_currency = self.env.ref('base.USD').with_context(
                         date=aml.date)
@@ -243,12 +244,14 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                             abs(line.amount_currency) *
                             aml.move_id.usd_currency_rate)
                 amount_untaxed = round(balance * paid_rate, 4)
+                if line.move_id.partner_id:
+                    vat = line.move_id.partner_id.vat or ''
                 items.append(
                     [line.account_id.code, line.move_id.name,
                      line.name, line.ref, amount_untaxed,
                      'debit' if line.debit > 0.0 else 'credit',
                      line.journal_id,
-                     (', ').join(line.mapped('tax_ids.name'))])
+                     (', ').join(line.mapped('tax_ids.name')), vat])
         return items
 
     @api.multi
@@ -296,6 +299,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                         'G': item[4] if item[5] == 'debit' else 0.0,
                         'H': item[4] if item[5] == 'credit' else 0.0,
                         'J': item[7],
+                        'K': item[8],
                     })
             # Set the aml to the main dictionary
             if aml.account_id.code not in res.keys():
@@ -370,6 +374,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             'H': _('Credit'),
             'I': _('Balance'),
             'J': _('Tax'),
+            'K': _('RFC'),
         })
         res, dictio_keys = self.prepare_data()
         # Loop the sorted dictionary keys and fill the xlsx file
