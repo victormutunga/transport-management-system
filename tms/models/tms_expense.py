@@ -535,7 +535,7 @@ class TmsExpense(models.Model):
                 'state': 'closed',
                 'employee_id':  rec.employee_id.id,
                 'price_total': line.price_total,
-                'date': str(fields.Date.today()),
+                'date': line.date,
                 'expense_control': True,
                 'expense_id': rec.id,
                 'ticket_number': line.invoice_number,
