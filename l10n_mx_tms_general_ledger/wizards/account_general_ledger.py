@@ -304,6 +304,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     if item[0] not in res.keys():
                         res[item[0]] = []
                     res[item[0]].append({
+                        'A': item[0],
                         'B': item[1],
                         'C': item[2],
                         'D': item[3],
@@ -320,6 +321,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             if aml.account_id.code not in res.keys():
                 res[aml.account_id.code] = []
             res[aml.account_id.code].append({
+                'A': aml.account_id.code,
                 'B': aml.move_id.name,
                 'C': aml.name,
                 'D': aml.ref,
@@ -343,6 +345,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             if aml.account_id.code not in res.keys():
                 res[aml.account_id.code] = []
             res[aml.account_id.code].append({
+                'A': aml.account_id.code,
                 'B': aml.move_id.name,
                 'C': aml.name,
                 'D': aml.ref,
@@ -366,6 +369,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 if item[0] not in res.keys():
                     res[item[0]] = []
                 res[item[0]].append({
+                    'A': item[0],
                     'B': item[1],
                     'C': item[2],
                     'D': item[3],
