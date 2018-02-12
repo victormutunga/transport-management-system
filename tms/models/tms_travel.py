@@ -216,7 +216,7 @@ class TmsTravel(models.Model):
                     _('The unit or driver are already in use!'))
             rec.state = "progress"
             rec.date_start_real = fields.Datetime.now()
-            rec.message_post('Travel Dispatched')
+            rec.message_post(_('Travel Dispatched'))
 
     @api.multi
     def action_done(self):
@@ -232,7 +232,7 @@ class TmsTravel(models.Model):
             rec.state = "done"
             rec.odometer = odometer.current_odometer
             rec.date_end_real = fields.Datetime.now()
-            rec.message_post('Travel Finished')
+            rec.message_post(_('Travel Finished'))
 
     @api.multi
     def action_cancel(self):
@@ -249,7 +249,7 @@ class TmsTravel(models.Model):
                       ' you must cancel the fuel logs or the advances '
                       'attached to this travel'))
             rec.state = "cancel"
-            rec.message_post('Travel Cancelled')
+            rec.message_post(_('Travel Cancelled'))
 
     @api.model
     def create(self, values):
