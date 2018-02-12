@@ -57,7 +57,7 @@ class FleetVehicleLogFuel(models.Model):
         ('cancel', 'Cancelled')],
         readonly=True,
         default='draft')
-    vendor_id = fields.Many2one('res.partner')
+    vendor_id = fields.Many2one('res.partner', required=True,)
     product_id = fields.Many2one(
         'product.product',
         string='Product',
