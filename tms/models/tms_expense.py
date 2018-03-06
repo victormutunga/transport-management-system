@@ -549,7 +549,8 @@ class TmsExpense(models.Model):
                 'expense_control': True,
                 'expense_id': rec.id,
                 'ticket_number': line.invoice_number,
-            })
+                'created_from_expense': True,
+                })
             line.control = True
             return fuel_voucher
 
@@ -806,6 +807,10 @@ class TmsExpense(models.Model):
             move_id = self.move_id
             self.move_id = False
             move_id.unlink()
+
+            for fuel_log in self.fuel_log_ids:
+                if fuel_log.created_from_expense:
+                    fuel_log.unlink()
         self.state = 'cancel'
 
     @api.multi

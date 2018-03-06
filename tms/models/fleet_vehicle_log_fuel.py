@@ -73,6 +73,7 @@ class FleetVehicleLogFuel(models.Model):
         string='Prepaid',
         compute="_compute_prepaid"
     )
+    created_from_expense = fields.Boolean(readonly=True)
 
     @api.depends('vendor_id')
     def _compute_prepaid(self):
