@@ -36,6 +36,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         [('get', 'Get'),
          ('print', 'Error')],
         default='get',)
+    expenses = []
 
     @api.model
     def get_month_start(self):
@@ -121,18 +122,18 @@ class AccountGeneralLedgerWizard(models.TransientModel):
     def get_tms_expense_info(self, expense, aml):
         """Method to get the tms expense info"""
         items = []
+        # Negative Cases
         if (expense.amount_balance < 0.0 and expense.payment_move_id and not
                 self._context.get('expense', False)):
             return items
+        # Miscelanous Cases
         if aml and aml.account_id and not aml.account_id.reconcile:
+            return items
+        # Duplicated Expenses
+        if expense.id in self.expenses:
             return items
         am_obj = self.env['account.move']
         lines = expense.move_id.line_ids
-        paid_rate = 1
-        if aml:
-            # Get the payment rate
-            paid_rate = round(
-                (abs(aml.balance) * 100) / expense.amount_balance, 4) / 100
         # If the expense is not reconciled we reconcile it
         if aml and not aml.reconciled:
             line_to_reconcile = expense.move_id.line_ids.filtered(
@@ -150,7 +151,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             amount = 0.0
             # if the aml is not reconcile or is the root aml itpass directly
             if not line.account_id.reconcile or line.name == expense.name:
-                amount = round(abs(line.balance) * paid_rate, 4)
+                amount = abs(line.balance)
                 items.append(
                     [line.account_id.code, line.move_id.name,
                      line.name, line.ref, amount,
@@ -167,7 +168,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 (line.id, line.id, line.id,))
             partial = self._cr.dictfetchone()
             if not partial:
-                amount = round(abs(line.balance) * paid_rate, 4)
+                amount = abs(line.balance)
                 items.append(
                     [line.account_id.code, line.move_id.name,
                      line.name, line.ref, amount,
@@ -178,12 +179,13 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 [('line_ids', 'in', partial['inv_aml'])]).mapped('line_ids')
             for inv_line in inv_lines:
                 taxes, vat = self.get_tax_info(inv_line)
-                amount = round(abs(inv_line.balance) * paid_rate, 4)
+                amount = abs(inv_line.balance)
                 items.append(
                     [inv_line.account_id.code, inv_line.move_id.name,
                      line.name, inv_line.ref, amount,
                      'debit' if line.debit > 0.0 else 'credit',
                      inv_line.journal_id, taxes, vat])
+        self.expenses.append(expense.id)
         return items
 
     @api.model
@@ -373,8 +375,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     'B': item[1],
                     'C': item[2],
                     'D': item[3],
-                    'E': aml.date,
-                    'F': aml.partner_id.name if aml.partner_id else '',
+                    'E': expense.payment_move_id.date,
+                    'F': expense.move_id.partner_id.name,
                     'G': item[4] if item[5] == 'debit' else 0.0,
                     'H': item[4] if item[5] == 'credit' else 0.0,
                     'I': item[7],
@@ -385,6 +387,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
     @api.multi
     def print_report(self):
         self.ensure_one()
+        self.expenses = []
         account_obj = self.env['account.account']
         wb = Workbook()
         ws1 = wb.active
