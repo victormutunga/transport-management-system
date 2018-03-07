@@ -550,8 +550,10 @@ class TmsExpense(models.Model):
                 'expense_id': rec.id,
                 'ticket_number': line.invoice_number,
                 'created_from_expense': True,
+                'expense_fuel_log_line': line.id,
                 })
             line.control = True
+            line.expense_fuel_log_boolean = True
             return fuel_voucher
 
     @api.multi
@@ -684,7 +686,8 @@ class TmsExpense(models.Model):
         for rec in self:
             # We only need all the lines except the fuel and the
             # made up expenses
-            if line.line_type == 'fuel' and not line.control:
+            if line.line_type == 'fuel' and (
+                    not line.control or line.expense_fuel_log_boolean):
                 rec.create_fuel_vouchers(line)
             if line.line_type not in (
                     'made_up_expense', 'fuel', 'tollstations'):
@@ -808,9 +811,8 @@ class TmsExpense(models.Model):
             self.move_id = False
             move_id.unlink()
 
-            for fuel_log in self.fuel_log_ids:
-                if fuel_log.created_from_expense:
-                    fuel_log.unlink()
+            self.fuel_log_ids.filtered(
+                lambda x: x.created_from_expense).unlink()
         self.state = 'cancel'
 
     @api.multi
@@ -825,7 +827,8 @@ class TmsExpense(models.Model):
                 ('id', 'not in', exp_no_travel)]).unlink()
             rec.expense_line_ids.search([
                 ('expense_id', '=', rec.id),
-                ('control', '=', True)]).unlink()
+                ('control', '=', True),
+                ('expense_fuel_log_boolean', '=', False)]).unlink()
             travels = self.env['tms.travel'].search(
                 [('expense_id', '=', rec.id)])
             travels.write({'expense_id': False, 'state': 'done'})
@@ -895,6 +898,8 @@ class TmsExpense(models.Model):
                     '\n Name of voucher not confirmed: ' +
                     fuel_log.name +
                     '\n State: ' + fuel_log.state))
+            elif (fuel_log.expense_fuel_log_line):
+                fuel_expense = fuel_log.expense_fuel_log_line
             else:
                 fuel_expense = rec.expense_line_ids.create({
                     'name': _(
@@ -916,6 +921,7 @@ class TmsExpense(models.Model):
                 })
                 if fuel_log.expense_control:
                     fuel_expense.name = fuel_expense.product_id.name
+            if fuel_expense:
                 fuel_log.write({
                     'state': 'closed',
                     'expense_id': rec.id
