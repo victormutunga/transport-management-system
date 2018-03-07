@@ -241,6 +241,29 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             # Get the payment rate
             paid_rate = round(
                 (partial_amount * 100) / inv_balance, 4) / 100
+            # Miscelanous Provition Case
+            if move.journal_id.type == 'general':
+                for line in move.line_ids:
+                    balance = abs(line.balance)
+                    vat = ''
+                    if partial['amount_currency'] and inv_aml.amount_currency:
+                        usd_currency = self.env.ref('base.USD').with_context(
+                            date=aml.date)
+                        mxn_currency = self.env.ref('base.MXN')
+                        balance = usd_currency.compute(
+                            abs(line.amount_currency), mxn_currency)
+                        if aml.move_id.usd_currency_rate:
+                            balance = (
+                                abs(line.amount_currency) *
+                                aml.move_id.usd_currency_rate)
+                    amount_untaxed = round(balance * paid_rate, 4)
+                    taxes, vat = self.get_tax_info(line)
+                    items.append(
+                        [line.account_id.code, line.move_id.name,
+                         line.name, line.ref, amount_untaxed,
+                         'debit' if line.debit > 0.0 else 'credit',
+                         line.journal_id, taxes, vat])
+                continue
             # Get the income statement amls of the invoice
             lines = move.line_ids.filtered(
                 lambda r: r.account_id.user_type_id.id in
@@ -288,8 +311,6 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             })
         # First get the amls without income statement accounts
         data = self.get_amls_info('normal')
-        expense_journals = self.env['operating.unit'].search([]).mapped(
-            'expense_journal_id.id')
         for aml in aml_obj.browse([x[0] for x in data]):
             vat = ''
             taxes = ''
@@ -299,9 +320,6 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     aml.account_id.user_type_id.id == 3):
                 aml_info = self.get_cash_info(aml)
                 for item in aml_info:
-                    if (item[6].type == 'general' and item[6].id not in
-                            expense_journals):
-                        continue
                     # Set the results to the main dictionary
                     if item[0] not in res.keys():
                         res[item[0]] = []
@@ -338,9 +356,13 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         data = self.get_amls_info('miscellanous')
         for aml in aml_obj.browse([x[0] for x in data]):
             # If the account is an income statement account and his journal is
-            # the company tax cash basis journal the aml is not necessary
-            if (aml.account_id.user_type_id.id in [13, 14, 15, 16, 17] and
-                    aml.journal_id == company_tax_journal):
+            # the company tax cash basis journal the aml or
+            # if the aml is part of a miscellanous journal entry rencolided
+            # this lines are not necessary
+            if ((aml.account_id.user_type_id.id in [13, 14, 15, 16, 17] and
+                    aml.journal_id == company_tax_journal) or
+                    (aml.move_id.line_ids.filtered(
+                        lambda x: x.account_id.reconcile))):
                 continue
             # DIOT
             taxes, vat = self.get_tax_info(aml)
