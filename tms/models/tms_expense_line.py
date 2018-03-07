@@ -88,9 +88,7 @@ class TmsExpenseLine(models.Model):
     route_id = fields.Many2one(
         'tms.route', related='travel_id.route_id',
         string='Route', readonly=True)
-    expense_fuel_log_boolean = fields.Boolean(readonly=True)
-    fuel_log_id = fields.One2many(
-        'fleet.vehicle.log.fuel', 'expense_fuel_log_line', readonly=True)
+    expense_fuel_log = fields.Boolean(readonly=True)
 
     @api.onchange('product_id')
     def _onchange_product_id(self):

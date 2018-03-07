@@ -550,10 +550,11 @@ class TmsExpense(models.Model):
                 'expense_id': rec.id,
                 'ticket_number': line.invoice_number,
                 'created_from_expense': True,
-                'expense_fuel_log_line': line.id,
+                'expense_line_id': line.id,
                 })
-            line.control = True
-            line.expense_fuel_log_boolean = True
+            line.write({
+                'control': True,
+                'expense_fuel_log': True})
             return fuel_voucher
 
     @api.multi
@@ -687,7 +688,7 @@ class TmsExpense(models.Model):
             # We only need all the lines except the fuel and the
             # made up expenses
             if line.line_type == 'fuel' and (
-                    not line.control or line.expense_fuel_log_boolean):
+                    not line.control or line.expense_fuel_log):
                 rec.create_fuel_vouchers(line)
             if line.line_type not in (
                     'made_up_expense', 'fuel', 'tollstations'):
@@ -828,7 +829,7 @@ class TmsExpense(models.Model):
             rec.expense_line_ids.search([
                 ('expense_id', '=', rec.id),
                 ('control', '=', True),
-                ('expense_fuel_log_boolean', '=', False)]).unlink()
+                ('expense_fuel_log', '=', False)]).unlink()
             travels = self.env['tms.travel'].search(
                 [('expense_id', '=', rec.id)])
             travels.write({'expense_id': False, 'state': 'done'})
@@ -898,8 +899,8 @@ class TmsExpense(models.Model):
                     '\n Name of voucher not confirmed: ' +
                     fuel_log.name +
                     '\n State: ' + fuel_log.state))
-            elif (fuel_log.expense_fuel_log_line):
-                fuel_expense = fuel_log.expense_fuel_log_line
+            elif fuel_log.expense_line_id:
+                fuel_expense = fuel_log.expense_line_id
             else:
                 fuel_expense = rec.expense_line_ids.create({
                     'name': _(
