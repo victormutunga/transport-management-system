@@ -193,6 +193,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         """This method get the cash basis amounts based on the payments"""
         am_obj = self.env['account.move']
         aml_obj = self.env['account.move.line']
+        mxn_currency = self.env.ref('base.MXN')
         items = []
         company_currency = aml.company_id.currency_id.id
         # This method search the aml linked to the invoice
@@ -228,7 +229,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     [line.account_id.code, line.move_id.name,
                      line.name, line.ref, round(abs(line.balance), 4),
                      'debit' if line.debit > 0.0 else 'credit',
-                     line.journal_id])
+                     line.journal_id, '', ''])
                 continue
             # Normal case
             inv_aml = aml_obj.browse(partial['inv_aml'])
@@ -241,6 +242,13 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             # Get the payment rate
             paid_rate = round(
                 (partial_amount * 100) / inv_balance, 4) / 100
+            # Search if the source document has advances
+            move_name = move.name
+            advance_aml = aml_obj.search(
+                [('move_id', '=', aml.move_id.id),
+                 ('account_id', '=', 3305),
+                 '|', ('name', 'ilike', move_name),
+                      ('ref', 'ilike', move_name)])
             # Miscelanous Provition Case
             if move.journal_id.type == 'general':
                 for line in move.line_ids:
@@ -249,13 +257,15 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     if partial['amount_currency'] and inv_aml.amount_currency:
                         usd_currency = self.env.ref('base.USD').with_context(
                             date=aml.date)
-                        mxn_currency = self.env.ref('base.MXN')
                         balance = usd_currency.compute(
                             abs(line.amount_currency), mxn_currency)
                         if aml.move_id.usd_currency_rate:
                             balance = (
                                 abs(line.amount_currency) *
                                 aml.move_id.usd_currency_rate)
+                    # Discount Advances
+                    if advance_aml:
+                        balance = balance - abs(advance_aml.balance)
                     amount_untaxed = round(balance * paid_rate, 4)
                     taxes, vat = self.get_tax_info(line)
                     items.append(
@@ -274,13 +284,15 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 if partial['amount_currency'] and inv_aml.amount_currency:
                     usd_currency = self.env.ref('base.USD').with_context(
                         date=aml.date)
-                    mxn_currency = self.env.ref('base.MXN')
                     balance = usd_currency.compute(
                         abs(line.amount_currency), mxn_currency)
                     if aml.move_id.usd_currency_rate:
                         balance = (
                             abs(line.amount_currency) *
                             aml.move_id.usd_currency_rate)
+                # Discount Advances
+                if advance_aml:
+                    balance = balance - abs(advance_aml.balance)
                 amount_untaxed = round(balance * paid_rate, 4)
                 taxes, vat = self.get_tax_info(line)
                 items.append(
