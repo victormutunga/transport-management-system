@@ -35,20 +35,24 @@ class TestTmsExpense(TransactionCase):
         self.unit = self.env.ref('tms.tms_fleet_vehicle_01')
         self.driver = self.env.ref('tms.tms_hr_employee_01')
 
+        employee_accont = self.env['account.account'].create({
+            "code": 'TestEmployee',
+            "name": 'Test Employee',
+            "user_type_id": self.env.ref(
+                "account.data_account_type_current_assets").id
+        })
         self.driver.write({
             'address_home_id': self.env.ref(
                 'base.res_partner_address_31').id,
-            'tms_advance_account_id': self.env.ref(
-                'l10n_generic_coa.1_conf_xfa').id,
-            'tms_expense_negative_account_id': self.env.ref(
-                'l10n_generic_coa.1_conf_stk').id})
+            'tms_advance_account_id': employee_accont.id,
+            'tms_expense_negative_account_id': employee_accont.id})
 
         self.travel = self.env.ref('tms.tms_travel_01')
         self.bank_account = self.env['account.journal'].create({
             'bank_acc_number': '121212',
-            'name': 'Bank(MXN)',
-            'code': '1212',
+            'name': 'Test Bank',
             'type': 'bank',
+            'code': 'TESTBANK',
             'currency_id': self.env.ref('base.MXN').id,
         })
 
