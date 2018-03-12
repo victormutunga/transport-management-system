@@ -48,12 +48,14 @@ class TestTmsExpense(TransactionCase):
             'tms_expense_negative_account_id': employee_accont.id})
 
         self.travel = self.env.ref('tms.tms_travel_01')
+        self.travel.advance_ids.write(
+            {'currency_id': self.env.ref('base.USD').id})
         self.bank_account = self.env['account.journal'].create({
             'bank_acc_number': '121212',
             'name': 'Test Bank',
             'type': 'bank',
             'code': 'TESTBANK',
-            'currency_id': self.env.ref('base.MXN').id,
+            # 'currency_id': self.env.ref('base.MXN').id,
         })
 
     def confirm_advances(self):
