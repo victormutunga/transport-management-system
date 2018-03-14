@@ -36,6 +36,10 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         [('get', 'Get'),
          ('print', 'Error')],
         default='get',)
+    expense_journal_ids = fields.Many2many(
+        'account.journal', default=lambda self: [
+            (6, 0, self.env['operating.unit'].search([]).mapped(
+                'expense_journal_id.id'))])
     expenses = []
 
     @api.model
@@ -90,8 +94,6 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         # We get all the amls in the month range given by the user of the
         # miscellanous journal entries
         else:
-            expense_journals = self.env['operating.unit'].search([]).mapped(
-                'expense_journal_id.id')
             self._cr.execute(
                 """SELECT aml.id
                 FROM account_move_line aml
@@ -102,7 +104,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     AND aj.id NOT IN %s
                 ORDER BY aml.account_id""",
                 (self.date_start, self.date_end,
-                 'general', tuple(expense_journals,),))
+                 'general', tuple(self.expense_journal_ids.ids,),))
             amls = self._cr.fetchall()
         return amls
 
@@ -193,6 +195,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         """This method get the cash basis amounts based on the payments"""
         am_obj = self.env['account.move']
         aml_obj = self.env['account.move.line']
+        expense_obj = self.env['tms.expense']
         mxn_currency = self.env.ref('base.MXN')
         items = []
         company_currency = aml.company_id.currency_id.id
@@ -206,14 +209,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             WHERE pr.credit_move_id = %s OR pr.debit_move_id = %s""",
             (aml.id, aml.id, aml.id,))
         partials = self._cr.dictfetchall()
-        expense = self.env['tms.expense'].search([
-            ('name', '=', aml.name)])
-        if not partials and not expense:
+        if not partials:
             return []
-        # if the aml is of an expense is called a method to get the invoice
-        # information
-        if expense:
-            return self.get_tms_expense_info(expense, aml)
         for partial in partials:
             # If the partial is in currency id but don't has amount currency is
             # not necessary the loop to avoid wrong moves in the report
@@ -222,6 +219,11 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     partial['amount_currency'] and partial['amount']):
                 continue
             move = am_obj.search([('line_ids', 'in', partial['inv_aml'])])
+            # if the aml is of an expense is called a method to get the invoice
+            # information
+            if move.journal_id.id in self.expense_journal_ids.ids:
+                expense = expense_obj.search([('move_id', '=', move.id)])
+                return self.get_tms_expense_info(expense, aml)
             # Exchange currency
             if move.journal_id.id == 4:
                 line = aml_obj.browse(partial['inv_aml'])
@@ -374,7 +376,8 @@ class AccountGeneralLedgerWizard(models.TransientModel):
             if ((aml.account_id.user_type_id.id in [13, 14, 15, 16, 17] and
                     aml.journal_id == company_tax_journal) or
                     (aml.move_id.line_ids.filtered(
-                        lambda x: x.account_id.reconcile))):
+                        lambda x: x.account_id.reconcile and
+                        (x.matched_credit_ids or x.matched_debit_ids)))):
                 continue
             # DIOT
             taxes, vat = self.get_tax_info(aml)
