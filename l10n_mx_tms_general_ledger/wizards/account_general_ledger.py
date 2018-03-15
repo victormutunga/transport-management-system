@@ -301,9 +301,6 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                         balance = (
                             abs(line.amount_currency) *
                             aml.move_id.usd_currency_rate)
-                # Discount Advances
-                if advance_aml:
-                    balance = balance - abs(advance_aml.balance)
                 # ##################  REFUNDS ################
                 if line.product_id.id in refund_lines:
                     balance -= refund_lines[line.product_id.id]
@@ -312,6 +309,18 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     amount_untaxed = round(balance, 4)
                 else:
                     amount_untaxed = round(balance * paid_rate, 4)
+                # Discount Advances
+                if (advance_aml and advance_aml.move_id.line_ids.filtered(
+                        lambda x: x.account_id.user_type_id.id == 3)):
+                    amount_untaxed = amount_untaxed - round(abs(
+                        advance_aml.balance) / len(lines), 4)
+                elif (advance_aml and not
+                        advance_aml.move_id.line_ids.filtered(
+                        lambda x: x.account_id.user_type_id.id == 3)):
+                    line_rate = round(abs(line.balance) * 100 / (
+                        sum([abs(x.balance) for x in lines])), 4) * .01
+                    amount_untaxed = round(abs(
+                        advance_aml.balance) * line_rate, 4)
                 taxes, vat = self.get_tax_info(line)
                 items.append(
                     [line.account_id.code, line.move_id.name,
@@ -437,7 +446,7 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                     'B': item[1],
                     'C': item[2],
                     'D': item[3],
-                    'E': expense.payment_move_id.date,
+                    'E': expense.payment_move_id.date or expense.move_id.date,
                     'F': expense.move_id.partner_id.name,
                     'G': item[4] if item[5] == 'debit' else 0.0,
                     'H': item[4] if item[5] == 'credit' else 0.0,
