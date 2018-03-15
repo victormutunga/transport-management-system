@@ -7,6 +7,7 @@ from datetime import datetime
 import base64
 import calendar
 import logging
+import numpy
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
@@ -119,6 +120,34 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         elif aml.tax_ids:
             taxes = (', ').join(aml.mapped('tax_ids.name'))
         return taxes, vat
+
+    @api.model
+    def get_refunds(self, move):
+        res = {}
+        self._cr.execute(
+            """SELECT am.id AS move_id
+                FROM account_invoice ai
+                    JOIN account_invoice_account_move_line_rel payment
+                        ON ai.id = payment.account_invoice_id
+                    JOIN account_move_line aml
+                        ON aml.id = payment.account_move_line_id
+                    JOIN account_invoice inv ON inv.id = aml.invoice_id
+                        AND inv.type IN ('out_refund', 'in_refund')
+                        AND inv.date >= %s AND inv.date <= %s
+                    JOIN account_move am ON am.id = inv.move_id
+                WHERE ai.id = (SELECT id FROM account_invoice
+                                WHERE move_id = %s)""",
+            (self.date_start, self.date_end, move.id))
+        refund_move_ids = self._cr.fetchall()
+        refunds = self.env['account.move'].browse(
+            [x[0] for x in refund_move_ids])
+        for line in refunds.mapped('line_ids').filtered(
+                lambda r: r.account_id.user_type_id.id in
+                [13, 14, 15, 16, 17] and not r.tax_line_id):
+            if line.product_id.id not in res:
+                res[line.product_id.id] = 0.0
+            res[line.product_id.id] += round(abs(line.balance), 4)
+        return res
 
     @api.model
     def get_tms_expense_info(self, expense, aml):
@@ -251,35 +280,15 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                  ('account_id', '=', 3305),
                  '|', ('name', 'ilike', move_name),
                       ('ref', 'ilike', move_name)])
-            # Miscelanous Provition Case
-            if move.journal_id.type == 'general':
-                for line in move.line_ids:
-                    balance = abs(line.balance)
-                    vat = ''
-                    if partial['amount_currency'] and inv_aml.amount_currency:
-                        usd_currency = self.env.ref('base.USD').with_context(
-                            date=aml.date)
-                        balance = usd_currency.compute(
-                            abs(line.amount_currency), mxn_currency)
-                        if aml.move_id.usd_currency_rate:
-                            balance = (
-                                abs(line.amount_currency) *
-                                aml.move_id.usd_currency_rate)
-                    # Discount Advances
-                    if advance_aml:
-                        balance = balance - abs(advance_aml.balance)
-                    amount_untaxed = round(balance * paid_rate, 4)
-                    taxes, vat = self.get_tax_info(line)
-                    items.append(
-                        [line.account_id.code, line.move_id.name,
-                         line.name, line.ref, amount_untaxed,
-                         'debit' if line.debit > 0.0 else 'credit',
-                         line.journal_id, taxes, vat])
-                continue
+            # Search if the source document is an invoice and haz refunds
+            refund_lines = self.get_refunds(move)
             # Get the income statement amls of the invoice
             lines = move.line_ids.filtered(
                 lambda r: r.account_id.user_type_id.id in
                 [13, 14, 15, 16, 17] and not r.tax_line_id)
+            # Miscelanous Provition Case
+            if move.journal_id.type == 'general':
+                lines = move.line_ids
             for line in lines:
                 balance = abs(line.balance)
                 vat = ''
@@ -295,7 +304,14 @@ class AccountGeneralLedgerWizard(models.TransientModel):
                 # Discount Advances
                 if advance_aml:
                     balance = balance - abs(advance_aml.balance)
-                amount_untaxed = round(balance * paid_rate, 4)
+                # ##################  REFUNDS ################
+                if line.product_id.id in refund_lines:
+                    balance -= refund_lines[line.product_id.id]
+                    amount_untaxed = balance
+                elif refund_lines:
+                    amount_untaxed = round(balance, 4)
+                else:
+                    amount_untaxed = round(balance * paid_rate, 4)
                 taxes, vat = self.get_tax_info(line)
                 items.append(
                     [line.account_id.code, line.move_id.name,
@@ -371,14 +387,23 @@ class AccountGeneralLedgerWizard(models.TransientModel):
         for aml in aml_obj.browse([x[0] for x in data]):
             # If the account is an income statement account and his journal is
             # the company tax cash basis journal the aml or
-            # if the aml is part of a miscellanous journal entry rencolided
-            # this lines are not necessary
-            if ((aml.account_id.user_type_id.id in [13, 14, 15, 16, 17] and
-                    aml.journal_id == company_tax_journal) or
-                    (aml.move_id.line_ids.filtered(
-                        lambda x: x.account_id.reconcile and
-                        (x.matched_credit_ids or x.matched_debit_ids)))):
+            if (aml.account_id.user_type_id.id in [13, 14, 15, 16, 17] and
+                    aml.journal_id == company_tax_journal):
                 continue
+            # if the aml is part of a miscellanous journal entry renconciled
+            # and this line is not a TMS expense provition are not necessary
+            elif (aml.move_id.line_ids.filtered(
+                    lambda x: x.account_id.reconcile and
+                    (x.matched_credit_ids or x.matched_debit_ids))):
+                journal_ids = aml.move_id.mapped(
+                    'line_ids.matched_credit_ids.credit_move_id.journal_id')
+                journal_ids += (
+                    aml.move_id.mapped(
+                        'line_ids.matched_debit_ids.debit_move_id.journal_id'))
+                if not (numpy.any(numpy.array(journal_ids.ids) in
+                        numpy.array(self.expense_journal_ids.ids))):
+                    continue
+
             # DIOT
             taxes, vat = self.get_tax_info(aml)
             if aml.account_id.code not in res.keys():
