@@ -36,6 +36,37 @@ class TestTmsExpense(TransactionCase):
             'tms_expense_negative_account_id': employee_accont.id})
 
         self.travel = self.env.ref('tms.tms_travel_05')
+        self.waybill = self.env['tms.waybill'].create({
+            'operating_unit_id': self.operating_unit.id,
+            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_order_id': self.env.ref('base.res_partner_2').id,
+            'partner_invoice_id': self.env.ref('base.res_partner_2').id,
+            'departure_address_id': self.env.ref(
+                'base.res_partner_address_31').id,
+            'arrival_address_id': self.env.ref(
+                'base.res_partner_address_22').id,
+            'travel_ids': [(6, 0, [self.travel.id])],
+            'customer_factor_ids': [(0, 0, {
+                'factor_type': 'travel',
+                'name': 'Travel',
+                'fixed_amount': 1001.5,
+                'category': 'customer',
+            })],
+            'transportable_line_ids': [(0, 0, {
+                'transportable_id': self.env.ref(
+                    'tms.tms_transportable_01').id,
+                'quantity': 100.0,
+                'name': 'Sand',
+                'transportable_uom_id': self.env.ref(
+                    'product.product_uom_ton').id,
+            })],
+            'driver_factor_ids': [(0, 0, {
+                'factor_type': 'travel',
+                'name': 'Travel',
+                'fixed_amount': 501.5,
+                'category': 'driver',
+            })],
+        })
 
         # Create advance
         self.tms_advance.create({
@@ -46,8 +77,8 @@ class TestTmsExpense(TransactionCase):
             'amount': 350.00,
         })
         # Confirm fuel vouchers
-        self.travel.fuel_log_ids.action_approved()
-        self.travel.fuel_log_ids.action_confirm()
+        self.waybill.travel_ids.mapped('fuel_log_ids').action_approved()
+        self.waybill.travel_ids.mapped('fuel_log_ids').action_confirm()
         # Confirm and paid advances.
         self.bank_account = self.env['account.journal'].create({
             'bank_acc_number': '121212',
@@ -55,11 +86,12 @@ class TestTmsExpense(TransactionCase):
             'type': 'bank',
             'code': 'TESTBANK',
         })
-        self.travel.advance_ids.action_approve()
-        self.travel.advance_ids.action_authorized()
-        self.travel.advance_ids.action_confirm()
+        self.waybill.travel_ids.mapped('advance_ids').action_approve()
+        self.waybill.travel_ids.mapped('advance_ids').action_authorized()
+        self.waybill.travel_ids.mapped('advance_ids').action_confirm()
         self.env['tms.wizard.payment'].with_context({
-            'active_ids': self.travel.advance_ids.mapped('id'),
+            'active_ids': self.waybill.travel_ids.mapped(
+                'advance_ids').mapped('id'),
             'active_model': 'tms.advance',
         }).create({
             'amount_total': sum(self.travel.advance_ids.mapped('amount')),
@@ -68,8 +100,9 @@ class TestTmsExpense(TransactionCase):
         }).make_payment()
 
         # Confirm travel
-        self.travel.action_progress()
-        self.travel.action_done()
+        for travel in self.waybill.travel_ids:
+            travel.action_progress()
+            travel.action_done()
 
         # Allow to cancel the expense
         journal = self.env.ref('tms.tms_account_journal_expense')
@@ -80,14 +113,15 @@ class TestTmsExpense(TransactionCase):
             'operating_unit_id': self.operating_unit.id,
             'unit_id': self.unit.id,
             'employee_id': self.driver.id,
-            'travel_ids': [(4, self.travel.id)],
+            'travel_ids': [(6, 0, [self.travel.id])],
             'expense_line_ids': [(0, 0, {
                 'travel_id': self.travel.id,
                 'product_id': self.product_fuel.id,
-                'name': self.product_fuel.name,
                 'line_type': self.product_fuel.tms_product_category,
+                'name': self.product_fuel.name,
                 'unit_price': 100.0,
-                'partner_id': self.env.ref('base.res_partner_address_12').id,
+                'partner_id': self.env.ref(
+                    'base.res_partner_address_12').id,
                 'invoice_number': '10010101',
                 'date': '03/08/2018',
             })]
@@ -144,12 +178,24 @@ class TestTmsExpense(TransactionCase):
             ('state', '=', 'done'),
         ]).mapped('id')
         self.assertTrue(self.travel.id in travel_ids)
-        self.create_expense()
 
-    def test_40_tms_expense_action_approved(self):
-        pass
+        expense = self.create_expense()
+        self.assertEquals(
+            len(expense.expense_line_ids.filtered(
+                lambda x: x.line_type == 'salary')),
+            len(expense.travel_ids))
 
-    def test_50_tms_expense_action_confirm(self):
+        amount_salary = len(self.waybill.travel_ids) * sum(
+            self.waybill.driver_factor_ids.mapped('fixed_amount'))
+        self.assertEquals(amount_salary, expense.amount_salary)
+
+        amount_advance = 0
+        for advance in self.waybill.travel_ids.mapped('advance_ids'):
+            if advance.payment_move_id:
+                amount_advance += advance.amount
+        self.assertEquals(amount_advance, expense.amount_advance)
+
+    def test_40_tms_expense_action_confirm(self):
         expense = self.create_expense()
         # Confirm expense.
         expense.action_approved()
@@ -162,7 +208,7 @@ class TestTmsExpense(TransactionCase):
         for lid in line_ids:
             self.assertTrue(lid in fuel_line_ids.mapped('id'))
 
-    def test_60_tms_expense_action_cancel(self):
+    def test_50_tms_expense_action_cancel(self):
         expense = self.create_expense()
         # Confirm expense.
         expense.action_approved()
@@ -173,4 +219,4 @@ class TestTmsExpense(TransactionCase):
         if expense.expense_line_ids.filtered(
                 lambda x: x.expense_fuel_log):
             self.assertFalse(any(expense.fuel_log_ids.filtered(
-                    lambda x: x.created_from_expense)))
+                lambda x: x.created_from_expense)))
