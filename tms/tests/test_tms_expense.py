@@ -36,6 +36,29 @@ class TestTmsExpense(TransactionCase):
             'tms_expense_negative_account_id': employee_accont.id})
 
         self.travel = self.env.ref('tms.tms_travel_05')
+        self.travel2 = self.tms_travel.create({
+            'operating_unit_id': self.operating_unit.id,
+            'unit_id': self.unit.id,
+            'employee_id': self.driver.id,
+            'route_id': self.env.ref('tms.tms_route_02').id,
+        })
+        self.travel2.write({
+            'fuel_log_ids': [(0, 0, {
+                'operating_unit_id': self.operating_unit.id,
+                'vendor_id': self.env.ref('base.res_partner_address_12').id,
+                'travel_id': self.travel2.id,
+                'vehicle_id': self.unit.id,
+                'product_id': self.product_fuel.id,
+                'tax_amount': 10.0,
+                'price_total': 150.0,
+            })],
+            'advance_ids': [(0, 0, {
+                'operating_unit_id': self.operating_unit.id,
+                'travel_id': self.travel2.id,
+                'product_id': self.product_real_expense.id,
+                'amount': 200.0,
+            })],
+        })
         self.waybill = self.env['tms.waybill'].create({
             'operating_unit_id': self.operating_unit.id,
             'partner_id': self.env.ref('base.res_partner_2').id,
@@ -45,7 +68,7 @@ class TestTmsExpense(TransactionCase):
                 'base.res_partner_address_31').id,
             'arrival_address_id': self.env.ref(
                 'base.res_partner_address_22').id,
-            'travel_ids': [(6, 0, [self.travel.id])],
+            'travel_ids': [(6, 0, [self.travel.id, self.travel2.id])],
             'customer_factor_ids': [(0, 0, {
                 'factor_type': 'travel',
                 'name': 'Travel',
@@ -109,22 +132,47 @@ class TestTmsExpense(TransactionCase):
         journal.write({'update_posted': True})
 
     def create_expense(self):
+        product_other_income = self.env.ref('tms.product_other_income')
+        product_salary_discount = self.env.ref('tms.product_discount')
+        product_salary_retention = self.env.ref('tms.product_retention')
         return self.tms_expense.create({
             'operating_unit_id': self.operating_unit.id,
             'unit_id': self.unit.id,
             'employee_id': self.driver.id,
-            'travel_ids': [(6, 0, [self.travel.id])],
-            'expense_line_ids': [(0, 0, {
-                'travel_id': self.travel.id,
-                'product_id': self.product_fuel.id,
-                'line_type': self.product_fuel.tms_product_category,
-                'name': self.product_fuel.name,
-                'unit_price': 100.0,
-                'partner_id': self.env.ref(
-                    'base.res_partner_address_12').id,
-                'invoice_number': '10010101',
-                'date': '03/08/2018',
-            })]
+            'travel_ids': [(6, 0, [self.travel.id, self.travel2.id])],
+            'expense_line_ids': [
+                (0, 0, {
+                    'travel_id': self.travel.id,
+                    'product_id': self.product_fuel.id,
+                    'line_type': self.product_fuel.tms_product_category,
+                    'name': self.product_fuel.name,
+                    'unit_price': 100.0,
+                    'partner_id': self.env.ref(
+                        'base.res_partner_address_12').id,
+                    'invoice_number': '10010101',
+                    'date': '03/08/2018',
+                }), (0, 0, {
+                    'product_id': product_other_income.id,
+                    'name': product_other_income.name,
+                    'unit_price': 100.0,
+                }), (0, 0, {
+                    'product_id': product_salary_discount.id,
+                    'name': product_salary_discount.name,
+                    'unit_price': 100.0,
+                }), (0, 0, {
+                    'product_id': product_salary_retention.id,
+                    'name': product_salary_retention.name,
+                    'unit_price': 100.0,
+                }), (0, 0, {
+                    'travel_id': self.travel.id,
+                    'product_id': self.product_real_expense.id,
+                    'line_type': (
+                        self.product_real_expense.tms_product_category),
+                    'name': self.product_real_expense.name,
+                    'unit_price': 900.0,
+                    'tax_ids': [(4, self.env.ref(
+                        'l10n_generic_coa.1_purchase_tax_template').id)],
+                })],
         })
 
     def test_10_tms_expense_create_advance_line(self):
@@ -138,6 +186,8 @@ class TestTmsExpense(TransactionCase):
         })
         with self.assertRaises(ValidationError) as err:
             self.create_expense()
+        self.waybill.travel_ids.mapped('advance_ids').filtered(
+            lambda x: x.state == 'closed').write({'state': 'confirmed'})
         self.assertEquals(
             err.exception.name,
             'Oops! All the advances must be confirmed or cancelled \n '
@@ -185,15 +235,51 @@ class TestTmsExpense(TransactionCase):
                 lambda x: x.line_type == 'salary')),
             len(expense.travel_ids))
 
+        # Salary
         amount_salary = len(self.waybill.travel_ids) * sum(
             self.waybill.driver_factor_ids.mapped('fixed_amount'))
         self.assertEquals(amount_salary, expense.amount_salary)
-
-        amount_advance = 0
-        for advance in self.waybill.travel_ids.mapped('advance_ids'):
-            if advance.payment_move_id:
-                amount_advance += advance.amount
+        # Other Income
+        amount_other_income = sum(expense.expense_line_ids.filtered(
+            lambda x: x.line_type == 'other_income').mapped('price_total'))
+        self.assertEquals(amount_other_income, expense.amount_other_income)
+        # Salary Discount
+        amount_salary_discount = sum(expense.expense_line_ids.filtered(
+            lambda x: x.line_type == 'salary_discount').mapped('price_total'))
+        self.assertEquals(
+            amount_salary_discount, expense.amount_salary_discount)
+        # Salary Retention
+        amount_salary_retention = sum(expense.expense_line_ids.filtered(
+            lambda x: x.line_type == 'salary_retention').mapped('price_total'))
+        self.assertEquals(
+            amount_salary_retention, expense.amount_salary_retention)
+        # Expenses
+        amount_real_expense = sum(expense.expense_line_ids.filtered(
+            lambda x: x.line_type == 'real_expense').mapped('price_subtotal'))
+        self.assertEquals(amount_real_expense, expense.amount_real_expense)
+        # Subtotal (Real)
+        amount_subtotal_real = (
+            amount_salary +
+            amount_salary_discount +
+            amount_real_expense +
+            amount_salary_retention +
+            amount_other_income)
+        self.assertEquals(amount_subtotal_real, expense.amount_subtotal_real)
+        # Taxes (Real)
+        amount_tax_real = sum(expense.expense_line_ids.filtered(
+            lambda x: x.line_type == 'real_expense').mapped('tax_amount'))
+        self.assertEquals(amount_tax_real, expense.amount_tax_real)
+        # Total (Real)
+        amount_total_real = amount_subtotal_real + amount_tax_real
+        self.assertEquals(amount_total_real, expense.amount_total_real)
+        # Advances
+        amount_advance = sum(self.waybill.travel_ids.mapped(
+            'advance_ids').filtered(lambda x: x.payment_move_id).mapped(
+            'amount'))
         self.assertEquals(amount_advance, expense.amount_advance)
+        # Balance
+        amount_balance = amount_total_real - amount_advance
+        self.assertEquals(amount_balance, expense.amount_balance)
 
     def test_40_tms_expense_action_confirm(self):
         expense = self.create_expense()
