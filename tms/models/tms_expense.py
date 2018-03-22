@@ -6,6 +6,7 @@
 from __future__ import division
 
 from datetime import datetime
+import pytz
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -190,6 +191,13 @@ class TmsExpense(models.Model):
     fuel_efficiency_real = fields.Float(
     )
 
+    def _get_time(self, date):
+        start = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+        user = self.env.user
+        tz = pytz.timezone(user.tz) if user.tz else pytz.utc
+        start = pytz.utc.localize(start).astimezone(tz)
+        return start.strftime("%Y-%m-%d %H:%M:%S")
+
     @api.depends('travel_ids')
     def _compute_income_km(self):
         for rec in self:
@@ -231,14 +239,16 @@ class TmsExpense(models.Model):
     def _compute_travel_days(self):
         for rec in self:
             if rec.start_date and rec.end_date:
+                date_start = self._get_time(rec.start_date)
+                date_end = self._get_time(rec.end_date)
                 strp_start_date = datetime.strptime(
-                    rec.start_date, "%Y-%m-%d %H:%M:%S")
+                    date_start, "%Y-%m-%d %H:%M:%S")
                 strp_end_date = datetime.strptime(
-                    rec.end_date, "%Y-%m-%d %H:%M:%S")
+                    date_end, "%Y-%m-%d %H:%M:%S")
                 difference = strp_end_date - strp_start_date
                 days = int(difference.days) + 1
                 hours = int(difference.seconds / 3600)
-                mins = int((difference.seconds - (hours * 3600))/60)
+                mins = int((difference.seconds - (hours * 3600)) / 60)
                 seconds = difference.seconds - ((hours * 3600) + (mins * 60))
                 if hours < 10:
                     hours = '0' + str(hours)
@@ -533,13 +543,13 @@ class TmsExpense(models.Model):
                 'product_qty': line.product_qty,
                 'tax_amount': line.tax_amount,
                 'state': 'closed',
-                'employee_id':  rec.employee_id.id,
+                'employee_id': rec.employee_id.id,
                 'price_total': line.price_total,
                 'date': line.date,
                 'expense_control': True,
                 'expense_id': rec.id,
                 'ticket_number': line.invoice_number,
-                })
+            })
             line.control = True
             return fuel_voucher
 
@@ -788,7 +798,7 @@ class TmsExpense(models.Model):
                         'cfdi_fiscal_folio': False,
                         'xml_signed': False,
                         'reference': False,
-                        })
+                    })
                     line.invoice_id.signal_workflow('invoice_cancel')
                     line.invoice_id = False
             if self.move_id.state == 'posted':
@@ -978,7 +988,7 @@ class TmsExpense(models.Model):
                 if ac_loan:
                     loan.write({
                         'expense_id': self.id
-                        })
+                    })
                     total_discount = self.calculate_discounts(methods, loan)
                     total_final = loan.balance - total_discount
                     if total_final <= 0.0:
