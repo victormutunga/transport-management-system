@@ -663,7 +663,6 @@ class TmsExpense(models.Model):
                 tax_account = tax.account_id.id
                 if not tax_account:
                     raise ValidationError(
-                        _('Warning !'),
                         _('Tax Account is not defined for '
                           'Tax %s (id:%d)') % (tax.name, tax.id,))
                 tax_amount = line.tax_amount

@@ -131,10 +131,24 @@ class TestTmsExpense(TransactionCase):
         journal = self.env.ref('tms.tms_account_journal_expense')
         journal.write({'update_posted': True})
 
+        tax_group_16 = self.env['account.tax.group'].create(
+            {'name': 'Taxes 16%'})
+        self.tax_16 = self.env['account.tax'].create({
+            'name': 'Tax 16.00%',
+            'type_tax_use': 'purchase',
+            'amount_type': 'percent',
+            'amount': 16.0,
+            'account_id': employee_accont.id,
+            'refund_account_id': employee_accont.id,
+            'tax_group_id': tax_group_16.id,
+            'active': True,
+        })
+
     def create_expense(self):
         product_other_income = self.env.ref('tms.product_other_income')
         product_salary_discount = self.env.ref('tms.product_discount')
         product_salary_retention = self.env.ref('tms.product_retention')
+        product_made_up_expense = self.env.ref('tms.product_madeup')
         return self.tms_expense.create({
             'operating_unit_id': self.operating_unit.id,
             'unit_id': self.unit.id,
@@ -164,14 +178,17 @@ class TestTmsExpense(TransactionCase):
                     'name': product_salary_retention.name,
                     'unit_price': 100.0,
                 }), (0, 0, {
+                    'product_id': product_made_up_expense.id,
+                    'name': product_made_up_expense.name,
+                    'unit_price': 100.0,
+                }), (0, 0, {
                     'travel_id': self.travel.id,
                     'product_id': self.product_real_expense.id,
                     'line_type': (
                         self.product_real_expense.tms_product_category),
                     'name': self.product_real_expense.name,
                     'unit_price': 900.0,
-                    'tax_ids': [(4, self.env.ref(
-                        'l10n_generic_coa.1_purchase_tax_template').id)],
+                    'tax_ids': [(4, self.tax_16.id)],
                 })],
         })
 
@@ -280,6 +297,30 @@ class TestTmsExpense(TransactionCase):
         # Balance
         amount_balance = amount_total_real - amount_advance
         self.assertEquals(amount_balance, expense.amount_balance)
+        # Cosf of Fuel
+        amount_fuel = sum([
+            log.price_subtotal + log.special_tax_amount
+            for log in expense.fuel_log_ids])
+        self.assertEquals(amount_fuel, expense.amount_fuel)
+        # SubTotal (All)
+        amount_subtotal_total = sum([
+            log.price_subtotal + log.special_tax_amount
+            for log in expense.travel_ids.mapped('fuel_log_ids')])
+        amount_subtotal_total += sum(expense.expense_line_ids.filtered(
+            lambda x: x.line_type == 'real_expense').mapped('price_subtotal'))
+        amount_subtotal_total += amount_balance
+        self.assertEquals(amount_subtotal_total, expense.amount_subtotal_total)
+        # Taxes (All)
+        amount_tax_total = sum(expense.travel_ids.mapped(
+            'fuel_log_ids').mapped('tax_amount')) + amount_tax_real
+        self.assertEquals(amount_tax_total, expense.amount_tax_total)
+        # Made up expense
+        amount_made_up_expense = sum(expense.expense_line_ids.filtered(
+            lambda x: x.line_type == 'made_up_expense').mapped('price_total'))
+        # Total (All)
+        amount_total_total = (
+            amount_subtotal_total + amount_tax_total + amount_made_up_expense)
+        self.assertEquals(amount_total_total, expense.amount_total_total)
 
     def test_40_tms_expense_action_confirm(self):
         expense = self.create_expense()
