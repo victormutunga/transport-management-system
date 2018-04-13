@@ -535,7 +535,8 @@ class TmsExpense(models.Model):
             fuel_voucher = rec.env['fleet.vehicle.log.fuel'].create({
                 'operating_unit_id': rec.operating_unit_id.id,
                 'travel_id': line.travel_id.id,
-                'vehicle_id': line.travel_id.unit_id.id,
+                'vehicle_id': (
+                    line.travel_id.unit_id.id or line.expense_id.unit_id.id),
                 'product_id': line.product_id.id,
                 'price_unit': line.unit_price,
                 'price_subtotal': line.price_subtotal,
@@ -546,15 +547,12 @@ class TmsExpense(models.Model):
                 'employee_id': rec.employee_id.id,
                 'price_total': line.price_total,
                 'date': line.date,
-                'expense_control': True,
                 'expense_id': rec.id,
                 'ticket_number': line.invoice_number,
                 'created_from_expense': True,
                 'expense_line_id': line.id,
                 })
-            line.write({
-                'control': True,
-                'expense_fuel_log': True})
+            line.write({'expense_fuel_log': True})
             return fuel_voucher
 
     @api.multi
@@ -810,7 +808,6 @@ class TmsExpense(models.Model):
             move_id = self.move_id
             self.move_id = False
             move_id.unlink()
-
             self.fuel_log_ids.filtered(
                 lambda x: x.created_from_expense).unlink()
         self.state = 'cancel'
@@ -827,8 +824,7 @@ class TmsExpense(models.Model):
                 ('id', 'not in', exp_no_travel)]).unlink()
             rec.expense_line_ids.search([
                 ('expense_id', '=', rec.id),
-                ('control', '=', True),
-                ('expense_fuel_log', '=', False)]).unlink()
+                ('control', '=', True)]).unlink()
             travels = self.env['tms.travel'].search(
                 [('expense_id', '=', rec.id)])
             travels.write({'expense_id': False, 'state': 'done'})
@@ -839,10 +835,11 @@ class TmsExpense(models.Model):
                 'state': 'confirmed'
             })
             fuel_logs = self.env['fleet.vehicle.log.fuel'].search(
-                [('expense_id', '=', rec.id)])
+                [('expense_id', '=', rec.id),
+                 ('created_from_expense', '=', False)])
             fuel_logs.write({
                 'expense_id': False,
-                'state': 'confirmed'
+                'state': 'confirmed',
             })
 
     @api.multi
@@ -919,8 +916,6 @@ class TmsExpense(models.Model):
                     'date': fuel_log.date,
                     'invoice_number': fuel_log.ticket_number,
                 })
-                if fuel_log.expense_control:
-                    fuel_expense.name = fuel_expense.product_id.name
             if fuel_expense:
                 fuel_log.write({
                     'state': 'closed',

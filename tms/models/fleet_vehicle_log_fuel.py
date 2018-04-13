@@ -66,7 +66,6 @@ class FleetVehicleLogFuel(models.Model):
         'res.currency', string='Currency',
         required=True,
         default=lambda self: self.env.user.company_id.currency_id)
-    expense_control = fields.Boolean(readonly=True)
     ticket_number = fields.Char()
     prepaid_id = fields.Many2one(
         'fleet.vehicle.log.fuel.prepaid',

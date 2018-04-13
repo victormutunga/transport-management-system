@@ -21,7 +21,7 @@ class TmsRetention(models.Model):
         help='Factor to compute the retention depending of the type:\n'
              'Days: factor * days of travel\n'
              'Salary: factor * driver salary',
-        digits=(20,4),)
+        digits=(20, 4),)
     mixed = fields.Boolean(
         help='Check this if you want to compute the retention plus a fixed '
              'amount')
