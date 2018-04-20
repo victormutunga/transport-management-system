@@ -129,7 +129,7 @@ class TmsWaybill(models.Model):
         string='Taxes')
     amount_total = fields.Float(
         compute='_compute_amount_total',
-        string='Total')
+        string='Total', store=True)
     distance_real = fields.Float(
         help="Route obtained by electronic reading")
     distance_route = fields.Float()
