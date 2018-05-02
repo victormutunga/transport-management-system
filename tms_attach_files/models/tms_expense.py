@@ -11,9 +11,8 @@ class TmsExpense(models.Model):
     @api.multi
     def create_supplier_invoice(self, lines):
         for line in lines:
+            res = super(TmsExpense, self).create_supplier_invoice(line)
             if line.is_invoice:
-                invoice_id = super(TmsExpense, self).create_supplier_invoice(
-                    line)
                 vals = {
                     'file_xml_sign': line.xml_file,
                     'file_pdf': line.pdf_file,
@@ -21,6 +20,6 @@ class TmsExpense(models.Model):
                     'pdf_name': line.pdf_filename,
                 }
                 wiz = self.env['tms.attachment.wizard'].with_context(
-                    active_id=invoice_id.id).create(vals)
+                    active_id=res.id).create(vals)
                 wiz.attach_files()
-                return invoice_id
+            return res

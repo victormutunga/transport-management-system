@@ -500,7 +500,7 @@ class TmsExpense(models.Model):
                     'expense_id': False,
                     'state': 'confirmed'
                 })
-                return super(TmsExpense, self).unlink()
+            return super(TmsExpense, self).unlink()
 
     @api.multi
     def action_approved(self):

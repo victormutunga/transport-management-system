@@ -66,14 +66,6 @@ class TmsTollImport(models.TransientModel):
                             'date': txt_date,
                             'import_rate': amount_total,
                             })
-                return {
-                    'name': 'Toll station data',
-                    'view_type': 'form',
-                    'view_mode': 'tree',
-                    'target': 'current',
-                    'res_model': 'tms.toll.data',
-                    'type': 'ir.actions.act_window'
-                }
             except Exception as message:
                 raise ValidationError(_(
                     'Oops! Odoo has detected an error'
@@ -82,3 +74,11 @@ class TmsTollImport(models.TransientModel):
         else:
             raise ValidationError(
                 _('Oops! The files must have .txt or .dat extensions'))
+        return {
+            'name': 'Toll station data',
+            'view_type': 'form',
+            'view_mode': 'tree',
+            'target': 'current',
+            'res_model': 'tms.toll.data',
+            'type': 'ir.actions.act_window',
+        }

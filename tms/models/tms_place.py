@@ -6,12 +6,11 @@
 import logging
 import urllib as my_urllib
 
+import simplejson as json
 from odoo import _, api, fields
 from odoo.addons.base_geoengine import fields as geo_fields
 from odoo.addons.base_geoengine import geo_model
 from odoo.exceptions import ValidationError
-
-import simplejson as json
 
 _logger = logging.getLogger(__name__)
 try:

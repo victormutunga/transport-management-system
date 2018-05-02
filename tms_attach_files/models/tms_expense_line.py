@@ -7,7 +7,7 @@ import os
 from codecs import BOM_UTF8
 from datetime import datetime
 
-from lxml import objectify
+from lxml import objectify as obj
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
@@ -28,9 +28,9 @@ class TmsExpenseLine(models.Model):
                 raise ValidationError(_(
                     'Verify that file be .xml, please!'))
             xml_str = base64.decodestring(self.xml_file).lstrip(BOM_UTF8)
-            xml_str_rep = xml_str.replace(
+            root = xml_str.replace(
                 'xmlns:schemaLocation', 'xsi:schemaLocation')
-            xml = objectify.fromstring(xml_str_rep)
+            xml = obj.fromstring(root)  # pylint: disable=c-extension-no-member
             xml_vat_emitter = xml.Emisor.get('rfc', xml.Emisor.get('Rfc', ''))
             xml_folio = xml.get('folio', xml.get('Folio', ''))
             xml_date = xml.get('fecha', xml.get('Fecha', ''))
