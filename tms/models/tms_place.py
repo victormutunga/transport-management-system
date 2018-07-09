@@ -7,20 +7,13 @@ import logging
 import urllib as my_urllib
 
 import simplejson as json
-from odoo import _, api, fields
-from odoo.addons.base_geoengine import fields as geo_fields
-from odoo.addons.base_geoengine import geo_model
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
-try:
-    from pyproj import Proj, transform
-    import geojson
-except ImportError:
-    _logger.debug('Cannot `import pyproj or geojson`.')
 
 
-class TmsPlace(geo_model.GeoModel):
+class TmsPlace(models.Model):
     _name = 'tms.place'
     _description = 'Cities / Places'
 
@@ -38,11 +31,6 @@ class TmsPlace(geo_model.GeoModel):
     longitude = fields.Float(
         required=False, digits=(20, 10),
         help='GPS Longitude')
-    point = geo_fields.GeoPoint(
-        string='Coordinate',
-        compute='_compute_point',
-        inverse='_set_lat_long',
-    )
 
     @api.onchange('state_id')
     def get_country_id(self):
@@ -91,28 +79,3 @@ class TmsPlace(geo_model.GeoModel):
                 rec.complete_name = rec.name + ', ' + rec.state_id.name
             else:
                 rec.complete_name = rec.name
-
-    @api.depends('latitude', 'longitude')
-    def _compute_point(self):
-        for rec in self:
-            rec.point = geo_fields.GeoPoint.from_latlon(
-                self.env.cr, rec.latitude, rec.longitude).wkb_hex
-
-    def set_lang_long(self):
-        point_x, point_y = geojson.loads(self.point)['coordinates']
-        inproj = Proj(init='epsg:3857')
-        outproj = Proj(init='epsg:4326')
-        longitude, latitude = transform(inproj, outproj, point_x, point_y)
-        self.latitude = latitude
-        self.longitude = longitude
-
-    @api.onchange('point')
-    def onchange_geo_point(self):
-        if self.point:
-            self.set_lang_long()
-
-    @api.depends('point')
-    def _set_lat_long(self):
-        for rec in self:
-            if rec.point:
-                rec.set_lang_long()

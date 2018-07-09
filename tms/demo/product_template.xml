@@ -30,9 +30,6 @@
     <record id="product.product_delivery_02_product_template" model="product.template">
         <field name="active" eval="0"/>
     </record>
-    <record id="sale.advance_product_0_product_template" model="product.template">
-        <field name="active" eval="0"/>
-    </record>
     <record id="product.service_cost_01_product_template" model="product.template">
         <field name="active" eval="0"/>
     </record>
@@ -46,9 +43,6 @@
         <field name="active" eval="0"/>
     </record>
     <record id="product.product_product_17_product_template" model="product.template">
-        <field name="active" eval="0"/>
-    </record>
-    <record id="stock.product_icecream_product_template" model="product.template">
         <field name="active" eval="0"/>
     </record>
     <record id="product.product_product_27_product_template" model="product.template">

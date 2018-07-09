@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Copyright 2012, Israel Cruz Argil, Argil Consulting
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
@@ -6,7 +5,7 @@
 
 {
     "name": "Freight Management",
-    "version": "10.0.0.1.0",
+    "version": "10.0.2.0.0",
     "category": "Transport",
     "author": "Jarsa Sistemas, Argil Consulting",
     "website": "https://www.jarsa.com.mx/page/transport-management-system",
@@ -15,17 +14,12 @@
         "account_cancel",
         "fleet",
         "hr",
-        "purchase",
-        "sale",
-        "base_geoengine",
         "account_operating_unit"
     ],
     'external_dependencies': {
         'python': [
             'sodapy',
             'num2words',
-            'pyproj',
-            'geojson',
         ],
     },
     "summary": "Management System for Carriers, Trucking and other companies",
@@ -72,7 +66,6 @@
         'data/ir_config_parameter.xml',
     ],
     "demo": [
-        'demo/stock_warehouse_orderpoint.xml',
         'demo/product_product.xml',
         'demo/product_template.xml',
         'demo/fleet_vehicle_odometer.xml',

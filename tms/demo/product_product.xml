@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <record id="stock.product_icecream" model="product.product">
-        <field name="active" eval="0"/>
-    </record>
     <record id="product.product_product_16" model="product.product">
         <field name="active" eval="0"/>
     </record>
@@ -94,9 +91,6 @@
         <field name="active" eval="0"/>
     </record>
     <record id ="product.service_order_01" model="product.product">
-        <field name="active" eval="0"/>
-    </record>
-    <record id ="sale.advance_product_0" model="product.product">
         <field name="active" eval="0"/>
     </record>
     <record id ="product.product_product_1" model="product.product">

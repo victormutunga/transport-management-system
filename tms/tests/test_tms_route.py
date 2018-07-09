@@ -2,9 +2,9 @@
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-import simplejson as json
-
 from mock import MagicMock
+
+import simplejson as json
 
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import TransactionCase
