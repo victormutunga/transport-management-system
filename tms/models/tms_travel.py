@@ -122,6 +122,9 @@ class TmsTravel(models.Model):
     partner_ids = fields.Many2many(
         'res.partner', string='Customer', compute='_compute_partner_ids',
         store=True)
+    company_id = fields.Many2one(
+        'res.company', string='Company', required=True,
+        default=lambda self: self.env.user.company_id)
 
     @api.depends('waybill_ids')
     def _compute_partner_ids(self):

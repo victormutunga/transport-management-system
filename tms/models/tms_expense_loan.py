@@ -76,6 +76,9 @@ class TmsExpenseLoan(models.Model):
         "is only for Loan Expense Records with balance < 0.0",
         readonly=True,
         ondelete='restrict',)
+    company_id = fields.Many2one(
+        'res.company', string='Company', required=True,
+        default=lambda self: self.env.user.company_id)
 
     @api.model
     def create(self, values):

@@ -71,6 +71,9 @@ class TmsAdvance(models.Model):
     product_id = fields.Many2one(
         'product.product', string='Product', required=True,
         domain=[('tms_product_category', '=', 'real_expense')])
+    company_id = fields.Many2one(
+        'res.company', string='Company', required=True,
+        default=lambda self: self.env.user.company_id)
 
     @api.multi
     @api.depends('travel_id')

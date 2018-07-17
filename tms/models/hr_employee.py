@@ -23,11 +23,11 @@ class HrEmployee(models.Model):
     driver = fields.Boolean(
         help='Used to define if this person will be used as a Driver')
     tms_advance_account_id = fields.Many2one(
-        'account.account', 'Advance Account')
+        'account.account', 'Advance Account', company_dependent=True)
     tms_loan_account_id = fields.Many2one(
-        'account.account', 'Loan Account')
+        'account.account', 'Loan Account', company_dependent=True)
     tms_expense_negative_account_id = fields.Many2one(
-        'account.account', 'Negative Balance Account')
+        'account.account', 'Negative Balance Account', company_dependent=True)
     operating_unit_id = fields.Many2one(
         'operating.unit', 'Operating Unit')
     driver_license = fields.Char(string="License ID")

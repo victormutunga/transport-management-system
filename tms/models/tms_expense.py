@@ -188,8 +188,10 @@ class TmsExpense(models.Model):
         'Productivity Percentage',
         compute='_compute_percentage_km',
     )
-    fuel_efficiency_real = fields.Float(
-    )
+    fuel_efficiency_real = fields.Float()
+    company_id = fields.Many2one(
+        'res.company', string='Company', required=True,
+        default=lambda self: self.env.user.company_id)
 
     def _get_time(self, date):
         start = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
@@ -750,7 +752,6 @@ class TmsExpense(models.Model):
                 'journal_id': result['journal_id'],
                 'name': rec.name,
                 'line_ids': [line for line in result['move_lines']],
-                'partner_id': rec.env.user.company_id.id,
                 'operating_unit_id': rec.operating_unit_id.id,
             }
             move_id = result['move_obj'].create(move)

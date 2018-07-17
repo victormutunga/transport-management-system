@@ -74,6 +74,9 @@ class FleetVehicleLogFuel(models.Model):
     )
     created_from_expense = fields.Boolean(readonly=True)
     expense_line_id = fields.Many2one('tms.expense.line', readonly=True)
+    company_id = fields.Many2one(
+        'res.company', string='Company', required=True,
+        default=lambda self: self.env.user.company_id)
 
     @api.depends('vendor_id')
     def _compute_prepaid(self):
