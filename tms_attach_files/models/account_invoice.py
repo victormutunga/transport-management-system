@@ -36,9 +36,15 @@ class AccountInvoice(models.Model):
             raise ValidationError(
                 _('Error in XML structure\n%s \n %s') %
                 str(ex), expense_line.name)
-        validate_xml = self._validate_xml_sat(
-            xml_vat_emitter, xml_vat_receiver, xml_amount, xml_uuid)
-        if validate_xml.Estado == 'Cancelado':
+        validate_xml = False
+        try:
+            validate_xml = self._validate_xml_sat(
+                xml_vat_emitter, xml_vat_receiver, xml_amount, xml_uuid)
+        except ValidationError:
+            self.message_post(_(
+                'Cannot be verified the SAT status for this document, please '
+                'verify that the CFDI is valid before validate this record.'))
+        if validate_xml and validate_xml.Estado == 'Cancelado':
             raise ValidationError(
                 _('This XML state is CANCELED in the SAT system.\n' +
                   'Expense line: ' + expense_line.name + '\nTravel: ' +
