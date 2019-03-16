@@ -114,11 +114,11 @@
         <field name="model">tms.expense.loan</field>
         <field name="arch" type="xml">
             <search string="Search Loans">
-                <filter icon="terp-gtk-media-pause" string="Draft" domain="[('state','=','draft')]"/>
-                <filter icon="terp-gtk-jump-to-ltr" string="Approved" domain="[('state','=','approved')]"/>
-                <filter icon="terp-check" string="Confirmed" domain="[('state','=','confirmed')]"/>
-                <filter icon="terp-check" string="Not Paid" domain="[('paid','=',0)]"/>
-                <filter icon="terp-check" string="Paid" domain="[('paid','=',1)]"/>
+                <filter name="draft" icon="terp-gtk-media-pause" string="Draft" domain="[('state','=','draft')]"/>
+                <filter name="approved" icon="terp-gtk-jump-to-ltr" string="Approved" domain="[('state','=','approved')]"/>
+                <filter name="confirmed" icon="terp-check" string="Confirmed" domain="[('state','=','confirmed')]"/>
+                <filter name="not_paid" icon="terp-check" string="Not Paid" domain="[('paid','=',0)]"/>
+                <filter name="paid" icon="terp-check" string="Paid" domain="[('paid','=',1)]"/>
                 <newline/>
                 <field name="name" select="1"/>
                 <field name="employee_id" />
@@ -126,12 +126,12 @@
                 <field name="date" string="Expense date" />
                 <newline/>
                 <group expand="0" string="Group By..." >
-                    <filter string="Driver" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
-                    <filter string="Product" icon="terp-personal" domain="[]" context="{'group_by':'product_id'}"/>
-                    <filter string="Paid" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'paid'}"/>
+                    <filter name="driver" string="Driver" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
+                    <filter name="product" string="Product" icon="terp-personal" domain="[]" context="{'group_by':'product_id'}"/>
+                    <filter name="paid" string="Paid" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'paid'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                    <filter string="Expense Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>                        
+                    <filter name="state" string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    <filter name="expense_date" string="Expense Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>                        
                 </group>
            </search>
         </field>

@@ -201,20 +201,20 @@
         <field name="model">tms.expense</field>
         <field name="arch" type="xml">
             <search string="Search Expenses">
-                <filter domain="[('state','=','draft')]" string="Draft"/>
-                <filter domain="[('state','=','approved')]" string="Approved"/>
-                <filter domain="[('state','=','confirmed')]" string="Confirmed"/>
-                <filter domain="[('paid','=',0)]" string="Not Paid"/>
-                <filter domain="[('paid','=',1)]" string="Paid"/>
+                <filter name="draft" domain="[('state','=','draft')]" string="Draft"/>
+                <filter name="approved" domain="[('state','=','approved')]" string="Approved"/>
+                <filter name="confirmed" domain="[('state','=','confirmed')]" string="Confirmed"/>
+                <filter name="not_paid" domain="[('paid','=',0)]" string="Not Paid"/>
+                <filter name="paid" domain="[('paid','=',1)]" string="Paid"/>
                 <field name="name"/>
                 <field name="employee_id"/>
                 <field name="unit_id"/>
                 <field name="date" string="Expense date"/>
-                <filter context="{'group_by':'employee_id'}" string="Driver"/>
-                <filter context="{'group_by':'unit_id'}" string="Unit"/>
-                <filter context="{'group_by':'state'}" string="State"/>
-                <filter context="{'group_by':'date'}" string="Period"/>
-                <filter context="{'group_by':'paid'}" string="Paid"/>
+                <filter name="driver" context="{'group_by':'employee_id'}" string="Driver"/>
+                <filter name="unit" context="{'group_by':'unit_id'}" string="Unit"/>
+                <filter name="state" context="{'group_by':'state'}" string="State"/>
+                <filter name="period" context="{'group_by':'date'}" string="Period"/>
+                <filter name="paid" context="{'group_by':'paid'}" string="Paid"/>
                 <filter name="operating_unit_group_by" context="{'group_by':'operating_unit_id'}" string="Operating Unit"/>
             </search>
         </field>

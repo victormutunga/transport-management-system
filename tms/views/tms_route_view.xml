@@ -11,9 +11,9 @@
                 <field name="active"/>
                 <newline/>
                 <group expand="0" string="Group by...">
-                    <filter context="{'group_by' : 'departure_id'}" domain="[]" string="Departure"/>
+                    <filter name="departure" context="{'group_by' : 'departure_id'}" domain="[]" string="Departure"/>
                     <separator orientation="vertical"/>
-                    <filter context="{'group_by' : 'arrival_id'}" domain="[]" string="Arrival"/>
+                    <filter name="arrival" context="{'group_by' : 'arrival_id'}" domain="[]" string="Arrival"/>
                     <separator orientation="vertical"/>
                 </group>
             </search>

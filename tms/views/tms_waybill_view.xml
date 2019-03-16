@@ -292,30 +292,20 @@
                 <field name="operating_unit_id"/>
                 <field name="date_order" string="Waybill date"/>
                 <field name="user_id"/>
-                <separator/>
-                <filter domain="[('state','=','draft')]" icon="terp-gtk-media-pause" string="Pending"/>
-                <filter domain="[('state','=','approved')]" icon="terp-gtk-jump-to-ltr" string="Approved"/>
-                <filter domain="[('state','=','confirmed')]" icon="terp-check" string="Confirmed"/>
-                <separator/>
-                <filter domain="[('invoice_id','!=', False)]" icon="terp-stock_symbol-selection" string="Invoiced"/>
-                <filter domain="[('invoice_id','=', False)]" icon="terp-dialog-close" string="Not Invoiced"/>
-                <filter domain="[('state','!=','cancel')]" icon="terp-stock_symbol-selection" name="not_cancelled" string="Not Cancelled"/>
-                <filter domain="[('date_order','&gt;=', time.strftime('%Y-%m-01'))]" icon="terp-check" name="this_month" string="From this month"/>
-                <newline/>
-                <filter domain="[('user_id','=',uid)]" help="My Waybills"/>
-                <newline/>
-                <group expand="0" string="Group By...">
-                    <filter context="{'group_by':'partner_id'}" string="Customer"/>
-                    <filter string="Waybill Category"/>
-                    <separator orientation="vertical"/>
-                    <filter context="{'group_by':'state'}" string="State"/>
-                    <separator orientation="vertical"/>
-                    <filter context="{'group_by':'date_order'}" string="Order Date"/>
-                    <filter string="Invoice"/>
-                    <filter context="{'group_by':'user_id'}" string="Salesman"/>
-                    <filter context="{'group_by' : 'date_order'}" string="Period"/>
-                    <filter name="operating_unit_group_by" context="{'group_by':'operating_unit_id'}" string="Operating Unit"/>
-                </group>
+                <filter name="pending" domain="[('state','=','draft')]" string="Pending"/>
+                <filter name="approved" domain="[('state','=','approved')]" string="Approved"/>
+                <filter name="confirmed" domain="[('state','=','confirmed')]" string="Confirmed"/>
+                <filter name="invoiced" domain="[('invoice_id','!=', False)]" string="Invoiced"/>
+                <filter name="not_invoiced" domain="[('invoice_id','=', False)]" string="Not Invoiced"/>
+                <filter domain="[('state','!=','cancel')]" name="not_cancelled" string="Not Cancelled"/>
+                <filter domain="[('date_order','&gt;=', time.strftime('%Y-%m-01'))]" name="this_month" string="From this month"/>
+                <filter name="my_waybills" domain="[('user_id','=',uid)]" string="My Waybills"/>
+                <filter name="customer" context="{'group_by':'partner_id'}" string="Customer"/>
+                <filter name="state" context="{'group_by':'state'}" string="State"/>
+                <filter name="order_date" context="{'group_by':'date_order'}" string="Order Date"/>
+                <filter name="salesman" context="{'group_by':'user_id'}" string="Salesman"/>
+                <filter name="period" context="{'group_by' : 'date_order'}" string="Period"/>
+                <filter name="operating_unit_group_by" context="{'group_by':'operating_unit_id'}" string="Operating Unit"/>
             </search>
         </field>
     </record>
@@ -359,12 +349,6 @@
         <field name="search_view_id" ref="view_tms_waybill_filter"/>
         <field name="context">{&quot;search_default_user_id&quot;:uid, 'search_default_this_month': 1}</field>
         <field name="help">Waybills</field>
-    </record>
-    <record id="action_tms_invoice" model="ir.values">
-        <field name="name">Trial Balance</field>
-        <field name="key2">client_print_multi</field>
-        <field name="key">action</field>
-        <field name="model">tms.waybill</field>
     </record>
     <menuitem action="action_tms_waybill_form" id="menu_tms_waybill" parent="menu_tms_travels" sequence="2" groups="tms.group_traffic,tms.group_expenses,tms.group_supervisor_traffic,tms.group_monitoring"/>
 </odoo>

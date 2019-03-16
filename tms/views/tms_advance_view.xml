@@ -5,24 +5,24 @@
         <field name="model">tms.advance</field>
         <field name="arch" type="xml">
             <search string="Advances">
-                <filter domain="[('state','=','draft')]" string="Draft"/>
-                <filter domain="[('state','=','approved')]" string="Approved"/>
-                <filter domain="[('state','=','confirmed')]" string="Confirmed"/>
-                <filter domain="[('state','=','closed')]" string="Closed"/>
-                <filter domain="[('state','=','cancel')]" string="Cancelled"/>
-                <filter domain="[('paid','=', True)]" string="Paid"/>
-                <filter domain="[('paid','=', False)]" string="Not Paid"/>
+                <filter name="draft" domain="[('state','=','draft')]" string="Draft"/>
+                <filter name="approved" domain="[('state','=','approved')]" string="Approved"/>
+                <filter name="confirmed" domain="[('state','=','confirmed')]" string="Confirmed"/>
+                <filter name="closed" domain="[('state','=','closed')]" string="Closed"/>
+                <filter name="cancelled" domain="[('state','=','cancel')]" string="Cancelled"/>
+                <filter name="paid" domain="[('paid','=', True)]" string="Paid"/>
+                <filter name="not_paid" domain="[('paid','=', False)]" string="Not Paid"/>
                 <filter domain="[('date','&gt;=', time.strftime('%Y-%m-01'))]" string="From this month" name="this_month"/>
                 <field name="date"/>
                 <field name="name"/>
                 <field name="employee_id"/>
                 <field name="state"/>
-                <filter context="{'group_by': 'travel_id'}" string="Travel"/>
-                <filter context="{'group_by': 'unit_id'}" string="Unit"/>
-                <filter context="{'group_by': 'employee_id'}" string="Driver"/>
-                <filter context="{'group_by': 'state'}" string="State"/>
-                <filter context="{'group_by': 'date'}" string="Period"/>
-                <filter context="{'group_by': 'date:day'}" string="Day"/>
+                <filter name="travel" context="{'group_by': 'travel_id'}" string="Travel"/>
+                <filter name="unit" context="{'group_by': 'unit_id'}" string="Unit"/>
+                <filter name="driver" context="{'group_by': 'employee_id'}" string="Driver"/>
+                <filter name="state" context="{'group_by': 'state'}" string="State"/>
+                <filter name="period" context="{'group_by': 'date'}" string="Period"/>
+                <filter name="day" context="{'group_by': 'date:day'}" string="Day"/>
                 <filter name="operating_unit_group_by" context="{'group_by':'operating_unit_id'}" string="Operating Unit"/>
             </search>
         </field>

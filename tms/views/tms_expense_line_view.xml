@@ -69,7 +69,7 @@
         <field name="model">tms.expense.line</field>
         <field name="arch" type="xml">
             <search string="Expense Lines">
-                <filter context="{'group_by':'line_type'}" domain="[]" icon="terp-check" string="Line Type"/>
+                <filter name="line_type" context="{'group_by':'line_type'}" domain="[]" icon="terp-check" string="Line Type"/>
             </search>
         </field>
     </record>

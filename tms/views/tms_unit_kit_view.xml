@@ -14,9 +14,9 @@
                 <field name="employee_id"/>
                 <field name="date_start"/>
                 <field name="date_end"/>
-                <filter context="{'group_by' : 'unit_id'}" string="Unit"/>
+                <filter name="unit" context="{'group_by' : 'unit_id'}" string="Unit"/>
                 <separator orientation="vertical"/>
-                <filter context="{'group_by' : 'employee_id'}" string="Driver"/>
+                <filter name="driver" context="{'group_by' : 'employee_id'}" string="Driver"/>
             </search>
         </field>
     </record>

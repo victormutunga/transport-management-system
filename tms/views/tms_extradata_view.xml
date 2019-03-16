@@ -17,8 +17,6 @@
             <form string="TMS Extra Fields">
                 <group>
                     <field name="type" invisible="1"/>
-                    <field name="type_id" context="{'active_model': active_model_base}"/>
-                    <newline/>
                     <field invisible="1" name="value_extra"/>
                     <field attrs="{'invisible':[('type','!=','char')],'required':[('type','=','char')]}" name="value_char"/>
                     <field attrs="{'invisible':[('type','!=','integer')],'required':[('type','=','integer')]}" name="value_integer"/>
