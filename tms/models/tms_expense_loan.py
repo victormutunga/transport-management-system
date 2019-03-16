@@ -8,7 +8,7 @@ from odoo.exceptions import ValidationError
 
 class TmsExpenseLoan(models.Model):
     _name = "tms.expense.loan"
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = 'mail.thread'
     _description = "Tms Expense Loan"
 
     operating_unit_id = fields.Many2one(

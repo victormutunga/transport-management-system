@@ -9,7 +9,7 @@ from odoo import _, api, exceptions, fields, models
 
 class TmsRoute(models.Model):
     _name = 'tms.route'
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = 'mail.thread'
     _description = 'Routes'
 
     name = fields.Char('Route Name', size=64, required=True, index=True)

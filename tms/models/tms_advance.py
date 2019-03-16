@@ -8,7 +8,7 @@ from odoo.exceptions import ValidationError
 
 class TmsAdvance(models.Model):
     _name = 'tms.advance'
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = 'mail.thread'
     _description = 'Money advance payments for Travel expenses'
     _order = "name desc, date desc"
 

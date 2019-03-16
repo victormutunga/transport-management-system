@@ -6,10 +6,10 @@ from odoo import _, api, fields, models
 
 
 class TmsEvent(models.Model):
-    _name = "tms.event"
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _description = "Events"
-    _order = "date"
+    _name = 'tms.event'
+    _inherit = 'mail.thread'
+    _description = 'Events'
+    _order = 'date'
 
     name = fields.Char(
         string='Description', required=True)

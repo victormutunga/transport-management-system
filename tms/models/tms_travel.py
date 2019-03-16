@@ -11,7 +11,7 @@ from odoo.exceptions import ValidationError
 
 class TmsTravel(models.Model):
     _name = 'tms.travel'
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = 'mail.thread'
     _description = 'Travel'
     _order = "date desc"
 

@@ -13,7 +13,7 @@ from odoo.exceptions import ValidationError
 
 class TmsExpense(models.Model):
     _name = 'tms.expense'
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = 'mail.thread'
     _description = 'Travel Expenses'
     _order = 'name desc'
 

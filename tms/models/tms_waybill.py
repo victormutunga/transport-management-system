@@ -17,7 +17,7 @@ except ImportError:
 
 class TmsWaybill(models.Model):
     _name = 'tms.waybill'
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = 'mail.thread'
     _description = 'Waybills'
     _order = 'name desc'
 

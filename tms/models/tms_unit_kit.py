@@ -8,7 +8,7 @@ from odoo import fields, models
 
 class TmsUnitKit(models.Model):
     _name = "tms.unit.kit"
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = 'mail.thread'
     _order = "unit_id desc"
     _description = "Units Kits"
 

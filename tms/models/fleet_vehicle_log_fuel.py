@@ -18,7 +18,7 @@ except ImportError:
 
 class FleetVehicleLogFuel(models.Model):
     _name = 'fleet.vehicle.log.fuel'
-    _inherit = ['fleet.vehicle.log.fuel', 'mail.thread', 'ir.needaction_mixin']
+    _inherit = ['fleet.vehicle.log.fuel', 'mail.thread']
     _order = "date desc,vehicle_id desc"
 
     name = fields.Char()
