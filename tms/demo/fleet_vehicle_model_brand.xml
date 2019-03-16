@@ -316,6 +316,7 @@
     <function name="unlink" eval="[ref('fleet.brand_dodge')]" model="fleet.vehicle.model.brand"/>
     <function name="unlink" eval="[ref('fleet.brand_ferrari')]" model="fleet.vehicle.model.brand"/>
     <function name="unlink" eval="[ref('fleet.brand_fiat')]" model="fleet.vehicle.model.brand"/>
+    <function name="unlink" eval="[ref('fleet.brand_ford')]" model="fleet.vehicle.model.brand"/>
     <function name="unlink" eval="[ref('fleet.brand_holden')]" model="fleet.vehicle.model.brand"/>
     <function name="unlink" eval="[ref('fleet.brand_honda')]" model="fleet.vehicle.model.brand"/>
     <function name="unlink" eval="[ref('fleet.brand_hyundai')]" model="fleet.vehicle.model.brand"/>
@@ -360,5 +361,5 @@
     <function name="unlink" eval="[ref('fleet.brand_toyota')]" model="fleet.vehicle.model.brand"/>
     <function name="unlink" eval="[ref('fleet.brand_trabant')]" model="fleet.vehicle.model.brand"/>
     <function name="unlink" eval="[ref('fleet.brand_volkswagen')]" model="fleet.vehicle.model.brand"/>
-    <function name="unlink" eval="[ref('fleet.brand_willys')]" model="fleet.vehicle.model.brand"/> 
+    <function name="unlink" eval="[ref('fleet.brand_willys')]" model="fleet.vehicle.model.brand"/>
 </odoo>
