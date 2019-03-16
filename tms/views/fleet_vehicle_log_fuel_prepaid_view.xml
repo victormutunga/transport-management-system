@@ -29,7 +29,7 @@
                 <sheet>
                     <div class="oe_title">
                         <h1>
-                            <label attrs="{'invisible':[('name','=', False)]}" class="oe_inline" string="Prepaid - " style="font-size:30px;"/>
+                            <label for="name" attrs="{'invisible':[('name','=', False)]}" class="oe_inline" string="Prepaid - " style="font-size:30px;"/>
                             <field name="name" readonly="1"/>
                         </h1>
                     </div>

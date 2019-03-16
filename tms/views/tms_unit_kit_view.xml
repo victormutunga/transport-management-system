@@ -44,7 +44,7 @@
             <form string="Units Kits">
                 <sheet>
                     <h1>
-                        <label class="oe_inline" style="font-size:30px;" string="Kit Name - " attrs="{'invisible':[('name','=', False)]}"/>
+                        <label for="name" class="oe_inline" style="font-size:30px;" string="Kit Name - " attrs="{'invisible':[('name','=', False)]}"/>
                         <field name="name"/>
                     </h1>
                     <group col="4" colspan="4">

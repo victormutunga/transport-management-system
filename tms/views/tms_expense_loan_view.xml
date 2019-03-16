@@ -33,7 +33,7 @@
             </header>
             <sheet>
             <h1>
-                <label class="oe_inline" style="font-size:30px;" string="Loan - " attrs="{'invisible':[('name','=', False)]}"/>
+                <label for="name" class="oe_inline" style="font-size:30px;" string="Loan - " attrs="{'invisible':[('name','=', False)]}"/>
                 <field name="name" class="oe_inline" readonly="1"/>
             </h1>
             <group col="2">
