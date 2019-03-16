@@ -21,5 +21,5 @@
     ],
     'summary': 'Management System for Carriers, Trucking and other companies',
     'license': 'AGPL-3',
-    'installable': True,
+    'installable': False,
 }

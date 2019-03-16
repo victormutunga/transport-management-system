@@ -17,5 +17,5 @@
         'wizards/tms_toll_import.xml',
         'reports/report_highway.xml',
     ],
-    'installable': True,
+    'installable': False,
 }

@@ -8,7 +8,7 @@
     'website': 'https://www.jarsa.com.mx/',
     'author': 'Jarsa Sistemas, S.A. de C.v.',
     'license': 'AGPL-3',
-    'installable': True,
+    'installable': False,
     'depends': [
         'tms',
     ],

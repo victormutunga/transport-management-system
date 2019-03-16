@@ -13,5 +13,5 @@
     'data': [
         'views/tms_expense_line_view.xml'
     ],
-    'installable': True,
+    'installable': False,
 }
