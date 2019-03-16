@@ -50,9 +50,9 @@ class FleetVehicle(models.Model):
     def _compute_insurance_days_to_expire(self):
         for rec in self:
             now = datetime.now()
-            date_expire = datetime.strptime(
-                rec.insurance_expiration,
-                '%Y-%m-%d') if rec.insurance_expiration else datetime.now()
+            date_expire = (
+                rec.insurance_expiration if rec.insurance_expiration else
+                datetime.now())
             delta = date_expire - now
             if delta.days >= -1:
                 rec.insurance_days_to_expire = delta.days + 1

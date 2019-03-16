@@ -40,10 +40,10 @@ class HrEmployee(models.Model):
     @api.depends('license_expiration')
     def _compute_days_to_expire(self):
         for rec in self:
-            date = datetime.now()
+            date = fields.Date.context_today(self)
             if rec.license_expiration:
-                date = datetime.strptime(rec.license_expiration, '%Y-%m-%d')
-            now = datetime.now()
+                date = rec.license_expiration
+            now = fields.Date.context_today(self)
             delta = date - now
             rec.days_to_expire = delta.days if delta.days > 0 else 0
 

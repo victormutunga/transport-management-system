@@ -193,10 +193,9 @@ class TmsExpense(models.Model):
         default=lambda self: self.env.user.company_id)
 
     def _get_time(self, date):
-        start = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
         user = self.env.user
         tz = pytz.timezone(user.tz) if user.tz else pytz.utc
-        start = pytz.utc.localize(start).astimezone(tz)
+        start = pytz.utc.localize(date).astimezone(tz)
         return start.strftime("%Y-%m-%d %H:%M:%S")
 
     @api.depends('travel_ids')

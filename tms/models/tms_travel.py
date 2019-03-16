@@ -153,30 +153,24 @@ class TmsTravel(models.Model):
     def _compute_date_end(self):
         for rec in self:
             if rec.date_start:
-                strp_date = datetime.strptime(
-                    rec.date_start, "%Y-%m-%d %H:%M:%S")
-                rec.date_end = strp_date + timedelta(
+                rec.date_end = rec.date_start + timedelta(
                     hours=rec.route_id.travel_time)
 
     @api.depends('date_start', 'date_end')
     def _compute_travel_duration(self):
         for rec in self:
             if rec.date_start and rec.date_end:
-                start_date = datetime.strptime(
-                    rec.date_start, "%Y-%m-%d %H:%M:%S")
-                end_date = datetime.strptime(rec.date_end, "%Y-%m-%d %H:%M:%S")
-                difference = (end_date - start_date).total_seconds() / 60 / 60
+                difference = (
+                    rec.date_end - rec.date_start).total_seconds() / 60 / 60
                 rec.travel_duration = difference
 
     @api.depends('date_start_real', 'date_end_real')
     def _compute_travel_duration_real(self):
         for rec in self:
             if rec.date_start_real and rec.date_end_real:
-                start_date = datetime.strptime(
-                    rec.date_start_real, "%Y-%m-%d %H:%M:%S")
-                end_date = datetime.strptime(
-                    rec.date_end_real, "%Y-%m-%d %H:%M:%S")
-                difference = (end_date - start_date).total_seconds() / 60 / 60
+                difference = (
+                    rec.date_end_real - rec.date_start_real).total_seconds(
+                    ) / 60 / 60
                 rec.travel_duration_real = difference
 
     @api.onchange('kit_id')
