@@ -178,8 +178,8 @@
                             <group>
                                 <field name="waybill_ids" attrs="{'readonly':[('state','in',('done', 'closed'))]}" nolabel="1">
                                     <tree colors="red:state=='cancel';green:state=='approved';blue:state=='confirmed';" string="Waybills">
-                                        <button groups="tms.group_waybill_approve" icon="gtk-go-forward" name="action_approve" states="draft" string="Approve" type="object"/>
-                                        <button groups="tms.group_waybill_confirm" icon="gtk-ok" name="action_confirm" states="approved" string="Confirm" type="object"/>
+                                        <button icon="gtk-go-forward" name="action_approve" states="draft" string="Approve" type="object"/>
+                                        <button icon="gtk-ok" name="action_confirm" states="approved" string="Confirm" type="object"/>
                                         <field name="state"/>
                                         <field name="name"/> 
                                         <field name="date_order"/>

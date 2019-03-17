@@ -43,8 +43,8 @@
                 <field name="auto_expense"/>
                 <field name="paid"/>
                 <field name="state"/>
-                <button groups="tms.group_advance_approve" icon="gtk-go-forward" name="action_approve" states="draft" string="Approve" type="object"/>
-                <button groups="tms.group_advance_confirm" icon="gtk-goto-last" name="action_confirm" states="approved" string="Confirm" type="object"/>
+                <button icon="gtk-go-forward" name="action_approve" states="draft" string="Approve" type="object"/>
+                <button icon="gtk-goto-last" name="action_confirm" states="approved" string="Confirm" type="object"/>
             </tree>
         </field>
     </record>

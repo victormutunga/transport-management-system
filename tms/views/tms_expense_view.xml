@@ -6,8 +6,8 @@
         <field name="priority">2</field>
         <field name="arch" type="xml">
             <tree colors="gray:state=='cancel';green:state=='approved';blue:state=='confirmed';" string="Waybills">
-                <button groups="tms.group_expense_approve" icon="fa-thumbs-up" name="action_approved" states="draft" string="Approve" type="object"/>
-                <button groups="tms.group_expense_confirm" icon="fa-check-square-o" name="action_confirm" states="approved" string="Confirm" type="object"/>
+                <button icon="fa-thumbs-up" name="action_approved" states="draft" string="Approve" type="object"/>
+                <button icon="fa-check-square-o" name="action_confirm" states="approved" string="Confirm" type="object"/>
                 <field name="name"/>
                 <field name="date"/>
                 <field name="employee_id"/>
