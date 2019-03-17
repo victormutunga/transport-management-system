@@ -85,11 +85,11 @@ class TmsExpense(models.Model):
         store=True)
     amount_loan = fields.Float(
         compute='_compute_amount_loan',
-        string='Loans',
+        string='Total Loans',
         store=True)
     amount_advance = fields.Float(
         compute='_compute_amount_advance',
-        string='Advances',
+        string='Total Advances',
         store=True)
     amount_balance = fields.Float(
         compute='_compute_amount_balance',

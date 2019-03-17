@@ -11,19 +11,19 @@ class TmsExtradata(models.Model):
     _description = "TMS Extra Data"
 
     type_id = fields.Many2one(
-        'tms.extradata.type', string="Type", required="True")
+        'tms.extradata.type', string="Type of Data", required="True")
     type = fields.Selection(related="type_id.type")
-    value_char = fields.Char('Value')
-    value_integer = fields.Integer('Value')
-    value_float = fields.Float('Value')
-    value_date = fields.Date('Value')
-    value_datetime = fields.Datetime('Value')
-    value_extra = fields.Text('Value')
+    value_char = fields.Char()
+    value_integer = fields.Integer()
+    value_float = fields.Float()
+    value_date = fields.Date()
+    value_datetime = fields.Datetime()
+    value_extra = fields.Text()
     waybill_id = fields.Many2one(
         'tms.waybill', 'Waybill',
         ondelete='cascade')
     vehicle_id = fields.Many2one(
-        'fleet.vehicle', 'Waybill',
+        'fleet.vehicle', 'Vehicle',
         ondelete='cascade')
 
     @api.onchange('value_char', 'value_integer', 'value_float',

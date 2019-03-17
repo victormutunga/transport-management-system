@@ -73,7 +73,7 @@ class TmsExpenseLine(models.Model):
     is_invoice = fields.Boolean(string='Is Invoice?')
     partner_id = fields.Many2one(
         'res.partner', string='Supplier',)
-    invoice_date = fields.Date('Date')
+    invoice_date = fields.Date()
     invoice_number = fields.Char()
     invoice_id = fields.Many2one(
         'account.invoice',

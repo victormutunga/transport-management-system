@@ -26,7 +26,7 @@ class FleetVehicle(models.Model):
         string='Unit Fleet Type')
     notes = fields.Text()
     active = fields.Boolean(default=True)
-    driver_id = fields.Many2one('res.partner', string="Driver")
+    driver_id = fields.Many2one('res.partner', string="Driver User")
     employee_id = fields.Many2one(
         'hr.employee',
         string="Driver",

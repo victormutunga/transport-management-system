@@ -19,7 +19,8 @@ class TmsExpenseLoan(models.Model):
         default=fields.Date.context_today)
     date_confirmed = fields.Date(
         readonly=True,
-        related='move_id.date')
+        related='move_id.date',
+        string='Date Confirmed')
     employee_id = fields.Many2one(
         'hr.employee', 'Driver', required=True)
     expense_ids = fields.Many2many(
