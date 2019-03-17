@@ -24,16 +24,14 @@
                 <field name="date_start"/>
                 <field name="date_end"/>
                 <filter name="unit" context="{'group_by' : 'unit_id'}" string="Unit"/>
-                <filter name="driver" context="{'group_by' : 'employee_id'}" string="Driver 1"/>
-                <filter name="customer" context="{'group_by' : 'partner_id'}" string="Customer"/>
+                <filter name="driver" context="{'group_by' : 'employee_id'}" string="Driver"/>
                 <filter name="departure" context="{'group_by' : 'departure_id'}" string="Departure"/>
                 <filter name="arrival" context="{'group_by' : 'arrival_id'}" string="Arrival"/>
                 <filter name="company" context="{'group_by' : 'company_id'}" string="Company"/>
-                <filter name="operating_unit" context="{'group_by' : 'operating_unit_id'}" string="Base"/>
                 <filter name="state" context="{'group_by' : 'state'}" string="State"/>
                 <filter name="date" context="{'group_by' : 'date'}" string="Date"/>
-                <filter context="{'group_by' : 'date_start_real:day'}" name="date_dispatched" string="Day Dispatched"/>
-                <filter name="day_finished" context="{'group_by' : 'date_end_real:day'}" string="Day Finished"/>
+                <filter context="{'group_by' : 'date_start_real'}" name="date_dispatched" string="Day Dispatched"/>
+                <filter name="day_finished" context="{'group_by' : 'date_end_real'}" string="Day Finished"/>
                 <filter name="operating_unit_group_by" context="{'group_by':'operating_unit_id'}" string="Operating Unit"/>
             </search>
         </field>
@@ -46,7 +44,7 @@
             <tree colors="gray:state=='cancel';red:state=='draft';green:state=='progress';blue:state=='done';" string="Travels">
                 <field name="name"/>
                 <field name="date"/>
-                <field name="unit_id" string="Unit"/>
+                <field name="unit_id"/>
                 <field name="trailer1_id"/>
                 <field name="dolly_id"/>
                 <field name="trailer2_id"/>
@@ -370,14 +368,14 @@
         <field name="name">TMS Travel</field>
         <field name="res_model">tms.travel</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form,kanban,calendar,graph,gantt</field>
+        <field name="view_mode">tree,form,kanban,calendar,graph</field>
         <field name="context">{}</field>
     </record>
     <record id="open_view_tms_travel_report" model="ir.actions.act_window">
         <field name="name">TMS Travel</field>
         <field name="res_model">tms.travel</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form,gantt</field>
+        <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_tms_travel_tree_report"/>
         <field name="context">{&quot;search_default_progress&quot;:1, 'search_default_date_dispatched': 1}</field>
     </record>

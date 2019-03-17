@@ -9,11 +9,12 @@
     'author': 'Jarsa Sistemas, Argil Consulting',
     'website': 'https://www.jarsa.com.mx/page/transport-management-system',
     'depends': [
-        'account_accountant',
+        'account',
         'account_cancel',
         'fleet',
         'hr',
-        'account_operating_unit'
+        'account_operating_unit',
+        'uom',
     ],
     'external_dependencies': {
         'python': [
