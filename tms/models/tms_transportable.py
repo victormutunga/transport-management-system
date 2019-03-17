@@ -11,7 +11,7 @@ class TmsTransportable(models.Model):
 
     name = fields.Char(required=True, translate=True)
     uom_id = fields.Many2one(
-        'product.uom', 'Unit of Measure ', required=True)
+        'uom.uom', 'Unit of Measure ', required=True)
 
     @api.multi
     def copy(self, default=None):

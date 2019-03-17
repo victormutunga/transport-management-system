@@ -24,7 +24,7 @@ class TmsExpenseLine(models.Model):
         compute='_compute_price_subtotal',
         string='Subtotal',)
     product_uom_id = fields.Many2one(
-        'product.uom',
+        'uom.uom',
         string='Unit of Measure')
     line_type = fields.Selection(
         [('real_expense', 'Real Expense'),

@@ -31,7 +31,7 @@ class FleetVehicleLogFuel(models.Model):
         compute='_compute_employee_id',
         store=True,)
     odometer = fields.Float(related='vehicle_id.odometer',)
-    product_uom_id = fields.Many2one('product.uom', string='UoM')
+    product_uom_id = fields.Many2one('uom.uom', string='UoM')
     product_qty = fields.Float(string='Liters', default=1.0,)
     tax_amount = fields.Float(string='Taxes',)
     price_total = fields.Float(string='Total')

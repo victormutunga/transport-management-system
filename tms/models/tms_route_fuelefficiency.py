@@ -7,6 +7,7 @@ from odoo import fields, models
 
 class TmsRouteFuelEficciency(models.Model):
     _name = 'tms.route.fuelefficiency'
+    _description = 'Fuel Efficiency by Route'
 
     route_id = fields.Many2one(
         'tms.route',

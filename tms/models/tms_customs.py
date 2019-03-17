@@ -6,6 +6,7 @@ from odoo import fields, models
 
 class TmsCustoms(models.Model):
     _name = 'tms.customs'
+    _description = 'Customs'
 
     waybill_id = fields.Many2one('tms.waybill')
     customs = fields.Char()

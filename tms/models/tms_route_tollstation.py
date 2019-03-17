@@ -7,6 +7,7 @@ from odoo import fields, models
 
 class TmsRouteTollstation(models.Model):
     _name = 'tms.route.tollstation'
+    _description = 'Tollstation'
 
     name = fields.Char(required=True)
     place_id = fields.Many2one('tms.place', string="Place", required=True)

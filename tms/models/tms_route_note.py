@@ -7,6 +7,7 @@ from odoo import fields, models
 
 class TmsRouteNote(models.Model):
     _name = 'tms.route.note'
+    _description = 'Notes for route'
 
     route_id = fields.Many2one('tms.route', string='Route', required=True)
     partner_id = fields.Many2one(

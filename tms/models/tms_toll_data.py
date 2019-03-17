@@ -7,6 +7,7 @@ from odoo import fields, models
 
 class TmsTollData(models.Model):
     _name = 'tms.toll.data'
+    _description = 'Toll Data'
 
     date = fields.Datetime()
     num_tag = fields.Char(string='Tag number')

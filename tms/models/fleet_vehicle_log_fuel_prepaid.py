@@ -7,6 +7,7 @@ from odoo.exceptions import ValidationError
 
 class FleetVehicleLogFuelPrepaid(models.Model):
     _name = 'fleet.vehicle.log.fuel.prepaid'
+    _description = 'Prepaid Fuel Vouchers'
 
     name = fields.Char()
     price_total = fields.Float(string='Total')

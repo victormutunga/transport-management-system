@@ -8,6 +8,7 @@ from odoo import fields, models
 class TmsRoutePlace(models.Model):
     _name = 'tms.route.place'
     _order = 'sequence'
+    _description = 'Place'
 
     route_id = fields.Many2one(
         'tms.route',

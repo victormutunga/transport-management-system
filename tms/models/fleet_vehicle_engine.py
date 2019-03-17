@@ -7,5 +7,6 @@ from odoo import fields, models
 
 class FleetVehicleEngine(models.Model):
     _name = 'fleet.vehicle.engine'
+    _description = 'Engines of Vehicles'
 
     name = fields.Char(required=True)

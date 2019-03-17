@@ -9,6 +9,7 @@ from odoo.exceptions import ValidationError
 
 class TmsWizardPayment(models.TransientModel):
     _name = 'tms.wizard.payment'
+    _description = 'Wizard to pay expenses or advances'
 
     journal_id = fields.Many2one(
         'account.journal', string='Bank Account',

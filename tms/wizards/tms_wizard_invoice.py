@@ -7,6 +7,7 @@ from odoo import _, api, exceptions, models
 
 class TmsWizardInvoice(models.TransientModel):
     _name = 'tms.wizard.invoice'
+    _description = 'Wizard to create invoices from Waybills'
 
     @api.model
     def prepare_lines(self, product, quantity,

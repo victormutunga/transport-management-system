@@ -7,6 +7,7 @@ from odoo import fields, models
 
 class TmsRouteTollstationCostperaxis(models.Model):
     _name = 'tms.route.tollstation.costperaxis'
+    _description = 'Cost Per Axis'
 
     axis = fields.Integer(required=True)
     cost_credit = fields.Float(required=True)
