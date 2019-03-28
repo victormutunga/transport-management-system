@@ -4,17 +4,17 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 {
-    "name": "Freight Management",
-    "version": "10.0.2.0.1",
-    "category": "Transport",
-    "author": "Jarsa Sistemas, Argil Consulting",
-    "website": "https://www.jarsa.com.mx/page/transport-management-system",
-    "depends": [
-        "account_accountant",
-        "account_cancel",
-        "fleet",
-        "hr",
-        "account_operating_unit"
+    'name': 'Freight Management',
+    'version': '10.0.2.0.1',
+    'category': 'Transport',
+    'author': 'Jarsa Sistemas, Argil Consulting',
+    'website': 'https://www.jarsa.com.mx/page/transport-management-system',
+    'depends': [
+        'account_accountant',
+        'account_cancel',
+        'fleet',
+        'hr',
+        'account_operating_unit'
     ],
     'external_dependencies': {
         'python': [
@@ -22,9 +22,9 @@
             'num2words',
         ],
     },
-    "summary": "Management System for Carriers, Trucking and other companies",
-    "license": "AGPL-3",
-    "data": [
+    'summary': 'Management System for Carriers, Trucking and other companies',
+    'license': 'AGPL-3',
+    'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
         'views/tms_view.xml',
@@ -65,10 +65,7 @@
         'report/expense_report.xml',
         'data/ir_config_parameter.xml',
     ],
-    "demo": [
-        'demo/product_product.xml',
-        'demo/product_template.xml',
-        'demo/fleet_vehicle_odometer.xml',
+    'demo': [
         'demo/ir_sequence.xml',
         'demo/operating_unit.xml',
         'demo/fleet_vehicle_engine.xml',
@@ -84,6 +81,7 @@
         'demo/tms_transportable.xml',
         'demo/tms_unit_kit.xml',
     ],
-    "application": True,
-    "installable": True,
+    'application': True,
+    'installable': True,
+    'post_init_hook': 'post_init_hook',
 }
