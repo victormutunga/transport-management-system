@@ -44,7 +44,7 @@ class AccountInvoice(models.Model):
             self.message_post(_(
                 'Cannot be verified the SAT status for this document, please '
                 'verify that the CFDI is valid before validate this record.'))
-        if validate_xml and validate_xml.Estado == 'Cancelado':
+        if validate_xml == 'Cancelado':
             raise ValidationError(
                 _('This XML state is CANCELED in the SAT system.\n' +
                   'Expense line: ' + expense_line.name + '\nTravel: ' +
