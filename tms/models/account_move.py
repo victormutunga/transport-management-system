@@ -17,12 +17,9 @@ class AccountMove(models.Model):
             loans = self.env['tms.expense.loan'].search(
                 [('payment_move_id', '=', rec.id)])
             if advances:
-                for advance in advances:
-                    advance.paid = False
+                advances.write({'paid': False})
             if expenses:
-                for expense in expenses:
-                    expense.paid = False
+                expenses.write({'paid': False})
             if loans:
-                for loan in loans:
-                    loan.paid = False
-            return super(AccountMove, self).unlink()
+                loans.write({'paid': False})
+        return super(AccountMove, self).unlink()
