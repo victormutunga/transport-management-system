@@ -2,8 +2,6 @@
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from datetime import datetime
-
 from odoo import api, fields, models
 
 
@@ -49,11 +47,10 @@ class FleetVehicle(models.Model):
     @api.depends('insurance_expiration')
     def _compute_insurance_days_to_expire(self):
         for rec in self:
-            now = datetime.now()
             date_expire = (
                 rec.insurance_expiration if rec.insurance_expiration else
-                datetime.now())
-            delta = date_expire - now
+                fields.Datetime.now())
+            delta = date_expire - fields.Datetime.now()
             if delta.days >= -1:
                 rec.insurance_days_to_expire = delta.days + 1
             else:
