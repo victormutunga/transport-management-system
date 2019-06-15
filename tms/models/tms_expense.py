@@ -119,7 +119,6 @@ class TmsExpense(models.Model):
         string='SubTotal (All)',
         compute='_compute_amount_subtotal_total',
         store=True)
-    vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle')
     last_odometer = fields.Float('Last Read')
     vehicle_odometer = fields.Float()
     current_odometer = fields.Float(
