@@ -45,7 +45,6 @@
             </field>
             <field name="car_value" position="after">
                 <field name="year_model"/>
-                <field name="active"/>
             </field>
             <xpath expr="//sheet/group[2]" position="replace">
                 <notebook>

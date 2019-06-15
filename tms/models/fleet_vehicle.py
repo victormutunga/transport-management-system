@@ -7,7 +7,6 @@ from odoo import api, fields, models
 
 class FleetVehicle(models.Model):
     _inherit = 'fleet.vehicle'
-    _description = "Vehicle"
     _order = 'name'
 
     name = fields.Char(compute=False, required=True)
@@ -23,13 +22,12 @@ class FleetVehicle(models.Model):
          ('other', 'Other')],
         string='Unit Fleet Type')
     notes = fields.Text()
-    active = fields.Boolean(default=True)
     driver_id = fields.Many2one('res.partner', string="Driver User")
     employee_id = fields.Many2one(
         'hr.employee',
         string="Driver",
         domain=[('driver', '=', True)])
-    expense_ids = fields.One2many('tms.expense', 'unit_id', string='Expenses')
+    # expense_ids = fields.One2many('tms.expense', 'unit_id', string='Expenses')
     engine_id = fields.Many2one('fleet.vehicle.engine', string='Engine')
     supplier_unit = fields.Boolean()
     unit_extradata = fields.One2many(
