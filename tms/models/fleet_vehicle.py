@@ -27,7 +27,6 @@ class FleetVehicle(models.Model):
         'hr.employee',
         string="Driver",
         domain=[('driver', '=', True)])
-    # expense_ids = fields.One2many('tms.expense', 'unit_id', string='Expenses')
     engine_id = fields.Many2one('fleet.vehicle.engine', string='Engine')
     supplier_unit = fields.Boolean()
     unit_extradata = fields.One2many(
