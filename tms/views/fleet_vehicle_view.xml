@@ -5,17 +5,17 @@
         <field name="model">fleet.vehicle</field>
         <field name="inherit_id" ref="fleet.fleet_vehicle_view_search"/>
         <field name="arch" type="xml">
-            <search string="All vehicles">
+            <xpath expr="//filter[@name='activities_overdue']" position="before">
                 <field filter_domain="['|', ('name','ilike',self), ('license_plate','ilike',self)]" name="name" string="Vehicle"/>
                 <field name="year_model"/>
                 <field name="serial_number"/>
                 <field name="registration"/>
-                <group expand="1" string="Group By">
-                    <filter context="{'group_by' : 'year_model'}" name="groupby_year_model" string="Year Model"/>
-                    <filter context="{'group_by' : 'registration'}" name="groupby_registration" string="Registration"/>
-                    <filter context="{'group_by' : 'fleet_type'}" name="groupby_fleet_type" string="Fleet Type"/>
-                </group>
-            </search>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter context="{'group_by' : 'year_model'}" name="groupby_year_model" string="Year Model"/>
+                <filter context="{'group_by' : 'registration'}" name="groupby_registration" string="Registration"/>
+                <filter context="{'group_by' : 'fleet_type'}" name="groupby_fleet_type" string="Fleet Type"/>
+            </xpath>
         </field>
     </record>
     <record id="fleet_vehicle_form_inherit_tms" model="ir.ui.view">
