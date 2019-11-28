@@ -14,7 +14,6 @@ class TestTmsFactor(TransactionCase):
 
     def test_10_tms_factor_onchange_factor_type(self):
         factor_type_list = [
-            ['', 'name'],
             ['distance', 'Distance Route (Km/Mi)'],
             ['distance_real', 'Distance Real (Km/Mi)'],
             ['weight', 'Weight'],

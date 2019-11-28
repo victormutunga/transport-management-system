@@ -48,10 +48,9 @@ class TmsPlace(models.Model):
             else:
                 raise ValidationError(
                     _("You need to set a Place and a State Name"))
-            google_url = (
-                'http://maps.googleapis.com/maps/api/geocode/json?' +
-                'address=' + address.encode('utf-8') + '&sensor=false')
+            google_url = 'http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=false' % address.encode('utf-8')  # noqa
             try:
+                # TODO deprecated-urllib-function
                 result = json.load(my_urllib.urlopen(google_url))
                 if result['status'] == 'OK':
                     location = result['results'][0]['geometry']['location']

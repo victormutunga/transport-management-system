@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
+from odoo.tools.float_utils import float_compare
 
 
 class TestTmsTravel(TransactionCase):
@@ -42,14 +43,16 @@ class TestTmsTravel(TransactionCase):
         date = datetime.now() + timedelta(days=10)
         self.travel_id.date_end = date
         self.travel_id._compute_travel_duration()
-        self.assertEqual(self.travel_id.travel_duration, 240)
+        self.assertEqual(float_compare(self.travel_id.travel_duration,
+                                       240, precision_digits=2), 0)
 
     def test_20_tms_travel_compute_travel_duration_real(self):
         self.travel_id.date_start_real = datetime.now()
         date = datetime.now() + timedelta(days=10)
         self.travel_id.date_end_real = date
         self.travel_id._compute_travel_duration_real()
-        self.assertEqual(self.travel_id.travel_duration_real, 240)
+        self.assertEqual(float_compare(self.travel_id.travel_duration_real,
+                                       240, precision_digits=2), 0)
 
     def test_30_tms_travel_onchange_kit(self):
         self.travel_id.kit_id = self.kit.id
@@ -134,10 +137,12 @@ class TestTmsTravel(TransactionCase):
             self.travel_id.validate_driver_license()
 
     def test_120_tms_travel_validate_vehicle_insurance(self):
-        self.travel_id.unit_id.insurance_expiration = datetime.now()
+        self.travel_id.unit_id.insurance_expiration = datetime.now().date()
         with self.assertRaisesRegexp(
                 ValidationError,
-                'You can not Dispatch this Travel because this Vehicle T1 '
+                'You can not Dispatch this Travel because this Vehicle %s '
                 'Insurance %s is expired or about to expire in '
-                'next 5 days' % self.travel_id.unit_id.insurance_expiration):
+                'next 5 days' % (
+                    self.travel_id.unit_id.name, self.travel_id.unit_id.insurance_expiration.strftime(  # noqa
+                        '%Y-%m-%d'))):
             self.travel_id.validate_vehicle_insurance()

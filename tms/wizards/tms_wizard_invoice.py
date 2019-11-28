@@ -108,7 +108,7 @@ class TmsWizardInvoice(models.TransientModel):
             if record.invoice_id:
                 raise exceptions.ValidationError(
                     _('The record is already invoiced'))
-            elif record.state not in ['confirmed', 'closed']:
+            if record.state not in ['confirmed', 'closed']:
                 raise exceptions.ValidationError(
                     _('The record must be confirmed or closed'))
             record_names.append(record.name)

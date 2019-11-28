@@ -3267,11 +3267,6 @@ msgid "Sequences for TMS"
 msgstr "TMS pour Sequences"
 
 #. module: tms
-#: model:ir.model.fields,field_description:tms.field_fleet_vehicle_serial_number
-msgid "Serial number"
-msgstr "Numéro de série"
-
-#. module: tms
 #: model:ir.ui.view,arch_db:tms.fleet_vehicle_log_fuel_form_tms
 #: model:ir.ui.view,arch_db:tms.view_tms_advance_form
 #: model:ir.ui.view,arch_db:tms.view_tms_event_form
@@ -4334,11 +4329,6 @@ msgstr "Écrivez ici toute autre information"
 #: model:ir.ui.view,arch_db:tms.fleet_vehicle_search_inherit_tms
 msgid "Year Model"
 msgstr "Modèle Année"
-
-#. module: tms
-#: model:ir.model.fields,field_description:tms.field_fleet_vehicle_year_model
-msgid "Year model"
-msgstr "modèle Année"
 
 #. module: tms
 #: code:addons/tms/models/tms_travel.py:321

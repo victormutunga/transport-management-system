@@ -20,19 +20,24 @@ class TmsWizardPayment(models.TransientModel):
 
     @api.depends('journal_id')
     def _compute_amount_total(self):
+        model = self._context.get('active_model')
         for rec in self:
             amount_total = 0
             currency = rec.journal_id.currency_id or self.env.user.currency_id
-            active_ids = self.env[self._context.get('active_model')].browse(
+            active_ids = self.env[model].browse(
                 self._context.get('active_ids'))
+            if model not in ['tms.advance', 'tms.expense.loan', 'tms.expense']:
+                rec.amount_total = amount_total
+                continue
+            total = 0
             for obj in active_ids:
-                if self._context.get('active_model') in [
-                        'tms.advance', 'tms.expense.loan']:
-                    amount_total += currency.compute(
-                        obj.amount, self.env.user.currency_id)
-                elif self._context.get('active_model') == 'tms.expense':
-                    amount_total += currency.compute(
-                        obj.amount_balance, self.env.user.currency_id)
+                if model in ['tms.advance', 'tms.expense.loan']:
+                    total += obj.amount
+                elif model == 'tms.expense':
+                    total += obj.amount_balance
+                amount_total = currency._convert(
+                    total, self.env.user.currency_id, obj.company_id,
+                    obj.date)
             rec.amount_total = amount_total
 
     @api.multi
@@ -43,14 +48,14 @@ class TmsWizardPayment(models.TransientModel):
             active_model = self._context['active_model']
             bank_account_id = rec.journal_id.default_debit_account_id.id
             currency = rec.journal_id.currency_id or self.env.user.currency_id
-            currency_id = set([x.currency_id.id for x in active_ids])
+            currency_id = active_ids.mapped('currency_id').ids
             if len(currency_id) > 1:
                 raise ValidationError(
                     _('You cannot pay documents for different currency'))
-            elif currency.id != list(currency_id)[0]:
+            if currency.id != list(currency_id)[0]:
                 raise ValidationError(
                     _('You cannot pay documents in different currency of the '
-                      'bank (%s)' % rec.journal_id.currency_id.name))
+                      'bank (%s)') % rec.journal_id.currency_id.name)
             move_lines = []
             amount_bank = 0.0
             amount_currency = 0.0
@@ -134,26 +139,28 @@ class TmsWizardPayment(models.TransientModel):
                            amount_currency, amount_bank,
                            counterpart_move_line):
         for key, value in model_amount.items():
-            if key == self._context.get('active_model'):
-                if key == 'tms.expense' and value < 0.0:
-                    raise ValidationError(
-                        _('You cannot pay the expense %s because the '
-                            'balance is negative') % obj.name)
-                else:
-                    if currency.id != obj.currency_id.id:
-                        amount_currency += value * -1
-                        amount_bank += currency.compute(
-                            value, self.env.user.currency_id)
-                        counterpart_move_line['amount_currency'] = (
-                            value)
-                        counterpart_move_line['currency_id'] = (
-                            currency.id)
-                        counterpart_move_line['debit'] = (
-                            currency.compute(
-                                value, self.env.user.currency_id))
-                    else:
-                        amount_bank += value
-                        counterpart_move_line['debit'] = value
+            if key != self._context.get('active_model'):
+                continue
+            if key == 'tms.expense' and value < 0.0:
+                raise ValidationError(
+                    _('You cannot pay the expense %s because the '
+                        'balance is negative') % obj.name)
+            if currency.id != obj.currency_id.id:
+                amount_currency += value * -1
+                amount_bank += currency._convert(
+                    value, self.env.user.currency_id, obj.company_id,
+                    obj.date)
+                counterpart_move_line['amount_currency'] = (
+                    value)
+                counterpart_move_line['currency_id'] = (
+                    currency.id)
+                counterpart_move_line['debit'] = (
+                    currency._convert(
+                        value, self.env.user.currency_id, obj.company_id,
+                        obj.date))
+            else:
+                amount_bank += value
+                counterpart_move_line['debit'] = value
         return counterpart_move_line, amount_bank
 
     @api.multi
@@ -172,7 +179,7 @@ class TmsWizardPayment(models.TransientModel):
             if len(line) > 1:
                 raise ValidationError(_(
                     'The driver advance account is defined as '
-                    'payable. %s ' % line[0].name))
+                    'payable. %s ') % line[0].name)
             move_ids.append(line.id)
             move_ids.append(move_line.id)
             reconcile_ids = self.env['account.move.line'].browse(

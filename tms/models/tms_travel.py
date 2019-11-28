@@ -16,7 +16,7 @@ class TmsTravel(models.Model):
     _order = "date desc"
 
     waybill_ids = fields.Many2many(
-        'tms.waybill', string='Waybills')
+        'tms.waybill')
     driver_factor_ids = fields.One2many(
         'tms.factor', 'travel_id', string='Travel Driver Payment Factors',
         domain=[('category', '=', 'driver')])
@@ -26,7 +26,7 @@ class TmsTravel(models.Model):
         ('cancel', 'Cancelled'), ('closed', 'Closed')],
         readonly=True, default='draft')
     route_id = fields.Many2one(
-        'tms.route', 'Route', required=True,
+        'tms.route', required=True,
         states={'cancel': [('readonly', True)],
                 'closed': [('readonly', True)]})
     travel_duration = fields.Float(
@@ -42,17 +42,17 @@ class TmsTravel(models.Model):
     fuel_efficiency_expected = fields.Float(
         compute="_compute_fuel_efficiency_expected")
     kit_id = fields.Many2one(
-        'tms.unit.kit', 'Kit')
+        'tms.unit.kit')
     unit_id = fields.Many2one(
-        'fleet.vehicle', 'Unit',
+        'fleet.vehicle',
         required=True)
     trailer1_id = fields.Many2one(
-        'fleet.vehicle', 'Trailer1')
+        'fleet.vehicle')
     dolly_id = fields.Many2one(
-        'fleet.vehicle', 'Dolly',
+        'fleet.vehicle',
         domain=[('fleet_type', '=', 'dolly')])
     trailer2_id = fields.Many2one(
-        'fleet.vehicle', 'Trailer2',
+        'fleet.vehicle',
         domain=[('fleet_type', '=', 'trailer')])
     employee_id = fields.Many2one(
         'hr.employee', 'Driver', required=True,
@@ -86,17 +86,15 @@ class TmsTravel(models.Model):
         compute='_compute_fuel_efficiency_extraction')
     departure_id = fields.Many2one(
         'tms.place',
-        string='Departure',
         compute='_compute_departure_id',
         store=True,
         readonly=True)
     fuel_log_ids = fields.One2many(
         'fleet.vehicle.log.fuel', 'travel_id', string='Fuel Vouchers')
     advance_ids = fields.One2many(
-        'tms.advance', 'travel_id', string='Advances')
+        'tms.advance', 'travel_id')
     arrival_id = fields.Many2one(
         'tms.place',
-        string='Arrival',
         compute='_compute_arrival_id',
         store=True,
         readonly=True)
@@ -111,7 +109,7 @@ class TmsTravel(models.Model):
     is_available = fields.Boolean(
         compute='_compute_is_available',
         string='Travel available')
-    operating_unit_id = fields.Many2one('operating.unit', 'Operating Unit')
+    operating_unit_id = fields.Many2one('operating.unit')
     color = fields.Integer()
     framework = fields.Selection([
         ('unit', 'Unit'),
@@ -122,7 +120,7 @@ class TmsTravel(models.Model):
         'res.partner', string='Customer', compute='_compute_partner_ids',
         store=True)
     company_id = fields.Many2one(
-        'res.company', string='Company', required=True,
+        'res.company', required=True,
         default=lambda self: self.env.user.company_id)
 
     @api.depends('waybill_ids')
@@ -267,7 +265,7 @@ class TmsTravel(models.Model):
             fuel_vehicle = len(rec.fuel_log_ids)
             count = 0
             for model in objects:
-                if model == 'tms.advance' or model == 'fleet.vehicle.log.fuel':
+                if model in ['tms.advance', 'fleet.vehicle.log.fuel']:
                     object_ok = len(rec.env[model].search(
                         [('state', '=', 'confirmed'),
                          ('travel_id', '=', rec.id)]))
@@ -330,9 +328,8 @@ class TmsTravel(models.Model):
             units = [
                 rec.unit_id, rec.trailer1_id, rec.dolly_id, rec.trailer2_id]
             for unit in units:
-                if (unit and unit.insurance_expiration and
-                        unit.insurance_expiration <= date.strftime(
-                            '%Y-%m-%d')):
+                if (unit.insurance_expiration and
+                        unit.insurance_expiration <= date.date()):
                     raise ValidationError(_(
                         "You can not Dispatch this Travel because this Vehicle"
                         " %s Insurance %s is expired or about to expire in "

@@ -22,7 +22,7 @@ class TmsWaybill(models.Model):
     _order = 'name desc'
 
     operating_unit_id = fields.Many2one(
-        'operating.unit', string='Operating Unit', required=True)
+        'operating.unit', required=True)
     customer_factor_ids = fields.One2many(
         'tms.factor', 'waybill_id',
         string='Waybill Customer Charge Factors',
@@ -55,13 +55,12 @@ class TmsWaybill(models.Model):
         'res.users', 'Salesman',
         default=(lambda self: self.env.user))
     partner_id = fields.Many2one(
-        'res.partner',
-        'Customer', required=True, change_default=True)
+        'res.partner', required=True, change_default=True)
     currency_id = fields.Many2one(
-        'res.currency', 'Currency', required=True,
+        'res.currency', required=True,
         default=lambda self: self.env.user.company_id.currency_id)
     company_id = fields.Many2one(
-        'res.company', string='Company', required=True,
+        'res.company', required=True,
         default=lambda self: self.env.user.company_id)
     partner_invoice_id = fields.Many2one(
         'res.partner', 'Invoice Address', required=True,
@@ -76,15 +75,15 @@ class TmsWaybill(models.Model):
         default=(lambda self: self.env['res.partner'].address_get(
             self['partner_id'])['contact']))
     departure_address_id = fields.Many2one(
-        'res.partner', 'Departure Address', required=True,
+        'res.partner', required=True,
         help="Departure address for current Waybill.", change_default=True)
     arrival_address_id = fields.Many2one(
-        'res.partner', 'Arrival Address', required=True,
+        'res.partner', required=True,
         help="Arrival address for current Waybill.", change_default=True)
     upload_point = fields.Char(change_default=True)
     download_point = fields.Char(change_default=True)
     invoice_id = fields.Many2one(
-        'account.invoice', 'Invoice', readonly=True, copy=False)
+        'account.invoice', readonly=True, copy=False)
     invoice_paid = fields.Boolean(
         compute="_compute_invoice_paid", readonly=True)
     supplier_invoice_id = fields.Many2one(
@@ -389,11 +388,10 @@ class TmsWaybill(models.Model):
                     _('You cannot unlink the invoice of this waybill'
                         ' because the invoice is still valid, '
                         'please check it.'))
-            else:
-                waybill.invoice_id = False
-                waybill.state = 'cancel'
-                waybill.message_post(
-                    body=_("<h5><strong>Cancelled</strong></h5>"))
+            waybill.invoice_id = False
+            waybill.state = 'cancel'
+            waybill.message_post(
+                body=_("<h5><strong>Cancelled</strong></h5>"))
 
     @api.multi
     def _amount_to_text(self, amount_total, currency, partner_lang='es_MX'):

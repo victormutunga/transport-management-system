@@ -34,7 +34,6 @@ class TmsAdvance(models.Model):
     unit_id = fields.Many2one(
         'fleet.vehicle',
         compute='_compute_unit_id',
-        string='Unit',
         store=True,)
     employee_id = fields.Many2one(
         'hr.employee',
@@ -59,7 +58,6 @@ class TmsAdvance(models.Model):
         readonly=True,)
     currency_id = fields.Many2one(
         'res.currency',
-        'Currency',
         required=True,
         default=lambda self: self.env.user.company_id.currency_id)
     auto_expense = fields.Boolean(
@@ -68,10 +66,10 @@ class TmsAdvance(models.Model):
     expense_id = fields.Many2one(
         'tms.expense', 'Expense Record', readonly=True)
     product_id = fields.Many2one(
-        'product.product', string='Product', required=True,
+        'product.product', required=True,
         domain=[('tms_product_category', '=', 'real_expense')])
     company_id = fields.Many2one(
-        'res.company', string='Company', required=True,
+        'res.company', required=True,
         default=lambda self: self.env.user.company_id)
 
     @api.multi
@@ -88,16 +86,14 @@ class TmsAdvance(models.Model):
     @api.model
     def create(self, values):
         res = super(TmsAdvance, self).create(values)
-        if res.operating_unit_id.advance_sequence_id:
-            sequence = res.operating_unit_id.advance_sequence_id
-        else:
+        if not res.operating_unit_id.advance_sequence_id:
             raise ValidationError(
-                _('The sequence is not '
-                    'defined in operating unit %s' %
+                _('The sequence is not defined in operating unit %s') % (
                     res.operating_unit_id.name))
         if res.amount <= 0:
             raise ValidationError(
                 _('The amount must be greater than zero.'))
+        sequence = res.operating_unit_id.advance_sequence_id
         res.name = sequence.next_by_id()
         return res
 
@@ -130,6 +126,7 @@ class TmsAdvance(models.Model):
 
     @api.multi
     def action_confirm(self):
+        obj_account_move = self.env['account.move']
         for rec in self:
             if rec.amount <= 0:
                 raise ValidationError(
@@ -137,75 +134,74 @@ class TmsAdvance(models.Model):
             if rec.move_id:
                 raise ValidationError(
                     _('You can not confirm a confirmed advance.'))
-            else:
-                obj_account_move = self.env['account.move']
-                advance_journal_id = (
-                    rec.operating_unit_id.advance_journal_id.id)
-                advance_debit_account_id = (
-                    rec.employee_id.
-                    tms_advance_account_id.id
-                )
-                advance_credit_account_id = (
-                    rec.employee_id.
-                    address_home_id.property_account_payable_id.id
-                )
-                if not advance_journal_id:
-                    raise ValidationError(
-                        _('Warning! The advance does not have a journal'
-                          ' assigned. Check if you already set the '
-                          'journal for advances in the base.'))
-                if not advance_credit_account_id:
-                    raise ValidationError(
-                        _('Warning! The driver does not have a home address'
-                          ' assigned. Check if you already set the '
-                          'home address for the employee.'))
-                if not advance_debit_account_id:
-                    raise ValidationError(
-                        _('Warning! You must have configured the accounts '
-                          'of the tms'))
-                move_lines = []
-                notes = _('* Base: %s \n'
-                          '* Advance: %s \n'
-                          '* Travel: %s \n'
-                          '* Driver: %s \n'
-                          '* Vehicle: %s') % (
-                    rec.operating_unit_id.name,
-                    rec.name,
-                    rec.travel_id.name,
-                    rec.employee_id.name,
-                    rec.unit_id.name)
-                total = rec.currency_id.compute(
-                    rec.amount,
-                    self.env.user.currency_id)
-                if total > 0.0:
-                    accounts = {'credit': advance_credit_account_id,
-                                'debit': advance_debit_account_id}
-                    for name, account in accounts.items():
-                        move_line = (0, 0, {
-                            'name': rec.name,
-                            'partner_id': (
-                                rec.employee_id.address_home_id.id),
-                            'account_id': account,
-                            'narration': notes,
-                            'debit': (total if name == 'debit' else 0.0),
-                            'credit': (total if name == 'credit' else 0.0),
-                            'journal_id': advance_journal_id,
-                            'operating_unit_id': rec.operating_unit_id.id,
-                        })
-                        move_lines.append(move_line)
-                    move = {
-                        'date': fields.Date.today(),
-                        'journal_id': advance_journal_id,
-                        'name': _('Advance: %s') % (rec.name),
-                        'line_ids': [line for line in move_lines],
-                        'operating_unit_id': rec.operating_unit_id.id
-                    }
-                    move_id = obj_account_move.create(move)
-                    move_id.post()
-                    rec.move_id = move_id.id
-                    rec.state = 'confirmed'
-                    rec.message_post(
-                        _('<strong>Advance confirmed.</strong>'))
+            advance_journal_id = (
+                rec.operating_unit_id.advance_journal_id.id)
+            advance_debit_account_id = (
+                rec.employee_id.
+                tms_advance_account_id.id
+            )
+            advance_credit_account_id = (
+                rec.employee_id.
+                address_home_id.property_account_payable_id.id
+            )
+            if not advance_journal_id:
+                raise ValidationError(
+                    _('Warning! The advance does not have a journal'
+                        ' assigned. Check if you already set the '
+                        'journal for advances in the base.'))
+            if not advance_credit_account_id:
+                raise ValidationError(
+                    _('Warning! The driver does not have a home address'
+                        ' assigned. Check if you already set the '
+                        'home address for the employee.'))
+            if not advance_debit_account_id:
+                raise ValidationError(
+                    _('Warning! You must have configured the accounts '
+                        'of the tms'))
+            move_lines = []
+            notes = _('* Base: %s \n'
+                      '* Advance: %s \n'
+                      '* Travel: %s \n'
+                      '* Driver: %s \n'
+                      '* Vehicle: %s') % (
+                rec.operating_unit_id.name,
+                rec.name,
+                rec.travel_id.name,
+                rec.employee_id.name,
+                rec.unit_id.name)
+            total = rec.currency_id._convert(
+                rec.amount, self.env.user.currency_id, rec.company_id,
+                rec.date)
+            if total <= 0.0:
+                continue
+            accounts = {'credit': advance_credit_account_id,
+                        'debit': advance_debit_account_id}
+            for name, account in accounts.items():
+                move_line = (0, 0, {
+                    'name': rec.name,
+                    'partner_id': (
+                        rec.employee_id.address_home_id.id),
+                    'account_id': account,
+                    'narration': notes,
+                    'debit': (total if name == 'debit' else 0.0),
+                    'credit': (total if name == 'credit' else 0.0),
+                    'journal_id': advance_journal_id,
+                    'operating_unit_id': rec.operating_unit_id.id,
+                })
+                move_lines.append(move_line)
+            move = {
+                'date': fields.Date.today(),
+                'journal_id': advance_journal_id,
+                'name': _('Advance: %s') % (rec.name),
+                'line_ids': [line for line in move_lines],
+                'operating_unit_id': rec.operating_unit_id.id
+            }
+            move_id = obj_account_move.create(move)
+            move_id.post()
+            rec.move_id = move_id.id
+            rec.state = 'confirmed'
+            rec.message_post(
+                _('<strong>Advance confirmed.</strong>'))
 
     @api.multi
     def action_cancel(self):
@@ -227,11 +223,10 @@ class TmsAdvance(models.Model):
         for rec in self:
             if rec.travel_id.state == 'cancel':
                 raise ValidationError(
-                    _('Could not set this advance to draft because'
-                        ' the travel is cancelled.'))
-            else:
-                rec.state = 'draft'
-                rec.message_post(_('<strong>Advance drafted.</strong>'))
+                    _('Could not set this advance to draft because the travel '
+                      'is cancelled.'))
+            rec.state = 'draft'
+            rec.message_post(_('<strong>Advance drafted.</strong>'))
 
     @api.multi
     def action_pay(self):

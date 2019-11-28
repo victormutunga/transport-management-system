@@ -29,8 +29,7 @@ class TestTmsExpense(TransactionCase):
                 "account.data_account_type_current_assets").id
         })
         self.driver.write({
-            'address_home_id': self.env.ref(
-                'base.res_partner_address_31').id,
+            'address_home_id': self.env.ref('base.res_partner_2').id,
             'tms_advance_account_id': employee_accont.id,
             'tms_expense_negative_account_id': employee_accont.id})
 
@@ -44,7 +43,7 @@ class TestTmsExpense(TransactionCase):
         self.travel2.write({
             'fuel_log_ids': [(0, 0, {
                 'operating_unit_id': self.operating_unit.id,
-                'vendor_id': self.env.ref('base.res_partner_address_12').id,
+                'vendor_id': self.env.ref('base.res_partner_12').id,
                 'travel_id': self.travel2.id,
                 'vehicle_id': self.unit.id,
                 'product_id': self.product_fuel.id,
@@ -63,10 +62,8 @@ class TestTmsExpense(TransactionCase):
             'partner_id': self.env.ref('base.res_partner_2').id,
             'partner_order_id': self.env.ref('base.res_partner_2').id,
             'partner_invoice_id': self.env.ref('base.res_partner_2').id,
-            'departure_address_id': self.env.ref(
-                'base.res_partner_address_31').id,
-            'arrival_address_id': self.env.ref(
-                'base.res_partner_address_22').id,
+            'departure_address_id': self.env.ref('base.res_partner_2').id,
+            'arrival_address_id': self.env.ref('base.res_partner_3').id,
             'travel_ids': [(6, 0, [self.travel.id, self.travel2.id])],
             'customer_factor_ids': [(0, 0, {
                 'factor_type': 'travel',
@@ -79,8 +76,7 @@ class TestTmsExpense(TransactionCase):
                     'tms.tms_transportable_01').id,
                 'quantity': 100.0,
                 'name': 'Sand',
-                'transportable_uom_id': self.env.ref(
-                    'product.product_uom_ton').id,
+                'transportable_uom_id': self.env.ref('uom.product_uom_ton').id,
             })],
             'driver_factor_ids': [(0, 0, {
                 'factor_type': 'travel',
@@ -160,8 +156,7 @@ class TestTmsExpense(TransactionCase):
                     'line_type': self.product_fuel.tms_product_category,
                     'name': self.product_fuel.name,
                     'unit_price': 100.0,
-                    'partner_id': self.env.ref(
-                        'base.res_partner_address_12').id,
+                    'partner_id': self.env.ref('base.res_partner_12').id,
                     'invoice_number': '10010101',
                     'date': '03/08/2018',
                 }), (0, 0, {

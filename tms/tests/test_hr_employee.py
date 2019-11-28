@@ -47,8 +47,10 @@ class TestHrEmployee(TransactionCase):
         Socrata.get.return_value = self.response
         self.employee_id.get_driver_license_info()
         self.assertEqual(self.employee_id.license_type, 'CATEGORIA A')
-        self.assertEqual(self.employee_id.license_valid_from, '2012-06-26')
-        self.assertEqual(self.employee_id.license_expiration, '2017-06-26')
+        self.assertEqual(self.employee_id.license_valid_from.strftime(
+            '%Y-%m-%d'), '2012-06-26')
+        self.assertEqual(self.employee_id.license_expiration.strftime(
+            '%Y-%m-%d'), '2017-06-26')
         Socrata.get.return_value = False
         with self.assertRaisesRegexp(
                 ValidationError,

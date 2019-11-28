@@ -19,8 +19,7 @@ class TmsExpenseLoan(models.Model):
         default=fields.Date.context_today)
     date_confirmed = fields.Date(
         readonly=True,
-        related='move_id.date',
-        string='Date Confirmed')
+        related='move_id.date')
     employee_id = fields.Many2one(
         'hr.employee', 'Driver', required=True)
     expense_ids = fields.Many2many(
@@ -77,7 +76,7 @@ class TmsExpenseLoan(models.Model):
         readonly=True,
         ondelete='restrict',)
     company_id = fields.Many2one(
-        'res.company', string='Company', required=True,
+        'res.company', required=True,
         default=lambda self: self.env.user.company_id)
 
     @api.model
@@ -85,9 +84,8 @@ class TmsExpenseLoan(models.Model):
         loan = super(TmsExpenseLoan, self).create(values)
         if not loan.operating_unit_id.loan_sequence_id:
             raise ValidationError(_(
-                'You need to define the sequence for loans in base %s' %
-                loan.operating_unit_id.name
-            ))
+                'You need to define the sequence for loans in base %s') %
+                loan.operating_unit_id.name)
         sequence = loan.operating_unit_id.loan_sequence_id
         loan.name = sequence.next_by_id()
         return loan
@@ -104,8 +102,7 @@ class TmsExpenseLoan(models.Model):
                 raise exceptions.ValidationError(
                     _('Could not approve the Loan.'
                       ' The Amount of discount must be greater than zero.'))
-            elif (rec.discount_type == 'percent' and
-                  rec.percent_discount <= 0.0):
+            if (rec.discount_type == 'percent' and rec.percent_discount <= 0.0):  # noqa
                 raise exceptions.ValidationError(
                     _('Could not approve the Loan.'
                       ' The Amount of discount must be greater than zero.'))
@@ -166,9 +163,9 @@ class TmsExpenseLoan(models.Model):
                           loan.operating_unit_id.name,
                           loan.name,
                           loan.employee_id.name)
-            total = loan.currency_id.compute(
-                loan.amount,
-                self.env.user.currency_id)
+            total = loan.currency_id._convert(
+                loan.amount, self.env.user.currency_id, loan.company_id,
+                loan.date)
             if total > 0.0:
                 accounts = {'credit': loan_credit_account_id,
                             'debit': loan_debit_account_id}

@@ -9,14 +9,9 @@ from odoo import api, fields, models
 
 class FleetVehicle(models.Model):
     _inherit = 'fleet.vehicle'
-    _description = "Vehicle"
-    _order = 'name'
 
-    name = fields.Char(compute=False, required=True)
     operating_unit_id = fields.Many2one(
         'operating.unit', string='Operating Unit')
-    year_model = fields.Char()
-    serial_number = fields.Char()
     registration = fields.Char()
     fleet_type = fields.Selection(
         [('tractor', 'Motorized Unit'),
@@ -25,8 +20,6 @@ class FleetVehicle(models.Model):
          ('other', 'Other')],
         string='Unit Fleet Type')
     notes = fields.Text()
-    active = fields.Boolean(default=True)
-    driver_id = fields.Many2one('res.partner', string="Driver User")
     employee_id = fields.Many2one(
         'hr.employee',
         string="Driver",
@@ -49,10 +42,9 @@ class FleetVehicle(models.Model):
     @api.depends('insurance_expiration')
     def _compute_insurance_days_to_expire(self):
         for rec in self:
-            now = datetime.now()
+            now = datetime.now().date()
             date_expire = (
-                rec.insurance_expiration if rec.insurance_expiration else
-                datetime.now())
+                rec.insurance_expiration if rec.insurance_expiration else now)
             delta = date_expire - now
             if delta.days >= -1:
                 rec.insurance_days_to_expire = delta.days + 1

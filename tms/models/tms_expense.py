@@ -19,16 +19,16 @@ class TmsExpense(models.Model):
 
     name = fields.Char(readonly=True)
     operating_unit_id = fields.Many2one(
-        'operating.unit', string="Operating Unit", required=True)
+        'operating.unit', required=True)
     employee_id = fields.Many2one(
         'hr.employee', 'Driver', required=True,)
     travel_ids = fields.Many2many(
         'tms.travel',
         string='Travels')
     unit_id = fields.Many2one(
-        'fleet.vehicle', 'Unit', required=True)
+        'fleet.vehicle', required=True)
     currency_id = fields.Many2one(
-        'res.currency', 'Currency', required=True,
+        'res.currency', required=True,
         default=lambda self: self.env.user.company_id.currency_id)
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -148,7 +148,6 @@ class TmsExpense(models.Model):
         help="Fuel Qty Difference between Fuel Vouchers + Fuel Paid in Cash "
         "versus Fuel qty computed based on Distance Real and Global Fuel "
         "Efficiency Real obtained by electronic reading and/or GPS"
-        # compute=_get_fuel_diff
     )
     fuel_log_ids = fields.One2many(
         'fleet.vehicle.log.fuel', 'expense_id', string='Fuel Vouchers')
@@ -237,31 +236,30 @@ class TmsExpense(models.Model):
 
     @api.depends('start_date', 'end_date')
     def _compute_travel_days(self):
-        for rec in self:
-            if rec.start_date and rec.end_date:
-                date_start = self._get_time(rec.start_date)
-                date_end = self._get_time(rec.end_date)
-                strp_start_date = datetime.strptime(
-                    date_start, "%Y-%m-%d %H:%M:%S")
-                strp_end_date = datetime.strptime(
-                    date_end, "%Y-%m-%d %H:%M:%S")
-                difference = strp_end_date - strp_start_date
-                days = int(difference.days) + 1
-                hours = int(difference.seconds / 3600)
-                mins = int((difference.seconds - (hours * 3600)) / 60)
-                seconds = difference.seconds - ((hours * 3600) + (mins * 60))
-                if hours < 10:
-                    hours = '0' + str(hours)
-                if mins < 10:
-                    mins = '0' + str(mins)
-                if seconds < 10:
-                    seconds = '0' + str(seconds)
-                total_string = (
-                    str(days) + _('Day(s), ') +
-                    str(hours) + ':' +
-                    str(mins) + ':' +
-                    str(seconds))
-                rec.travel_days = total_string
+        for rec in self.filtered(lambda exp: exp.start_date and exp.end_date):
+            date_start = self._get_time(rec.start_date)
+            date_end = self._get_time(rec.end_date)
+            strp_start_date = datetime.strptime(
+                date_start, "%Y-%m-%d %H:%M:%S")
+            strp_end_date = datetime.strptime(
+                date_end, "%Y-%m-%d %H:%M:%S")
+            difference = strp_end_date - strp_start_date
+            days = int(difference.days) + 1
+            hours = int(difference.seconds / 3600)
+            mins = int((difference.seconds - (hours * 3600)) / 60)
+            seconds = difference.seconds - ((hours * 3600) + (mins * 60))
+            if hours < 10:
+                hours = '0' + str(hours)
+            if mins < 10:
+                mins = '0' + str(mins)
+            if seconds < 10:
+                seconds = '0' + str(seconds)
+            total_string = (
+                str(days) + _('Day(s), ') +
+                str(hours) + ':' +
+                str(mins) + ':' +
+                str(seconds))
+            rec.travel_days = total_string
 
     @api.depends('payment_move_id')
     def _compute_paid(self):
@@ -293,69 +291,62 @@ class TmsExpense(models.Model):
 
     @api.depends('expense_line_ids')
     def _compute_amount_fuel_cash(self):
+        # TODO - Why not only one method for all the amounts?
         for rec in self:
             rec.amount_fuel_cash = 0.0
-            for line in rec.expense_line_ids:
-                if line.line_type == 'fuel_cash':
-                    rec.amount_fuel_cash += (
-                        line.price_subtotal +
-                        line.special_tax_amount)
+            for line in rec.expense_line_ids.filtered(lambda li: li.line_type == 'fuel_cash'):  # noqa
+                rec.amount_fuel_cash += (
+                    line.price_subtotal +
+                    line.special_tax_amount)
 
     @api.depends('expense_line_ids')
     def _compute_amount_refund(self):
         for rec in self:
             rec.amount_refund = 0.0
-            for line in rec.expense_line_ids:
-                if line.line_type == 'refund':
-                    rec.amount_refund += line.price_total
+            for line in rec.expense_line_ids.filtered(lambda li: li.line_type == 'refund'):  # noqa
+                rec.amount_refund += line.price_total
 
     @api.depends('expense_line_ids')
     def _compute_amount_other_income(self):
         for rec in self:
             rec.amount_other_income = 0.0
-            for line in rec.expense_line_ids:
-                if line.line_type == 'other_income':
-                    rec.amount_other_income += line.price_total
+            for line in rec.expense_line_ids.filtered(lambda li: li.line_type == 'other_income'):  # noqa
+                rec.amount_other_income += line.price_total
 
     @api.depends('expense_line_ids')
     def _compute_amount_salary(self):
         for rec in self:
             rec.amount_salary = 0.0
-            for line in rec.expense_line_ids:
-                if line.line_type == 'salary':
-                    rec.amount_salary += line.price_total
+            for line in rec.expense_line_ids.filtered(lambda li: li.line_type == 'salary'):  # noqa
+                rec.amount_salary += line.price_total
 
     @api.depends('expense_line_ids')
     def _compute_amount_salary_discount(self):
         for rec in self:
             rec.amount_salary_discount = 0
-            for line in rec.expense_line_ids:
-                if line.line_type == 'salary_discount':
-                    rec.amount_salary_discount += line.price_total
+            for line in rec.expense_line_ids.filtered(lambda li: li.line_type == 'salary_discount'):  # noqa
+                rec.amount_salary_discount += line.price_total
 
     @api.depends('expense_line_ids')
     def _compute_amount_loan(self):
         for rec in self:
             rec.amount_loan = 0
-            for line in rec.expense_line_ids:
-                if line.line_type == 'loan':
-                    rec.amount_loan += line.price_total
+            for line in rec.expense_line_ids.filtered(lambda li: li.line_type == 'loan'):  # noqa
+                rec.amount_loan += line.price_total
 
     @api.depends('expense_line_ids')
     def _compute_amount_made_up_expense(self):
         for rec in self:
             rec.amount_made_up_expense = 0
-            for line in rec.expense_line_ids:
-                if line.line_type == 'made_up_expense':
-                    rec.amount_made_up_expense += line.price_total
+            for line in rec.expense_line_ids.filtered(lambda li: li.line_type == 'made_up_expense'):  # noqa
+                rec.amount_made_up_expense += line.price_total
 
     @api.depends('expense_line_ids')
     def _compute_amount_real_expense(self):
         for rec in self:
             rec.amount_real_expense = 0
-            for line in rec.expense_line_ids:
-                if line.line_type == 'real_expense':
-                    rec.amount_real_expense += line.price_subtotal
+            for line in rec.expense_line_ids.filtered(lambda li: li.line_type == 'real_expense'):  # noqa
+                rec.amount_real_expense += line.price_subtotal
 
     @api.depends('travel_ids', 'expense_line_ids')
     def _compute_amount_subtotal_real(self):
@@ -476,30 +467,28 @@ class TmsExpense(models.Model):
 
     @api.multi
     def unlink(self):
+        if self.filtered(lambda rec: rec.state == 'confirmed'):
+            raise ValidationError(
+                _('You can not delete a travel expense in status confirmed'))
         for rec in self:
-            if rec.state == 'confirmed':
-                raise ValidationError(
-                    _('You can not delete a travel expense'
-                      'in status confirmed'))
-            else:
-                travels = self.env['tms.travel'].search(
-                    [('expense_id', '=', rec.id)])
-                travels.write({
-                    'expense_id': False,
-                    'state': 'done'
-                })
-                advances = self.env['tms.advance'].search(
-                    [('expense_id', '=', rec.id)])
-                advances.write({
-                    'expense_id': False,
-                    'state': 'confirmed'
-                })
-                fuel_logs = self.env['fleet.vehicle.log.fuel'].search(
-                    [('expense_id', '=', rec.id)])
-                fuel_logs.write({
-                    'expense_id': False,
-                    'state': 'confirmed'
-                })
+            travels = self.env['tms.travel'].search(
+                [('expense_id', '=', rec.id)])
+            travels.write({
+                'expense_id': False,
+                'state': 'done'
+            })
+            advances = self.env['tms.advance'].search(
+                [('expense_id', '=', rec.id)])
+            advances.write({
+                'expense_id': False,
+                'state': 'confirmed'
+            })
+            fuel_logs = self.env['fleet.vehicle.log.fuel'].search(
+                [('expense_id', '=', rec.id)])
+            fuel_logs.write({
+                'expense_id': False,
+                'state': 'confirmed'
+            })
             return super(TmsExpense, self).unlink()
 
     @api.multi
@@ -886,15 +875,14 @@ class TmsExpense(models.Model):
 
     @api.multi
     def create_fuel_line(self, fuel_log, travel):
+        if (fuel_log.state not in ['confirmed', 'closed']):
+            raise ValidationError(_(
+                'Oops! All the voucher must be confirmed'
+                '\n Name of voucher not confirmed: ' +
+                fuel_log.name +
+                '\n State: ' + fuel_log.state))
         for rec in self:
-            if (fuel_log.state != 'confirmed' and
-                    fuel_log.state != 'closed'):
-                raise ValidationError(_(
-                    'Oops! All the voucher must be confirmed'
-                    '\n Name of voucher not confirmed: ' +
-                    fuel_log.name +
-                    '\n State: ' + fuel_log.state))
-            elif fuel_log.expense_line_id:
+            if fuel_log.expense_line_id:
                 fuel_expense = fuel_log.expense_line_id
             else:
                 fuel_expense = rec.expense_line_ids.create({

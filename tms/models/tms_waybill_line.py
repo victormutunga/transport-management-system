@@ -14,7 +14,6 @@ class TmsWaybillLine(models.Model):
 
     waybill_id = fields.Many2one(
         'tms.waybill',
-        string='Waybill',
         readonly=True)
     name = fields.Char('Description', required=True)
     sequence = fields.Integer(
@@ -23,7 +22,6 @@ class TmsWaybillLine(models.Model):
         default=10)
     product_id = fields.Many2one(
         'product.product',
-        string='Product',
         required=True)
     unit_price = fields.Float(
         default=0.0)
@@ -41,8 +39,7 @@ class TmsWaybillLine(models.Model):
         string='Discount (%)',
         help="Please use 99.99 format...")
     account_id = fields.Many2one(
-        'account.account',
-        string='Account')
+        'account.account')
 
     @api.onchange('product_id')
     def on_change_product_id(self):

@@ -63,24 +63,19 @@ class TmsFactor(models.Model):
             'percent_driver': _('Income Percent per Driver'),
             'amount_driver': _('Amount Percent per Driver'),
         }
-        if not self.factor_type:
-            self.name = 'name'
-        else:
-            self.name = values[self.factor_type]
+        self.name = values[self.factor_type]
 
     @api.multi
     def get_driver_amount(self, employee, driver_value, amount):
-        if employee:
-            if employee.income_percentage == 0.0:
-                raise ValidationError(_(
-                    'The employee must have a income '
-                    'percentage value'))
-            else:
-                amount += driver_value * (employee.income_percentage / 100)
-        else:
+        if not employee:
             raise ValidationError(_(
                 'Invalid parameter you can '
                 'use this factor only with drivers'))
+        if employee.income_percentage == 0.0:
+            raise ValidationError(_(
+                'The employee must have a income '
+                'percentage value'))
+        amount += driver_value * (employee.income_percentage / 100)
         return amount
 
     @api.multi

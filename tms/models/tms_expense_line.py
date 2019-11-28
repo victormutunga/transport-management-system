@@ -12,11 +12,9 @@ class TmsExpenseLine(models.Model):
 
     loan_id = fields.Many2one('tms.expense.loan', string='Loan')
     travel_id = fields.Many2one(
-        'tms.travel',
-        string='Travel')
+        'tms.travel')
     expense_id = fields.Many2one(
-        'tms.expense',
-        string='Expense',)
+        'tms.expense')
     product_qty = fields.Float(
         string='Qty', default=1.0)
     unit_price = fields.Float()

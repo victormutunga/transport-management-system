@@ -10,12 +10,11 @@ class TmsRouteTollstation(models.Model):
     _description = 'Tollstation'
 
     name = fields.Char(required=True)
-    place_id = fields.Many2one('tms.place', string="Place", required=True)
-    partner_id = fields.Many2one('res.partner', string="Partner")
-    route_ids = fields.Many2many('tms.route', string="Routes")
+    place_id = fields.Many2one('tms.place', required=True)
+    partner_id = fields.Many2one('res.partner')
+    route_ids = fields.Many2many('tms.route')
     credit = fields.Boolean()
     cost_per_axis_ids = fields.One2many(
         'tms.route.tollstation.costperaxis',
-        'tollstation_id',
-        string='Cost per Axis')
+        'tollstation_id')
     active = fields.Boolean(default=True)

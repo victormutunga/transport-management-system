@@ -7,12 +7,9 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='activities_overdue']" position="before">
                 <field filter_domain="['|', ('name','ilike',self), ('license_plate','ilike',self)]" name="name" string="Vehicle"/>
-                <field name="year_model"/>
-                <field name="serial_number"/>
                 <field name="registration"/>
             </xpath>
             <xpath expr="//group" position="inside">
-                <filter context="{'group_by' : 'year_model'}" name="groupby_year_model" string="Year Model"/>
                 <filter context="{'group_by' : 'registration'}" name="groupby_registration" string="Registration"/>
                 <filter context="{'group_by' : 'fleet_type'}" name="groupby_fleet_type" string="Fleet Type"/>
             </xpath>
@@ -43,15 +40,10 @@
                 <field name="operating_unit_id" required="1"/>
                 <field name="fleet_type" required="1"/>
             </field>
-            <field name="car_value" position="after">
-                <field name="year_model"/>
-                <field name="active"/>
-            </field>
             <xpath expr="//sheet/group[2]" position="replace">
                 <notebook>
                     <page string="General Information">
                         <group>
-                            <field name="serial_number"/>
                             <field name="registration"/>
                             <field name="supplier_unit"/>
                             <field name="insurance_policy"/>
@@ -126,7 +118,6 @@
                     <field name="license_plate"/>
                     <field invisible="1" name="driver_id"/>
                     <field name="employee_id"/>
-                    <field name="serial_number"/>
                     <field name="state_id"/>
                     <field name="odometer"/>
                     <field name="odometer_unit"/>

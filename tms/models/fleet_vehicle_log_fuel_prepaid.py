@@ -16,7 +16,7 @@ class FleetVehicleLogFuelPrepaid(models.Model):
     invoice_paid = fields.Boolean(
         compute='_compute_invoiced_paid')
     operating_unit_id = fields.Many2one(
-        'operating.unit', string='Operating Unit')
+        'operating.unit')
     notes = fields.Char()
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -30,10 +30,9 @@ class FleetVehicleLogFuelPrepaid(models.Model):
         default=fields.Date.context_today)
     product_id = fields.Many2one(
         'product.product',
-        string='Product',
         domain=[('tms_product_category', '=', 'fuel')])
     currency_id = fields.Many2one(
-        'res.currency', string='Currency',
+        'res.currency',
         required=True,
         default=lambda self: self.env.user.company_id.currency_id)
     log_fuel_ids = fields.One2many(
@@ -81,11 +80,10 @@ class FleetVehicleLogFuelPrepaid(models.Model):
 
     @api.multi
     def create_invoice(self):
+        if self.mapped('invoice_id'):
+            raise ValidationError(_('The record is already invoiced'))
+        obj_invoice = self.env['account.invoice']
         for rec in self:
-            obj_invoice = self.env['account.invoice']
-            if rec.invoice_id:
-                raise ValidationError(
-                    _('The record is already invoiced'))
             journal_id = rec.operating_unit_id.purchase_journal_id.id
             fpos = rec.vendor_id.property_account_position_id
             invoice_account = fpos.map_account(

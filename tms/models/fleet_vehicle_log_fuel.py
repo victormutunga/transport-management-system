@@ -22,8 +22,8 @@ class FleetVehicleLogFuel(models.Model):
     _order = "date desc,vehicle_id desc"
 
     name = fields.Char()
-    travel_id = fields.Many2one('tms.travel', string='Travel')
-    expense_id = fields.Many2one('tms.expense', string='Expense')
+    travel_id = fields.Many2one('tms.travel')
+    expense_id = fields.Many2one('tms.expense')
     employee_id = fields.Many2one(
         'hr.employee',
         string='Driver',
@@ -79,8 +79,8 @@ class FleetVehicleLogFuel(models.Model):
 
     @api.depends('vendor_id')
     def _compute_prepaid(self):
+        obj_prepaid = self.env['fleet.vehicle.log.fuel.prepaid']
         for rec in self:
-            obj_prepaid = self.env['fleet.vehicle.log.fuel.prepaid']
             prepaid_id = obj_prepaid.search([
                 ('operating_unit_id', '=', rec.operating_unit_id.id),
                 ('vendor_id', '=', rec.vendor_id.id),
@@ -89,6 +89,7 @@ class FleetVehicleLogFuel(models.Model):
                 if prepaid_id.balance > rec.price_total:
                     rec.prepaid_id = prepaid_id.id
                 else:
+                    # TODO Remove raise
                     raise ValidationError(
                         _('Insufficient amount'))
 
@@ -132,13 +133,12 @@ class FleetVehicleLogFuel(models.Model):
 
     @api.multi
     def action_cancel(self):
+        if self.mapped('invoice_id'):
+            raise ValidationError(
+                _('Could not cancel Fuel Voucher! This Fuel Voucher is '
+                  'already Invoiced'))
         for rec in self:
-            if rec.invoice_id:
-                raise ValidationError(
-                    _('Could not cancel Fuel Voucher! This '
-                      'Fuel Voucher is already Invoiced'))
-            elif (rec.travel_id and
-                  rec.travel_id.state == 'closed'):
+            if (rec.travel_id and rec.travel_id.state == 'closed'):
                 raise ValidationError(
                     _('Could not cancel Fuel Voucher! This Fuel '
                       'Voucher is already linked to a Travel Expense'))
@@ -188,6 +188,7 @@ class FleetVehicleLogFuel(models.Model):
 
     @api.multi
     def _amount_to_text(self, product_qty):
+        # TODO Use the Odoo method in the currency
         total = str(float(product_qty)).split('.')[0]
         total = num2words(float(total), lang='es').upper()
         return '%s' % (total)

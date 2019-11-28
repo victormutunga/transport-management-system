@@ -11,4 +11,4 @@ class FleetVehicleOdometer(models.Model):
     last_odometer = fields.Float(string='Last Read')
     current_odometer = fields.Float(string='Current Read')
     distance = fields.Float()
-    travel_id = fields.Many2one('tms.travel', string='Travel')
+    travel_id = fields.Many2one('tms.travel')
