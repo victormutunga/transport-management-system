@@ -42,10 +42,10 @@ class TmsWizardPayment(models.TransientModel):
 
     @api.multi
     def make_payment(self):
+        active_ids = self.env[self._context.get('active_model')].browse(
+            self._context.get('active_ids'))
+        active_model = self._context['active_model']
         for rec in self:
-            active_ids = self.env[self._context.get('active_model')].browse(
-                self._context.get('active_ids'))
-            active_model = self._context['active_model']
             bank_account_id = rec.journal_id.default_debit_account_id.id
             currency = rec.journal_id.currency_id or self.env.user.currency_id
             currency_id = active_ids.mapped('currency_id').ids
@@ -165,7 +165,15 @@ class TmsWizardPayment(models.TransientModel):
 
     @api.multi
     def create_moves_and_reconciles(self, move, active_ids):
+        payments = {}
+        for line in move.get('line_ids'):
+            if line[2].get('payment_id'):
+                payments.update({line[2].get('name'): line[2].get('payment_id')})  # noqa
+                line[2].update({'payment_id': False})
         move_id = self.env['account.move'].create(move)
+        for payment in payments:
+            move_id.filtered(
+                lambda line: line.name == payment).payment_id = payments[payment]  # noqa
         move_id.post()
         journal_id = active_ids.mapped('move_id.journal_id')
         for move_line in move_id.line_ids.filtered(
