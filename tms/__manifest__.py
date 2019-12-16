@@ -55,8 +55,6 @@
         'views/tms_route_tollstation_view.xml',
         'views/fleet_vehicle_engine_view.xml',
         'views/tms_route_note_view.xml',
-        'views/tms_custom_house_view.xml',
-        'views/tms_custom_view.xml',
         'data/product_product_data.xml',
         'data/operating_unit.xml',
         'wizards/tms_wizard_payment_view.xml',

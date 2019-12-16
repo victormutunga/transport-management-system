@@ -172,14 +172,9 @@
                                 <group colspan="2">
                                     <separator colspan="2" string="Supplier Invoice Data"/>
                                     <field name="supplier_invoice_id"/>
-                                    <field name="supplier_invoice_paid"/>
-                                    <newline/>
+                                    <field name="supplier_invoice_paid" readonly="1"/>
                                 </group>
                             </group>
-                        </page>
-                        <page string="Customs">
-                            <separator coslpan="4" string="Customs"/>
-                            <field name="custom_ids" nolabel="1"/>
                         </page>
                         <page string="Expenses">
                             <field name="expense_ids"/>

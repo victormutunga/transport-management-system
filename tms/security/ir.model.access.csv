@@ -61,9 +61,6 @@ traffic_tms_factor,traffic_tms_factor,model_tms_factor,group_traffic,1,1,1,1
 traffic_tms_route_note,traffic_tms_route_note,model_tms_route_note,group_traffic,1,1,1,1
 traffic_tms_waybill_line,traffic_tms_waybill_line,model_tms_waybill_line,group_traffic,1,1,1,1
 traffic_tms_waybill_taxes,traffic_tms_waybill_taxes,model_tms_waybill_taxes,group_traffic,1,1,1,1
-traffic_tms_custom_house,traffic_tms_custom_house,model_tms_custom_house,group_traffic,1,1,1,1
-traffic_tms_customs,traffic_tms_customs,model_tms_customs,group_traffic,1,1,1,1
-
 expenses_tms_waybill,access_tms_waybill,model_tms_waybill,group_expenses,1,1,1,0
 expenses_tms_travel,access_tms_travel,model_tms_travel,group_expenses,1,1,1,1
 expenses_tms_advance,access_tms_advance,model_tms_advance,group_expenses,1,1,1,0
