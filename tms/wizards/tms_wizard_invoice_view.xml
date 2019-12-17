@@ -7,8 +7,8 @@
             <form string="Create Invoice">
                 <separator colspan="4" string="Create Customer Invoice from selected Records ?"/>
                 <footer>
-                    <button name="make_invoices" string="Confirm" type="object"/>or
-                    <button class="oe_link" special="cancel" string="Cancel"/>
+                    <button name="make_invoices" string="Confirm" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>
         </field>

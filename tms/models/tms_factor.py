@@ -63,7 +63,7 @@ class TmsFactor(models.Model):
             'percent_driver': _('Income Percent per Driver'),
             'amount_driver': _('Amount Percent per Driver'),
         }
-        self.name = values[self.factor_type]
+        self.name = values.get(self.factor_type)
 
     @api.multi
     def get_driver_amount(self, employee, driver_value, amount):
