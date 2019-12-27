@@ -41,7 +41,29 @@ Configuration
 
 To configure this module, you need to:
 
-#. Go to ...
+# Configure your products according to each function. In the product is found
+a new field, to assign the TMS category, and this are:
+
+- Freight (Waybill): Indicates the cost by freight, only could
+  be used as line in the Waybill.
+- Moves (Waybill): Used when in the fleet is moved a product from to a new
+  location.
+- Insurance: When the fleet has an insurance with a extra cost, this product
+  could be used to indicate that.
+- Highway Tolls: Used in the Waybills to indicate the costs for Highway Tolls.
+- Other: Is a generic type, to be used in the Waybills.
+- Real Expense: Indicate the possible expenses in the travels
+- Made up Expense:
+- Salary:
+- Salary Retention:
+- Salary Discount:
+- Fuel:
+- Other Income:
+- Refund:
+- Negative Balance:
+- Fuel in Cash:
+- Tollstations (Expenses):
+- Loan:
 
 Usage
 =====
