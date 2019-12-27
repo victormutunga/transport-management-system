@@ -117,7 +117,8 @@ class TmsWizardInvoice(models.TransientModel):
             journal_id = record.operating_unit_id.sale_journal_id.id
             if active_model == 'tms.waybill':
                 res = self.compute_waybill(record, lines)
-            if active_model == 'fleet.vehicle.log.fuel':
+            elif active_model == 'fleet.vehicle.log.fuel':
+                journal_id = record.operating_unit_id.purchase_journal_id.id
                 res = self.compute_fuel_log(record, lines)
             partner_ids.append(res['partner_id'].id)
 
@@ -143,11 +144,11 @@ class TmsWizardInvoice(models.TransientModel):
             '<strong>Invoice of:</strong> %s </br>') % (
             ', '.join(record_names))
         invoice_id.message_post(body=message)
-
+        view = self.env.ref('account.invoice_form') if 'out' in res[
+            'invoice_type'] else self.env.ref('account.invoice_supplier_form')
         return {
             'name': 'Customer Invoice',
-            'view_id': self.env.ref(
-                'account.invoice_form').id,
+            'view_id': view.id,
             'view_type': 'form',
             'view_mode': 'form',
             'target': 'current',
