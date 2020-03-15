@@ -3,9 +3,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 import logging
-import urllib as my_urllib
+import requests
 
-import simplejson as json
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
@@ -47,16 +46,26 @@ class TmsPlace(models.Model):
             else:
                 raise ValidationError(
                     _("You need to set a Place and a State Name"))
-            google_url = 'http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=false' % address.encode('utf-8')  # noqa
-            try:
-                # TODO deprecated-urllib-function
-                result = json.load(my_urllib.urlopen(google_url))
-                if result['status'] == 'OK':
-                    location = result['results'][0]['geometry']['location']
-                    self.latitude = location['lat']
-                    self.longitude = location['lng']
-            except Exception:
-                raise ValidationError(_("Google Maps is not available."))
+            key = self.env['ir.config_parameter'].get_param('mapquest.key')
+            if key == 'key':
+                raise ValidationError(_(
+                    "You need to define mapquest.key parameter."))
+            params = {
+                'key': key,
+                'outFormat': 'json',
+                'location': address.encode('utf-8'),
+                'thumbMaps': 'false',
+
+            }
+            url = 'https://www.mapquestapi.com/geocoding/v1/address'
+            result = requests.get(url, params=params)
+            if result.status_code == 200:
+                data = result.json()
+                location = data['results'][0]['locations'][0]['latLng']
+                self.latitude = location['lat']
+                self.longitude = location['lng']
+            else:
+                raise ValidationError(_("MapQuest is not available."))
 
     def open_in_google(self):
         for place in self:

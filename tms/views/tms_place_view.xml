@@ -19,7 +19,7 @@
         <field name="arch" type="xml"> 
             <form string="Places" version="9.0">
                 <header>
-                    <button name="get_coordinates" string="Get Coords from Google" type="object"/>
+                    <button name="get_coordinates" string="Get Coordinates" type="object"/>
                     <button name="open_in_google" string="View in Google Maps" type="object"/>
                 </header>
                 <group col="4">

@@ -1,12 +1,7 @@
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-
-import urllib
-
-from mock import MagicMock
-
-import simplejson as json
+import responses
 
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
@@ -17,57 +12,47 @@ class TestTmsPlace(TransactionCase):
     def setUp(self):
         super(TestTmsPlace, self).setUp()
         self.place = self.env.ref('tms.tms_place_01')
+        self.env['ir.config_parameter'].set_param(
+            'mapquest.key', 'test')
         self.result = {
-            'status': 'OK',
-            'results': [
-                {'geometry': {
-                    'location_type': 'APPROXIMATE',
-                    'bounds': {
-                        'northeast': {'lat': 29.73872,
-                                      'lng': -98.22295799999999},
-                        'southwest': {'lat': 29.2241411, 'lng': -98.8058509}},
-                    'viewport': {
-                        'northeast': {'lat': 29.73872,
-                                      'lng': -98.22295799999999},
-                        'southwest': {'lat': 29.2241411, 'lng': -98.8058509}},
-                    'location': {'lat': 29.4241219,
-                                 'lng': -98.49362819999999}},
-                    'address_components': [{
-                        'long_name': 'San Antonio',
-                        'types': ['locality', 'political'],
-                        'short_name': 'San Antonio'}, {
-                        'long_name': 'Bexar County',
-                        'types': ['administrative_area_level_2', 'political'],
-                        'short_name': 'Bexar County'}, {
-                        'long_name': 'Texas',
-                        'types': ['administrative_area_level_1', 'political'],
-                        'short_name': 'TX'}, {
-                        'long_name': 'United States',
-                        'types': ['country', 'political'],
-                        'short_name': 'US'}],
-                    'place_id': 'ChIJrw7QBK9YXIYRvBagEDvhVgg',
-                    'formatted_address': 'San Antonio, TX, USA',
-                    'types': ['locality', 'political']}]}
-        self.geo_point = {
-            'coordinates': [1234567.0123456789, 2273030.926987689],
-            'type': 'Point'}
+            'results': [{
+                'locations': [{
+                    'latLng': {
+                        'lat': 29.4241219,
+                        'lng': -98.4936282,
+                    },
+                }],
+            }],
+        }
 
+    @responses.activate
     def test_10_tms_place_get_coordinates(self):
-        urllib.urlopen = MagicMock()
-        urllib.urlopen.return_value = False
+        responses.add(
+            responses.GET, 'https://www.mapquestapi.com/geocoding/v1/address',
+            json={'error': 'not found'}, status=404)
         with self.assertRaisesRegexp(
                 ValidationError,
-                'Google Maps is not available.'):
+                'MapQuest is not available.'):
             self.place.get_coordinates()
+        state = self.place.state_id
         self.place.state_id = False
         with self.assertRaisesRegexp(
                 ValidationError,
                 'You need to set a Place and a State Name'):
             self.place.get_coordinates()
+        self.place.state_id = state
+        self.env['ir.config_parameter'].set_param(
+            'mapquest.key', 'key')
+        with self.assertRaisesRegexp(
+                ValidationError,
+                'You need to define mapquest.key parameter.'):
+            self.place.get_coordinates()
 
+    @responses.activate
     def test_11_tms_place_get_coordinates(self):
-        json.load = MagicMock()
-        json.load.return_value = self.result
+        responses.add(
+            responses.GET, 'https://www.mapquestapi.com/geocoding/v1/address',
+            json=self.result, status=200)
         self.place.get_coordinates()
         self.assertEqual(self.place.latitude, 29.4241219,
                          msg='Latitude is not correct')
