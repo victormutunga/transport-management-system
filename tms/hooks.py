@@ -4,7 +4,7 @@
 
 from odoo import api, SUPERUSER_ID
 
-products = [
+PRODUCTS = [
     'product.product_product_16',
     'product.product_product_24',
     'product.consu_delivery_01',
@@ -83,5 +83,5 @@ def post_init_hook(cr, registry):
         env['fleet.vehicle.odometer'].search([]).unlink()
         if stock.state == 'installed':
             env['stock.warehouse.orderpoint'].search([]).unlink()
-        for product in products:
+        for product in PRODUCTS:
             env.ref(product).write({'active': False})
