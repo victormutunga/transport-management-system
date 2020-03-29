@@ -170,6 +170,7 @@ class TmsTravel(models.Model):
                     rec.date_end_real - rec.date_start_real).total_seconds(
                     ) / 60 / 60
                 rec.travel_duration_real = difference
+            rec.travel_duration_real = 0
 
     @api.onchange('kit_id')
     def _onchange_kit(self):
