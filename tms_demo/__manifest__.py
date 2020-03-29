@@ -21,6 +21,5 @@
         'demo/tms_waybill.xml',
         'demo/tms_expense.xml',
     ],
-    'installable': False,
     'auto-install': False,
 }

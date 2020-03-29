@@ -23,6 +23,7 @@
         <field name="name">Group Expenses</field>
          <field name="implied_ids" eval="[(4, ref('group_monitoring')), (4, ref('account.group_account_invoice'))]"/>
          <field name="category_id" ref="tms_group_category"/>
+         <field name="users" eval="[(4, ref('base.user_admin'))]"/>
     </record>
     <record id="tms_waybill_comp_rule" model="ir.rule">
         <field name="name">Waybill</field>

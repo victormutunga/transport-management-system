@@ -111,7 +111,7 @@ class TmsWizardPayment(models.TransientModel):
                 'date': rec.date,
                 'journal_id': rec.journal_id.id,
                 'ref': name,
-                'line_ids': [line for line in move_lines],
+                'line_ids': move_lines,
                 'narration': rec.notes,
             }
             # Creating moves and reconciles method explained above

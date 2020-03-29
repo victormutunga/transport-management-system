@@ -19,5 +19,4 @@ class TmsWaybillTaxes(models.Model):
                 ('type', '<>', 'closed')])
     account_analytic_id = fields.Many2one(
         'account.analytic.account', 'Analytic account')
-    base = fields.Float(digits='Account', readonly=True)
     tax_amount = fields.Float(digits='Account', readonly=True)

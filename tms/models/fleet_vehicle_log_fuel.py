@@ -28,7 +28,7 @@ class FleetVehicleLogFuel(models.Model):
         'hr.employee',
         string='Driver',
         domain=[('driver', '=', True)],
-        compute='_compute_driver_id',
+        related='travel_id.employee_id',
         store=True,)
     odometer = fields.Float(related='vehicle_id.odometer',)
     product_uom_id = fields.Many2one('uom.uom', string='UoM')
@@ -55,6 +55,7 @@ class FleetVehicleLogFuel(models.Model):
         ('closed', 'Closed'),
         ('cancel', 'Cancelled')],
         readonly=True,
+        tracking=True,
         default='draft')
     vendor_id = fields.Many2one('res.partner', required=True,)
     product_id = fields.Many2one(
@@ -94,37 +95,33 @@ class FleetVehicleLogFuel(models.Model):
                         _('Insufficient amount'))
             rec.prepaid_id = False
 
-    @api.depends('vehicle_id')
-    def _compute_driver_id(self):
-        for rec in self:
-            rec.employee_id = rec.travel_id.employee_id
-
     @api.depends('tax_amount')
     def _compute_price_subtotal(self):
         for rec in self:
-            rec.price_subtotal = 0
+            price_subtotal = 0
             if rec.tax_amount > 0:
-                rec.price_subtotal = rec.tax_amount / 0.16
+                price_subtotal = rec.tax_amount / 0.16
+            rec.price_subtotal = price_subtotal
 
     @api.depends('product_qty', 'price_subtotal')
     def _compute_price_unit(self):
         for rec in self:
-            rec.price_unit = 0
+            price_unit = 0
             if rec.product_qty and rec.price_subtotal > 0:
-                rec.price_unit = rec.price_subtotal / rec.product_qty
-            return rec.price_unit
+                price_unit = rec.price_subtotal / rec.product_qty
+            rec.price_unit = price_unit
 
     @api.depends('price_subtotal', 'tax_amount', 'price_total')
     def _compute_special_tax_amount(self):
         for rec in self:
-            rec.special_tax_amount = 0
+            special_tax_amount = 0
             if rec.price_subtotal and rec.price_total and rec.tax_amount > 0:
-                rec.special_tax_amount = (
+                special_tax_amount = (
                     rec.price_total - rec.price_subtotal - rec.tax_amount)
+            rec.special_tax_amount = special_tax_amount
 
     def action_approved(self):
         for rec in self:
-            rec.message_post(body=_('<b>Fuel Voucher Approved.</b>'))
             rec.state = 'approved'
 
     def action_cancel(self):
@@ -153,7 +150,6 @@ class FleetVehicleLogFuel(models.Model):
 
     def set_2_draft(self):
         for rec in self:
-            rec.message_post(body=_('<b>Fuel Voucher Draft.</b>'))
             rec.state = 'draft'
 
     def action_confirm(self):
@@ -164,7 +160,6 @@ class FleetVehicleLogFuel(models.Model):
                 raise ValidationError(
                     _('Liters, Taxes and Total'
                       ' must be greater than zero.'))
-            rec.message_post(body=_('<b>Fuel Voucher Confirmed.</b>'))
             rec.state = 'confirmed'
 
     @api.onchange('travel_id')

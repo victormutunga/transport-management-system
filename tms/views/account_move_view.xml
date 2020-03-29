@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <notebook position="inside">
-                <page attrs="{'invisible':[('waybill_ids','=',False)]}" string="Waybills">
+                <page attrs="{'invisible':[('waybill_ids', '=', [])]}" string="Waybills">
                     <field name="waybill_ids"/>
                 </page>
             </notebook>

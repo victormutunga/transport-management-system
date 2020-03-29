@@ -23,6 +23,7 @@ class FleetVehicleLogFuelPrepaid(models.Model):
         ('confirmed', 'Confirmed'),
         ('closet', 'Closet')],
         readonly=True,
+        tracking=True,
         default='draft')
     vendor_id = fields.Many2one('res.partner', string="Supplier")
     date = fields.Date(
@@ -58,19 +59,22 @@ class FleetVehicleLogFuelPrepaid(models.Model):
     @api.depends('log_fuel_ids')
     def _compute_balance(self):
         for rec in self:
-            rec.balance = rec.price_total
+            balance = rec.price_total
             for fuel in rec.log_fuel_ids:
-                rec.balance -= fuel.price_total
-                if rec.balance > rec.price_total:
+                balance -= fuel.price_total
+                if balance > rec.price_total:
                     raise ValidationError(
                         _('The total amount of fuel voucher is '
                           'higher than the allowed limit'))
+            rec.balance = balance
 
     @api.depends('invoice_id')
     def _compute_invoiced_paid(self):
         for rec in self:
+            invoice_paid = False
             if rec.invoice_id and rec.invoice_id.state == "paid":
-                rec.invoice_paid = True
+                invoice_paid = True
+            rec.invoice_paid = invoice_paid
 
     def action_confirm(self):
         for rec in self:

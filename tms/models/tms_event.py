@@ -16,7 +16,7 @@ class TmsEvent(models.Model):
     state = fields.Selection(
         [('draft', 'Draft'),
          ('confirm', 'Confirm'),
-         ('cancel', 'Cancel')], readonly=True, default='draft')
+         ('cancel', 'Cancel')], tracking=True, readonly=True, default='draft')
     date = fields.Date(
         default=fields.Date.context_today,
         required=True,
@@ -46,15 +46,12 @@ class TmsEvent(models.Model):
 
     def action_confirm(self):
         for rec in self:
-            rec.message_post(body=_('<b>Event Confirmed.</b>'))
             rec.state = 'confirm'
 
     def action_cancel(self):
         for rec in self:
-            rec.message_post(body=_('<b>Event Cancelled.</b>'))
             rec.state = 'cancel'
 
     def set_2_draft(self):
         for rec in self:
-            rec.message_post(body=_('<b>Event Draft.</b>'))
             rec.state = 'draft'

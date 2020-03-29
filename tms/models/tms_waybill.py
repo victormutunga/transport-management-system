@@ -46,6 +46,7 @@ class TmsWaybill(models.Model):
         ('approved', 'Approved'),
         ('confirmed', 'Confirmed'),
         ('cancel', 'Cancelled')], readonly=True,
+        tracking=True,
         help="Gives the state of the Waybill.",
         default='draft')
     date_order = fields.Datetime(
@@ -64,16 +65,11 @@ class TmsWaybill(models.Model):
         default=lambda self: self.env.user.company_id)
     partner_invoice_id = fields.Many2one(
         'res.partner', 'Invoice Address', required=True,
-        help="Invoice address for current Waybill.",
-        default=(lambda self: self.env[
-            'res.partner'].address_get(
-            self['partner_id'])))
+        help="Invoice address for current Waybill.")
     partner_order_id = fields.Many2one(
         'res.partner', 'Ordering Contact', required=True,
         help="The name and address of the contact who requested the "
-        "order or quotation.",
-        default=(lambda self: self.env['res.partner'].address_get(
-            self['partner_id'])['contact']))
+        "order or quotation.")
     departure_address_id = fields.Many2one(
         'res.partner', required=True,
         help="Departure address for current Waybill.", change_default=True)
@@ -226,7 +222,6 @@ class TmsWaybill(models.Model):
     def action_approve(self):
         for waybill in self:
             waybill.state = 'approved'
-            self.message_post(body=_("<h5><strong>Aprroved</strong></h5>"))
 
     @api.depends('invoice_id')
     def _compute_invoice_paid(self):
@@ -315,23 +310,25 @@ class TmsWaybill(models.Model):
 
     @api.depends('waybill_line_ids')
     def _compute_amount_tax(self):
-        for waybill in self:
-            for line in waybill.waybill_line_ids:
-                waybill.amount_tax += line.tax_amount
+        for rec in self:
+            amount_tax = 0
+            for line in rec.waybill_line_ids:
+                amount_tax += line.tax_amount
+            rec.amount_tax = amount_tax
 
     @api.depends('amount_untaxed', 'amount_tax')
     def _compute_amount_total(self):
-        for waybill in self:
-            waybill.amount_total = waybill.amount_untaxed + waybill.amount_tax
+        for rec in self:
+            rec.amount_total = rec.amount_untaxed + rec.amount_tax
 
     def action_confirm(self):
-        for waybill in self:
-            if not waybill.travel_ids:
+        for rec in self:
+            if not rec.travel_ids:
                 raise exceptions.ValidationError(
                     _('Could not confirm Waybill !'
                       'Waybill must be assigned to a Travel before '
                       'confirming.'))
-            waybill.state = 'confirmed'
+            rec.state = 'confirmed'
 
     @api.onchange('waybill_line_ids')
     def onchange_waybill_line_ids(self):
@@ -345,14 +342,14 @@ class TmsWaybill(models.Model):
                     line.product_id, waybill.partner_id)
                 for tax in taxes['taxes']:
                     val = {
-                        'tax_id': tax['id'], 'base': taxes['base'],
-                        'tax_amount': tax['amount']}
+                        'tax_id': tax['id'],
+                        'tax_amount': tax['amount']
+                    }
                     if tax['id'] not in tax_grouped:
                         tax_grouped[tax['id']] = val
                     else:
                         tax_grouped[
                             tax['id']]['tax_amount'] += val['tax_amount']
-                        tax_grouped[tax['id']]['base'] += val['base']
             tax_lines = waybill.tax_line_ids.browse([])
             for tax in tax_grouped.values():
                 tax_lines += tax_lines.new(tax)
@@ -360,13 +357,11 @@ class TmsWaybill(models.Model):
 
     def action_cancel_draft(self):
         for waybill in self:
-            for travel in waybill.travel_ids:
-                if travel.state == 'cancel':
-                    raise exceptions.ValidationError(
-                        _('Could not set to draft this Waybill !'
-                          'Travel is Cancelled !!!'))
-            waybill.message_post(
-                body=_("<h5><strong>Cancel to Draft</strong></h5>"))
+            for travel in waybill.travel_ids.filtered(
+                    lambda t: t.state == 'cancel'):
+                raise exceptions.ValidationError(
+                    _('Could not set to draft this Waybill !'
+                      'Travel is Cancelled !!!'))
             waybill.state = 'draft'
 
     def action_cancel(self):
@@ -378,8 +373,6 @@ class TmsWaybill(models.Model):
                         'please check it.'))
             waybill.invoice_id = False
             waybill.state = 'cancel'
-            waybill.message_post(
-                body=_("<h5><strong>Cancelled</strong></h5>"))
 
     def _amount_to_text(self, amount_total, currency, partner_lang='es_MX'):
         total = str(float(amount_total)).split('.')[0]

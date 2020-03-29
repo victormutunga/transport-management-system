@@ -55,7 +55,7 @@
                     </group>
                     <group string="Supplier Details" attrs="{'invisible':['|', ('line_type','=',False), ('line_type','in', ['salary','salary_retention','salary_discount','other_income','refund'])]}">
                         <field name="is_invoice" attrs="{'invisible':['|', ('line_type','=', False), ('line_type','in',['salary','salary_retention','salary_discount','other_income','refund', 'fuel',])]}"/>
-                        <field name="partner_id" attrs="{'invisible':[('is_invoice', '=', False), ('line_type', '!=', 'fuel')],'required':['|', ('is_invoice', '=', True),('line_type', 'in', ['fuel', 'fuel_cash'])]}" domain="[('supplier', '=', True)]"/>
+                        <field name="partner_id" attrs="{'invisible':[('is_invoice', '=', False), ('line_type', '!=', 'fuel')],'required':['|', ('is_invoice', '=', True),('line_type', 'in', ['fuel', 'fuel_cash'])]}" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'show_address': 1, 'default_is_company': True, 'show_vat': True}" domain="[('is_company', '=', True)]"/>
                         <field name="invoice_number" attrs="{'invisible':[('is_invoice', '=', False), ('line_type', '!=', 'fuel')]}"/>
                         <field name="date" attrs="{'invisible':[('is_invoice', '=', False), ('line_type', '!=', 'fuel')],'required':['|', ('is_invoice', '=', True),('line_type', 'in', ['fuel', 'fuel_cash'])]}"/>
                         <field name="invoice_id" attrs="{'invisible':['|', ('is_invoice', '=', False), ('invoice_id', '=', False)]}" domain="[('partner_id', '=', partner_id),('state', 'not in', ['paid'])]" readonly="1"/>

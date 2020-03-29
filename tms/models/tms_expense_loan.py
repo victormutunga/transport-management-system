@@ -32,6 +32,7 @@ class TmsExpenseLoan(models.Model):
          ('confirmed', 'Confirmed'),
          ('closed', 'Closed'),
          ('cancel', 'Cancelled'), ],
+        tracking=True,
         readonly=True,
         default='draft')
     discount_method = fields.Selection([
@@ -107,7 +108,6 @@ class TmsExpenseLoan(models.Model):
                       ' The Amount of discount must be greater than zero.'))
 
             rec.state = 'approved'
-            rec.message_post(_('<strong>Loan approved.</strong>'))
 
     def action_cancel(self):
         for rec in self:
@@ -124,7 +124,6 @@ class TmsExpenseLoan(models.Model):
                 move_id.button_cancel()
             move_id.unlink()
             rec.state = 'cancel'
-            rec.message_post(_('<strong>Loan cancelled.</strong>'))
 
     def action_confirm(self):
         for loan in self:
@@ -172,7 +171,6 @@ class TmsExpenseLoan(models.Model):
                         'partner_id': (
                             loan.employee_id.address_home_id.id),
                         'account_id': account,
-                        'narration': notes,
                         'debit': (total if name == 'debit' else 0.0),
                         'credit': (total if name == 'credit' else 0.0),
                         'journal_id': loan_journal_id,
@@ -184,7 +182,8 @@ class TmsExpenseLoan(models.Model):
                     'journal_id': loan_journal_id,
                     'name': _('Loan: %s') % (loan.name),
                     'line_ids': move_lines,
-                    'operating_unit_id': loan.operating_unit_id.id
+                    'operating_unit_id': loan.operating_unit_id.id,
+                    'narration': notes,
                 }
                 move_id = obj_account_move.create(move)
                 move_id.post()
@@ -193,13 +192,10 @@ class TmsExpenseLoan(models.Model):
                         'move_id': move_id.id,
                         'state': 'confirmed',
                     })
-                self.message_post(
-                    _('<strong>Loan confirmed.</strong>'))
 
     def action_cancel_draft(self):
         for rec in self:
             rec.state = 'draft'
-            rec.message_post(_('<strong>Loan drafted.</strong>'))
 
     @api.depends('expense_ids')
     def _compute_balance(self):

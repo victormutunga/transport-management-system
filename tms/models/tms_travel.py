@@ -22,9 +22,12 @@ class TmsTravel(models.Model):
         domain=[('category', '=', 'driver')])
     name = fields.Char('Travel Number')
     state = fields.Selection([
-        ('draft', 'Pending'), ('progress', 'In Progress'), ('done', 'Done'),
-        ('cancel', 'Cancelled'), ('closed', 'Closed')],
-        readonly=True, default='draft')
+        ('draft', 'Pending'),
+        ('progress', 'In Progress'),
+        ('done', 'Done'),
+        ('cancel', 'Cancelled'),
+        ('closed', 'Closed')],
+        tracking=True, readonly=True, default='draft')
     route_id = fields.Many2one(
         'tms.route', required=True,
         states={'cancel': [('readonly', True)],
@@ -86,7 +89,7 @@ class TmsTravel(models.Model):
         compute='_compute_fuel_efficiency_extraction')
     departure_id = fields.Many2one(
         'tms.place',
-        compute='_compute_departure_id',
+        related='route_id.departure_id',
         store=True,
         readonly=True)
     fuel_log_ids = fields.One2many(
@@ -95,7 +98,7 @@ class TmsTravel(models.Model):
         'tms.advance', 'travel_id')
     arrival_id = fields.Many2one(
         'tms.place',
-        compute='_compute_arrival_id',
+        related='route_id.arrival_id',
         store=True,
         readonly=True)
     notes = fields.Text(
@@ -126,20 +129,7 @@ class TmsTravel(models.Model):
     @api.depends('waybill_ids')
     def _compute_partner_ids(self):
         for rec in self:
-            partner_ids = []
-            for waybill in rec.waybill_ids:
-                partner_ids.append(waybill.partner_id.id)
-            rec.partner_ids = partner_ids
-
-    @api.depends('route_id')
-    def _compute_departure_id(self):
-        for rec in self:
-            rec.departure_id = rec.route_id.departure_id
-
-    @api.depends('route_id')
-    def _compute_arrival_id(self):
-        for rec in self:
-            rec.arrival_id = rec.route_id.arrival_id
+            rec.partner_ids = rec.waybill_ids.mapped('partner_id')
 
     @api.depends('fuel_efficiency_expected', 'fuel_efficiency_travel')
     def _compute_fuel_efficiency_extraction(self):
@@ -153,6 +143,7 @@ class TmsTravel(models.Model):
             if rec.date_start:
                 rec.date_end = rec.date_start + timedelta(
                     hours=rec.route_id.travel_time)
+            rec.date_end = False
 
     @api.depends('date_start', 'date_end')
     def _compute_travel_duration(self):
@@ -161,6 +152,7 @@ class TmsTravel(models.Model):
                 difference = (
                     rec.date_end - rec.date_start).total_seconds() / 60 / 60
                 rec.travel_duration = difference
+            rec.travel_duration = 0
 
     @api.depends('date_start_real', 'date_end_real')
     def _compute_travel_duration_real(self):
@@ -209,7 +201,6 @@ class TmsTravel(models.Model):
                     _('The unit or driver are already in use!'))
             rec.state = "progress"
             rec.date_start_real = fields.Datetime.now()
-            rec.message_post(body=_('Travel Dispatched'))
 
     def action_done(self):
         for rec in self:
@@ -224,7 +215,6 @@ class TmsTravel(models.Model):
             rec.state = "done"
             rec.odometer = odometer.current_odometer
             rec.date_end_real = fields.Datetime.now()
-            rec.message_post(body=_('Travel Finished'))
 
     def action_cancel(self):
         for rec in self:
@@ -240,7 +230,6 @@ class TmsTravel(models.Model):
                       ' you must cancel the fuel logs or the advances '
                       'attached to this travel'))
             rec.state = "cancel"
-            rec.message_post(body=_('Travel Cancelled'))
 
     @api.model
     def create(self, values):

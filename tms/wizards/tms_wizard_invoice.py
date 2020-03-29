@@ -16,10 +16,9 @@ class TmsWizardInvoice(models.TransientModel):
             'product_id': product.id,
             'quantity': quantity,
             'price_unit': price_unit,
-            'uom_id': product.uom_id.id,
-            'invoice_line_tax_ids': [(6, 0, [x.id for x in tax])],
-            'name': product.name,
-            'origin': origin,
+            'product_uom_id': product.uom_id.id,
+            'tax_ids': [(6, 0, tax.ids)],
+            'name': product.display_name + '\n' + origin,
             'account_id': account.id,
         }
 
@@ -71,12 +70,9 @@ class TmsWizardInvoice(models.TransientModel):
         ieps = record.operating_unit_id.ieps_product_id
         products = [record.product_id, ieps]
         for product in products:
-            if product.property_account_expense_id:
-                account = product.property_account_expense_id
-            elif product.categ_id.property_account_expense_categ_id:
-                account = (
-                    product.categ_id.property_account_expense_categ_id)
-            else:
+            account = product.product_tmpl_id.get_product_accounts(fpos).get(
+                'expense', False)
+            if not account:
                 raise exceptions.ValidationError(
                     _('You must have an expense account in the '
                       'product or its category'))
@@ -134,22 +130,18 @@ class TmsWizardInvoice(models.TransientModel):
             'journal_id': journal_id,
             'currency_id': currency_id,
             'type': res['invoice_type'],
-            'invoice_line_ids': [line for line in res['lines']],
+            'invoice_line_ids': res['lines'],
         })
-        for record in records:
-            record.write({'invoice_id': invoice_id.id})
+        records.write({'invoice_id': invoice_id.id})
         message = _(
             '<strong>Invoice of:</strong> %s </br>') % (
             ', '.join(record_names))
         invoice_id.message_post(body=message)
-        view = self.env.ref('account.invoice_form') if 'out' in res[
-            'invoice_type'] else self.env.ref('account.invoice_supplier_form')
         return {
-            'name': 'Customer Invoice',
-            'view_id': view.id,
+            'name': _('Customer Invoice'),
             'view_mode': 'form',
             'target': 'current',
-            'res_model': 'account.invoice',
+            'res_model': 'account.move',
             'res_id': invoice_id.id,
             'type': 'ir.actions.act_window'
         }
