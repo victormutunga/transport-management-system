@@ -1,0 +1,46 @@
+image: vauxoo/odoo-80-image-shippable-auto
+stages:
+  - test
+
+lint:
+  stage: test
+  tags:
+    - lint
+  variables:
+    LINT_CHECK: "1"
+    TESTS: "0"
+  script:
+    - source variables.sh
+    - export TRAVIS_BUILD_DIR=$(pwd)
+    - pip3 install deployv-addon-gitlab-tools
+    - deployvcmd gitlab_tools check_keys
+    - source ${REPO_REQUIREMENTS}/virtualenv/nodejs/bin/activate
+    - source ${REPO_REQUIREMENTS}/virtualenv/python${TRAVIS_PYTHON_VERSION}/bin/activate
+    - git clone https://github.com/vauxoo/maintainer-quality-tools.git -b master ${HOME}/maintainer-quality-tools
+    - export PATH=${HOME}/maintainer-quality-tools/travis:${HOME}/gitlab_tools:${PATH}
+    - travis_install_nightly
+    - travis_run_tests
+
+test:
+  stage: test
+  coverage: '/^TOTAL.*\s+(\d+\%)$/'
+  tags:
+    - odoo
+    - test
+  variables:
+    LINT_CHECK: "0"
+    TESTS: "1"
+  script:
+    - source variables.sh
+    - export TRAVIS_BUILD_DIR=$(pwd)
+    - pip3 install deployv-addon-gitlab-tools
+    - deployvcmd gitlab_tools check_keys
+    - source ${REPO_REQUIREMENTS}/virtualenv/nodejs/bin/activate
+    - source ${REPO_REQUIREMENTS}/virtualenv/python${TRAVIS_PYTHON_VERSION}/bin/activate
+    - git clone https://github.com/vauxoo/maintainer-quality-tools.git -b master ${HOME}/maintainer-quality-tools
+    - export PATH=${HOME}/maintainer-quality-tools/travis:${HOME}/gitlab_tools:${PATH}
+    - travis_install_nightly
+    - travis_run_tests
+    - travis_after_tests_success || true
+    - coverage html --rcfile=${CI_PROJECT_DIR}/.coveragerc -d $CI_COMMIT_REF_SLUG || true
+    - coverage report -m --show-missing --rcfile=${CI_PROJECT_DIR}/.coveragerc || true
