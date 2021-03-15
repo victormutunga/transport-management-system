@@ -10,7 +10,7 @@ class TmsExpense(models.Model):
     @api.multi
     def create_supplier_invoice(self, lines):
         for line in lines:
-            res = super(TmsExpense, self).create_supplier_invoice(line)
+            res = super().create_supplier_invoice(line)
             if line.is_invoice:
                 vals = {
                     'file_xml_sign': line.xml_file,

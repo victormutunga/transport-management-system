@@ -7,7 +7,7 @@ from odoo.tests.common import TransactionCase
 class TestTmsWaybillTrasnportableLine(TransactionCase):
 
     def setUp(self):
-        super(TestTmsWaybillTrasnportableLine, self).setUp()
+        super().setUp()
         self.waybill = self.env['tms.waybill']
         self.operating_unit = self.env.ref(
             'operating_unit.main_operating_unit')

@@ -75,7 +75,7 @@ class TmsAdvance(models.Model):
 
     @api.model
     def create(self, values):
-        res = super(TmsAdvance, self).create(values)
+        res = super().create(values)
         if not res.operating_unit_id.advance_sequence_id:
             raise ValidationError(
                 _('The sequence is not defined in operating unit %s') % (
@@ -185,7 +185,7 @@ class TmsAdvance(models.Model):
                 'narration': notes,
             }
             move_id = obj_account_move.create(move)
-            move_id.post()
+            move_id.action_post()
             rec.move_id = move_id.id
             rec.state = 'confirmed'
 
@@ -199,7 +199,6 @@ class TmsAdvance(models.Model):
             move_id = rec.move_id
             rec.move_id = False
             move_id.button_cancel()
-            move_id.unlink()
             rec.state = 'cancel'
 
     def action_cancel_draft(self):

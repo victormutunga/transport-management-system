@@ -328,6 +328,7 @@
         <field name="model">tms.waybill</field>
         <field name="inherit_id" ref="view_tms_waybill_form"/>
         <field name="groups_id" eval="[(6, 0, [ref('tms.group_expenses') ])]"/>
+        <field name="priority">100</field>
         <field name="arch" type="xml">
             <field name='driver_factor_ids' position="replace">
                 <field name='driver_factor_ids' context="{'default_category': 'driver'}" />

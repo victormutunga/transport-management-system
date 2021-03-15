@@ -25,7 +25,7 @@ class TmsExtradataType(models.Model):
 
     @api.model
     def default_get(self, field):
-        res = super(TmsExtradataType, self).default_get(
+        res = super().default_get(
             field)
         active_model = self.env.context['active_model']
         if active_model == 'fleet.vehicle':

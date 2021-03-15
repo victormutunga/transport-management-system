@@ -114,5 +114,5 @@ class AccountInvoice(models.Model):
         xml_str_rep = xml_str.replace(
             'xmlns:schemaLocation', 'xsi:schemaLocation')
         xml_64 = base64.encodestring(xml_str_rep).lstrip(BOM_UTF8)
-        res = super(AccountInvoice, self)._validate_invoice_xml(xml_64)
+        res = super()._validate_invoice_xml(xml_64)
         return res

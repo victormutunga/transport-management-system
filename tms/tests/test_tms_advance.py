@@ -9,7 +9,7 @@ from odoo import fields
 class TestTmsAdvance(TransactionCase):
 
     def setUp(self):
-        super(TestTmsAdvance, self).setUp()
+        super().setUp()
         self.advance = self.env['tms.advance']
         self.operating_unit = self.env.ref(
             'operating_unit.main_operating_unit')
@@ -30,18 +30,10 @@ class TestTmsAdvance(TransactionCase):
             'tms_expense_negative_account_id': employee_accont.id,
             'tms_loan_account_id': employee_accont.id,
         })
-        account_bank = self.env['account.account'].create({
-            "code": 'TestBank',
-            "name": 'Test Bank',
-            "user_type_id": self.env.ref(
-                "account.data_account_type_current_assets").id
-        })
         self.journal_id = self.env['account.journal'].create({
             'name': 'Test Bank',
             'type': 'bank',
             'code': 'TESTBANK',
-            'default_debit_account_id': account_bank.id,
-            'default_credit_account_id': account_bank.id,
         })
         self.group = self.env.ref('account.group_account_manager')
 
@@ -56,12 +48,12 @@ class TestTmsAdvance(TransactionCase):
         })
 
     def test_10_tms_advance_create(self):
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'The amount must be greater than zero.'):
             self.create_advance(0.0)
         self.operating_unit.advance_sequence_id = False
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'The sequence is not defined in operating unit Mexico'):
             self.create_advance(2500.0)
@@ -95,7 +87,7 @@ class TestTmsAdvance(TransactionCase):
     def test_50_tms_advance_action_confirm(self):
         advance = self.create_avance_confirm()
         advance.amount = 0.0
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'The amount must be greater than zero.'):
             advance.action_confirm()
@@ -103,7 +95,7 @@ class TestTmsAdvance(TransactionCase):
     def test_51_tms_advance_action_confirm(self):
         advance = self.create_avance_confirm()
         advance.operating_unit_id.advance_journal_id = False
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'Warning! The advance does not have a journal'
                 ' assigned. Check if you already set the '
@@ -113,7 +105,7 @@ class TestTmsAdvance(TransactionCase):
     def test_52_tms_advance_action_confirm(self):
         advance = self.create_avance_confirm()
         advance.employee_id.tms_advance_account_id = False
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'Warning! You must have configured the accounts '
                 'of the tms'):
@@ -122,7 +114,7 @@ class TestTmsAdvance(TransactionCase):
     def test_53_tms_advance_action_confirm(self):
         advance = self.create_avance_confirm()
         advance.employee_id.address_home_id.property_account_payable_id = False
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'Warning! The driver does not have a home address'
                 ' assigned. Check if you already set the '
@@ -134,7 +126,7 @@ class TestTmsAdvance(TransactionCase):
         self.operating_unit.credit_limit = 3000.0
         advance.action_approve()
         advance.action_confirm()
-        advance.move_id.post()
+        advance.move_id.action_post()
         wizard = self.env['tms.wizard.payment'].with_context({
             'active_model': 'tms.advance',
             'active_ids': [advance.id]}).create({
@@ -142,14 +134,11 @@ class TestTmsAdvance(TransactionCase):
                 'amount_total': advance.amount,
             })
         wizard.make_payment()
-        advance.payment_move_id.journal_id.update({'update_posted': True})
-        advance.move_id.journal_id.update({'update_posted': True})
         return advance
 
     def cancel_advance(self, advance):
         advance.payment_move_id.line_ids.remove_move_reconcile()
         advance.payment_move_id.button_cancel()
-        advance.payment_move_id.unlink()
         advance.action_cancel()
         return advance
 
@@ -161,7 +150,7 @@ class TestTmsAdvance(TransactionCase):
     def test_61_tms_advance_action_cancel(self):
         advance = self.create_advance_cancel()
         self.group.users = False
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'Could not cancel this advance because'
                 ' the advance is already paid. '
@@ -172,7 +161,7 @@ class TestTmsAdvance(TransactionCase):
         advance = self.create_advance_cancel()
         cancel_advance = self.cancel_advance(advance)
         cancel_advance.travel_id.update({'state': 'cancel'})
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'Could not set this advance to draft because'
                 ' the travel is cancelled.'):

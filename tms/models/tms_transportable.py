@@ -2,7 +2,7 @@
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import _, api, fields, models
+from odoo import _, fields, models
 
 
 class TmsTransportable(models.Model):
@@ -25,7 +25,7 @@ class TmsTransportable(models.Model):
                 values=", ".join([self.name, str(copied_count)]))
 
         default['name'] = new_name
-        return super(TmsTransportable, self).copy(default)
+        return super().copy(default)
 
     _sql_constraints = [
         ('name_unique',

@@ -321,7 +321,7 @@ class TmsExpense(models.Model):
     def _compute_amount_salary(self):
         for rec in self:
             rec.amount_salary = sum(rec.expense_line_ids.filtered(
-                    lambda l: l.line_type == 'salary').mapped('price_total'))
+                lambda l: l.line_type == 'salary').mapped('price_total'))
 
     @api.depends('expense_line_ids')
     def _compute_amount_salary_discount(self):
@@ -445,11 +445,11 @@ class TmsExpense(models.Model):
             values.get('operating_unit_id'))
         sequence = operating_unit.expense_sequence_id
         values['name'] = sequence.next_by_id()
-        return super(TmsExpense, self).create(values)
+        return super().create(values)
 
     def write(self, values):
         for rec in self:
-            res = super(TmsExpense, self).write(values)
+            res = super().write(values)
             rec.get_travel_info()
             return res
 
@@ -476,7 +476,7 @@ class TmsExpense(models.Model):
                 'expense_id': False,
                 'state': 'confirmed'
             })
-            return super(TmsExpense, self).unlink()
+            return super().unlink()
 
     def action_approved(self):
         for rec in self:
@@ -726,7 +726,7 @@ class TmsExpense(models.Model):
                 raise ValidationError(
                     _('An error has occurred in the creation'
                         ' of the accounting move. '))
-            move_id.post()
+            move_id.action_post()
             # Here we reconcile the invoices with the corresponding
             # move line
             rec.reconcile_supplier_invoices(result['invoices'], move_id)
@@ -770,9 +770,7 @@ class TmsExpense(models.Model):
                     line.invoice_id = False
             if self.move_id.state == 'posted':
                 self.move_id.button_cancel()
-            move_id = self.move_id
             self.move_id = False
-            move_id.unlink()
             self.fuel_log_ids.filtered(
                 lambda x: x.created_from_expense).unlink()
         self.state = 'cancel'
@@ -814,17 +812,6 @@ class TmsExpense(models.Model):
                 'Name of advance not confirmed or cancelled: ' +
                 advance.name +
                 '\n State: ' + advance.state))
-        if not advance.paid:
-            if advance.move_id.matched_percentage == 1.0:
-                advance_move = advance.move_id.line_ids[-1]
-                if advance_move.credit > 0:
-                    move_lines = advance.move_id.line_ids[-1]
-                    reconcile_move = move_lines.full_reconcile_id
-                    for line in reconcile_move.reconciled_line_ids:
-                        if line.journal_id.type == 'bank':
-                            move_id = line.move_id.id
-                advance.write(
-                    {'paid': True, 'payment_move_id': move_id})
         if not advance.paid and advance.state == 'confirmed':
             raise ValidationError(_(
                 'Oops! All the advances must be paid'
@@ -1042,8 +1029,8 @@ class TmsExpense(models.Model):
                 else:
                     raise ValidationError(_(
                         'Oops! You have not defined a Driver factor in '
-                        'the Travel or the Waybill\nTravel: %s' %
-                        travel.name))
+                        'the Travel or the Waybill\nTravel: %s') %
+                        travel.name)
             return driver_salary
 
     def create_supplier_invoice(self, line):

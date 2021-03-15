@@ -8,7 +8,7 @@ from odoo.tests.common import TransactionCase
 class TestFleetVehicleLogFuel(TransactionCase):
 
     def setUp(self):
-        super(TestFleetVehicleLogFuel, self).setUp()
+        super().setUp()
         self.log_fuel = self.env['fleet.vehicle.log.fuel']
         self.fuel_log = self.env.ref('tms.tms_fuel_log_01')
         self.fuel_log2 = self.env.ref('tms.tms_fuel_log_02')
@@ -43,7 +43,7 @@ class TestFleetVehicleLogFuel(TransactionCase):
 
     def test_20_fleet_vehicle_log_fuel_create(self):
         self.operating_unit.fuel_log_sequence_id = False
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError, 'You need to define the sequence for fuel '
                 'logs in base Mexico'):
             self.create_log_fuel()
@@ -53,7 +53,7 @@ class TestFleetVehicleLogFuel(TransactionCase):
         log_fuel_cancel = self.create_log_fuel()
         log_fuel_cancel.action_cancel()
         log_fuel.travel_id.state = 'closed'
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError, 'Could not cancel Fuel Voucher! This Fuel '
                 'Voucher is already linked to a Travel Expense'):
             log_fuel.action_cancel()
@@ -62,7 +62,7 @@ class TestFleetVehicleLogFuel(TransactionCase):
             'active_model': 'fleet.vehicle.log.fuel',
             'active_ids': [log_fuel.id]}).create({})
         wizard.make_invoices()
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'Could not cancel Fuel Voucher! This Fuel Voucher is already '
                 'Invoiced'):
@@ -73,7 +73,7 @@ class TestFleetVehicleLogFuel(TransactionCase):
         log_fuel.product_qty = -1
         log_fuel.tax_amount = -1
         log_fuel.price_total = -1
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'Liters, Taxes and Total must be greater than zero.'):
             log_fuel.action_confirm()

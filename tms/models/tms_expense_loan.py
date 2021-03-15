@@ -20,7 +20,7 @@ class TmsExpenseLoan(models.Model):
     date_confirmed = fields.Date(
         readonly=True,
         related='move_id.date',
-        string='Date Confirmed')
+        string="Date Confirmed")
     employee_id = fields.Many2one(
         'hr.employee', 'Driver', required=True)
     expense_ids = fields.Many2many(
@@ -83,7 +83,7 @@ class TmsExpenseLoan(models.Model):
 
     @api.model
     def create(self, values):
-        loan = super(TmsExpenseLoan, self).create(values)
+        loan = super().create(values)
         if not loan.operating_unit_id.loan_sequence_id:
             raise ValidationError(_(
                 'You need to define the sequence for loans in base %s') %
@@ -116,13 +116,11 @@ class TmsExpenseLoan(models.Model):
                 rec.payment_move_id = False
                 payment_move_id.button_cancel()
                 payment_move_id.line_ids.remove_move_reconcile()
-                payment_move_id.unlink()
 
             move_id = rec.move_id
             rec.move_id = False
             if move_id.state == 'posted':
                 move_id.button_cancel()
-            move_id.unlink()
             rec.state = 'cancel'
 
     def action_confirm(self):
@@ -186,7 +184,7 @@ class TmsExpenseLoan(models.Model):
                     'narration': notes,
                 }
                 move_id = obj_account_move.create(move)
-                move_id.post()
+                move_id.action_post()
                 self.write(
                     {
                         'move_id': move_id.id,
@@ -216,7 +214,7 @@ class TmsExpenseLoan(models.Model):
                 raise ValidationError(
                     _('You can not delete a Loan'
                       ' in status confirmed or closed'))
-            return super(TmsExpenseLoan, self).unlink()
+            return super().unlink()
 
     @api.depends('payment_move_id')
     def _compute_paid(self):

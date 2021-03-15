@@ -9,7 +9,7 @@ from odoo.tools import mute_logger
 class TestTmsTransportable(TransactionCase):
 
     def setUp(self):
-        super(TestTmsTransportable, self).setUp()
+        super().setUp()
         self.obj_transportable = self.env['tms.transportable']
         self.ton = self.env.ref('uom.product_uom_ton')
         self.transportable = self.env.ref('tms.tms_transportable_01')
@@ -17,7 +17,7 @@ class TestTmsTransportable(TransactionCase):
     @mute_logger('openerp.sql_db')
     def _test_10_tms_transportable_product_unique_name(self):
         # Catch correctly the IntegrityError
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 IntegrityError,
                 'duplicate key value violates unique constraint '
                 '"tms_transportable_name_unique"'):

@@ -1,5 +1,6 @@
 # Copyright 2016, Jarsa Sistemas, S.A. de C.V.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# pylint: skip-file
 
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
@@ -8,13 +9,10 @@ from odoo.tests.common import TransactionCase
 class TestTmsExpenseLoan(TransactionCase):
 
     def setUp(self):
-        super(TestTmsExpenseLoan, self).setUp()
+        super().setUp()
         self.expense_loan = self.env['tms.expense.loan']
         self.operating_unit = self.env.ref(
             'operating_unit.main_operating_unit')
-        self.operating_unit.loan_journal_id.write({
-            'update_posted': True,
-        })
         self.employee_id = self.env.ref('tms.tms_hr_employee_01')
         self.unit = self.env.ref('tms.tms_fleet_vehicle_01')
         self.product = self.env.ref('tms.product_loan')
@@ -32,19 +30,10 @@ class TestTmsExpenseLoan(TransactionCase):
             'tms_expense_negative_account_id': employee_accont.id,
             'tms_loan_account_id': employee_accont.id,
         })
-        account_bank = obj_account.create({
-            "code": 'TestBank',
-            "name": 'Test Bank',
-            "user_type_id": self.env.ref(
-                "account.data_account_type_current_assets").id
-        })
         self.journal_id = self.env['account.journal'].create({
             'name': 'Test Bank',
             'type': 'bank',
             'code': 'TESTBANK',
-            'default_debit_account_id': account_bank.id,
-            'default_credit_account_id': account_bank.id,
-            'update_posted': True,
         })
 
     def create_expense_loan(self):
@@ -72,7 +61,7 @@ class TestTmsExpenseLoan(TransactionCase):
 
     def test_10_tms_expense_loan_create(self):
         self.operating_unit.loan_sequence_id = False
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError, 'You need to define the sequence for loans '
                 'in base Mexico'):
             self.create_expense_loan()
@@ -86,10 +75,10 @@ class TestTmsExpenseLoan(TransactionCase):
         loan = self.create_expense_loan()
         msg = ('Could not approve the Loan. The Amount of discount must be '
                'greater than zero.')
-        with self.assertRaisesRegexp(ValidationError, msg):
+        with self.assertRaisesRegex(ValidationError, msg):
             loan.action_approve()
         loan.discount_type = 'percent'
-        with self.assertRaisesRegexp(ValidationError, msg):
+        with self.assertRaisesRegex(ValidationError, msg):
             loan.action_approve()
 
     def test_40_tms_expense_loan_action_cancel(self):
@@ -97,7 +86,7 @@ class TestTmsExpenseLoan(TransactionCase):
         loan.fixed_discount = 10.0
         loan.action_approve()
         loan.action_confirm()
-        loan.move_id.post()
+        loan.move_id.action_post()
         wizard = self.env['tms.wizard.payment'].with_context({
             'active_model': 'tms.expense.loan',
             'active_ids': [loan.id]}).create({
@@ -110,7 +99,7 @@ class TestTmsExpenseLoan(TransactionCase):
     def test_50_tms_expense_loan_action_confirm(self):
         loan = self.create_expense_loan()
         loan.operating_unit_id.loan_journal_id = False
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'Warning! The loan does not have a journal'
                 ' assigned. Check if you already set the '
@@ -120,7 +109,7 @@ class TestTmsExpenseLoan(TransactionCase):
     def test_51_tms_expense_loan_action_confirm(self):
         loan = self.create_expense_loan()
         loan.employee_id.address_home_id.property_account_payable_id = False
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'Warning! The driver does not have a home address'
                 ' assigned. Check if you already set the '
@@ -130,7 +119,7 @@ class TestTmsExpenseLoan(TransactionCase):
     def test_52_tms_expense_loan_action_confirm(self):
         loan = self.create_expense_loan()
         loan.employee_id.tms_loan_account_id = False
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'Warning! You must have configured the accounts of the tms'):
             loan.action_confirm()
@@ -140,9 +129,8 @@ class TestTmsExpenseLoan(TransactionCase):
         loan.fixed_discount = 10.0
         loan.action_approve()
         loan.action_confirm()
-        loan.move_id.post()
-        loan.move_id.journal_id.update_posted = True
-        with self.assertRaisesRegexp(
+        loan.move_id.action_post()
+        with self.assertRaisesRegex(
                 ValidationError,
                 'You can not delete a Loan in status confirmed or closed'):
             loan.unlink()

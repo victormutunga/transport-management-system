@@ -21,9 +21,8 @@ class FleetVehicleLogFuelPrepaid(models.Model):
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
-        ('closet', 'Closet')],
+        ('closed', 'Closed')],
         readonly=True,
-        tracking=True,
         default='draft')
     vendor_id = fields.Many2one('res.partner', string="Supplier")
     date = fields.Date(
@@ -46,12 +45,11 @@ class FleetVehicleLogFuelPrepaid(models.Model):
 
     @api.model
     def create(self, values):
-        res = super(FleetVehicleLogFuelPrepaid, self).create(values)
+        res = super().create(values)
         if not res.operating_unit_id.prepaid_fuel_sequence_id:
-            raise ValidationError(_(
-                'You need to define the sequence for fuel logs in base %s' %
-                res.operating_unit_id.name
-            ))
+            raise ValidationError(
+                _('You need to define the sequence for fuel logs in base %s')
+                % res.operating_unit_id.name)
         sequence = res.operating_unit_id.prepaid_fuel_sequence_id
         res.name = sequence.next_by_id()
         return res

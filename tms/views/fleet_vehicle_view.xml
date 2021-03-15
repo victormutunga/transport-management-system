@@ -105,6 +105,7 @@
         <field name="name">fleet.vehicle.tms.tree</field>
         <field name="inherit_id" ref="fleet.fleet_vehicle_view_tree"/>
         <field name="model">fleet.vehicle</field>
+        <field name="priority">100</field>
         <field name="arch" type="xml">
             <tree position="replace">
                 <tree string="Vehicle">

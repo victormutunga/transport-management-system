@@ -148,21 +148,21 @@ class TmsTravel(models.Model):
     @api.depends('date_start', 'date_end')
     def _compute_travel_duration(self):
         for rec in self:
+            travel_duration = 0
             if rec.date_start and rec.date_end:
-                difference = (
+                travel_duration = (
                     rec.date_end - rec.date_start).total_seconds() / 60 / 60
-                rec.travel_duration = difference
-            rec.travel_duration = 0
+            rec.travel_duration = travel_duration
 
     @api.depends('date_start_real', 'date_end_real')
     def _compute_travel_duration_real(self):
         for rec in self:
+            travel_duration_real = 0
             if rec.date_start_real and rec.date_end_real:
-                difference = (
+                travel_duration_real = (
                     rec.date_end_real - rec.date_start_real).total_seconds(
                     ) / 60 / 60
-                rec.travel_duration_real = difference
-            rec.travel_duration_real = 0
+            rec.travel_duration_real = travel_duration_real
 
     @api.onchange('kit_id')
     def _onchange_kit(self):
@@ -233,12 +233,11 @@ class TmsTravel(models.Model):
 
     @api.model
     def create(self, values):
-        travel = super(TmsTravel, self).create(values)
+        travel = super().create(values)
         if not travel.operating_unit_id.travel_sequence_id:
-            raise ValidationError(_(
-                'You need to define the sequence for travels in base %s' %
-                travel.operating_unit_id.name
-            ))
+            raise ValidationError(
+                _('You need to define the sequence for travels in base %s')
+                % travel.operating_unit_id.name)
         sequence = travel.operating_unit_id.travel_sequence_id
         travel.name = sequence.next_by_id()
         return travel
@@ -324,4 +323,4 @@ class TmsTravel(models.Model):
     def copy(self, default=None):
         default = dict(default or {})
         default['waybill_ids'] = False
-        return super(TmsTravel, self).copy(default)
+        return super().copy(default)

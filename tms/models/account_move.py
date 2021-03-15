@@ -10,7 +10,7 @@ class AccountMove(models.Model):
     waybill_ids = fields.One2many(
         'tms.waybill', 'invoice_id', string="Waybills", readonly=True)
 
-    def unlink(self):
+    def button_cancel(self):
         for rec in self:
             advances = self.env['tms.advance'].search(
                 [('payment_move_id', '=', rec.id)])
@@ -30,4 +30,4 @@ class AccountMove(models.Model):
                 loans.write({
                     'paid': False,
                 })
-            return super(AccountMove, self).unlink()
+        return super().button_cancel()

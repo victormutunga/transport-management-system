@@ -30,7 +30,7 @@ class TmsExpenseLine(models.Model):
 
     @api.model
     def create(self, values):
-        res = super(TmsExpenseLine, self).create(values)
+        res = super().create(values)
         res.tollstation_ids.write({
             'state': 'closed',
             'expense_line_id': res.id})
@@ -39,7 +39,7 @@ class TmsExpenseLine(models.Model):
     @api.multi
     def write(self, values):
         for rec in self:
-            res = super(TmsExpenseLine, self).write(values)
+            res = super().write(values)
             tolls = self.env['tms.toll.data'].search(
                 [('expense_line_id', '=', self.id)])
             tolls.write({
@@ -59,7 +59,7 @@ class TmsExpenseLine(models.Model):
             tolls.write({
                 'state': 'open',
                 'expense_line_id': False})
-        return super(TmsExpenseLine, self).unlink()
+        return super().unlink()
 
     @api.multi
     def sort_expense_lines(self):

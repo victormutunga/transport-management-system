@@ -45,7 +45,7 @@ class TmsWizardPayment(models.TransientModel):
             self._context.get('active_ids'))
         active_model = self._context['active_model']
         for rec in self:
-            bank_account_id = rec.journal_id.default_debit_account_id.id
+            bank_account_id = rec.journal_id.payment_credit_account_id.id
             currency = rec.journal_id.currency_id or self.env.user.currency_id
             currency_id = active_ids.mapped('currency_id').ids
             if len(currency_id) > 1:
@@ -119,16 +119,15 @@ class TmsWizardPayment(models.TransientModel):
 
     def _create_payment(self, counterpart_move_line, record):
         obj_payment = self.env['account.payment']
-        payment_id = obj_payment.create({
+        payment_id = obj_payment.with_context(active_ids=False).create({
             'partner_type': 'supplier',
             'journal_id': counterpart_move_line['journal_id'],
             'partner_id': counterpart_move_line['partner_id'],
             'amount': counterpart_move_line['debit'],
-            'payment_date': record.date,
-            'communication': counterpart_move_line['name'],
+            'date': record.date,
+            'ref': counterpart_move_line['name'],
             'payment_type': 'outbound',
             'payment_method_id': 1,
-            'state': 'posted',
         })
         counterpart_move_line['payment_id'] = payment_id.id
 
@@ -170,7 +169,7 @@ class TmsWizardPayment(models.TransientModel):
         for payment in payments:
             move_id.filtered(
                 lambda line: line.name == payment).payment_id = payments[payment]  # noqa
-        move_id.post()
+        move_id.action_post()
         journal_id = active_ids.mapped('move_id.journal_id')
         for move_line in move_id.line_ids.filtered(
                 lambda l: l.account_id.internal_type == 'payable'):

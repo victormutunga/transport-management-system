@@ -8,7 +8,7 @@ from odoo.exceptions import ValidationError
 class TestTmsExpense(TransactionCase):
 
     def setUp(self):
-        super(TestTmsExpense, self).setUp()
+        super().setUp()
         self.tms_expense = self.env['tms.expense']
         self.tms_expense_line = self.env['tms.expense.line']
         self.tms_advance = self.env['tms.advance']
@@ -90,7 +90,7 @@ class TestTmsExpense(TransactionCase):
         self.tms_advance.create({
             'operating_unit_id': self.operating_unit.id,
             'travel_id': self.travel.id,
-            'date': '03/07/2018',
+            'date': '2018-07-03',
             'product_id': self.product_real_expense.id,
             'amount': 350.00,
         })
@@ -113,7 +113,7 @@ class TestTmsExpense(TransactionCase):
             'active_model': 'tms.advance',
         }).create({
             'amount_total': sum(self.travel.advance_ids.mapped('amount')),
-            'date': '03/09/2018',
+            'date': '2018-09-03',
             'journal_id': self.bank_account.id,
         }).make_payment()
 
@@ -122,29 +122,14 @@ class TestTmsExpense(TransactionCase):
             travel.action_progress()
             travel.action_done()
 
-        # Allow to cancel the expense
-        journal = self.env.ref('tms.tms_account_journal_expense')
-        journal.write({'update_posted': True})
-
-        tax_group_16 = self.env['account.tax.group'].create(
-            {'name': 'Taxes 16%'})
-        self.tax_16 = self.env['account.tax'].create({
-            'name': 'Tax 16.00%',
-            'type_tax_use': 'purchase',
-            'amount_type': 'percent',
-            'amount': 16.0,
-            'account_id': employee_accont.id,
-            'refund_account_id': employee_accont.id,
-            'tax_group_id': tax_group_16.id,
-            'active': True,
-        })
+        self.tax = self.env.user.company_id.account_sale_tax_id
 
     def create_expense(self):
         product_other_income = self.env.ref('tms.product_other_income')
         product_salary_discount = self.env.ref('tms.product_discount')
         product_salary_retention = self.env.ref('tms.product_retention')
         product_made_up_expense = self.env.ref('tms.product_madeup')
-        return self.tms_expense.create({
+        expense = self.tms_expense.create({
             'operating_unit_id': self.operating_unit.id,
             'unit_id': self.unit.id,
             'employee_id': self.driver.id,
@@ -158,7 +143,7 @@ class TestTmsExpense(TransactionCase):
                     'unit_price': 100.0,
                     'partner_id': self.env.ref('base.res_partner_12').id,
                     'invoice_number': '10010101',
-                    'date': '03/08/2018',
+                    'date': '2018-08-03',
                 }), (0, 0, {
                     'product_id': product_other_income.id,
                     'name': product_other_income.name,
@@ -182,9 +167,11 @@ class TestTmsExpense(TransactionCase):
                         self.product_real_expense.tms_product_category),
                     'name': self.product_real_expense.name,
                     'unit_price': 900.0,
-                    'tax_ids': [(4, self.tax_16.id)],
+                    'tax_ids': [(4, self.tax.id)],
                 })],
         })
+        expense.get_travel_info()
+        return expense
 
     def test_10_tms_expense_create_advance_line(self):
         adv = self.tms_advance.create({
@@ -199,8 +186,8 @@ class TestTmsExpense(TransactionCase):
             self.create_expense()
         self.waybill.travel_ids.mapped('advance_ids').filtered(
             lambda x: x.state == 'closed').write({'state': 'confirmed'})
-        self.assertEquals(
-            err.exception.name,
+        self.assertEqual(
+            err.exception.args[0],
             'Oops! All the advances must be confirmed or cancelled \n '
             'Name of advance not confirmed or cancelled: ' + adv.name +
             '\n State: ' + adv.state)
@@ -209,8 +196,8 @@ class TestTmsExpense(TransactionCase):
         adv.action_confirm()
         with self.assertRaises(ValidationError) as err2:
             self.create_expense()
-        self.assertEquals(
-            err2.exception.name,
+        self.assertEqual(
+            err2.exception.args[0],
             'Oops! All the advances must be paid\n '
             'Name of advance not paid: ' + adv.name)
 
@@ -226,8 +213,8 @@ class TestTmsExpense(TransactionCase):
         })
         with self.assertRaises(ValidationError) as err:
             self.create_expense()
-        self.assertEquals(
-            err.exception.name,
+        self.assertEqual(
+            err.exception.args[0],
             'Oops! All the voucher must be confirmed\n '
             'Name of voucher not confirmed: ' + log.name + '\n '
             'State: ' + log.state)
@@ -241,7 +228,7 @@ class TestTmsExpense(TransactionCase):
         self.assertTrue(self.travel.id in travel_ids)
 
         expense = self.create_expense()
-        self.assertEquals(
+        self.assertEqual(
             len(expense.expense_line_ids.filtered(
                 lambda x: x.line_type == 'salary')),
             len(expense.travel_ids))
@@ -249,25 +236,25 @@ class TestTmsExpense(TransactionCase):
         # Salary
         amount_salary = len(self.waybill.travel_ids) * sum(
             self.waybill.driver_factor_ids.mapped('fixed_amount'))
-        self.assertEquals(amount_salary, expense.amount_salary)
+        self.assertEqual(amount_salary, expense.amount_salary)
         # Other Income
         amount_other_income = sum(expense.expense_line_ids.filtered(
             lambda x: x.line_type == 'other_income').mapped('price_total'))
-        self.assertEquals(amount_other_income, expense.amount_other_income)
+        self.assertEqual(amount_other_income, expense.amount_other_income)
         # Salary Discount
         amount_salary_discount = sum(expense.expense_line_ids.filtered(
             lambda x: x.line_type == 'salary_discount').mapped('price_total'))
-        self.assertEquals(
+        self.assertEqual(
             amount_salary_discount, expense.amount_salary_discount)
         # Salary Retention
         amount_salary_retention = sum(expense.expense_line_ids.filtered(
             lambda x: x.line_type == 'salary_retention').mapped('price_total'))
-        self.assertEquals(
+        self.assertEqual(
             amount_salary_retention, expense.amount_salary_retention)
         # Expenses
         amount_real_expense = sum(expense.expense_line_ids.filtered(
             lambda x: x.line_type == 'real_expense').mapped('price_subtotal'))
-        self.assertEquals(amount_real_expense, expense.amount_real_expense)
+        self.assertEqual(amount_real_expense, expense.amount_real_expense)
         # Subtotal (Real)
         amount_subtotal_real = (
             amount_salary +
@@ -275,27 +262,27 @@ class TestTmsExpense(TransactionCase):
             amount_real_expense +
             amount_salary_retention +
             amount_other_income)
-        self.assertEquals(amount_subtotal_real, expense.amount_subtotal_real)
+        self.assertEqual(amount_subtotal_real, expense.amount_subtotal_real)
         # Taxes (Real)
         amount_tax_real = sum(expense.expense_line_ids.filtered(
             lambda x: x.line_type == 'real_expense').mapped('tax_amount'))
-        self.assertEquals(amount_tax_real, expense.amount_tax_real)
+        self.assertEqual(amount_tax_real, expense.amount_tax_real)
         # Total (Real)
         amount_total_real = amount_subtotal_real + amount_tax_real
-        self.assertEquals(amount_total_real, expense.amount_total_real)
+        self.assertEqual(amount_total_real, expense.amount_total_real)
         # Advances
         amount_advance = sum(self.waybill.travel_ids.mapped(
             'advance_ids').filtered(lambda x: x.payment_move_id).mapped(
             'amount'))
-        self.assertEquals(amount_advance, expense.amount_advance)
+        self.assertEqual(amount_advance, expense.amount_advance)
         # Balance
         amount_balance = amount_total_real - amount_advance
-        self.assertEquals(amount_balance, expense.amount_balance)
+        self.assertEqual(amount_balance, expense.amount_balance)
         # Cosf of Fuel
         amount_fuel = sum([
             log.price_subtotal + log.special_tax_amount
             for log in expense.fuel_log_ids])
-        self.assertEquals(amount_fuel, expense.amount_fuel)
+        self.assertEqual(amount_fuel, expense.amount_fuel)
         # SubTotal (All)
         amount_subtotal_total = sum([
             log.price_subtotal + log.special_tax_amount
@@ -303,18 +290,18 @@ class TestTmsExpense(TransactionCase):
         amount_subtotal_total += sum(expense.expense_line_ids.filtered(
             lambda x: x.line_type == 'real_expense').mapped('price_subtotal'))
         amount_subtotal_total += amount_balance
-        self.assertEquals(amount_subtotal_total, expense.amount_subtotal_total)
+        self.assertEqual(amount_subtotal_total, expense.amount_subtotal_total)
         # Taxes (All)
         amount_tax_total = sum(expense.travel_ids.mapped(
             'fuel_log_ids').mapped('tax_amount')) + amount_tax_real
-        self.assertEquals(amount_tax_total, expense.amount_tax_total)
+        self.assertEqual(amount_tax_total, expense.amount_tax_total)
         # Made up expense
         amount_made_up_expense = sum(expense.expense_line_ids.filtered(
             lambda x: x.line_type == 'made_up_expense').mapped('price_total'))
         # Total (All)
         amount_total_total = (
             amount_subtotal_total + amount_tax_total + amount_made_up_expense)
-        self.assertEquals(amount_total_total, expense.amount_total_total)
+        self.assertEqual(amount_total_total, expense.amount_total_total)
 
     def test_40_tms_expense_action_confirm(self):
         expense = self.create_expense()

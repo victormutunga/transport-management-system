@@ -136,7 +136,7 @@ class TmsExpenseLine(models.Model):
 
     @api.model
     def create(self, values):
-        expense_line = super(TmsExpenseLine, self).create(values)
+        expense_line = super().create(values)
         if expense_line.line_type in (
                 'salary_discount', 'salary_retention', 'loan'):
             if expense_line.price_total > 0:

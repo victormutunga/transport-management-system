@@ -10,7 +10,7 @@ from odoo.tests.common import TransactionCase
 class TestTmsPlace(TransactionCase):
 
     def setUp(self):
-        super(TestTmsPlace, self).setUp()
+        super().setUp()
         self.place = self.env.ref('tms.tms_place_01')
         self.env['ir.config_parameter'].set_param(
             'mapquest.key', 'test')
@@ -30,20 +30,20 @@ class TestTmsPlace(TransactionCase):
         responses.add(
             responses.GET, 'https://www.mapquestapi.com/geocoding/v1/address',
             json={'error': 'not found'}, status=404)
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'MapQuest is not available.'):
             self.place.get_coordinates()
         state = self.place.state_id
         self.place.state_id = False
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'You need to set a Place and a State Name'):
             self.place.get_coordinates()
         self.place.state_id = state
         self.env['ir.config_parameter'].set_param(
             'mapquest.key', 'key')
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'You need to define mapquest.key parameter.'):
             self.place.get_coordinates()

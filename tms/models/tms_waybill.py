@@ -182,7 +182,7 @@ class TmsWaybill(models.Model):
 
     @api.model
     def create(self, values):
-        waybill = super(TmsWaybill, self).create(values)
+        waybill = super().create(values)
         sequence = waybill.operating_unit_id.waybill_sequence_id
         waybill.name = sequence.next_by_id()
         product = self.env['product.product'].search([
@@ -208,7 +208,7 @@ class TmsWaybill(models.Model):
                 for travel in rec.travel_ids:
                     travel.partner_ids = False
                     travel._compute_partner_ids()
-            res = super(TmsWaybill, self).write(values)
+            res = super().write(values)
             return res
 
     @api.onchange('partner_id')
@@ -226,7 +226,9 @@ class TmsWaybill(models.Model):
     @api.depends('invoice_id')
     def _compute_invoice_paid(self):
         for rec in self:
-            paid = (rec.invoice_id and rec.invoice_id.state == 'paid')
+            paid = (
+                rec.invoice_id and
+                rec.invoice_id.payment_state in ['in_payment', 'paid'])
             rec.invoice_paid = paid
 
     @api.onchange('customer_factor_ids', 'transportable_line_ids')
@@ -357,8 +359,8 @@ class TmsWaybill(models.Model):
 
     def action_cancel_draft(self):
         for waybill in self:
-            for travel in waybill.travel_ids.filtered(
-                    lambda t: t.state == 'cancel'):
+            travel = waybill.travel_ids.filtered(lambda t: t.state == 'cancel')
+            if travel:
                 raise exceptions.ValidationError(
                     _('Could not set to draft this Waybill !'
                       'Travel is Cancelled !!!'))

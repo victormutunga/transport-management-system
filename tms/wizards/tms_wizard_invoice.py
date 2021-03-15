@@ -129,7 +129,7 @@ class TmsWizardInvoice(models.TransientModel):
             'fiscal_position_id': res['fpos'].id,
             'journal_id': journal_id,
             'currency_id': currency_id,
-            'type': res['invoice_type'],
+            'move_type': res['invoice_type'],
             'invoice_line_ids': res['lines'],
         })
         records.write({'invoice_id': invoice_id.id})

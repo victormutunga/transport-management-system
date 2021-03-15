@@ -12,7 +12,7 @@ from odoo.tests.common import TransactionCase
 class TestTmsRoute(TransactionCase):
 
     def setUp(self):
-        super(TestTmsRoute, self).setUp()
+        super().setUp()
         self.route = self.env.ref('tms.tms_route_01')
         self.place = self.env.ref('tms.tms_place_03')
         self.route.route_place_ids.create({
@@ -40,14 +40,14 @@ class TestTmsRoute(TransactionCase):
             self.route.distance_loaded,
             737.00,
             'On change works')
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError, 'The value must be positive and lower '
                 'than the distance route.'):
             self.route.update({'distance_empty': -10.0})
             self.route.on_change_disance_empty()
 
     def test_11_tms_route_on_change_distance_empty(self):
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError, 'The value must be positive and lower than '
                 'the distance route.'):
             self.route1.write({'distance_empty': -2})
@@ -60,7 +60,7 @@ class TestTmsRoute(TransactionCase):
             self.route.distance_empty,
             737.00,
             'On change works')
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError, 'The value must be positive and lower than '
                 'the distance route.'):
             self.route.update({'distance_loaded': -10.0})
@@ -75,13 +75,13 @@ class TestTmsRoute(TransactionCase):
         self.assertEqual(self.route.distance, 946.8870000000001,
                          msg='Distance is not correct')
         json.loads.return_value = False
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 UserError,
                 'Google Maps is not available.'):
             self.route.get_route_info()
 
     def test_31_tms_route_get_route_info(self):
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 UserError,
                 "The arrival don't have coordinates."):
             self.route.arrival_id.write({
@@ -89,7 +89,7 @@ class TestTmsRoute(TransactionCase):
                 'longitude': False,
             })
             self.route.get_route_info()
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 UserError,
                 "The departure don't have coordinates."):
             self.route.departure_id.write({

@@ -8,7 +8,7 @@ from odoo.tests.common import TransactionCase
 class TestTmsFactor(TransactionCase):
 
     def setUp(self):
-        super(TestTmsFactor, self).setUp()
+        super().setUp()
         self.factor = self.env['tms.factor']
         self.employee = self.env.ref('tms.tms_hr_employee_01')
 
@@ -277,14 +277,14 @@ class TestTmsFactor(TransactionCase):
 
     def test_90_get_driver_amount(self):
         factor = self.create_factor()
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'The employee must have a income percentage value'):
             factor.get_driver_amount(self.employee, 500, 100)
         self.employee.income_percentage = 500
         amount = factor.get_driver_amount(self.employee, 500, 100)
         self.assertEqual(amount, 2600, 'Error in amount')
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'Invalid parameter you can use this factor only with drivers'):
             factor.get_driver_amount(False, 500, 100)
@@ -301,7 +301,7 @@ class TestTmsFactor(TransactionCase):
         amount = factor.get_amount(
             employee=self.employee)
         self.assertEqual(amount, 500.0, 'Error in amount')
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'the amount isnt between of any ranges'):
             factor.fixed_amount = 0.0

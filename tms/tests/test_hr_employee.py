@@ -17,7 +17,7 @@ except ImportError:
 class TestHrEmployee(TransactionCase):
 
     def setUp(self):
-        super(TestHrEmployee, self).setUp()
+        super().setUp()
         self.employee_id = self.env.ref('tms.tms_hr_employee_01')
         self.response = [
             {
@@ -43,8 +43,10 @@ class TestHrEmployee(TransactionCase):
         self.assertEqual(self.employee_id.days_to_expire, 0)
 
     def test_20_get_driver_license_info(self):
-        Socrata.get = MagicMock()
-        Socrata.get.return_value = self.response
+        Socrata.__init__ = MagicMock(return_value=None)
+        Socrata.session = MagicMock()
+        Socrata.session.close = MagicMock()
+        Socrata.get = MagicMock(return_value=self.response)
         self.employee_id.get_driver_license_info()
         self.assertEqual(self.employee_id.license_type, 'CATEGORIA A')
         self.assertEqual(self.employee_id.license_valid_from.strftime(
@@ -52,7 +54,7 @@ class TestHrEmployee(TransactionCase):
         self.assertEqual(self.employee_id.license_expiration.strftime(
             '%Y-%m-%d'), '2017-06-26')
         Socrata.get.return_value = False
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'The driver license is not in SCT database'):
             self.employee_id.get_driver_license_info()

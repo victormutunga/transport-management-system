@@ -11,7 +11,7 @@ from odoo.tools.float_utils import float_compare
 class TestTmsTravel(TransactionCase):
 
     def setUp(self):
-        super(TestTmsTravel, self).setUp()
+        super().setUp()
         self.travel_id = self.env.ref("tms.tms_travel_01")
         self.kit = self.env.ref('tms.tms_unit_kit_01')
         self.unit = self.env.ref('tms.tms_fleet_vehicle_01')
@@ -78,12 +78,12 @@ class TestTmsTravel(TransactionCase):
 
     def test_60_tms_travel_action_progress(self):
         self.travel_id2.state = 'progress'
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError, 'The unit or driver are already in use!'):
             self.travel_id.action_progress()
 
     def test_70_tms_travel_action_cancel(self):
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'If you want to cancel this travel,'
                 ' you must cancel the fuel logs or the advances '
@@ -98,7 +98,7 @@ class TestTmsTravel(TransactionCase):
 
     def test_80_tms_travel_create(self):
         self.operating_unit_id.travel_sequence_id = False
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'You need to define the sequence for travels in base'):
             self.env['tms.travel'].create({
@@ -128,7 +128,7 @@ class TestTmsTravel(TransactionCase):
 
     def test_110_tms_travel_validate_driver_license(self):
         self.travel_id.employee_id.days_to_expire = 0
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 "You can not Dispatch this Travel because Fernando Bedoya "
                 "Driver s License Validity %s is expired or about "
@@ -138,7 +138,7 @@ class TestTmsTravel(TransactionCase):
 
     def test_120_tms_travel_validate_vehicle_insurance(self):
         self.travel_id.unit_id.insurance_expiration = datetime.now().date()
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'You can not Dispatch this Travel because this Vehicle %s '
                 'Insurance %s is expired or about to expire in '

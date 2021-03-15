@@ -10,7 +10,7 @@ from odoo.tests.common import TransactionCase
 class TestTmsEvent(TransactionCase):
 
     def setUp(self):
-        super(TestTmsEvent, self).setUp()
+        super().setUp()
         self.travel_id = self.env.ref("tms.tms_travel_01")
 
     def create_event(self):

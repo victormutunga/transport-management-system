@@ -10,7 +10,7 @@ from odoo.tests.common import TransactionCase
 class TestTmsWaybill(TransactionCase):
 
     def setUp(self):
-        super(TestTmsWaybill, self).setUp()
+        super().setUp()
         self.waybill = self.env['tms.waybill']
         self.operating_unit = self.env.ref(
             'operating_unit.main_operating_unit')
@@ -23,34 +23,11 @@ class TestTmsWaybill(TransactionCase):
         self.travel_id1 = self.env.ref("tms.tms_travel_01")
         self.transportable = self.env.ref('tms.tms_transportable_01')
         self.transportable2 = self.env.ref('tms.tms_transportable_02')
-        tax_account = self.env['account.account'].create({
-            "code": 'X031017',
-            "name": 'Tax Account',
-            "user_type_id": self.env.ref(
-                "account.data_account_type_current_assets").id
-        })
-        self.tax = self.env['account.tax'].create({
-            "name": 'IVA 15.0',
-            "description": 'SO-DIC-0316',
-            "amount": 15,
-            "amount_type": 'percent',
-            "type_tax_use": 'purchase',
-            "refund_account_id": tax_account.id,
-            "account_id": tax_account.id,
-        })
-        account_bank = self.env['account.account'].create({
-            "code": 'TestBank',
-            "name": 'Test Bank',
-            "user_type_id": self.env.ref(
-                "account.data_account_type_current_assets").id
-        })
+        self.tax = self.env.user.company_id.account_sale_tax_id
         self.journal_id = self.env['account.journal'].create({
             'name': 'Test Bank',
             'type': 'bank',
             'code': 'TESTBANK',
-            'default_debit_account_id': account_bank.id,
-            'default_credit_account_id': account_bank.id,
-            'update_posted': True,
         })
 
     def create_waybill(self):
@@ -93,7 +70,7 @@ class TestTmsWaybill(TransactionCase):
             'active_model': 'tms.waybill',
             'active_ids': [waybill.id]}).create({})
         wizard.make_invoices()
-        waybill.invoice_id.action_invoice_open()
+        waybill.invoice_id.action_post()
         obj_payment = self.env['account.payment']
         payment = obj_payment.create({
             'partner_type': 'customer',
@@ -103,17 +80,16 @@ class TestTmsWaybill(TransactionCase):
             'payment_type': 'inbound',
             'payment_method_id': 1,
         })
-        payment.post()
-        waybill.invoice_id._get_outstanding_info_JSON()
+        payment.action_post()
         invoice = json.loads(
-            waybill.invoice_id.outstanding_credits_debits_widget)
-        waybill.invoice_id.assign_outstanding_credit(
+            waybill.invoice_id.invoice_outstanding_credits_debits_widget)
+        waybill.invoice_id.js_assign_outstanding_line(
             invoice['content'][0]['id'])
         return waybill
 
     def test_20_tms_waybill_compute_invoice_paid(self):
         waybill = self.create_waybill_invoice_paid()
-        waybill.invoice_id.state = "paid"
+        waybill.invoice_id.payment_state = "paid"
         waybill._compute_invoice_paid()
         self.assertTrue(waybill.invoice_paid, 'she have invoice paid')
 
@@ -143,7 +119,7 @@ class TestTmsWaybill(TransactionCase):
         waybill = self.create_waybill()
         waybill.travel_ids = False
         waybill.action_approve()
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'Could not confirm Waybill !'
                 'Waybill must be assigned to a Travel before '
@@ -155,7 +131,7 @@ class TestTmsWaybill(TransactionCase):
         waybill.waybill_line_ids.tax_ids = self.tax
         waybill.onchange_waybill_line_ids()
         self.assertEqual(waybill.tax_line_ids[0].tax_id, self.tax)
-        self.assertEqual(waybill.tax_line_ids[0].tax_amount, 15.0)
+        self.assertEqual(waybill.tax_line_ids[0].tax_amount, 16.0)
         waybill.waybill_line_ids.create({
             'product_id': self.insurance.id,
             'name': self.insurance.name,
@@ -165,13 +141,13 @@ class TestTmsWaybill(TransactionCase):
             'waybill_id': waybill.id
         })
         waybill.onchange_waybill_line_ids()
-        self.assertEqual(waybill.tax_line_ids[0].tax_amount, 30.0)
+        self.assertEqual(waybill.tax_line_ids[0].tax_amount, 32.0)
 
     def test_70_tms_waybill_action_cancel_draft(self):
         waybill = self.create_waybill()
         waybill.action_approve()
         waybill.action_cancel()
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'Could not set to draft this Waybill !'
                 'Travel is Cancelled !!!'):
@@ -213,7 +189,7 @@ class TestTmsWaybill(TransactionCase):
             'active_model': 'tms.waybill',
             'active_ids': [waybill.id]}).create({})
         wizard.make_invoices()
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 ValidationError,
                 'You cannot unlink the invoice of this waybill'
                 ' because the invoice is still valid, '

@@ -10,7 +10,7 @@ from odoo.tests.common import TransactionCase
 class TestFleetVehicle(TransactionCase):
 
     def setUp(self):
-        super(TestFleetVehicle, self).setUp()
+        super().setUp()
         self.unit = self.env.ref('tms.tms_fleet_vehicle_02')
 
     def test_10_fleet_vehicle_compute_insurance_days_to_expire(self):

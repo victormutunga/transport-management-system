@@ -12,7 +12,6 @@
         'account_operating_unit',
         'fleet',
         'hr',
-        'uom',
     ],
     'external_dependencies': {
         'python': [
