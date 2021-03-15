@@ -28,5 +28,4 @@
     <function name="unlink" eval="[ref('fleet.log_odometer_26')]" model="fleet.vehicle.odometer"/>
     <function name="unlink" eval="[ref('fleet.log_odometer_27')]" model="fleet.vehicle.odometer"/>
     <function name="unlink" eval="[ref('fleet.log_odometer_28')]" model="fleet.vehicle.odometer"/>
-    <function name="unlink" eval="[ref('fleet.log_odometer_29')]" model="fleet.vehicle.odometer"/>
 </odoo>
