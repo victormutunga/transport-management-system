@@ -18,7 +18,8 @@ except ImportError:
 
 class FleetVehicleLogFuel(models.Model):
     _name = 'fleet.vehicle.log.fuel'
-    _inherit = ['fleet.vehicle.log.fuel', 'mail.thread']
+    _inherit = ['mail.thread']
+    _description = 'Fuel Logs'
     _order = "date desc,vehicle_id desc"
 
     name = fields.Char()
@@ -30,6 +31,8 @@ class FleetVehicleLogFuel(models.Model):
         domain=[('driver', '=', True)],
         related='travel_id.employee_id',
         store=True,)
+    vehicle_id = fields.Many2one('fleet.vehicle', required=True,)
+    date = fields.Date(required=True, default=fields.Date.today)
     odometer = fields.Float(related='vehicle_id.odometer',)
     product_uom_id = fields.Many2one('uom.uom', string='UoM')
     product_qty = fields.Float(string='Liters', default=1.0,)

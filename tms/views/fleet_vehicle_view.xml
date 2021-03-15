@@ -15,7 +15,7 @@
             </xpath>
         </field>
     </record>
-    <record id="fleet_vehicle_form_inherit_tms" model="ir.ui.view">
+    <!-- <record id="fleet_vehicle_form_inherit_tms" model="ir.ui.view">
         <field name="name">fleet.vehicle.tms.form</field>
         <field name="model">fleet.vehicle</field>
         <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
@@ -90,7 +90,7 @@
                 </group>
             </xpath>
         </field>
-    </record>
+    </record>-->
     <record model='ir.ui.view' id='fleet_vehicle_tms_kanban'>
         <field name='name'>fleet_vehicle_tms_kanban</field>
         <field name='model'>fleet.vehicle</field>

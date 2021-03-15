@@ -4,20 +4,21 @@
 
 {
     'name': 'Freight Management',
-    'version': '13.0.1.0.0',
+    'version': '14.0.1.0.0',
     'category': 'Transport',
     'author': 'Jarsa Sistemas, Argil Consulting',
     'website': 'https://www.jarsa.com.mx/page/transport-management-system',
     'depends': [
+        'account_operating_unit',
         'fleet',
         'hr',
-        'account_operating_unit',
         'uom',
     ],
     'external_dependencies': {
         'python': [
             'sodapy',
             'num2words',
+            'responses',
         ],
     },
     'summary': 'Management System for Carriers, Trucking and other companies',

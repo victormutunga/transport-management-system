@@ -15,7 +15,7 @@ class TmsWaybillTransportableLine(models.Model):
     name = fields.Char('Description', required=True)
     transportable_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure ', required=True)
-    quantity = fields.Float('Quantity (UoM)', requerid=True, default=0.0)
+    quantity = fields.Float('Quantity (UoM)', required=True, default=0.0)
     notes = fields.Char()
     waybill_id = fields.Many2one(
         'tms.waybill')

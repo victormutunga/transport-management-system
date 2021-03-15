@@ -139,5 +139,14 @@
             </t>
         </t>
     </template>
-    <report file="tms.travel_instructions_letter" id="print_travel_intructions_letter" model="tms.travel" name="tms.travel_instructions_letter" report_type="qweb-pdf" string="Letter of Instructions"/>
+    <record id="print_travel_intructions_letter" model="ir.actions.report">
+        <field name="name">Letter of Instructions</field>
+        <field name="model">tms.travel</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">tms.travel_instructions_letter</field>
+        <field name="report_file">tms.travel_instructions_letter</field>
+        <field name="print_report_name">Letter of Instructions</field>
+        <field name="binding_model_id" ref="model_tms_expense"/>
+        <field name="binding_type">report</field>
+    </record>
 </odoo>

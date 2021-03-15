@@ -266,5 +266,14 @@
             </t>
         </t>
     </template>
-    <report file="tms.expense_report" id="print_expense_report" model="tms.expense" name="tms.expense_report" report_type="qweb-pdf" string="Expense Report"/>
+    <record id="print_expense_report" model="ir.actions.report">
+        <field name="name">Expense Report</field>
+        <field name="model">tms.expense</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">tms.expense_report</field>
+        <field name="report_file">tms.expense_report</field>
+        <field name="print_report_name">Expense Report</field>
+        <field name="binding_model_id" ref="model_tms_expense"/>
+        <field name="binding_type">report</field>
+    </record>
 </odoo>

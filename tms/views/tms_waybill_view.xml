@@ -203,10 +203,11 @@
                     </h1>
                     <group col="4">
                         <field attrs="{'readonly':[('state','in',('confirmed'))]}" name="operating_unit_id"/>
+                        <field attrs="{'readonly':[('state','in',('confirmed'))]}" name="company_id"/>
                         <field attrs="{'readonly':[('state','in',('confirmed'))]}" name="date_order"/>
                         <field attrs="{'readonly':[('state','in',('confirmed'))]}" groups="base.group_multi_currency" name="currency_id"/>
                         <separator colspan="4" string="·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·" style="text-align: center;"/>
-                        <field attrs="{'readonly':[('state','in',('confirmed'))]}" colspan="4" domain="[('customer','=',True), ('is_company', '=', True)]" name="partner_id"/>
+                        <field attrs="{'readonly':[('state','in',('confirmed'))]}" colspan="4" domain="['|',('company_id','=',False),('company_id', '=', company_id),('is_company', '=', True)]" name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" options='{"always_reload": True}'/>
                         <field attrs="{'readonly':[('state','in',('confirmed'))]}" context="{'search_default_customer':1, 'show_address': 1}" domain="[('parent_id','=',partner_id)]" name="partner_order_id" options="{&quot;always_reload&quot;: True}"/>
                         <field attrs="{'readonly':[('state','in',('confirmed'))]}" context="{'search_default_customer':1, 'show_address': 1}" domain="[('parent_id','=',partner_id)]" name="partner_invoice_id" options="{&quot;always_reload&quot;: True}"/>
                         <field attrs="{'readonly':[('state','in',('confirmed'))]}" context="{'search_default_customer':1, 'show_address': 1}" name="departure_address_id" options="{&quot;always_reload&quot;: True}"/>

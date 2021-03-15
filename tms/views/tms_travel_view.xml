@@ -53,7 +53,7 @@
                 <field name="route_id"/>
                 <field name="state"/>
                 <button groups="tms.group_traffic,tms.group_expenses" icon="fa-thumbs-up" name="action_progress" states="draft" string="Dispatch Travel" type="object"/>
-                <button groups="tms.group_traffic,tms.group_expenses" icon="fa-check-square" name="action_end" states="progress" string="End Travel" type="object"/>
+                <button groups="tms.group_traffic,tms.group_expenses" icon="fa-check-square" name="action_done" states="progress" string="End Travel" type="object"/>
             </tree>
         </field>
     </record>
@@ -211,7 +211,7 @@
                                     <field attrs="{'readonly':[('state','in',('done', 'closed'))]}" name="distance_loaded"/>
                                     <field attrs="{'readonly':[('state','in',('done', 'closed'))]}" name="distance_empty"/>
                                     <field name="distance_driver"/>
-                                    <field name="odometer" attrs="{'invisible':[('state','!=', 'done', 'closed')]}"/>
+                                    <field name="odometer" attrs="{'invisible':[('state','not in', ['done', 'closed'])]}"/>
                                 </group>
                                 <group>
                                     <separator colspan="4" string="Fuel Efficiency"/>
